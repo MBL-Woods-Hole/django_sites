@@ -76,10 +76,25 @@ WSGI_APPLICATION = 'illumina_submission.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'dj_test',
+        'OPTIONS': {
+            'read_default_file': '~/.my.cnf_dj',
+            # 'read_default_group' : 'clientdj',
+        },
+        
     }
 }
+
+# # Database
+# # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # Password validation
