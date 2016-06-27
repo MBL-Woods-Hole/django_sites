@@ -93,14 +93,14 @@ DATABASES = {
             'read_default_group': 'clientdj',
         },
     },
-    'vampsdev': {
-        'NAME': 'test',
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': '~/.my.cnf',
-            'read_default_group': 'clientvampsdev',
-        },
-    },
+    # 'vampsdev': {
+    #     'NAME': 'test',
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'OPTIONS': {
+    #         'read_default_file': '~/.my.cnf',
+    #         'read_default_group': 'clientvampsdev',
+    #     },
+    # },
     'local_env454': {
         'NAME': 'test_env454',
         'ENGINE': 'django.db.backends.mysql',
