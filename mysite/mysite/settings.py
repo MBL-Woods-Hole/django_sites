@@ -88,8 +88,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', 
         'NAME': 'dj_test',
         'OPTIONS': {
-            'read_default_file': '~/.my.cnf_dj',
-            # 'read_default_group' : 'clientdj',
+            # 'read_default_file': '~/.my.cnf_dj',
+            'read_default_file': '~/.my.cnf',
+            'read_default_group': 'clientdj',
         },
         
     }
