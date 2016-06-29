@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 't!5e9i3tgcg#91o(7kw!0lw(s=0257258-p+!h3!gv@27ww^t9'
+SECRET_KEY = 'jv#20+0b6rufp6(ug6wz-vt0h28yw-x&qg$ab^g6dh6kn)6uy$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -29,8 +29,9 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+
 INSTALLED_APPS = [
-    'polls.apps.PollsConfig',
+    'submission.apps.SubmissionConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,15 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-
-# INSTALLED_APPS = [
-#     'django.contrib.admin',
-#     'django.contrib.auth',
-#     'django.contrib.contenttypes',
-#     'django.contrib.sessions',
-#     'django.contrib.messages',
-#     'django.contrib.staticfiles',
-# ]
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,7 +56,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,8 +68,19 @@ TEMPLATES = [
         },
     },
 ]
+
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
+
+# Database
+# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
@@ -130,35 +133,49 @@ if 'test' not in sys.argv:
         },
     }
 
-
-class web_submissionRouter(object): 
+class submissionRouter(object): 
     def db_for_read(self, model, **hints):
-        "Point all operations on web_submission models to 'web_submissiondb'"
-        if model._meta.app_label == 'web_submission':
-            return 'web_submissiondb'
+        "Point all operations on submission models to 'test_env454'"
+        if model._meta.app_label == 'submission':
+            return 'test_env454'
+        # if model._meta.app_label == 'submission':
+        #     return 'test_env454'
         return 'default'
 
     def db_for_write(self, model, **hints):
-        "Point all operations on web_submission models to 'web_submissiondb'"
-        if model._meta.app_label == 'web_submission':
-            return 'web_submissiondb'
+        "Point all operations on submission models to 'test_env454'"
         return 'default'
-    
+
     def allow_relation(self, obj1, obj2, **hints):
-        "Allow any relation if a both models in web_submission app"
-        if obj1._meta.app_label == 'web_submission' and obj2._meta.app_label == 'web_submission':
+        db_list = ('test_env454', 'test_vamps')
+        if obj1._state.db in db_list and obj2._state.db in db_list:
             return True
-        # Allow if neither is web_submission app
-        elif 'web_submission' not in [obj1._meta.app_label, obj2._meta.app_label]: 
-            return True
+        return None
+
+        # "Allow any relation if a both models in submission app"
+        # if obj1._meta.app_label == 'submission' and obj2._meta.app_label == 'submission':
+        #     return True
+        # # Allow if neither is submission app
+        # elif 'submission' not in [obj1._meta.app_label, obj2._meta.app_label]: 
+        #     return True
+        # return False
+
+    def allow_migrate(self, db, app_label, model_name=None, **hints):
+        """
+        All non-auth models end up in this pool.
+        """
         return False
-    
+
+
     def allow_syncdb(self, db, model):
-        if db == 'test_vamps' or db == 'test_env454' or model._meta.app_label == "web_submission":
+        if db == 'test_vamps' or db == 'test_env454' or model._meta.app_label == "submission":
             return False # we're not using syncdb on our legacy database
         else: # but all other models/databases are fine
             return True
 
+DATABASE_ROUTERS = ['submission.db_router.submissionRouter']
+
+DATABASE_APPS_MAPPING = {'submission': 'test_env454'}
 
 
 # Password validation
@@ -185,14 +202,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-USE_TZ = True
-
 TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
 USE_L10N = True
 
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
