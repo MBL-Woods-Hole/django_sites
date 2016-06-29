@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
-import os
+import os, sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -64,7 +64,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,7 +76,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
@@ -92,35 +91,74 @@ DATABASES = {
             'read_default_file': '~/.my.cnf',
             'read_default_group': 'clientdj',
         },
-    },
-    # 'vampsdev': {
-    #     'NAME': 'test',
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'OPTIONS': {
-    #         'read_default_file': '~/.my.cnf',
-    #         'read_default_group': 'clientvampsdev',
-    #     },
-    # },
-    'local_env454': {
-        'NAME': 'test_env454',
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': '~/.my.cnf',
-            'read_default_group': 'clienthome',
-        },
-    },
-    'local_vamps': {
-        'NAME': 'test_vamps',
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': '~/.my.cnf',
-            'read_default_group': 'clienthome',
-        },
-    },
-    
-        
-    
+    }
 }
+if 'test' not in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'dj_test',
+            'OPTIONS': {
+                # 'read_default_file': '~/.my.cnf_dj',
+                'read_default_file': '~/.my.cnf',
+                'read_default_group': 'clientdj',
+            },
+        },
+        # 'vampsdev': {
+        #     'NAME': 'test',
+        #     'ENGINE': 'django.db.backends.mysql',
+        #     'OPTIONS': {
+        #         'read_default_file': '~/.my.cnf',
+        #         'read_default_group': 'clientvampsdev',
+        #     },
+        # },
+        'local_env454': {
+            'NAME': 'test_env454',
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
+                'read_default_file': '~/.my.cnf',
+                'read_default_group': 'clienthome',
+            },
+        },
+        'local_vamps': {
+            'NAME': 'test_vamps',
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
+                'read_default_file': '~/.my.cnf',
+                'read_default_group': 'clienthome',
+            },
+        },
+    }
+
+
+class web_submissionRouter(object): 
+    def db_for_read(self, model, **hints):
+        "Point all operations on web_submission models to 'web_submissiondb'"
+        if model._meta.app_label == 'web_submission':
+            return 'web_submissiondb'
+        return 'default'
+
+    def db_for_write(self, model, **hints):
+        "Point all operations on web_submission models to 'web_submissiondb'"
+        if model._meta.app_label == 'web_submission':
+            return 'web_submissiondb'
+        return 'default'
+    
+    def allow_relation(self, obj1, obj2, **hints):
+        "Allow any relation if a both models in web_submission app"
+        if obj1._meta.app_label == 'web_submission' and obj2._meta.app_label == 'web_submission':
+            return True
+        # Allow if neither is web_submission app
+        elif 'web_submission' not in [obj1._meta.app_label, obj2._meta.app_label]: 
+            return True
+        return False
+    
+    def allow_syncdb(self, db, model):
+        if db == 'test_vamps' or db == 'test_env454' or model._meta.app_label == "web_submission":
+            return False # we're not using syncdb on our legacy database
+        else: # but all other models/databases are fine
+            return True
+
 
 
 # Password validation
