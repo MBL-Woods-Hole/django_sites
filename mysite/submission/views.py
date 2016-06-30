@@ -36,6 +36,7 @@ def index(request):
 
 from django.http import HttpResponse
 from django.template import loader
+from django.http import Http404
 
 from django.shortcuts import render
 from .models_l_env454 import Run
@@ -55,9 +56,17 @@ def index(request):
     context = {'latest_run_list': latest_run_list}
     return render(request, 'submission/index.html', context)
         
-def detail(request, run_id):
-    return HttpResponse("You're looking at run %s." % run_id)
+# def detail(request, run_id):
+#     return HttpResponse("You're looking at run %s." % run_id)
 
+def detail(request, run_id):
+    try:
+        run = Run.objects.get(pk=run_id)
+    except Run.DoesNotExist:
+        raise Http404("Run does not exist")
+    return render(request, 'submission/detail.html', {'run': run})
+    
+    
 def results(request, run_id):
     response = "You're looking at the results of run %s."
     return HttpResponse(response % run_id)
