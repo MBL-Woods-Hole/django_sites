@@ -9,6 +9,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('env454_db',)
+
 
 class Env454_Contact(models.Model):
     contact_id = models.SmallIntegerField(primary_key=True)

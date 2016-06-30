@@ -38,9 +38,12 @@ class submissionRouter(object):
         #   db = 'local_env454'
         if model._meta.app_label == 'submission':
           print "111"
-          print model._meta.db_table
+          print "model._meta: "
+          print model._meta
           print "=" *10
-          if model._meta.db_table.startswith('vamps_'):
+          if hasattr(model._meta, 'vamps_db'):
+
+          # if model._meta.db_table.startswith('vamps_'):
             print "local_vamps 222"
             db = 'local_vamps'
           else:

@@ -9,6 +9,10 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+# import django.db.models.options as options
+models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('vamps_db',)
+
+
 
 class VampsAuth(models.Model):
     user = models.CharField(unique=True, max_length=20)
@@ -28,7 +32,7 @@ class VampsAuth(models.Model):
         managed = False
         db_table = 'vamps_auth'
         unique_together = (('first_name', 'last_name', 'email', 'institution'),)
-
+        vamps_db = True
 
 class VampsSubmissions(models.Model):
     submit_code = models.CharField(unique=True, max_length=40)
@@ -46,6 +50,7 @@ class VampsSubmissions(models.Model):
         return "%s: %s" % (self.submit_code, self.temp_project)
 
     class Meta:
+        vamps_db = True
         managed = False
         db_table = 'vamps_submissions'
 
@@ -90,6 +95,7 @@ class VampsSubmissionsTubes(models.Model):
         return "%s: %s, %s, %s" % (self.submit_code, self.project_name, self.dataset_name, self.dna_region)
 
     class Meta:
+        vamps_db = True
         managed = False
         db_table = 'vamps_submissions_tubes'
         unique_together = (('submit_code', 'tube_number'),)
