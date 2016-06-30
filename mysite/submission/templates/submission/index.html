@@ -10,7 +10,7 @@
     <ul>
     {% for run in latest_run_list %}
       <!-- <li><a href="/submission/{{ run.run_id }}/">{{ run.run }}</a></li> -->
-      <li><a href="{% url 'detail' run.run_id %}">{{ run.run }}</a></li>
+      <li><a href="{% url 'submission:detail' run.run_id %}">{{ run.run }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
