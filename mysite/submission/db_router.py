@@ -2,16 +2,33 @@
 # import settings
 
 class submissionRouter(object): 
+    
     def db_for_read(self, model, **hints):
-        "Point all operations on submission models to 'local_env454'"
+        """
+        From http://www.mechanicalgirl.com/post/reporting-django-multi-db-support/
+        Send reads on a specific model to the appropriate db
+        """
+        db = 'default'
+
         if model._meta.app_label == 'submission':
-            return 'local_env454'
-        # if model._meta.app_label == 'submission':
-        #     return 'local_env454'
-        return 'default'
+          # print "111"
+          # print "model._meta: "
+          # print model._meta
+          # print "=" *10
+          if hasattr(model._meta, 'vamps_db'):
+
+          # if model._meta.db_table.startswith('vamps_'):
+            db = 'local_vamps'
+          else:
+            db = 'local_env454'
+      
+        print "db = %s" % db
+        return db
 
     def db_for_write(self, model, **hints):
         "Point all operations on submission models to 'local_env454'"
+        if model._meta.app_label == 'submission':
+            return None
         return 'default'
 
     def allow_relation(self, obj1, obj2, **hints):
