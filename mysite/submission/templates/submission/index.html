@@ -2,7 +2,9 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'submission/style.css' %}" />
 
-<img id="header_top" src="{{ STATIC_URL }}/images/jbpc_header_top6.jpg" alt="VAMPS Header -Top">
+
+{% include 'submission/header.html' %}
+<!-- <img id="header_top" src="static/submission/images/jbpc_header_top6.jpg" alt="VAMPS Header -Top"> -->
 
 {% if latest_question_list %}
     <ul>

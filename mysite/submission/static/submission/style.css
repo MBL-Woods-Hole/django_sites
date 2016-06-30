@@ -2,3 +2,31 @@ li a {
     color: green;
 }
 
+.emph {
+	font-weight:bold;
+}
+
+ol.help_list
+{
+	padding-top: 10px;
+   /* padding-bottom: 10px;	 */
+}
+
+ol.help_list li
+{
+	margin-left: 1em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+}
+
+.message {
+    color: red; font-weight: bold;
+}
+
+.green_message {
+    color: #006600; font-weight: bold;
+}
+
+.blue_message {
+    color: #0000FF; font-weight: bold;
+}
