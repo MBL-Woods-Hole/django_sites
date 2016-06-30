@@ -9,9 +9,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-# import django.db.models.options as options
 models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('vamps_db',)
-
 
 
 class VampsAuth(models.Model):
