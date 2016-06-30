@@ -64,7 +64,6 @@ class EnvSampleSource(models.Model):
         managed = False
         db_table = 'env_sample_source'
 
-
 class IlluminaAdaptor(models.Model):
     illumina_adaptor_id = models.SmallIntegerField(primary_key=True)
     illumina_adaptor = models.CharField(unique=True, max_length=3)
@@ -184,7 +183,6 @@ class RunInfo(models.Model):
     empcr_operator = models.CharField(max_length=5)
     platform = models.CharField(max_length=11, blank=True, null=True)
     concentration = models.DecimalField(max_digits=10, decimal_places=4)
-    quant_method = models.ForeignKey('QuantMethod', models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -218,7 +216,6 @@ class RunInfoIll(models.Model):
         managed = False
         db_table = 'run_info_ill'
         unique_together = (('run', 'run_key', 'barcode_index', 'lane'),)
-
 
 class RunKey(models.Model):
     run_key_id = models.SmallIntegerField(primary_key=True)
