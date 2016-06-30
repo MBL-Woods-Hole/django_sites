@@ -27,10 +27,10 @@ class VampsAuth(models.Model):
         return "%s, %s %s, %s" % (self.user, self.first_name, self.last_name, self.institution)
 
     class Meta:
+        vamps_db = True
         managed = False
         db_table = 'vamps_auth'
         unique_together = (('first_name', 'last_name', 'email', 'institution'),)
-        vamps_db = True
 
 class VampsSubmissions(models.Model):
     submit_code = models.CharField(unique=True, max_length=40)
