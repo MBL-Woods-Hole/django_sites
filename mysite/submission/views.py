@@ -19,12 +19,21 @@ def index(request):
 #
 # class HelpView(TemplateView):
 #     template_name = "help.html"
+#
+# from django.http import HttpResponse
+#
+# def index(request):
+#     return HttpResponse("Illumina files processing")
 
 from django.http import HttpResponse
 
-def index(request):
-    return HttpResponse("Illumina files processing")
+from .models_l_env454 import Run
 
+def index(request):
+    latest_run_list = Run.objects.order_by('-run')[:10]
+    output = ', '.join([q.run for q in latest_run_list])
+    return HttpResponse(output)
+    
 def detail(request, question_id):
     return HttpResponse("You're looking at question %s." % question_id)
 
