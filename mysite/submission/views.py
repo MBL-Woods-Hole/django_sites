@@ -38,7 +38,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.http import Http404
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from .models_l_env454 import Run
 
 
@@ -58,14 +58,17 @@ def index(request):
         
 # def detail(request, run_id):
 #     return HttpResponse("You're looking at run %s." % run_id)
+#
+# def detail(request, run_id):
+#     try:
+#         run = Run.objects.get(pk=run_id)
+#     except Run.DoesNotExist:
+#         raise Http404("Run does not exist")
+#     return render(request, 'submission/detail.html', {'run': run})
 
 def detail(request, run_id):
-    try:
-        run = Run.objects.get(pk=run_id)
-    except Run.DoesNotExist:
-        raise Http404("Run does not exist")
+    run = get_object_or_404(Run, pk=run_id)
     return render(request, 'submission/detail.html', {'run': run})
-    
     
 def results(request, run_id):
     response = "You're looking at the results of run %s."
