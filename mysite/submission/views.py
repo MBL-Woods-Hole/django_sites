@@ -24,15 +24,29 @@ def index(request):
 #
 # def index(request):
 #     return HttpResponse("Illumina files processing")
+#
+# from django.http import HttpResponse
+#
+# from .models_l_env454 import Run
+#
+# def index(request):
+#     latest_run_list = Run.objects.order_by('-run')[:10]
+#     output = ', '.join([q.run for q in latest_run_list])
+#     return HttpResponse(output)
 
 from django.http import HttpResponse
+from django.template import loader
 
 from .models_l_env454 import Run
 
+
 def index(request):
-    latest_run_list = Run.objects.order_by('-run')[:10]
-    output = ', '.join([q.run for q in latest_run_list])
-    return HttpResponse(output)
+    latest_run_list = Run.objects.order_by('-run')[:15]
+    template = loader.get_template('submission/index.html')
+    context = {
+        'latest_run_list': latest_run_list,
+    }
+    return HttpResponse(template.render(context, request))
     
 def detail(request, question_id):
     return HttpResponse("You're looking at question %s." % question_id)

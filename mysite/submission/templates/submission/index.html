@@ -6,10 +6,10 @@
 {% include 'submission/header.html' %}
 <!-- <img id="header_top" src="static/submission/images/jbpc_header_top6.jpg" alt="VAMPS Header -Top"> -->
 
-{% if latest_question_list %}
+{% if latest_run_list %}
     <ul>
-    {% for question in latest_question_list %}
-      <li><a href="{% url 'submission:detail' question.id %}">{{ question.question_text }}</a></li>
+    {% for run in latest_run_list %}
+      <li><a href="/submission/{{ run.run_id }}/">{{ run.run }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
