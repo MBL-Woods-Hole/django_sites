@@ -37,14 +37,20 @@ class submissionRouter(object):
         # if model._meta.app_label.startswith('Env454'):
         #   db = 'local_env454'
         if model._meta.app_label == 'submission':
-          if model._meta.db_table.startswith('Vamps'):
+          print "111"
+          print model._meta.db_table
+          print "=" *10
+          if model._meta.db_table.startswith('vamps_'):
+            print "local_vamps 222"
             db = 'local_vamps'
           else:
+            print "local_env454 333"
             db = 'local_env454'
       
         # "Point all operations on submission models to 'local_env454'"
         # if model._meta.app_label == 'submission':
         #     return 'local_env454'
+        print "db = %s DDDD" % db
         return db
 
     def db_for_write(self, model, **hints):

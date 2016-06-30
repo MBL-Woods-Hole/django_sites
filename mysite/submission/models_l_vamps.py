@@ -21,6 +21,9 @@ class VampsAuth(models.Model):
     institution = models.CharField(max_length=128, blank=True, null=True)
     date_added = models.CharField(max_length=10, blank=True, null=True)
 
+    def __str__(self):
+        return "%s, %s %s, %s" % (self.user, self.first_name, self.last_name, self.institution)
+
     class Meta:
         managed = False
         db_table = 'vamps_auth'
@@ -38,6 +41,9 @@ class VampsSubmissions(models.Model):
     date_initial = models.DateField()
     date_updated = models.DateField()
     locked = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return "%s: %s" % (self.submit_code, self.temp_project)
 
     class Meta:
         managed = False
@@ -79,6 +85,9 @@ class VampsSubmissionsTubes(models.Model):
     read_length = models.SmallIntegerField(blank=True, null=True)
     trim_distal = models.CharField(max_length=5, blank=True, null=True)
     env_sample_source = models.ForeignKey('NewEnvSampleSource', models.DO_NOTHING)
+
+    def __str__(self):
+        return "%s: %s, %s, %s" % (self.submit_code, self.project_name, self.dataset_name, self.dna_region)
 
     class Meta:
         managed = False
