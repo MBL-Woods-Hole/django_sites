@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^(?P<run_id>[0-9]+)/results/$', views.results, name='results'),
     # ex: /polls/5/vote/
     url(r'^(?P<run_id>[0-9]+)/vote/$', views.vote, name='vote'),
+    url(r'^help/$', views.help, name='help'),
 ]
 
 # from django.conf.urls import url

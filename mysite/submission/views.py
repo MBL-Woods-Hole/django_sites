@@ -76,3 +76,6 @@ def results(request, run_id):
 
 def vote(request, run_id):
     return HttpResponse("You're voting on run %s." % run_id)
+    
+def help(request):
+    return render(request, 'submission/help.html')
