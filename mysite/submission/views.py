@@ -97,12 +97,12 @@ def get_run(request):
         print "request.POST = "
         print request.POST
         if form.is_valid():
-            pass
             find_rundate = request.POST.get(
                           'find_rundate'
                       , '')
 
-            print find_rundate
+            print "find_rundate = %s" % find_rundate
+
             find_machine = request.POST.get(
                           'find_machine'
                       , '')
