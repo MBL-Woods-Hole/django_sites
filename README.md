@@ -22,3 +22,6 @@ python manage.py migrate
 python manage.py runserver
 ---
 Put your code in some directory outside of the document root, such as /home/mycode.
+
+Clean with 
+mysite$ flake8 . | grep -v "line too long" > flake_res; mate flake_res
