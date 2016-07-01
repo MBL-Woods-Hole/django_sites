@@ -82,10 +82,9 @@ def help(request):
     return render(request, 'submission/help.html')
 
 def gzip_all(request):
-    latest_run_list = Run.objects.order_by('-run')[:10]
-    context = {'latest_run_list': latest_run_list}
-    return render(request, 'submission/gzip_all.html', context)
-        
+    form = get_run(request)
+    return render(request, 'submission/gzip_all.html', {'form': form})
+
 # ---
 from django.http import HttpResponseRedirect
 
@@ -127,4 +126,5 @@ def get_run(request):
     else:
         form = RunForm()
 
-    return render(request, 'submission/name.html', {'form': form})
+    return form
+    # return render(request, 'submission/name.html', {'form': form})

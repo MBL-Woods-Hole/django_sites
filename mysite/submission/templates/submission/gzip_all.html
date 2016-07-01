@@ -3,9 +3,7 @@
 <h1>Gzip all files</h1>
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="/gzip_all/" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit" />
+<form method="post" name="choose_run_m_form" id="choose_run_m_form" action="">
+    
+    {% include "submission/form_snippet.html" %}
 </form>
-
