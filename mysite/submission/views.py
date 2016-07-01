@@ -93,21 +93,14 @@ from .forms import NameForm
 
 def get_name(request):
     # if this is a POST request we need to process the form data
-    print "request.method = "
-    print request.method
-    print "request.POST = "
-    print request.POST
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = NameForm(request.POST)
-        print "1"
         # check whether it's valid:
         if form.is_valid():
-            print "Ura"
             contact_name = request.POST.get(
                           'your_name'
                       , '')
-            print contact_name
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
@@ -115,7 +108,6 @@ def get_name(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        print "2"
         form = NameForm()
 
     return render(request, 'submission/name.html', {'form': form})
