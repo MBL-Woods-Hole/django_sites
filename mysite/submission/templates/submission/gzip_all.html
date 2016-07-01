@@ -1,5 +1,7 @@
 {% load staticfiles %}
 
+{% include 'submission/header.html' %}
+
 <h1>Gzip all files</h1>
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
@@ -8,5 +10,13 @@
     {% include "submission/form_snippet.html" %}
 </form>
 
+"FFF request.POST"
+{{ request.POST }}</br>
+"find_rundate"</br>
+{{ request.POST.find_rundate }}</br>
+
+
 This command line(s) can be run on any not cluster:
-cd /xraid2-2/g454/run_new_pipeline/illumina/20160624/lane_1_B/analysis/; time gzip -r *
+<div class = "green_message">
+cd /xraid2-2/g454/run_new_pipeline/illumina/{{ request.POST.find_rundate }}/lane_{{ request.POST.find_lane }}_{{ request.POST.find_domain }}/analysis/; time gzip -r *
+</div>
