@@ -165,6 +165,9 @@ class Run(models.Model):
         managed = False
         db_table = 'run'
         unique_together = (('run', 'platform'),)
+    
+    def __str__(self):
+        return self.run
 
 
 class RunInfo(models.Model):
