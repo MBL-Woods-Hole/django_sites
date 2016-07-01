@@ -1,39 +1,35 @@
 from django import forms
-#
-# class RunForm(forms.Form):
-#     find_lane = forms.CharField(label='Lane number', max_length=10)
-
 from .models_l_env454 import Run
+from .models import Machine, Domain
+
 
 class NameForm(forms.Form):
-    your_name = forms.CharField(label='Your name', max_length=100)
-    YEAR_IN_SCHOOL_CHOICES = (
-       ('FR', 'Freshman'),
-       ('SO', 'Sophomore'),
-       ('JR', 'Junior'),
-       ('SR', 'Senior'),
-    )
-    # find_rundate = forms.ChoiceField(YEAR_IN_SCHOOL_CHOICES)
-    find_rundate = forms.ModelChoiceField(queryset = Run.objects.filter(run__startswith='201').order_by('-run')[:50], label='Run date', empty_label=None)
-    
+#   find_rundate = forms.ModelChoiceField(queryset = Run.objects.filter(run__gte='2014').order_by('-run')
+# , label='Run date', empty_label=None)
+  query = Run.objects.filter(run__gte='2015').filter(run__startswith='201').order_by('-run')
+  find_rundate = forms.ModelChoiceField(queryset = query, label='Run date', empty_label=None)
+  find_machine = forms.ChoiceField(Machine.MACHINE_CHOICES, label='Machine name')
+  find_domain  = forms.ChoiceField(Domain.DOMAIN_CHOICES, label='Domain')
+  find_lane    = forms.CharField(label='Lane number', max_length=10)
 
-class ContactForm(forms.Form):
-    YEAR_IN_SCHOOL_CHOICES = (
-       ('FR', 'Freshman'),
-       ('SO', 'Sophomore'),
-       ('JR', 'Junior'),
-       ('SR', 'Senior'),
-    )
-    find_rundate = forms.ChoiceField(YEAR_IN_SCHOOL_CHOICES)
-  
-    subject = forms.CharField(max_length=100)
-    message = forms.CharField(widget=forms.Textarea)
-    sender = forms.EmailField()
-    cc_myself = forms.BooleanField(required=False)
-
+    # your_name = forms.CharField(label='Your name', max_length=100)
+    # YEAR_IN_SCHOOL_CHOICES = (
+    #    ('FR', 'Freshman'),
+    #    ('SO', 'Sophomore'),
+    #    ('JR', 'Junior'),
+    #    ('SR', 'Senior'),
+    # )
+    # # find_rundate = forms.ChoiceField(YEAR_IN_SCHOOL_CHOICES)
+    # find_rundate = forms.ModelChoiceField(queryset = Run.objects.filter(run__startswith='201').order_by('-run')[:50], label='Run date', empty_label=None)
+    # find_machine = forms.ChoiceField(Machine.MACHINE_CHOICES, label='Machine name')
 
 class RunForm(forms.Form):
-  find_rundate = forms.ModelChoiceField(queryset = Run.objects.order_by('-run')[:10], label='Run date', empty_label=None)
-  # find_machine = forms.ModelChoiceField(MACHINE_CHOICES, label='Machine name', empty_label=None)
-  # find_domain  = forms.ModelChoiceField(DOMAIN_CHOICES, label='Domain', empty_label=None)
-  find_lane    = forms.CharField(label='Lane number', max_length=10)
+  # book = forms.ModelChoiceField(queryset = Book.objects.filter(pk__in = Book.objects.order_by('-rating')[:100].values_list('pk')))
+
+  # find_rundate = forms.ModelChoiceField(queryset = Run.objects.filter(pk__in = Run.objects.filter(run__startswith='201').order_by('-run')[:50].values_list('pk')))
+
+  query = Run.objects.filter(run__gte='2015').filter(run__startswith='201').order_by('-run')
+  find_rundate = forms.ModelChoiceField(queryset =query, label='Run date', empty_label=None)
+  find_machine = forms.ChoiceField(Machine.MACHINE_CHOICES, label='Machine name')
+  find_domain  = forms.ChoiceField(Domain.DOMAIN_CHOICES, label='Domain')
+  find_lane    = forms.CharField(label='Lane number', max_length=3)

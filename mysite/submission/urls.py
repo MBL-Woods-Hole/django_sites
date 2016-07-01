@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^(?P<run_id>[0-9]+)/vote/$', views.vote, name='vote'),
     url(r'^help/$', views.help, name='help'),
     url(r'^gzip_all/$', views.gzip_all, name='gzip_all'),
-    url(r'^name/$', views.get_name, name='name'),
+    url(r'^name/$', views.get_run, name='name'),
 ]
 
 # from django.conf.urls import url

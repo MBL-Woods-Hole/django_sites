@@ -169,7 +169,6 @@ class Run(models.Model):
     def __str__(self):
         return self.run
 
-
 class RunInfo(models.Model):
     run_info_id = models.SmallIntegerField(primary_key=True)
     run_key = models.ForeignKey('RunKey', models.DO_NOTHING)

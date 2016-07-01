@@ -89,7 +89,7 @@ def gzip_all(request):
 # ---
 from django.http import HttpResponseRedirect
 
-from .forms import NameForm
+from .forms import NameForm, RunForm
 
 def get_name(request):
     # if this is a POST request we need to process the form data
@@ -109,5 +109,43 @@ def get_name(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = NameForm()
+
+    return render(request, 'submission/name.html', {'form': form})
+
+def get_run(request):
+    print "Running get_run"
+    if request.method == 'POST':
+        form = RunForm(request.POST)
+        print "request.POST = "
+        print request.POST
+        if form.is_valid():
+            pass
+            find_rundate = request.POST.get(
+                          'find_rundate'
+                      , '')
+
+            print find_rundate
+            find_machine = request.POST.get(
+                          'find_machine'
+                      , '')
+            find_domain = request.POST.get(
+                          'find_domain'
+                      , '')
+            find_lane = request.POST.get(
+                          'find_lane'
+                      , '')
+
+
+            # contact_name = request.POST.get(
+            #               'your_name'
+            #           , '')
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            # return HttpResponseRedirect('/submission/name/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = RunForm()
 
     return render(request, 'submission/name.html', {'form': form})
