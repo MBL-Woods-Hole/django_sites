@@ -38,7 +38,8 @@ from django.http import HttpResponse
 from django.template import loader
 from django.http import Http404
 
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 from .models_l_env454 import Run
 
 
@@ -79,3 +80,31 @@ def vote(request, run_id):
     
 def help(request):
     return render(request, 'submission/help.html')
+
+def gzip_all(request):
+    latest_run_list = Run.objects.order_by('-run')[:10]
+    context = {'latest_run_list': latest_run_list}
+    return render(request, 'submission/gzip_all.html', context)
+        
+# ---
+from django.http import HttpResponseRedirect
+
+from .forms import NameForm
+
+def get_name(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = NameForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/thanks/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = NameForm()
+
+    return render(request, 'submission/name.html', {'form': form})
