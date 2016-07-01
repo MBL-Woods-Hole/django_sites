@@ -5,8 +5,8 @@
 # Create your views here.
 def index(request):
     return HttpResponse("Illumina files processing")
-    
-# def 
+
+# def
 '''
 #
 # from django.shortcuts import render_to_response
@@ -56,7 +56,7 @@ def index(request):
     latest_run_list = Run.objects.order_by('-run')[:10]
     context = {'latest_run_list': latest_run_list}
     return render(request, 'submission/index.html', context)
-        
+
 # def detail(request, run_id):
 #     return HttpResponse("You're looking at run %s." % run_id)
 #
@@ -70,14 +70,14 @@ def index(request):
 def detail(request, run_id):
     run = get_object_or_404(Run, pk=run_id)
     return render(request, 'submission/detail.html', {'run': run})
-    
+
 def results(request, run_id):
     response = "You're looking at the results of run %s."
     return HttpResponse(response % run_id)
 
 def vote(request, run_id):
     return HttpResponse("You're voting on run %s." % run_id)
-    
+
 def help(request):
     return render(request, 'submission/help.html')
 

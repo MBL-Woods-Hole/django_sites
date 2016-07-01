@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # import settings
 
-class submissionRouter(object): 
-    
+class submissionRouter(object):
+
     def db_for_read(self, model, **hints):
         """
         From http://www.mechanicalgirl.com/post/reporting-django-multi-db-support/
@@ -15,7 +15,7 @@ class submissionRouter(object):
             db = 'local_vamps'
           else:
             db = 'local_env454'
-      
+
         print "db = %s" % db
         return db
 
@@ -35,7 +35,7 @@ class submissionRouter(object):
         # if obj1._meta.app_label == 'submission' and obj2._meta.app_label == 'submission':
         #     return True
         # # Allow if neither is submission app
-        # elif 'submission' not in [obj1._meta.app_label, obj2._meta.app_label]: 
+        # elif 'submission' not in [obj1._meta.app_label, obj2._meta.app_label]:
         #     return True
         # return False
 

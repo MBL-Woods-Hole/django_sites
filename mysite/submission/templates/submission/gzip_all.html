@@ -4,6 +4,9 @@
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 <form method="post" name="choose_run_m_form" id="choose_run_m_form" action="">
-    
+
     {% include "submission/form_snippet.html" %}
 </form>
+
+This command line(s) can be run on any not cluster:
+cd /xraid2-2/g454/run_new_pipeline/illumina/20160624/lane_1_B/analysis/; time gzip -r *

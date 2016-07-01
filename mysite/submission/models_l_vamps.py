@@ -44,14 +44,13 @@ class VampsSubmissions(models.Model):
     date_updated = models.DateField()
     locked = models.IntegerField(blank=True, null=True)
 
-    def __str__(self):
-        return "%s: %s" % (self.submit_code, self.temp_project)
-
     class Meta:
         vamps_db = True
         managed = False
         db_table = 'vamps_submissions'
 
+    def __str__(self):
+        return "%s: %s" % (self.submit_code, self.temp_project)
 
 class VampsSubmissionsTubes(models.Model):
     submit_code = models.CharField(max_length=40)
@@ -89,11 +88,11 @@ class VampsSubmissionsTubes(models.Model):
     trim_distal = models.CharField(max_length=5, blank=True, null=True)
     env_sample_source = models.ForeignKey('NewEnvSampleSource', models.DO_NOTHING)
 
-    def __str__(self):
-        return "%s: %s, %s, %s" % (self.submit_code, self.project_name, self.dataset_name, self.dna_region)
-
     class Meta:
         vamps_db = True
         managed = False
         db_table = 'vamps_submissions_tubes'
         unique_together = (('submit_code', 'tube_number'),)
+
+    def __str__(self):
+        return "%s: %s, %s, %s" % (self.submit_code, self.project_name, self.dataset_name, self.dna_region)

@@ -58,13 +58,13 @@ class EnvSampleSource(models.Model):
     env_sample_source_id = models.IntegerField(primary_key=True)
     env_source_name = models.CharField(unique=True, max_length=50)
 
-    def __str__(self):
-        return "%s: %s" % (self.env_sample_source_id, self.env_source_name)
-
-
     class Meta:
         managed = False
         db_table = 'env_sample_source'
+
+    def __str__(self):
+        return "%s: %s" % (self.env_sample_source_id, self.env_source_name)
+
 
 class IlluminaAdaptor(models.Model):
     illumina_adaptor_id = models.SmallIntegerField(primary_key=True)
@@ -165,7 +165,7 @@ class Run(models.Model):
         managed = False
         db_table = 'run'
         unique_together = (('run', 'platform'),)
-    
+
     def __str__(self):
         return self.run
 
