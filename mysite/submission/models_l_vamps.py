@@ -32,6 +32,7 @@ class VampsAuth(models.Model):
         db_table = 'vamps_auth'
         unique_together = (('first_name', 'last_name', 'email', 'institution'),)
 
+
 class VampsSubmissions(models.Model):
     submit_code = models.CharField(unique=True, max_length=40)
     vamps_auth = models.ForeignKey(VampsAuth, models.DO_NOTHING)

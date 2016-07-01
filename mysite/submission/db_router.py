@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # import settings
 
+
 class submissionRouter(object):
 
     def db_for_read(self, model, **hints):
@@ -11,10 +12,10 @@ class submissionRouter(object):
         db = 'default'
 
         if model._meta.app_label == 'submission':
-          if hasattr(model._meta, 'vamps_db'):
-            db = 'local_vamps'
-          else:
-            db = 'local_env454'
+            if hasattr(model._meta, 'vamps_db'):
+                db = 'local_vamps'
+            else:
+                db = 'local_env454'
 
         print "db = %s" % db
         return db
@@ -45,11 +46,10 @@ class submissionRouter(object):
         """
         return False
 
-
     def allow_syncdb(self, db, model):
         if db == 'test_vamps' or db == 'local_env454' or model._meta.app_label == "submission":
-            return False # we're not using syncdb on our legacy database
-        else: # but all other models/databases are fine
+            return False  # we're not using syncdb on our legacy database
+        else:  # but all other models/databases are fine
             return True
 
 # class DatabaseAppsRouter(object):

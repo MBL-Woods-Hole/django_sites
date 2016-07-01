@@ -1,79 +1,30 @@
 ./mysite/settings.py:13:10: E401 multiple imports on one line
-./mysite/settings.py:158:80: E501 line too long (93 > 79 characters)
-./mysite/settings.py:161:80: E501 line too long (82 > 79 characters)
-./mysite/settings.py:173:80: E501 line too long (96 > 79 characters)
-./mysite/settings.py:188:80: E501 line too long (91 > 79 characters)
-./mysite/settings.py:191:80: E501 line too long (81 > 79 characters)
-./mysite/settings.py:194:80: E501 line too long (82 > 79 characters)
-./mysite/settings.py:197:80: E501 line too long (83 > 79 characters)
-./mysite/urls.py:22:2: W292 no newline at end of file
 ./submission/admin.py:1:1: F401 'django.contrib.admin' imported but unused
-./submission/db_router.py:4:1: E302 expected 2 blank lines, found 1
-./submission/db_router.py:8:80: E501 line too long (82 > 79 characters)
-./submission/db_router.py:14:11: E111 indentation is not a multiple of four
-./submission/db_router.py:16:11: E111 indentation is not a multiple of four
-./submission/db_router.py:35:80: E501 line too long (91 > 79 characters)
-./submission/db_router.py:38:80: E501 line too long (80 > 79 characters)
-./submission/db_router.py:49:5: E303 too many blank lines (2)
-./submission/db_router.py:50:80: E501 line too long (95 > 79 characters)
-./submission/db_router.py:51:25: E261 at least two spaces before inline comment
-./submission/db_router.py:52:14: E261 at least two spaces before inline comment
-./submission/forms.py:5:1: E302 expected 2 blank lines, found 1
-./submission/forms.py:6:3: E111 indentation is not a multiple of four
-./submission/forms.py:6:80: E501 line too long (92 > 79 characters)
-./submission/forms.py:7:3: E111 indentation is not a multiple of four
+./submission/forms.py:7:47: E251 unexpected spaces around keyword / parameter equals
 ./submission/forms.py:7:49: E251 unexpected spaces around keyword / parameter equals
-./submission/forms.py:7:51: E251 unexpected spaces around keyword / parameter equals
-./submission/forms.py:7:80: E501 line too long (93 > 79 characters)
-./submission/forms.py:8:3: E111 indentation is not a multiple of four
-./submission/forms.py:8:80: E501 line too long (81 > 79 characters)
-./submission/forms.py:9:3: E111 indentation is not a multiple of four
-./submission/forms.py:9:14: E221 multiple spaces before operator
-./submission/forms.py:10:3: E111 indentation is not a multiple of four
-./submission/forms.py:10:12: E221 multiple spaces before operator
-./submission/models.py:15:1: E302 expected 2 blank lines, found 1
-./submission/models_l_env454.py:6:80: E501 line too long (104 > 79 characters)
-./submission/models_l_env454.py:7:80: E501 line too long (82 > 79 characters)
+./submission/forms.py:7:72: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:7:74: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:8:51: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:8:53: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:8:66: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:8:68: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:8:92: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:8:94: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:9:68: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:9:70: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:10:16: E221 multiple spaces before operator
+./submission/forms.py:10:66: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:10:68: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:11:14: E221 multiple spaces before operator
+./submission/forms.py:11:41: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:11:43: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:11:69: E251 unexpected spaces around keyword / parameter equals
+./submission/forms.py:11:71: E251 unexpected spaces around keyword / parameter equals
 ./submission/models_l_env454.py:57:1: E302 expected 2 blank lines, found 1
-./submission/models_l_env454.py:172:1: E302 expected 2 blank lines, found 1
-./submission/models_l_env454.py:194:80: E501 line too long (80 > 79 characters)
-./submission/models_l_env454.py:224:1: E302 expected 2 blank lines, found 1
-./submission/models_l_vamps.py:6:80: E501 line too long (104 > 79 characters)
-./submission/models_l_vamps.py:7:80: E501 line too long (82 > 79 characters)
-./submission/models_l_vamps.py:27:80: E501 line too long (95 > 79 characters)
-./submission/models_l_vamps.py:33:80: E501 line too long (80 > 79 characters)
-./submission/models_l_vamps.py:35:1: E302 expected 2 blank lines, found 1
-./submission/models_l_vamps.py:55:1: E302 expected 2 blank lines, found 1
-./submission/models_l_vamps.py:89:80: E501 line too long (82 > 79 characters)
-./submission/models_l_vamps.py:98:80: E501 line too long (107 > 79 characters)
+./submission/models_l_vamps.py:56:1: E302 expected 2 blank lines, found 1
 ./submission/tests.py:1:1: F401 'django.test.TestCase' imported but unused
-./submission/urls.py:29:80: E501 line too long (85 > 79 characters)
-./submission/urls.py:31:4: W292 no newline at end of file
-./submission/views.py:17:80: E501 line too long (96 > 79 characters)
-./submission/views.py:38:1: F401 'django.template.loader' imported but unused
-./submission/views.py:39:1: F401 'django.http.Http404' imported but unused
-./submission/views.py:70:1: E302 expected 2 blank lines, found 1
-./submission/views.py:74:1: E302 expected 2 blank lines, found 1
-./submission/views.py:78:1: E302 expected 2 blank lines, found 1
-./submission/views.py:81:1: E302 expected 2 blank lines, found 1
-./submission/views.py:84:1: E302 expected 2 blank lines, found 1
-./submission/views.py:89:1: E402 module level import not at top of file
-./submission/views.py:89:1: F401 'django.http.HttpResponseRedirect' imported but unused
-./submission/views.py:91:1: E402 module level import not at top of file
-./submission/views.py:93:1: E302 expected 2 blank lines, found 1
-./submission/views.py:101:41: E203 whitespace before ','
-./submission/views.py:102:23: E131 continuation line unaligned for hanging indent
-./submission/views.py:106:13: F841 local variable 'find_machine' is assigned to but never used
-./submission/views.py:107:41: E203 whitespace before ','
-./submission/views.py:108:23: E131 continuation line unaligned for hanging indent
-./submission/views.py:109:13: F841 local variable 'find_domain' is assigned to but never used
-./submission/views.py:110:40: E203 whitespace before ','
-./submission/views.py:111:23: E131 continuation line unaligned for hanging indent
-./submission/views.py:112:13: F841 local variable 'find_lane' is assigned to but never used
-./submission/views.py:113:38: E203 whitespace before ','
-./submission/views.py:114:23: E131 continuation line unaligned for hanging indent
-./submission/views.py:117:13: E303 too many blank lines (2)
-./submission/views.py:130:69: W292 no newline at end of file
-./submission/migrations/0001_initial.py:19:80: E501 line too long (92 > 79 characters)
-./submission/migrations/0001_initial.py:24:80: E501 line too long (87 > 79 characters)
-./submission/migrations/0001_initial.py:25:80: E501 line too long (86 > 79 characters)
+./submission/views.py:69:13: F841 local variable 'find_machine' is assigned to but never used
+./submission/views.py:70:13: F841 local variable 'find_domain' is assigned to but never used
+./submission/views.py:70:24: E221 multiple spaces before operator
+./submission/views.py:71:13: F841 local variable 'find_lane' is assigned to but never used
+./submission/views.py:71:22: E221 multiple spaces before operator

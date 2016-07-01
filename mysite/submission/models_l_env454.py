@@ -169,6 +169,7 @@ class Run(models.Model):
     def __str__(self):
         return self.run
 
+
 class RunInfo(models.Model):
     run_info_id = models.SmallIntegerField(primary_key=True)
     run_key = models.ForeignKey('RunKey', models.DO_NOTHING)
@@ -220,6 +221,7 @@ class RunInfoIll(models.Model):
         managed = False
         db_table = 'run_info_ill'
         unique_together = (('run', 'run_key', 'barcode_index', 'lane'),)
+
 
 class RunKey(models.Model):
     run_key_id = models.SmallIntegerField(primary_key=True)

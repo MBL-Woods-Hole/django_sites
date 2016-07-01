@@ -12,6 +12,7 @@ class Machine(models.Model):
         ('ns', 'nextseq'),
     )
 
+
 class Domain(models.Model):
     DOMAIN_CHOICES = (
         ('Bacterial', 'Bacteria'),
