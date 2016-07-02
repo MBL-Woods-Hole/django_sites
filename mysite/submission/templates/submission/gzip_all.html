@@ -11,16 +11,15 @@
 
 {% include 'submission/name.html' %}
 
-
 "FFF request.POST"
 {{ request.POST }}</br>
 "OOO form.cleaned_data"</br>
 {{ form.cleaned_data }}</br>
 "run_data RRR"</br>
-{{ run_data }}</br>
+{{ run_data.find_rundate }}</br>
 
 
 This command line(s) can be run on any not cluster:
 <div class = "green_message">
-cd /xraid2-2/g454/run_new_pipeline/illumina/{{ form.cleaned_data.find_rundate.run }}/lane_{{ form.cleaned_data.find_lane }}_{{ form.cleaned_data.find_domain }}/analysis/; time gzip -r *
+cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/; time gzip -r *
 </div>

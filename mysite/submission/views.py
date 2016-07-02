@@ -51,14 +51,15 @@ def help(request):
 
 
 def gzip_all(request):
-    form, run_data = get_run(request)
+    run_data = {}
     try:
-        print "!!!form.cleaned_data"
-        print form.cleaned_data
-        print "555 find_rundate = "
-        print run_data['find_rundate']
+        form, run_data = get_run(request)
+        # print "!!!form.cleaned_data"
+        # print form.cleaned_data
+        # print "555 find_rundate = "
+        # print run_data['find_rundate']
     except:
-        pass
+        form = get_run(request)
     return render(request, 'submission/gzip_all.html', {'form': form, 'run_data': run_data})
 
 
