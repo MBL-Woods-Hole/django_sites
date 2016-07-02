@@ -58,6 +58,14 @@ def db_upload(request):
         form = get_run(request)
     return render(request, 'submission/db_upload.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db', 'is_cluster': 'not', 'pipeline_command': 'env454upload' })
 
+def run_info_upload(request):
+    run_data = {}
+    try:
+        form, run_data = get_run(request)
+    except:
+        form = get_run(request)
+    return render(request, 'submission/db_upload.html', {'form': form, 'run_data': run_data, 'header': 'Run info upload to db', 'is_cluster': 'not', 'pipeline_command': 'env454run_info_upload' })
+
 def gzip_all(request):
     run_data = {}
     try:

@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^help/$', views.help, name='help'),
     url(r'^gzip_all/$', views.gzip_all, name='gzip_all'),
     url(r'^db_upload/$', views.db_upload, name='db_upload'),
+    url(r'^run_info_upload/$', views.run_info_upload, name='run_info_upload'),
     # url(r'^name/$', views.get_run, name='name'),
 ]
 
