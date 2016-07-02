@@ -20,3 +20,10 @@ class Domain(models.Model):
         ('Eukaryal', 'Eukarya'),
         ('Fungal', 'ITS1'),
     )
+
+    DOMAIN_SHORTCUTS_CHOICES = (
+        ('B', 'Bacteria'),
+        ('A', 'Archaea'),
+        ('E', 'Eukarya'),
+        ('E', 'ITS1'),
+    )
