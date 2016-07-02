@@ -1,0 +1,21 @@
+{% load staticfiles %}
+
+{% include 'submission/header.html' %}
+
+<h1>{{ header }}</h1>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% include 'submission/select_run.html' %}
+
+This command line(s) can be run on any <strong>{{ is_cluster }}</strong> cluster:
+<div class = "green_message">
+  cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/reads_overlap/; run_gast_ill_nonchim_sge.sh; date
+</div>
+
+<br/>
+<br/>
+
+Afterwards you can check the percent of "Unknown" taxa by using:
+<div class = "green_message">
+cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/gast/; percent10_gast_unknowns.sh; date
+</div>
