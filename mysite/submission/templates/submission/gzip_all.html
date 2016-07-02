@@ -3,17 +3,19 @@
 {% include 'submission/header.html' %}
 
 <h1>Gzip all files</h1>
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% if error_message %}<p><strong>UUU {{ error_message }}</strong></p>{% endif %}
 
-<form method="post" name="choose_run_m_form" id="choose_run_m_form" action="">
-
+<!-- <form method="post" name="choose_run_m_form" id="choose_run_m_form" action="">
     {% include "submission/form_snippet.html" %}
-</form>
+</form> -->
+
+{% include 'submission/name.html' %}
+
 
 "FFF request.POST"
 {{ request.POST }}</br>
-"find_rundate"</br>
-{{ request.POST.find_rundate }}</br>
+"OOO form.cleaned_data"</br>
+{{ form.cleaned_data }}</br>
 
 
 This command line(s) can be run on any not cluster:

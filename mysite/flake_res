@@ -23,8 +23,8 @@
 ./submission/models_l_env454.py:57:1: E302 expected 2 blank lines, found 1
 ./submission/models_l_vamps.py:56:1: E302 expected 2 blank lines, found 1
 ./submission/tests.py:1:1: F401 'django.test.TestCase' imported but unused
-./submission/views.py:69:13: F841 local variable 'find_machine' is assigned to but never used
-./submission/views.py:70:13: F841 local variable 'find_domain' is assigned to but never used
-./submission/views.py:70:24: E221 multiple spaces before operator
-./submission/views.py:71:13: F841 local variable 'find_lane' is assigned to but never used
-./submission/views.py:71:22: E221 multiple spaces before operator
+./submission/views.py:71:13: F841 local variable 'find_machine' is assigned to but never used
+./submission/views.py:72:13: F841 local variable 'find_domain' is assigned to but never used
+./submission/views.py:72:24: E221 multiple spaces before operator
+./submission/views.py:73:13: F841 local variable 'find_lane' is assigned to but never used
+./submission/views.py:73:22: E221 multiple spaces before operator

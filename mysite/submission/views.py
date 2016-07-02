@@ -52,6 +52,11 @@ def help(request):
 
 def gzip_all(request):
     form = get_run(request)
+    try:
+        print "!!!form.cleaned_data"
+        print form.cleaned_data
+    except:
+        pass
     return render(request, 'submission/gzip_all.html', {'form': form})
 
 
@@ -62,13 +67,13 @@ def get_run(request):
         print "request.POST = "
         print request.POST
         if form.is_valid():
-            find_rundate = request.POST.get('find_rundate', '')
+            find_rundate = form.cleaned_data['find_rundate']
 
             print "find_rundate = %s" % find_rundate
 
-            find_machine = request.POST.get('find_machine', '')
-            find_domain  = request.POST.get('find_domain', '')
-            find_lane    = request.POST.get('find_lane', '')
+            find_machine = form.cleaned_data['find_machine']
+            find_domain  = form.cleaned_data['find_domain']
+            find_lane    = form.cleaned_data['find_lane']
 
             # contact_name = request.POST.get(
             #               'your_name'
@@ -77,7 +82,7 @@ def get_run(request):
             # ...
             # redirect to a new URL:
             # return HttpResponseRedirect('/submission/name/')
-
+            # return form
     # if a GET (or any other method) we'll create a blank form
     else:
         form = RunForm()
