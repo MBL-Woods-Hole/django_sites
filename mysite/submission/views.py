@@ -59,7 +59,7 @@ def gzip_all(request):
         print run_data['find_rundate']
     except:
         pass
-    return render(request, 'submission/gzip_all.html', {'form': form})
+    return render(request, 'submission/gzip_all.html', {'form': form, 'run_data': run_data})
 
 
 def get_run(request):
