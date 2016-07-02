@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^(?P<run_id>[0-9]+)/vote/$', views.vote, name='vote'),
     url(r'^help/$', views.help, name='help'),
     url(r'^gzip_all/$', views.gzip_all, name='gzip_all'),
+    url(r'^db_upload/$', views.db_upload, name='db_upload'),
     # url(r'^name/$', views.get_run, name='name'),
 ]
 
