@@ -51,10 +51,12 @@ def help(request):
 
 
 def gzip_all(request):
-    form = get_run(request)
+    form, run_data = get_run(request)
     try:
         print "!!!form.cleaned_data"
         print form.cleaned_data
+        print "555 find_rundate = "
+        print run_data['find_rundate']
     except:
         pass
     return render(request, 'submission/gzip_all.html', {'form': form})
@@ -62,27 +64,30 @@ def gzip_all(request):
 
 def get_run(request):
     print "Running get_run"
+    run_data = {}
     if request.method == 'POST':
         form = RunForm(request.POST)
         print "request.POST = "
         print request.POST
         if form.is_valid():
-            find_rundate = form.cleaned_data['find_rundate']
+            run_data['find_rundate'] = form.cleaned_data['find_rundate'].run
+            run_data['find_machine'] = form.cleaned_data['find_machine']
+            run_data['find_domain']  = form.cleaned_data['find_domain']
+            run_data['find_lane']    = form.cleaned_data['find_lane']
+            # pass
+            # find_rundate = form.cleaned_data['find_rundate'].run
 
-            print "find_rundate = %s" % find_rundate
+            # print "find_rundate = %s" % find_rundate
 
-            find_machine = form.cleaned_data['find_machine']
-            find_domain  = form.cleaned_data['find_domain']
-            find_lane    = form.cleaned_data['find_lane']
+            # find_machine = form.cleaned_data['find_machine']
+            # find_domain  = form.cleaned_data['find_domain']
+            # find_lane    = form.cleaned_data['find_lane']
 
-            # contact_name = request.POST.get(
-            #               'your_name'
-            #           , '')
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
             # return HttpResponseRedirect('/submission/name/')
-            # return form
+            return (form, run_data)
     # if a GET (or any other method) we'll create a blank form
     else:
         form = RunForm()
