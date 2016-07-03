@@ -12,11 +12,11 @@ class Machine(models.Model):
         ('ns', 'nextseq'),
     )
     
-class Overlaps(models.Model):
-    OVERLAP_CHOICES = (
-        ('ms', 'partial'),
-        ('hs', 'complete'),
-        ('ns', 'complete'),
+class Overlap(models.Model):
+    COMPLETE_OVERLAP_CHOICES = (
+        ('ms', 'False'),
+        ('hs', 'True'),
+        ('ns', 'True'),
     )
     
 
