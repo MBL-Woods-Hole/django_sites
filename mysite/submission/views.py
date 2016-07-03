@@ -56,7 +56,7 @@ def db_upload(request):
         form, run_data = get_run(request)
     except:
         form = get_run(request)
-    return render(request, 'submission/db_upload.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db', 'is_cluster': 'not', 'pipeline_command': 'env454upload' })
+    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db', 'is_cluster': 'not', 'pipeline_command': 'env454upload' })
 
 def run_info_upload(request):
     run_data = {}
@@ -64,7 +64,7 @@ def run_info_upload(request):
         form, run_data = get_run(request)
     except:
         form = get_run(request)
-    return render(request, 'submission/db_upload.html', {'form': form, 'run_data': run_data, 'header': 'Run info upload to db', 'is_cluster': 'not', 'pipeline_command': 'env454run_info_upload' })
+    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Run info upload to db', 'is_cluster': 'not', 'pipeline_command': 'env454run_info_upload' })
 
 def gast(request):
     run_data = {}

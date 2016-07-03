@@ -6,3 +6,8 @@
 <img src="{% static 'submission/images/jbpc_header_bottom6.jpg' %}" />
 
 <!-- <a href="http://www.mbl.edu/"><img id="mbl_logo" src="{% static 'submission/images/logo_mbl.png' %}" alt="MBL Logo" /></a> -->
+
+<h1>{{ header }}</h1>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% include 'submission/select_run.html' %}
