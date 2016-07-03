@@ -13,7 +13,6 @@
 Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}
 </div>
 
-This command line(s) can be run on any not cluster:
 <div class = "green_message">
 cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/; time gzip -r *
 </div>

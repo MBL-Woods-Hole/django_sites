@@ -2,24 +2,6 @@
 
 {% include 'submission/header.html' %}
 
-<h1>Gzip all files</h1>
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
-<!-- <form method="post" name="choose_run_m_form" id="choose_run_m_form" action="">
-    {% include "submission/form_snippet.html" %}
-</form> -->
-
-{% include 'submission/select_run.html' %}
-
-<!-- "FFF request.POST"
-{{ request.POST }}</br>
-"OOO form.cleaned_data"</br>
-{{ form.cleaned_data }}</br>
-"run_data RRR"</br>
-{{ run_data.find_rundate }}</br>
- -->
-
-This command line(s) can be run on any not cluster:
 <div class = "green_message">
 cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/; time gzip -r *
 </div>

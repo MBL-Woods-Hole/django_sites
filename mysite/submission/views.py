@@ -82,13 +82,9 @@ def gzip_all(request):
     run_data = {}
     try:
         form, run_data = get_run(request)
-        # print "!!!form.cleaned_data"
-        # print form.cleaned_data
-        # print "555 find_rundate = "
-        # print run_data['find_rundate']
     except:
         form = get_run(request)
-    return render(request, 'submission/gzip_all.html', {'form': form, 'run_data': run_data})
+    return render(request, 'submission/gzip_all.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not'})
 
 
 # def get_run(request):
