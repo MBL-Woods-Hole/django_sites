@@ -3,10 +3,10 @@
 {% include 'submission/header.html' %}
 
 <div class = "red_message">
-Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}
+Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}{{ run_data.find_machine }}
 </div>
 
 <div class = "green_message">
-cd /xraid2-2/g454/run_new_pipeline/illumina/hiseq_info/{{ run_data.find_rundate }}_{{ run_data.find_machine }}; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv /xraid2-2/g454/run_new_pipeline/illumina/hiseq_info/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/metadata_{{ run_data.find_rundate }}_{{ run_data.find_machine }}_lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}.csv -s {{ pipeline_command }} -l debug -p illumina -r {{ run_data.find_rundate }} -ft fastq -i /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }} -cp True -lane_name lane_{{ run_data.find_lane }}_{{ run_data.find_domain }} -do_perfect True
+cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.full_machine_name }}_info/{{ run_data.find_rundate }}{{ run_data.find_machine }}; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.full_machine_name }}_info/{{ run_data.find_rundate }}{{ run_data.find_machine }}/metadata_{{ run_data.find_rundate }}{{ run_data.find_machine }}_lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}.csv -s {{ pipeline_command }} -l debug -p illumina -r {{ run_data.find_rundate }} -ft fastq -i /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}{{ run_data.find_machine }}/ -cp True -lane_name lane_{{ run_data.find_lane }}_{{ run_data.find_domain }} -do_perfect {{ do_perfect }}
 </div>
 
