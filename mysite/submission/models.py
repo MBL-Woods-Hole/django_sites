@@ -11,7 +11,14 @@ class Machine(models.Model):
         ('hs', 'hiseq'),
         ('ns', 'nextseq'),
     )
-
+    
+class Overlaps(models.Model):
+    OVERLAP_CHOICES = (
+        ('ms', 'partial'),
+        ('hs', 'complete'),
+        ('ns', 'complete'),
+    )
+    
 
 class Domain(models.Model):
     DOMAIN_CHOICES = (
