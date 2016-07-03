@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^run_info_upload/$', views.run_info_upload, name='run_info_upload'),
     # Todo: rm run_info_upload, rename db_upload into a name for both
     url(r'^gast/$', views.gast, name='gast'),
+    url(r'^chimera_checking/$', views.chimera_checking, name='chimera_checking'),
 ]
 
 # from django.conf.urls import url

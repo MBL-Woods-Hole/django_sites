@@ -1,0 +1,13 @@
+{% load staticfiles %}
+
+{% include 'submission/page_w_command_l.html' %}
+
+<br/>
+Afterwards you can run the following command(s) to get chimera checking statistics. 
+<br/>
+This command line(s) can be run on any <strong>not</strong> cluster:
+
+<div class = "green_message">
+cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/chimera/; chimera_stats.py; date
+</div>
+

@@ -66,6 +66,14 @@ def run_info_upload(request):
         form = get_run(request)
     return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Run info upload to db', 'is_cluster': 'not', 'pipeline_command': 'env454run_info_upload' })
 
+def chimera_checking(request):
+    run_data = {}
+    try:
+        form, run_data = get_run(request)
+    except:
+        form = get_run(request)
+    return render(request, 'submission/chimera_checking.html', {'form': form, 'run_data': run_data, 'header': 'Chimera checking (for v4v5 region only)', 'is_cluster': '', 'pipeline_command': 'illumina_chimera_only' })
+
 def gast(request):
     run_data = {}
     try:
