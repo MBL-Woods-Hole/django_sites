@@ -74,6 +74,22 @@ def chimera_checking(request):
         form = get_run(request)
     return render(request, 'submission/chimera_checking.html', {'form': form, 'run_data': run_data, 'header': 'Chimera checking (for v4v5 region only)', 'is_cluster': '', 'pipeline_command': 'illumina_chimera_only' })
 
+def demultiplex(request):
+    run_data = {}
+    try:
+        form, run_data = get_run(request)
+    except:
+        form = get_run(request)
+    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Demultiplex Illumina files by index/run_key/lane', 'is_cluster': 'not', 'pipeline_command': 'illumina_files_demultiplex_only' })
+
+def overlap(request):
+    run_data = {}
+    try:
+        form, run_data = get_run(request)
+    except:
+        form = get_run(request)
+    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Overlap, filter and unique reads in already demultiplexed files', 'is_cluster': '', 'pipeline_command': 'illumina_files' })
+    
 def gast(request):
     run_data = {}
     try:
@@ -94,36 +110,3 @@ def gzip_all(request):
         form = get_run(request)
     return render(request, 'submission/gzip_all.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not'})
 
-
-# def get_run(request):
-#     print "Running get_run"
-#     run_data = {}
-#     if request.method == 'POST':
-#         form = RunForm(request.POST)
-#         print "request.POST = "
-#         print request.POST
-#         if form.is_valid():
-#             run_data['find_rundate'] = form.cleaned_data['find_rundate'].run
-#             run_data['find_machine'] = form.cleaned_data['find_machine']
-#             run_data['find_domain']  = form.cleaned_data['find_domain']
-#             run_data['find_lane']    = form.cleaned_data['find_lane']
-#             # pass
-#             # find_rundate = form.cleaned_data['find_rundate'].run
-#
-#             # print "find_rundate = %s" % find_rundate
-#
-#             # find_machine = form.cleaned_data['find_machine']
-#             # find_domain  = form.cleaned_data['find_domain']
-#             # find_lane    = form.cleaned_data['find_lane']
-#
-#             # process the data in form.cleaned_data as required
-#             # ...
-#             # redirect to a new URL:
-#             # return HttpResponseRedirect('/submission/name/')
-#             return (form, run_data)
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#         form = RunForm()
-#
-#     return form
-#     # return render(request, 'submission/name.html', {'form': form})
