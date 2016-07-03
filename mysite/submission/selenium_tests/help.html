@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8000/" />
+<title>help</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">help</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/submission/help/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Help and tips</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=li</td>
+	<td>If you got a &quot;Path to raw data is empty!&quot; or &quot;Sorry, there is no ini file. Please add a path to raw data.&quot; message: Check if &quot;path to raw data&quot; is correct, you can write in the field provided.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//li[6]/ul/li[2]</td>
+	<td>to keep your screen log automatically running add .screenrc file (notice the dot) to your home directory and then call screen only from here. In the file:<br /> shell -${SHELL}<br /> defscrollback 10000<br /> deflog on<br /> logtstamp on<br /> screen -t &quot;set_screen&quot; 1 bash -l<br /> autodetach on</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
