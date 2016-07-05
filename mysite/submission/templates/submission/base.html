@@ -20,20 +20,37 @@
 
          {% block navigation %}
          <div id="navigation">
-             <ul>
-                <li><a class="{% block home %}{% endblock %}" href="/submission">Home</a></li>
-                <li><a class="{% block demultiplex %}{% endblock %}" href="/submission/demultiplex/">Demultiplex</a></li>
-                <li><a class="{% block overlap %}{% endblock %}" href="/submission/overlap/">Overlap reads</a></li>
-                <li><a class="{% block chimera_checking %}{% endblock %}" href="/submission/chimera_checking/">Chimera checking</a></li>
-                <li><a class="{% block gast %}{% endblock %}" href="/submission/gast/">Gast</a></li>
-                <li><a class="{% block run_info_upload %}{% endblock %}" href="/submission/run_info_upload/">Run info upload</a></li>
-                <li><a class="{% block db_upload %}{% endblock %}" href="/submission/db_upload/">Data upload</a></li>
-                <li><a class="{% block gzip_all %}{% endblock %}" href="/submission/gzip_all/">Gzip all</a></li>
-                <li><a class="{% block help %}{% endblock %}" href="/submission/help/">Help</a></li>
+             <ul id="nav">
+               <li><a href="/submission/">Upload Submission Metadata</a></li>
+               <li><a href="/submission/demultiplex">Demultiplex</a></li>
+               <li><a href="/submission/overlap">Overlap Analyzing</a></li>
+               <li><a href="/submission/chimera_checking">Chimera checking</a></li>
+               <li><a href="/submission/gast">Gast</a></li>
+               <li><a href="/submission/run_info_upload">Run_info upload</a></li>
+               <li><a href="/submission/data_upload">Data upload</a></li>
+               <li><a href="/submission/gzip_all">gzip all</a></li>
+               <li><a href="/submission/help">help</a></li>  
+               <li><a href="/submission/#here">Separate steps</a>
+               <ul class="nav first"> 
+                 <li><a href="/submission/demultiplex">demultiplex</a></li>
+                 <li><a href="/submission/overlap">overlap</a></li>
+                 <li><a href="/submission/filter_mismatch">filtering mismatch</a></li>
+                 <li><a href="/submission/uniqueing">uniqueing</a></li>
+                 <li><a href="/submission/chimera_checking">chimera checking</a></li>
+                 <li><a href="/submission/gast">gast</a></li>
+                 <li><a href="/submission/clear_db">clear db</a></li>
+                 <li><a href="/submission/check_fa_counts">check counts in fa files</a></li>
+                 <li><a href="/submission/check_db_counts">check counts in db</a></li>
+                 <li><a href="/submission/gzip_all">gzip all</a></li>
+                 <li><a href="/submission/gunzip_all">gunzip all</a></li>
+                 <li><a href="/submission/help">help</a></li>
+                 </ul>  
+               </li>      
              </ul>
          </div>
          {% endblock %}
-
+         
+         <hr/>
          {% block real_content %}
          {% endblock %}
 

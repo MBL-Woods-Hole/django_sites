@@ -50,7 +50,7 @@ def vote(request, run_id):
 def help(request):
     return render(request, 'submission/help.html')
 
-def db_upload(request):
+def data_upload(request):
     run_data = {}
     try:
         form, run_data = get_run(request)
