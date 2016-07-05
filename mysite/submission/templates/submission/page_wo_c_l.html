@@ -1,18 +1,15 @@
-{% load staticfiles %}
+{% extends "submission/base.html" %}
 
-{% include 'submission/header.html' %}
-
-<h1>{{ header }}</h1>
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
+{% block real_content %}
 {% include 'submission/select_run.html' %}
-
-<div id="is_cluster"> This command line(s) can be run on any <strong>{{ is_cluster }}</strong> cluster: </div>
 
 <div class = "red_message">
 Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}
 </div>
 
+<div id="is_cluster"> This command line(s) can be run on any <strong>{{ is_cluster }}</strong> cluster: </div>
 <div class = "green_message">
 cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/; time gzip -r *
 </div>
+
+{% endblock %}

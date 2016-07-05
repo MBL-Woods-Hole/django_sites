@@ -1,8 +1,87 @@
+* { margin: 0; padding: 0; font-size: 12px;}
+
+/**************************** Menu ***************************/
+/* http://www.devinrolsen.com/pure-css-menu-with-infinite-sub-menus-tutorial/#comment-8304 */
+#navigation {
+  background-color: #a8b6c0;
+  color: black;
+  border-radius: 0;
+/*  margin: 1ex;*/
+  padding-bottom: 30px;
+}
+
+#nav, .nav, #nav .nav li { 
+  margin: 0px;
+  padding: 0px;
+}
+
+#nav li {
+  float: left;
+  display: inline;
+  cursor: pointer;
+  list-style: none;
+  padding: 0px 10px 0px 10px;
+/*  border: 1px #000 solid;*/
+  position: relative;
+}
+
+#nav li ul.first {
+  left: -1px;
+  top: 100%;
+}
+
+#navigation li, #navigation li a {
+  color: #000;
+  text-decoration: none;
+}
+
+#nav .nav li { 
+  width: 100%;
+  text-indent: 10px;
+  line-height: 30px;
+  margin-right: 10px;
+/*  border-top: 1px #000 solid;
+  border-bottom: 1px #000 solid;
+  border-left: none;
+  border-right: none; */ 
+  background: #fff;
+}
+
+#nav li a {
+  display: block;
+  width: inherit;
+  height: inherit;
+}
+
+ul.nav { 
+  display: none;
+}
+
+#nav li: hover > a, #nav li: hover { 
+  background: #eee;
+}
+
+li: hover > .nav { 
+  display: block;
+  position: absolute;
+  width: 200px;
+  top: -2px;
+  left: 50%;
+  z-index: 1000;
+  border: 1px #000 solid;
+}
+
+li: hover { position: relative;
+ z-index: 2000;
+ }
+
+/*end menu*/
+
 #bunner {
     background: #a8b6c0 url('images/helix100_6.png') left no-repeat;
     position: relative;
     top: 0px;
-    height: 100px;
+    height: 8em;
     border: 1px solid gray;
     z-index: -1;
 }
@@ -67,15 +146,4 @@ ol.help_list li
     background-color: #dddddd;
 }
 */
-#navigation {margin:1ex; padding-bottom: 30px;}
-#nav, .nav, #nav .nav li { margin:0px; padding:0px; }
-#nav li {float:left; display:inline; cursor:pointer; list-style:none; padding:0px 10px 0px 10px; border:1px #000 solid; position:relative;}
-#nav li ul.first {left:-1px; top:100%;}
-#navigation li, li a {color:#000;}
-#nav .nav li { width:100%; text-indent:10px; line-height:30px; margin-right:10px; border-top:1px #000 solid; border-bottom:1px #000 solid; border-left:none; border-right:none; background:#fff;}
-#nav li a {display:block; width:inherit; height:inherit;}
-ul.nav { display:none; }
-#nav li:hover > a, #nav li:hover { background:#eee; }
-#navigation li:hover > .nav { display:block; position:absolute; width:200px; top:-2px; left:50%; z-index:1000; border:1px #000 solid;}
-#navigation li:hover { position:relative; z-index:2000; }
 

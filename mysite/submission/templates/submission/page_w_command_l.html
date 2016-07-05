@@ -1,11 +1,8 @@
 {% extends "submission/base.html" %}
 
-HERE:
-{{ run_data }}
-
-{% block navigation %}<span  class="{{ run_data.menu_name }}"><it>{{ run_data.menu_name }}</it>{% endblock %}
-
 {% block real_content %}
+{% include 'submission/select_run.html' %}
+
 <div class = "red_message">
 Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}{{ run_data.find_machine }}
 </div>
