@@ -19,8 +19,9 @@
      <div id="content">
 
          {% block navigation %}
-             <ul id="top">
-                <li><a class="{% active request home %}" href="/">Home</a></li>
+         <div id="navigation">
+             <ul>
+                <li><a class="{% block home %}{% endblock %}" href="/submission">Home</a></li>
                 <li><a class="{% block demultiplex %}{% endblock %}" href="/submission/demultiplex/">Demultiplex</a></li>
                 <li><a class="{% block overlap %}{% endblock %}" href="/submission/overlap/">Overlap reads</a></li>
                 <li><a class="{% block chimera_checking %}{% endblock %}" href="/submission/chimera_checking/">Chimera checking</a></li>
@@ -30,18 +31,11 @@
                 <li><a class="{% block gzip_all %}{% endblock %}" href="/submission/gzip_all/">Gzip all</a></li>
                 <li><a class="{% block help %}{% endblock %}" href="/submission/help/">Help</a></li>
              </ul>
+         </div>
          {% endblock %}
 
          {% block real_content %}
-         <div id="intro">
-             <p>Hello.</p>
-             <p>Please create a Staff Request here by filling out the form below.</p>
-          </div> <!-- end intro -->
-
-          <div id="logout">
-           <a href="/accounts/logout" alt="Sign Off" title="Sign Off">Sign Off</a>
-          </div>
-          {% endblock %}
+         {% endblock %}
 
      </div> <!-- end content -->
 

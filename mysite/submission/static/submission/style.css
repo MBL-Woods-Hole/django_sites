@@ -39,3 +39,14 @@ ol.help_list li
 .red_message {
     color: red; font-weight: bold;
 }
+
+/* Menu */
+#navigation ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#navigation li {
+    display: inline;
+}
