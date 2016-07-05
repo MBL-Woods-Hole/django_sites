@@ -13,16 +13,16 @@ urlpatterns = [
     url(r'^(?P<run_id>[0-9]+)/results/$', views.results, name='results'),
     # ex: /submission/5/vote/
     url(r'^(?P<run_id>[0-9]+)/vote/$', views.vote, name='vote'),
-    url(r'^help/$', views.help, name='help'),
-    url(r'^gzip_all/$', views.gzip_all, name='gzip_all'),
-    url(r'^db_upload/$', views.db_upload, name='db_upload'),
+    url(r'^help/', views.help, name='help'),
+    url(r'^gzip_all/', views.gzip_all, name='gzip_all'),
+    url(r'^db_upload/', views.db_upload, name='db_upload'),
     # url(r'^run_info_upload/$', views.run_info_upload, name='run_info_upload'),
-    url(r'^run_info_upload/$', views.run_info_upload, name='run_info_upload'),
+    url(r'^run_info_upload/', views.run_info_upload, name='run_info_upload'),
     # Todo: rm run_info_upload, rename db_upload into a name for both
-    url(r'^gast/$', views.gast, name='gast'),
-    url(r'^chimera_checking/$', views.chimera_checking, name='chimera_checking'),
-    url(r'^demultiplex/$', views.demultiplex, name='demultiplex'),
-    url(r'^overlap/$', views.overlap, name='overlap'),
+    url(r'^gast/', views.gast, name='gast'),
+    url(r'^chimera_checking/', views.chimera_checking, name='chimera_checking'),
+    url(r'^demultiplex/', views.demultiplex, name='demultiplex'),
+    url(r'^overlap/', views.overlap, name='overlap'),
     
 ]
 
