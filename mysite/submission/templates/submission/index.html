@@ -1,19 +1,33 @@
-{% load staticfiles %}
+{% extends "submission/base.html" %}
+{% block title %}Home{% endblock %}
 
-<!-- <link rel="stylesheet" type="text/css" href="{% static 'submission/style.css' %}" /> -->
+{% block home %}current{% endblock %}
 
 
-{% include 'submission/header.html' %}
-<!-- <img id="header_top" src="static/submission/images/jbpc_header_top6.jpg" alt="VAMPS Header -Top"> -->
+{% block real_content %}
 
-{% if latest_run_list %}
-    <ul>
-    {% for run in latest_run_list %}
-      <!-- <li><a href="/submission/{{ run.run_id }}/">{{ run.run }}</a></li> -->
-      <li><a href="{% url 'submission:detail' run.run_id %}">{{ run.run }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No submission are available.</p>
-{% endif %}
+<div id="content">
 
+ <div id="intro">
+  <p>Hello.</p>
+  <p>Please create a Staff Request here by filling out the form
+  below.</p>
+ </div> <!-- end intro -->
+ <div>
+   {% if latest_run_list %}
+       <ul>
+       {% for run in latest_run_list %}
+         <!-- <li><a href="/submission/{{ run.run_id }}/">{{ run.run }}</a></li> -->
+         <li><a href="{% url 'submission:detail' run.run_id %}">{{ run.run }}</a></li>
+       {% endfor %}
+       </ul>
+   {% else %}
+       <p>No submission are available.</p>
+   {% endif %}
+ </div>
+ <div id="logout">
+  <a href="" alt="Sign Off" title="Sign Off">Sign Off</a>
+ </div>
+</div> <!-- end content -->
+
+{% endblock %}
