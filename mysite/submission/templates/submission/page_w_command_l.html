@@ -1,11 +1,11 @@
 {% extends "submission/base.html" %}
 
 HERE:
-{{ run_data.menu_name }}
+{{ run_data }}
 
-{% block run_data.menu_name %}<span  class="{{ run_data.menu_name }}"><it>{{ run_data.menu_name }}</it>{% endblock %}
+{% block navigation %}<span  class="{{ run_data.menu_name }}"><it>{{ run_data.menu_name }}</it>{% endblock %}
 
-
+{% block real_content %}
 <div class = "red_message">
 Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}{{ run_data.find_machine }}
 </div>
@@ -14,3 +14,4 @@ Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ ru
 cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.full_machine_name }}_info/{{ run_data.find_rundate }}{{ run_data.find_machine }}; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.full_machine_name }}_info/{{ run_data.find_rundate }}{{ run_data.find_machine }}/metadata_{{ run_data.find_rundate }}{{ run_data.find_machine }}_lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}.csv -s {{ pipeline_command }} -l debug -p illumina -r {{ run_data.find_rundate }} -ft fastq -i /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}{{ run_data.find_machine }}/ -cp True -lane_name lane_{{ run_data.find_lane }}_{{ run_data.find_domain }} -do_perfect {{ run_data.perfect_overlap }}
 </div>
 
+{% endblock %}
