@@ -1,23 +1,34 @@
+{% load staticfiles %}
+{% load tags %}
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
  <title>{% block title %}{% endblock %}</title> 
  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-  <link rel="stylesheet" type="text/css" href="/media/css/base.css" />
-  <link rel="stylesheet" type="text/css" href="/media/css/login.css" />
-  <link rel="stylesheet" href="/site_media/css/style.css" type="text/css" />
-  <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+ <link rel="stylesheet" type="text/css" href="{% static 'submission/style.css' %}" /> 
+  <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/submission/style.css" /><![endif]-->
  </head>
   <body class="{% block bodyclass %}{% endblock %}">
+  {% block bunner %}
+    <div id="bunner"></div> 
+  {% endblock %} 
+  
   {% block content %}
 
      <div id="content">
 
          {% block navigation %}
              <ul id="top">
-                <li><a class="{% block home %}{% endblock %}" href="/">Home</a></li>
-                <li><a class="{% block overlap %}{% endblock %}" href="overlap/">Overlap</a></li>
-                <li><a class="{% block gast %}{% endblock %}" href="gast/">gast</a></li>
+                <li><a class="{% active request home %}" href="/">Home</a></li>
+                <li><a class="{% block demultiplex %}{% endblock %}" href="/submission/demultiplex/">Demultiplex</a></li>
+                <li><a class="{% block overlap %}{% endblock %}" href="/submission/overlap/">Overlap reads</a></li>
+                <li><a class="{% block chimera_checking %}{% endblock %}" href="/submission/chimera_checking/">Chimera checking</a></li>
+                <li><a class="{% block gast %}{% endblock %}" href="/submission/gast/">Gast</a></li>
+                <li><a class="{% block run_info_upload %}{% endblock %}" href="/submission/run_info_upload/">Run info upload</a></li>
+                <li><a class="{% block db_upload %}{% endblock %}" href="/submission/db_upload/">Data upload</a></li>
+                <li><a class="{% block gzip_all %}{% endblock %}" href="/submission/gzip_all/">Gzip all</a></li>
+                <li><a class="{% block help %}{% endblock %}" href="/submission/help/">Help</a></li>
              </ul>
          {% endblock %}
 

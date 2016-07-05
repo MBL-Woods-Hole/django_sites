@@ -41,10 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 ]
 
-TEMPLATE_CONTEXT_PROCESSORS = [
-    'django.core.context_processors.request',
-]
-
 SITE_ID = 1
 
 MIDDLEWARE_CLASSES = [
