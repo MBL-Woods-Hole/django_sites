@@ -1,15 +1,16 @@
 {% extends "submission/base.html" %}
 
 {% block real_content %}
-{% include 'submission/select_run.html' %}
+  {% block header %}{{ header }}{% endblock %}
+  {% include 'submission/select_run.html' %}
 
-<div class = "red_message">
-Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}
-</div>
+  <div class = "red_message">
+  Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}
+  </div>
 
-<div id="is_cluster"> This command line(s) can be run on any <strong>{{ is_cluster }}</strong> cluster: </div>
-<div class = "green_message">
-cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/; time gzip -r *
-</div>
+  <div id="is_cluster"> This command line(s) can be run on any <strong>{{ is_cluster }}</strong> cluster: </div>
+  <div class = "green_message">
+  cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/; time gzip -r *
+  </div>
 
 {% endblock %}

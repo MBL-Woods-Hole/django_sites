@@ -52,6 +52,11 @@
          
          <hr/>
          {% block real_content %}
+         
+         <h1>{% block header %}{% endblock %}</h1>
+         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+         
+         
          {% endblock %}
 
      </div> <!-- end content -->

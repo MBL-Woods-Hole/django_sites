@@ -100,7 +100,7 @@ def gast(request):
         # print run_data['find_rundate']
     except:
         form = get_run(request)
-    return render(request, 'submission/gast.html', {'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': 'not'})
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': 'not'})
 
 def gzip_all(request):
     run_data = {}
