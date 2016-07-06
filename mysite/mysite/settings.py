@@ -30,7 +30,6 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
-    'menu',
     'submission.apps.SubmissionConfig',
     'django.contrib.admin',
     'django.contrib.auth',
