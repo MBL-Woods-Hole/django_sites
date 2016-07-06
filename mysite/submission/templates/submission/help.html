@@ -1,6 +1,7 @@
-{% load staticfiles %}
+{% extends "submission/base.html" %}
 
-{% include 'submission/top.html' %}
+{% block real_content %}
+  {% block header %}{{ header }}{% endblock %}
 
 <h1>Help and tips</h1>
 
@@ -88,6 +89,5 @@
 </li>
 
 </ol>
-		
-	
 
+{% endblock %}

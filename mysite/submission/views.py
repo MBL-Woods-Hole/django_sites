@@ -108,5 +108,5 @@ def gzip_all(request):
         form, run_data = get_run(request)
     except:
         form = get_run(request)
-    return render(request, 'submission/gzip_all.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not', 'menu_name': 'gast'})
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not', 'menu_name': 'gast'})
 

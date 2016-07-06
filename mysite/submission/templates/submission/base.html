@@ -14,46 +14,47 @@
     <div id="bunner"></div> 
   {% endblock %} 
   
+  {% block navigation %}
+  <div id="navigation">
+      <ul id="nav">
+        <li><a href="/submission/">Upload Submission Metadata</a></li>
+        <li><a href="/submission/demultiplex">Demultiplex</a></li>
+        <li><a href="/submission/overlap">Overlap Analyzing</a></li>
+        <li><a href="/submission/chimera_checking">Chimera checking</a></li>
+        <li><a href="/submission/gast">Gast</a></li>
+        <li><a href="/submission/run_info_upload">Run_info upload</a></li>
+        <li><a href="/submission/data_upload">Data upload</a></li>
+        <li><a href="/submission/gzip_all">Gzip all</a></li>
+        <li><a href="/submission/help">Help</a></li>  
+        <li><a href="/submission/#here">Separate steps</a>
+        <ul class="nav first"> 
+          <li><a href="/submission/demultiplex">Demultiplex</a></li>
+          <li><a href="/submission/overlap">Overlap</a></li>
+          <li><a href="/submission/filter_mismatch">Filtering mismatch</a></li>
+          <li><a href="/submission/uniqueing">Uniqueing</a></li>
+          <li><a href="/submission/chimera_checking">Chimera checking</a></li>
+          <li><a href="/submission/gast">Gast</a></li>
+          <li><a href="/submission/clear_db">Clear db</a></li>
+          <li><a href="/submission/check_fa_counts">Check counts in fa files</a></li>
+          <li><a href="/submission/check_db_counts">Check counts in db</a></li>
+          <li><a href="/submission/gzip_all">Gzip all</a></li>
+          <li><a href="/submission/gunzip_all">Gunzip all</a></li>
+          <li><a href="/submission/help">Help</a></li>
+          </ul>  
+        </li>      
+      </ul>
+  </div>
+  {% endblock %}
+  
   {% block content %}
 
-     <div id="content">
+     <div id="content">       
+       <h1>{% block header %}{% endblock %}</h1>
 
-         {% block navigation %}
-         <div id="navigation">
-             <ul id="nav">
-               <li><a href="/submission/">Upload Submission Metadata</a></li>
-               <li><a href="/submission/demultiplex">Demultiplex</a></li>
-               <li><a href="/submission/overlap">Overlap Analyzing</a></li>
-               <li><a href="/submission/chimera_checking">Chimera checking</a></li>
-               <li><a href="/submission/gast">Gast</a></li>
-               <li><a href="/submission/run_info_upload">Run_info upload</a></li>
-               <li><a href="/submission/data_upload">Data upload</a></li>
-               <li><a href="/submission/gzip_all">Gzip all</a></li>
-               <li><a href="/submission/help">Help</a></li>  
-               <li><a href="/submission/#here">Separate steps</a>
-               <ul class="nav first"> 
-                 <li><a href="/submission/demultiplex">Demultiplex</a></li>
-                 <li><a href="/submission/overlap">Overlap</a></li>
-                 <li><a href="/submission/filter_mismatch">Filtering mismatch</a></li>
-                 <li><a href="/submission/uniqueing">Uniqueing</a></li>
-                 <li><a href="/submission/chimera_checking">Chimera checking</a></li>
-                 <li><a href="/submission/gast">Gast</a></li>
-                 <li><a href="/submission/clear_db">Clear db</a></li>
-                 <li><a href="/submission/check_fa_counts">Check counts in fa files</a></li>
-                 <li><a href="/submission/check_db_counts">Check counts in db</a></li>
-                 <li><a href="/submission/gzip_all">Gzip all</a></li>
-                 <li><a href="/submission/gunzip_all">Gunzip all</a></li>
-                 <li><a href="/submission/help">Help</a></li>
-                 </ul>  
-               </li>      
-             </ul>
-         </div>
-         {% endblock %}
+       {% block run_choosing %}{% endblock %}
+
+       {% block real_content %}
          
-         <hr/>
-         {% block real_content %}
-         
-         <h1>{% block header %}{% endblock %}</h1>
          {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
          
          
