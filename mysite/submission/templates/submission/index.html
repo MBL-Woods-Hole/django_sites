@@ -5,17 +5,4 @@
 
 {% block real_content %}
 
-  <div>
-   {% if latest_run_list %}
-       <ul>
-       {% for run in latest_run_list %}
-         <!-- <li><a href="/submission/{{ run.run_id }}/">{{ run.run }}</a></li> -->
-         <li><a href="{% url 'submission:detail' run.run_id %}">{{ run.run }}</a></li>
-       {% endfor %}
-       </ul>
-   {% else %}
-       <p>No submission are available.</p>
-   {% endif %}
-  </div>
-
 {% endblock %}
