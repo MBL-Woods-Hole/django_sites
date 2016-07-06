@@ -2,6 +2,7 @@
 
 /**************************** Menu ***************************/
 /* http://www.devinrolsen.com/pure-css-menu-with-infinite-sub-menus-tutorial/#comment-8304 */
+
 #navigation {
   color: black;
   border-radius: 0;
@@ -59,13 +60,13 @@ ul.nav {
   display: none;
 }
 
-#nav li: hover > a, #nav li: hover { 
+#nav li:hover > a, #nav li:hover { 
 /*  background: #eee;*/
-  background: red;
+  background: lightblue;
 
 }
 
-li: hover > .nav { 
+li:hover > .nav { 
   display: block;
   position: absolute;
   width: 20em;
@@ -75,9 +76,10 @@ li: hover > .nav {
   border: 1px #000 solid;
 }
 
-li: hover { position: relative;
+li:hover { position: relative;
  z-index: 2000;
  }
+
 
 /*end menu*/
 
@@ -85,7 +87,7 @@ li: hover { position: relative;
     background: #a8b6c0 url('images/helix100_6.png') left no-repeat;
     position: relative;
     top: 0px;
-    height: 8em;
+    height: 4.7em;
     border: 1px solid gray;
     z-index: -1;
 }
