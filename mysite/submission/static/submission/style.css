@@ -1,13 +1,12 @@
-* { margin: 0; padding: 0; font-size: 12px;}
+* { margin: 0; padding: 0; font-size: small;}
 
 /**************************** Menu ***************************/
 /* http://www.devinrolsen.com/pure-css-menu-with-infinite-sub-menus-tutorial/#comment-8304 */
 #navigation {
-  background-color: #a8b6c0;
   color: black;
   border-radius: 0;
 /*  margin: 1ex;*/
-  padding-bottom: 30px;
+  padding-bottom: 1.2em;
 }
 
 #nav, .nav, #nav .nav li { 
@@ -16,12 +15,14 @@
 }
 
 #nav li {
+  background-color: #a8b6c0;
   float: left;
   display: inline;
   cursor: pointer;
   list-style: none;
-  padding: 0px 10px 0px 10px;
+  padding: 1px 0.8em 0px 0.8em;
 /*  border: 1px #000 solid;*/
+  border-right: 0.2em #fff solid;
   position: relative;
 }
 
@@ -37,13 +38,14 @@
 
 #nav .nav li { 
   width: 100%;
-  text-indent: 10px;
-  line-height: 30px;
-  margin-right: 10px;
+  text-indent: 1em;
+  line-height: 2em;
+  margin-right: 1em;
 /*  border-top: 1px #000 solid;
   border-bottom: 1px #000 solid;
   border-left: none;
   border-right: none; */ 
+/*  border-right: 2px #fff solid;*/
   background: #fff;
 }
 
@@ -58,13 +60,15 @@ ul.nav {
 }
 
 #nav li: hover > a, #nav li: hover { 
-  background: #eee;
+/*  background: #eee;*/
+  background: red;
+
 }
 
 li: hover > .nav { 
   display: block;
   position: absolute;
-  width: 200px;
+  width: 20em;
   top: -2px;
   left: 50%;
   z-index: 1000;
