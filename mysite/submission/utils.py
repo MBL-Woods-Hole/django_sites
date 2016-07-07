@@ -49,7 +49,7 @@ def get_run(request):
             print primer_suite[1]
             
             if (primer_suite[0]):
-                run_data['primer_suite'] = primer_suite
+                run_data['primer_suite'] = primer_suite[1]
             else: 
                 error_message = primer_suite[1]
             print "run_data: "
@@ -59,4 +59,4 @@ def get_run(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = RunForm()
-    return form
+    return (form, error_message)
