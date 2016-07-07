@@ -48,25 +48,24 @@
   
   {% block content %}
 
-     <div id="content">   
-       
-       {% if error_message %}
-         <div class = "red_message">
-           {{ error_message }}
-         </div>
-       {% endif %}
+     <div id="content">          
            
        <h1>{% block header %}{% endblock %}</h1>
 
        {% block run_choosing %}{% endblock %}
 
-       {% block some_content %}{% endblock %}
+       {% if error_message %}
+         <div class = "red_message">
+           {{ error_message }}
+         </div>
+       {% else %}
+
+         {% block some_content %}{% endblock %}
        
-       {% block first_green_message %}
-         
-         
-         
-       {% endblock %}
+         {% block first_green_message %}{% endblock %}
+       
+       {% endif %}
+       
 
      </div> <!-- end content -->
 
