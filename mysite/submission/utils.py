@@ -17,13 +17,11 @@ def get_domain_name(domain_name):
     return domain_choices[domain_name]
     
 def get_primer_suites(run, lane, suite_domain):
-    primer_suites = [entry.primer_suite for entry in RunInfoIll.objects.filter(run__run = run, lane = lane)]
-    print set(primer_suites)
-    for a in set(primer_suites):
-      if a.primer_suite.startswith(suite_domain):
-        print a
+    all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
+    primer_suites = set([entry.primer_suite for entry in all_suites if entry.primer_suite.primer_suite.startswith(suite_domain)])
+    print next(iter(primer_suites)).primer_suite
     print "*" * 10
-    return set(primer_suites)
+    return next(iter(primer_suites)).primer_suite
     '''
     
     for ps in set(ee):
