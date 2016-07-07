@@ -50,7 +50,11 @@
 
      <div id="content">   
        
-       {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+       {% if error_message %}
+         <div class = "red_message">
+           {{ error_message }}
+         </div>
+       {% endif %}
            
        <h1>{% block header %}{% endblock %}</h1>
 

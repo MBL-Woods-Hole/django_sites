@@ -26,39 +26,10 @@ def get_primer_suites(run, lane, suite_domain):
       return (False, error_message)
     except:
       raise
-    '''
-    
-    for ps in set(ee):
-        if ps.primer_suite.startswith('Bacterial'):
-            print ps
-    
-    from submission.models_l_env454 import RunInfoIll
-    
-    a = RunInfoIll.objects.filter(run__run='20160504', lane='1')
-    type(a)
-    for entry in a:
-        print entry.primer_suite
-    for entry in a:
-        print "%s, %s" % (entry.primer_suite, entry.dna_region)
-    
-    ee = [entry.primer_suite for entry in a]
-    set(ee)
-    {<PrimerSuite: Bacterial V4-V5 Suite>, <PrimerSuite: Archaeal V4-V5 Suite>}
-
-    
-    $query = "
-  SELECT DISTINCT primer_suite, dna_region
-       FROM " . $db_name . ".run_info_ill
-       JOIN " . $db_name . ".run USING(run_id)
-       JOIN " . $db_name . ".dna_region USING(dna_region_id)
-       JOIN " . $db_name . ".primer_suite USING(primer_suite_id)
-       WHERE
-       run = \"" . $rundate . "\"
-       AND lane = " . $lane . "      
-        ";'''
 
 def get_run(request):
     print "Running get_run from utils"
+    error_message = ""
     run_data = {}
     if request.method == 'POST':
         form = RunForm(request.POST)
@@ -73,12 +44,18 @@ def get_run(request):
             run_data['perfect_overlap']   = get_overlap(form.cleaned_data['find_machine'])
             run_data['suite_domain']      = get_domain_name(form.cleaned_data['find_domain'])
             primer_suite = get_primer_suites(run_data['find_rundate'], run_data['find_lane'], run_data['suite_domain'])
-            if (run_data['primer_suite'][0]):
-              run_data['primer_suite']
+            print "primer_suite[1]"
+            
+            print primer_suite[1]
+            
+            if (primer_suite[0]):
+                run_data['primer_suite'] = primer_suite
+            else: 
+                error_message = primer_suite[1]
             print "run_data: "
             print run_data
             
-            return (form, run_data)
+            return (form, run_data, error_message)
     # if a GET (or any other method) we'll create a blank form
     else:
         form = RunForm()
