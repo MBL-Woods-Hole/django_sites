@@ -13,6 +13,7 @@ class Machine(models.Model):
     )
     
 class Overlap(models.Model):
+  
     COMPLETE_OVERLAP_CHOICES = (
         ('ms', 'False'),
         ('hs', 'True'),
@@ -21,12 +22,6 @@ class Overlap(models.Model):
     
 
 class Domain(models.Model):
-    # DOMAIN_CHOICES = (
-    #     ('Bacterial', 'Bacteria'),
-    #     ('Archaeal',  'Archaea'),
-    #     ('Eukaryal',  'Eukarya'),
-    #     ('Fungal',    'ITS1'),
-    # )
 
     DOMAIN_SHORTCUTS_CHOICES = (
         ('B', 'Bacteria'),

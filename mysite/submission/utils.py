@@ -42,8 +42,8 @@ def get_run(request):
             run_data['find_lane']    = form.cleaned_data['find_lane']            
             run_data['full_machine_name'] = get_full_macine_name(form.cleaned_data['find_machine'])
             run_data['perfect_overlap']   = get_overlap(form.cleaned_data['find_machine'])
-            run_data['suite_domain']      = get_domain_name(form.cleaned_data['find_domain'])
-            primer_suite = get_primer_suites(run_data['find_rundate'], run_data['find_lane'], run_data['suite_domain'])
+            suite_domain      = get_domain_name(form.cleaned_data['find_domain'])
+            primer_suite = get_primer_suites(run_data['find_rundate'], run_data['find_lane'], suite_domain)
             print "primer_suite[1]"
             
             print primer_suite[1]
