@@ -48,7 +48,10 @@
   
   {% block content %}
 
-     <div id="content">       
+     <div id="content">   
+       
+       {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+           
        <h1>{% block header %}{% endblock %}</h1>
 
        {% block run_choosing %}{% endblock %}
@@ -57,7 +60,6 @@
        
        {% block first_green_message %}
          
-         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
          
          
        {% endblock %}

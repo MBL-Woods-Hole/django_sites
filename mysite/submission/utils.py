@@ -19,9 +19,13 @@ def get_domain_name(domain_name):
 def get_primer_suites(run, lane, suite_domain):
     all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
     primer_suites = set([entry.primer_suite for entry in all_suites if entry.primer_suite.primer_suite.startswith(suite_domain)])
-    print next(iter(primer_suites)).primer_suite
-    print "*" * 10
-    return next(iter(primer_suites)).primer_suite
+    try:
+      return (True, next(iter(primer_suites)).primer_suite)
+    except StopIteration:
+      error_message = "There is no such combination in our database: run = %s, lane = %s, and domain = %s" % (run, lane, suite_domain)
+      return (False, error_message)
+    except:
+      raise
     '''
     
     for ps in set(ee):
@@ -68,8 +72,9 @@ def get_run(request):
             run_data['full_machine_name'] = get_full_macine_name(form.cleaned_data['find_machine'])
             run_data['perfect_overlap']   = get_overlap(form.cleaned_data['find_machine'])
             run_data['suite_domain']      = get_domain_name(form.cleaned_data['find_domain'])
-            run_data['primer_suite']      = get_primer_suites(run_data['find_rundate'], run_data['find_lane'], run_data['suite_domain'])
-            
+            primer_suite = get_primer_suites(run_data['find_rundate'], run_data['find_lane'], run_data['suite_domain'])
+            if (run_data['primer_suite'][0]):
+              run_data['primer_suite']
             print "run_data: "
             print run_data
             
