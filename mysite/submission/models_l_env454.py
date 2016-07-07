@@ -129,6 +129,8 @@ class PrimerSuite(models.Model):
         managed = False
         db_table = 'primer_suite'
 
+    def __str__(self):
+        return self.primer_suite
 
 class Project(models.Model):
     project_id = models.SmallIntegerField(primary_key=True)
@@ -169,32 +171,6 @@ class Run(models.Model):
     def __str__(self):
         return self.run
 
-
-class RunInfo(models.Model):
-    run_info_id = models.SmallIntegerField(primary_key=True)
-    run_key = models.ForeignKey('RunKey', models.DO_NOTHING)
-    run = models.ForeignKey(Run, models.DO_NOTHING)
-    lane = models.IntegerField()
-    direction = models.CharField(max_length=4, blank=True, null=True)
-    dataset = models.ForeignKey(Dataset, models.DO_NOTHING)
-    project = models.ForeignKey(Project, models.DO_NOTHING)
-    tubelabel = models.CharField(max_length=32)
-    barcode = models.CharField(max_length=4)
-    adaptor = models.CharField(max_length=1, blank=True, null=True)
-    pool = models.CharField(max_length=32)
-    dna_region = models.ForeignKey(DnaRegion, models.DO_NOTHING)
-    amp_operator = models.CharField(max_length=5)
-    seq_operator = models.CharField(max_length=5)
-    empcr_operator = models.CharField(max_length=5)
-    platform = models.CharField(max_length=11, blank=True, null=True)
-    concentration = models.DecimalField(max_digits=10, decimal_places=4)
-
-    class Meta:
-        managed = False
-        db_table = 'run_info'
-        unique_together = (('run', 'run_key', 'lane', 'direction', 'platform'),)
-
-
 class RunInfoIll(models.Model):
     run_info_ill_id = models.AutoField(primary_key=True)
     run_key = models.ForeignKey('RunKey', models.DO_NOTHING)
@@ -221,6 +197,27 @@ class RunInfoIll(models.Model):
         managed = False
         db_table = 'run_info_ill'
         unique_together = (('run', 'run_key', 'barcode_index', 'lane'),)
+
+    def __str__(self):
+        return """run_info_ill_id: %s; 
+run_key: %s; 
+run: %s; 
+lane: %s; 
+dataset: %s; 
+project: %s; 
+tubelabel: %s; 
+barcode: %s; 
+adaptor: %s; 
+dna_region: %s; 
+amp_operator: %s; 
+seq_operator: %s; 
+barcode_index: %s; 
+overlap: %s; 
+insert_size: %s; 
+file_prefix: %s; 
+read_length: %s; 
+primer_suite: %s; """ %  (self.run_info_ill_id, self.run_key, self.run, self.lane, self.dataset, self.project, self.tubelabel, self.barcode, self.adaptor, self.dna_region, self.amp_operator, self.seq_operator, self.barcode_index, self.overlap, self.insert_size, self.file_prefix, self.read_length, self.primer_suite)
+
 
 
 class RunKey(models.Model):
