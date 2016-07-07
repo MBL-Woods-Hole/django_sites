@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^demultiplex/$', views.demultiplex, name='demultiplex'),
     url(r'^overlap_only/$', views.overlap_only, name='overlap_only'),
     url(r'^overlap/$', views.overlap, name='overlap'),
+    url(r'^clear_db/$', views.clear_db, name='clear_db'),
     
 ]
 

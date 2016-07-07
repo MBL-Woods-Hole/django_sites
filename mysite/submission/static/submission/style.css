@@ -115,6 +115,9 @@ ol.help_list li
 
 .green_message {
     color: #006600; font-weight: bold;
+    margin: 0.2em;
+  	margin-top: 0.5em;
+  	margin-bottom: 0.5em;
 }
 
 .blue_message {
@@ -129,8 +132,13 @@ ol.help_list li
   margin: 3;
 }
 
+/*div {
+  margin: 0.2em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 
-/* Menu */
+}
+*//* Menu */
 /*#navigation ul {
     list-style-type: none;
     margin: 0;

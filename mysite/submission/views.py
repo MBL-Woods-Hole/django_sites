@@ -72,7 +72,7 @@ def chimera_checking(request):
         form, run_data = get_run(request)
     except:
         form = get_run(request)
-    return render(request, 'submission/chimera_checking.html', {'form': form, 'run_data': run_data, 'header': 'Chimera checking (for v4v5 region only)', 'is_cluster': '', 'pipeline_command': 'illumina_chimera_only', 'menu_name': 'chimera_checking' })
+    return render(request, 'submission/chimera_checking.html', {'form': form, 'run_data': run_data, 'header': 'Chimera checking (for v4v5 region only)', 'is_cluster': '', 'pipeline_command': 'illumina_chimera_only'})
 
 def demultiplex(request):
     run_data = {}
@@ -105,7 +105,7 @@ def filter_mismatch(request):
         form, run_data = get_run(request)
     except:
         form = get_run(request)
-    return render(request, 'submission/overlap_only.html', {'form': form, 'run_data': run_data, 'header': 'Filtering partial (Ev4, v4v5 and ITS1) merged. Maximum number of mismatches allowed in the overlapped region is 3', 'is_cluster': '', 'command': 'reads_overlap/; run_mismatch_filter.sh; date' })
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Filtering partial (Ev4, v4v5 and ITS1) merged. Maximum number of mismatches allowed in the overlapped region is 3', 'is_cluster': '', 'command': 'reads_overlap/; run_mismatch_filter.sh; date' })
     
 def gast(request):
     run_data = {}
@@ -125,5 +125,13 @@ def gzip_all(request):
         form, run_data = get_run(request)
     except:
         form = get_run(request)
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not', 'menu_name': 'gast', 'command': '; time gzip -r *'})
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not', 'command': '; time gzip -r *'})
+
+def clear_db(request):
+    run_data = {}
+    try:
+        form, run_data = get_run(request)
+    except:
+        form = get_run(request)
+    return render(request, 'submission/clear_db.html', {'form': form, 'run_data': run_data, 'header': 'Remove old data from db'})
 
