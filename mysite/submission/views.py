@@ -90,13 +90,22 @@ def overlap(request):
         form = get_run(request)
     return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Overlap, filter and unique reads in already demultiplexed files', 'is_cluster': '', 'pipeline_command': 'illumina_files' })
 
+def overlap_only(request):
+    run_data = {}
+    try:
+        form, run_data = get_run(request)
+    except:
+        form = get_run(request)
+    return render(request, 'submission/overlap_only.html', {'form': form, 'run_data': run_data, 'header': 'Overlap reads in already demultiplexed files', 'is_cluster': '', 'command': '; run_partial_overlap_clust.sh; date' })
+
+
 def filter_mismatch(request):
     run_data = {}
     try:
         form, run_data = get_run(request)
     except:
         form = get_run(request)
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Filtering partial (Ev4, v4v5 and ITS1) merged. Maximum number of mismatches allowed in the overlapped region is 3', 'is_cluster': '', 'command': 'reads_overlap/; run_mismatch_filter.sh; date' })
+    return render(request, 'submission/overlap_only.html', {'form': form, 'run_data': run_data, 'header': 'Filtering partial (Ev4, v4v5 and ITS1) merged. Maximum number of mismatches allowed in the overlapped region is 3', 'is_cluster': '', 'command': 'reads_overlap/; run_mismatch_filter.sh; date' })
     
 def gast(request):
     run_data = {}

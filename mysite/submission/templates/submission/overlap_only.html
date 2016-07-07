@@ -6,10 +6,7 @@
 
 <br/>
 
-<div class = "notes">
-Afterwards you can check the percent of "Unknown" taxa by using:
-</div>
-
+Afterwards you can check the overlap percentage by using
 <div class = "green_message">
-cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/gast/; percent10_gast_unknowns.sh; date
+cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/reads_overlap/; take_ms_stats.py; date
 </div>

@@ -23,7 +23,9 @@ urlpatterns = [
     url(r'^chimera_checking/$', views.chimera_checking, name='chimera_checking'),
     url(r'^filter_mismatch/$', views.filter_mismatch, name='filter_mismatch'),
     url(r'^demultiplex/$', views.demultiplex, name='demultiplex'),
+    url(r'^overlap_only/$', views.overlap_only, name='overlap_only'),
     url(r'^overlap/$', views.overlap, name='overlap'),
+    
 ]
 
 # from django.conf.urls import url

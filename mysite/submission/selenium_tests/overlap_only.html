@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8000/" />
+<title>overlap_only</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">overlap_only</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/submission/overlap_only/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Overlap</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_find_rundate</td>
+	<td>label=20160504</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_find_domain</td>
+	<td>label=Archaea</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_find_lane</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.red_message</td>
+	<td>Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/20160504_ms</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=is_cluster</td>
+	<td>This command line(s) can be run on any cluster:</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.green_message</td>
+	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/20160504_ms/lane_1_A/analysis/; run_partial_overlap_clust.sh; date</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=body</td>
+	<td>Upload Submission Metadata Demultiplex Overlap Analyzing Chimera checking Gast Run_info upload Data upload Gzip all Help Separate steps Demultiplex Overlap Filtering mismatch Uniqueing Chimera checking Gast Clear db Check counts in fa files Check counts in db Gzip all Gunzip all Help <br /> Overlap reads in already demultiplexed files <br /> <br /> <br /> <br /> Run date: 20160504 20160428 20160420 20160406 20160404 20160331 20160328 20160317 20160308 20160301 20160226 20160223 20160212 20160204 20160115 20160108 20160105 20151222 20151211 20151123 20151120 20151110 20151109 20151029 20151023 20151023 20151020 20151014 20151006 20150908 20150902 20150824 20150811 20150806 20150727 20150622 20150606 20150605 20150529 20150527 20150521 20150519 20150514 20150512 20150505 20150430 20150420 20150415 20150403 20150402 20150331 20150309 20150306 20150227 20150223 20150218 20150205 20150130 20150121 20150107 Machine name: miseq hiseq nextseq Domain: Bacteria Archaea Eukarya ITS1 Lane number: Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/20160504_ms <br /> This command line(s) can be run on any cluster: <br /> cd /xraid2-2/g454/run_new_pipeline/illumina/20160504_ms/lane_1_A/analysis/; run_partial_overlap_clust.sh; date <br /> <br /> <br /> Afterwards you can check the overlap percentage by using cd /xraid2-2/g454/run_new_pipeline/illumina/20160504_ms/lane_1_A/analysis/reads_overlap/; take_ms_stats.py; date</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=body &gt; div.green_message</td>
+	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/20160504_ms/lane_1_A/analysis/reads_overlap/; take_ms_stats.py; date</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
