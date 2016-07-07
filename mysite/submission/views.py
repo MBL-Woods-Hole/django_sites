@@ -48,7 +48,7 @@ def vote(request, run_id):
 
 
 def help(request):
-    return render(request, 'submission/help.html')
+    return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
 def data_upload(request):
     run_data = {}
@@ -90,13 +90,13 @@ def overlap(request):
         form = get_run(request)
     return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Overlap, filter and unique reads in already demultiplexed files', 'is_cluster': '', 'pipeline_command': 'illumina_files' })
 
-def filtering(request):
+def filter_mismatch(request):
     run_data = {}
     try:
         form, run_data = get_run(request)
     except:
         form = get_run(request)
-    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Filtering partial (Ev4, v4v5 and ITS1) merged.<br/>Maximum number of mismatches allowed in the overlapped region is 3', 'is_cluster': '', 'command': 'reads_overlap/; run_mismatch_filter.sh; date' })
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Filtering partial (Ev4, v4v5 and ITS1) merged. Maximum number of mismatches allowed in the overlapped region is 3', 'is_cluster': '', 'command': 'reads_overlap/; run_mismatch_filter.sh; date' })
     
 def gast(request):
     run_data = {}

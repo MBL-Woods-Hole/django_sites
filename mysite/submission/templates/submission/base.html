@@ -53,12 +53,14 @@
 
        {% block run_choosing %}{% endblock %}
 
-       {% block real_content %}
+       {% block some_content %}{% endblock %}
+       
+       {% block first_green_message %}
          
          {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
          
          
-         {% endblock %}
+       {% endblock %}
 
      </div> <!-- end content -->
 

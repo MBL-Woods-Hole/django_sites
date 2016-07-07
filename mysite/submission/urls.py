@@ -21,6 +21,7 @@ urlpatterns = [
     # Todo: rm run_info_upload, rename data_upload into a name for both
     url(r'^gast/$', views.gast, name='gast'),
     url(r'^chimera_checking/$', views.chimera_checking, name='chimera_checking'),
+    url(r'^filter_mismatch/$', views.filter_mismatch, name='filter_mismatch'),
     url(r'^demultiplex/$', views.demultiplex, name='demultiplex'),
     url(r'^overlap/$', views.overlap, name='overlap'),
 ]
