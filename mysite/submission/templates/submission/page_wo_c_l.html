@@ -1,8 +1,10 @@
 {% extends "submission/base.html" %}
 
   {% block header %}{{ header }}{% endblock %}
-  {% block real_content %}
-    {% include 'submission/select_run.html' %}
+
+  {% block run_choosing %}{% include 'submission/select_run.html' %}{% endblock %}
+  
+  {% block first_green_message %}
 
     <div class = "red_message">
     Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}
@@ -14,4 +16,4 @@
       cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/{{ command }}
     </div>    
 
-{% endblock %}
+  {% endblock %}
