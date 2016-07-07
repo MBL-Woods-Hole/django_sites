@@ -48,13 +48,13 @@
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//strong[2]</td>
+	<td>css=strong</td>
 	<td>not</td>
 </tr>
 <tr>
 	<td>select</td>
 	<td>id=id_find_machine</td>
-	<td>label=hiseq</td>
+	<td>label=miseq</td>
 </tr>
 <tr>
 	<td>select</td>
@@ -64,7 +64,7 @@
 <tr>
 	<td>type</td>
 	<td>id=id_find_lane</td>
-	<td>2</td>
+	<td>1</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -74,19 +74,18 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=div.green_message</td>
-	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/hiseq_info/20160504hs; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv /xraid2-2/g454/run_new_pipeline/illumina/hiseq_info/20160504hs/metadata_20160504hs_lane_2_A.csv -s illumina_chimera_only -l debug -p illumina -r 20160504 -ft fastq -i /xraid2-2/sequencing/Illumina/20160504hs/ -cp True -lane_name lane_2_A -do_perfect True</td>
+	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160504ms; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160504ms/metadata_20160504ms_lane_1_A.csv -s illumina_chimera_only -l debug -p illumina -r 20160504 -ft fastq -i /xraid2-2/sequencing/Illumina/20160504ms/ -cp True -lane_name lane_1_A -do_perfect False</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>css=div.red_message</td>
-	<td>Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/20160504hs</td>
+	<td>Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/20160504ms</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//body/div[3]</td>
-	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/20160504_hs/lane_2_A/analysis/chimera/; chimera_stats.py; date</td>
+	<td>css=body &gt; div.green_message</td>
+	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/20160504_ms/lane_1_A/analysis/chimera/; chimera_stats.py; date</td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
