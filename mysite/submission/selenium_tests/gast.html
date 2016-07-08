@@ -22,6 +22,11 @@
 	<td>Gast</td>
 </tr>
 <tr>
+	<td>select</td>
+	<td>id=id_find_rundate</td>
+	<td>label=20160504</td>
+</tr>
+<tr>
 	<td>type</td>
 	<td>id=id_find_lane</td>
 	<td>1</td>
@@ -37,14 +42,29 @@
 	<td></td>
 </tr>
 <tr>
-	<td>selectWindow</td>
-	<td>null</td>
-	<td></td>
+	<td>verifyText</td>
+	<td>css=div.red_message</td>
+	<td>Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/20160504_hs</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.is_cluster</td>
+	<td>This command line(s) can be run on any not cluster:</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=span.emph</td>
+	<td>not</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>css=div.green_message</td>
 	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/20160504_hs/lane_1_B/analysis/reads_overlap/; run_gast_ill_nonchim_sge.sh; date</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.notes</td>
+	<td>Afterwards you can check the percent of &quot;Unknown&quot; taxa by using:</td>
 </tr>
 <tr>
 	<td>verifyText</td>
