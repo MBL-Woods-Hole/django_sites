@@ -1,0 +1,15 @@
+{% extends "submission/base.html" %}
+
+
+{% block header %}{{ header }}{% endblock %}
+{% block run_choosing %}{% include 'submission/select_run.html' %}{% endblock %}
+
+{% block some_content %}
+
+<br/>
+
+<div class = "green_message">
+mysql -h newbpcdb2 env454 -e 'SELECT count(*) FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) JOIN sequence_uniq_info_ill USING(sequence_ill_id) WHERE primer_suite = "{{ run_data.primer_suite }}" AND run = "{{ run_data.find_rundate }}" AND lane = "{{ run_data.find_lane }}";'
+</div>
+
+{% endblock %}
