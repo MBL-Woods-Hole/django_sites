@@ -21,8 +21,7 @@ urlpatterns = [
     url(r'^gzip_all/$', views.gzip_all, name='gzip_all'),
     # url(r'^gunzip_all/$', views.gunzip_all, name='gunzip_all'),
     url(r'^clear_db/$', views.clear_db, name='clear_db'),
-    # url(r'^db_cnts/$', views.db_cnts, name='db_cnts'),
-    # url(r'^files_cnts/$', views.files_cnts, name='files_cnts'),
+    url(r'^check_fa_counts/$', views.check_fa_counts, name='check_fa_counts'),
 ]
 
 # from django.conf.urls import url
