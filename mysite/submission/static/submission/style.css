@@ -61,7 +61,6 @@ ul.nav {
 }
 
 #nav li:hover > a, #nav li:hover { 
-/*  background: #eee;*/
   background: lightblue;
 
 }
@@ -79,6 +78,10 @@ li:hover > .nav {
 li:hover { position: relative;
  z-index: 2000;
  }
+
+#nav li.active {
+  background: lightblue !important;
+}
 
 
 /*end menu*/
