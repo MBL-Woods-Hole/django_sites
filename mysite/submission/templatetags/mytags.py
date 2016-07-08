@@ -8,9 +8,7 @@ register = template.Library()
 @register.simple_tag(takes_context=True)
 def active(context, pattern_or_urlname):
     try:
-        print "pattern_or_urlname = %s" % pattern_or_urlname
         pattern = '^' + reverse(pattern_or_urlname)
-        print "pattern = %s" % pattern
     except NoReverseMatch:
         pattern = pattern_or_urlname
     path = context['request'].path

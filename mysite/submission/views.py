@@ -135,3 +135,11 @@ def clear_db(request):
         form, error_message = get_run(request)
     return render(request, 'submission/clear_db.html', {'form': form, 'run_data': run_data, 'header': 'Remove old data from db',  'error_message': error_message})
 
+def uniqueing(request):
+    run_data = {}
+    try:
+        form, run_data, error_message = get_run(request)
+    except:
+        form, error_message = get_run(request)
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Uniqueing fasta files', 'is_cluster': '', 'command': 'reads_overlap/; run_unique_fa.sh; date',  'error_message': error_message })
+    
