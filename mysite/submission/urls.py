@@ -7,26 +7,22 @@ app_name = 'submission'
 urlpatterns = [
     # ex: /submission/
     url(r'^$', views.index, name='index'),
-    # ex: /submission/5/
-    url(r'^(?P<run_id>[0-9]+)/$', views.detail, name='detail'),
-    # ex: /submission/5/results/
-    url(r'^(?P<run_id>[0-9]+)/results/$', views.results, name='results'),
-    # ex: /submission/5/vote/
-    url(r'^(?P<run_id>[0-9]+)/vote/$', views.vote, name='vote'),
+    url(r'^metadata_upload/$', views.metadata_upload, name='metadata_upload'),
+    url(r'^demultiplex/$', views.demultiplex, name='demultiplex'),
+    url(r'^overlap/$', views.overlap, name='overlap'),
+    url(r'^overlap_only/$', views.overlap_only, name='overlap_only'),
+    url(r'^filter_mismatch/$', views.filter_mismatch, name='filter_mismatch'),
+    url(r'^uniqueing/$', views.uniqueing, name='uniqueing'),
+    url(r'^chimera_checking/$', views.chimera_checking, name='chimera_checking'),
+    url(r'^gast/$', views.gast, name='gast'),
+    url(r'^run_info_upload/$', views.run_info_upload, name='run_info_upload'),
+    url(r'^data_upload/$', views.data_upload, name='data_upload'),
     url(r'^help/$', views.help, name='help'),
     url(r'^gzip_all/$', views.gzip_all, name='gzip_all'),
-    url(r'^data_upload/$', views.data_upload, name='data_upload'),
-    # url(r'^run_info_upload/$', views.run_info_upload, name='run_info_upload'),
-    url(r'^run_info_upload/$', views.run_info_upload, name='run_info_upload'),
-    # Todo: rm run_info_upload, rename data_upload into a name for both
-    url(r'^gast/$', views.gast, name='gast'),
-    url(r'^chimera_checking/$', views.chimera_checking, name='chimera_checking'),
-    url(r'^filter_mismatch/$', views.filter_mismatch, name='filter_mismatch'),
-    url(r'^demultiplex/$', views.demultiplex, name='demultiplex'),
-    url(r'^overlap_only/$', views.overlap_only, name='overlap_only'),
-    url(r'^overlap/$', views.overlap, name='overlap'),
+    url(r'^gunzip_all/$', views.gunzip_all, name='gunzip_all'),
     url(r'^clear_db/$', views.clear_db, name='clear_db'),
-    
+    url(r'^db_cnts/$', views.db_cnts, name='db_cnts'),
+    url(r'^files_cnts/$', views.files_cnts, name='files_cnts'),
 ]
 
 # from django.conf.urls import url
