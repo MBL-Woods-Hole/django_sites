@@ -159,3 +159,10 @@ def check_db_counts(request):
         form, error_message = get_run(request)
     return render(request, 'submission/check_db_counts.html', {'form': form, 'run_data': run_data, 'header': 'Check counts in db', 'error_message': error_message})
 
+def gunzip_all(request):
+    run_data = {}
+    try:
+        form, run_data, error_message = get_run(request)
+    except:
+        form, error_message = get_run(request)
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gunzip all files', 'is_cluster': 'not', 'command': '; time gunzip -r *.gz',  'error_message': error_message})
