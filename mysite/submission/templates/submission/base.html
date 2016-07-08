@@ -6,71 +6,78 @@
     <head>
  <title>{% block title %}{% endblock %}</title> 
  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
- <link rel="stylesheet" type="text/css" href="{% static 'submission/style.css' %}" /> 
+ 
+ <link rel="stylesheet" type="text/css" href="{% static 'submission/reset.css' %}" /> 
+ <link rel="stylesheet" type="text/css" href="{% static 'submission/960.css' %}" /> 
+ <link rel="stylesheet" type="text/css" href="{% static 'submission/subm_style.css' %}" /> 
   <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/submission/style.css" /><![endif]-->
  </head>
   <body class="{% block bodyclass %}{% endblock %}">
-  {% block bunner %}
-    <div id="bunner"></div> 
-  {% endblock %} 
+    <div class="container_12">
+    {% block bunner %}
+      <div id="bunner"></div> 
+    {% endblock %} 
   
-  {% block navigation %}
-  <div id="navigation">
-      <ul id="nav">
-        <li class="nav-li {% active 'metadata_upload' %}"><a href="/submission/metadata_upload">Upload Submission Metadata</a></li>
-        <li class="nav-li {% active 'demultiplex' %}"><a href="/submission/demultiplex">Demultiplex</a></li>
-        <li class="nav-li {% active 'overlap' %}"><a href="/submission/overlap">Overlap Analyzing</a></li>
-        <li class="nav-li {% active 'chimera_checking' %}"><a href="/submission/chimera_checking">Chimera checking</a></li>
-        <li class="nav-li {% active 'gast' %}"><a href="/submission/gast">Gast</a></li>
-        <li class="nav-li {% active 'run_info_upload' %}"><a href="/submission/run_info_upload">Run_info upload</a></li>
-        <li class="nav-li {% active 'data_upload' %}"><a href="/submission/data_upload">Data upload</a></li>
-        <li class="nav-li {% active 'gzip_all' %}"><a href="/submission/gzip_all">Gzip all</a></li>
-        <li class="nav-li {% active 'help' %}"><a href="/submission/help">Help</a></li>  
-        <li class="nav-li {% active '#here' %}"><a href="/submission/#here">Separate steps</a>
-        <ul class="nav first"> 
+    {% block navigation %}
+    <div id="navigation">
+        <ul id="nav">
+          <li class="nav-li {% active 'metadata_upload' %}"><a href="/submission/metadata_upload">Upload Submission Metadata</a></li>
           <li class="nav-li {% active 'demultiplex' %}"><a href="/submission/demultiplex">Demultiplex</a></li>
-          <li class="nav-li {% active 'overlap_only' %}"><a href="/submission/overlap_only">Overlap</a></li>
-          <li class="nav-li {% active 'filter_mismatch' %}"><a href="/submission/filter_mismatch">Filtering mismatch</a></li>
-          <li class="nav-li {% active 'uniqueing' %}"><a href="/submission/uniqueing">Uniqueing</a></li>
+          <li class="nav-li {% active 'overlap' %}"><a href="/submission/overlap">Overlap Analyzing</a></li>
           <li class="nav-li {% active 'chimera_checking' %}"><a href="/submission/chimera_checking">Chimera checking</a></li>
           <li class="nav-li {% active 'gast' %}"><a href="/submission/gast">Gast</a></li>
-          <li class="nav-li {% active 'clear_db' %}"><a href="/submission/clear_db">Clear db</a></li>
-          <li class="nav-li {% active 'check_fa_counts' %}"><a href="/submission/check_fa_counts">Check counts in fa files</a></li>
-          <li class="nav-li {% active 'check_db_counts' %}"><a href="/submission/check_db_counts">Check counts in db</a></li>
+          <li class="nav-li {% active 'run_info_upload' %}"><a href="/submission/run_info_upload">Run_info upload</a></li>
+          <li class="nav-li {% active 'data_upload' %}"><a href="/submission/data_upload">Data upload</a></li>
           <li class="nav-li {% active 'gzip_all' %}"><a href="/submission/gzip_all">Gzip all</a></li>
-          <li class="nav-li {% active 'gunzip_all' %}"><a href="/submission/gunzip_all">Gunzip all</a></li>
-          <li class="nav-li {% active 'help' %}"><a href="/submission/help">Help</a></li>
-          </ul>  
-        </li>      
-      </ul>
-  </div>
-  {% endblock %}
+          <li class="nav-li {% active 'help' %}"><a href="/submission/help">Help</a></li>  
+          <li class="nav-li {% active '#here' %}"><a href="/submission/#here">Separate steps</a>
+          <ul class="nav first"> 
+            <li class="nav-li {% active 'demultiplex' %}"><a href="/submission/demultiplex">Demultiplex</a></li>
+            <li class="nav-li {% active 'overlap_only' %}"><a href="/submission/overlap_only">Overlap</a></li>
+            <li class="nav-li {% active 'filter_mismatch' %}"><a href="/submission/filter_mismatch">Filtering mismatch</a></li>
+            <li class="nav-li {% active 'uniqueing' %}"><a href="/submission/uniqueing">Uniqueing</a></li>
+            <li class="nav-li {% active 'chimera_checking' %}"><a href="/submission/chimera_checking">Chimera checking</a></li>
+            <li class="nav-li {% active 'gast' %}"><a href="/submission/gast">Gast</a></li>
+            <li class="nav-li {% active 'clear_db' %}"><a href="/submission/clear_db">Clear db</a></li>
+            <li class="nav-li {% active 'check_fa_counts' %}"><a href="/submission/check_fa_counts">Check counts in fa files</a></li>
+            <li class="nav-li {% active 'check_db_counts' %}"><a href="/submission/check_db_counts">Check counts in db</a></li>
+            <li class="nav-li {% active 'gzip_all' %}"><a href="/submission/gzip_all">Gzip all</a></li>
+            <li class="nav-li {% active 'gunzip_all' %}"><a href="/submission/gunzip_all">Gunzip all</a></li>
+            <li class="nav-li {% active 'help' %}"><a href="/submission/help">Help</a></li>
+            </ul>  
+          </li>      
+        </ul>
+    </div>
+    {% endblock %}
   
-  {% block content %}
+    {% block content %}
 
-     <div id="content">          
+       <div id="content">          
            
-       <h1>{% block header %}{% endblock %}</h1>
+         <h1>{% block header %}{% endblock %}</h1>
 
-       {% block run_choosing %}{% endblock %}
+         {% block run_choosing %}{% endblock %}
 
-       {% if error_message %}
-         <div class = "red_message">
-           {{ error_message }}
-         </div>
-       {% else %}
+         {% if error_message %}
+           <div class = "red_message">
+             {{ error_message }}
+           </div>
+         {% else %}
 
-         {% block some_content %}{% endblock %}
+           {% block some_content %}{% endblock %}
        
-         {% block first_green_message %}{% endblock %}
+           {% block first_green_message %}{% endblock %}
+           
+           {% block some_more_content %}{% endblock %}
+           
+         {% endif %}
        
-       {% endif %}
-       
 
-     </div> <!-- end content -->
+       </div> <!-- end content -->
 
 
-  {% endblock %} 
-  {% block footer %}{% endblock %}
- </body> 
+    {% endblock %} 
+    {% block footer %}{% endblock %}
+    </div> <!-- end container_12 -->
+  </body> 
  </html>
