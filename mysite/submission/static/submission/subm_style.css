@@ -1,12 +1,23 @@
-/** { margin: 0; padding: 0; font-size: small;}*/
+* {
+    margin: 0;
+    padding: 0;
+    font-size: small;
+}
 
 #content {
   margin: 0.5em;
-  font-size: small;
   line-height: 120%;
   position: relative;
 }
 
+h1 {
+  margin: 1em;
+  font-size: large;
+  text-align:center
+}
+/*padding: 20px;
+    font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background: #F8F8F8;*/
 
 /**************************** Menu ***************************/
 /* http://www.devinrolsen.com/pure-css-menu-with-infinite-sub-menus-tutorial/#comment-8304 */
@@ -25,14 +36,15 @@
 
 #nav li {
   margin: 0px;
-  background-color: #a8b6c0;
+  background-color: #eee;
+/*  #a8b6c0;*/
   float: left;
   display: inline;
   cursor: pointer;
   list-style: none;
-  padding: 1px 0.8em 0px 0.8em;
-/*  border: 1px #000 solid;*/
-  border-right: 0.2em #fff solid;
+  padding: 1px 0.5em 0px 0.5em;
+  border: 0.1em #000 solid;
+  /*border-right: 0.2em #fff solid;*/
   position: relative;
 }
 
@@ -56,7 +68,8 @@
   border-left: none;
   border-right: none; */ 
 /*  border-right: 2px #fff solid;*/
-  background: #a8b6c0;
+  background: #eee;
+/*  #a8b6c0;*/
 }
 
 #nav li a {
@@ -89,7 +102,7 @@ li:hover { position: relative;
  }
 
 #nav li.active {
-  background: lightblue !important;
+  background: #a8b6c0 !important;
 }
 
 
@@ -137,6 +150,9 @@ ol.help_list li
 }
 
 .red_message {
-    color: red; font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+  color: red; 
+  font-weight: bold;
 }
 

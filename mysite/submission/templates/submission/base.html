@@ -7,17 +7,21 @@
  <title>{% block title %}{% endblock %}</title> 
  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
  
- <link rel="stylesheet" type="text/css" href="{% static 'submission/reset.css' %}" /> 
+ <!-- <link rel="stylesheet" type="text/css" href="{% static 'submission/reset.css' %}" />  -->
  <link rel="stylesheet" type="text/css" href="{% static 'submission/960.css' %}" /> 
  <link rel="stylesheet" type="text/css" href="{% static 'submission/subm_style.css' %}" /> 
   <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/submission/style.css" /><![endif]-->
  </head>
   <body class="{% block bodyclass %}{% endblock %}">
     <div class="container_12">
+      <div class="grid_12">
     {% block bunner %}
       <div id="bunner"></div> 
     {% endblock %} 
+    </div>
+    <div class="clear"></div>
   
+    <div class="grid_12">
     {% block navigation %}
     <div id="navigation">
         <ul id="nav">
@@ -48,36 +52,59 @@
           </li>      
         </ul>
     </div>
-    {% endblock %}
+    {% endblock %} <!-- end navigation -->
+    </div>
+    <div class="clear"></div>
   
     {% block content %}
 
-       <div id="content">          
+      <div id="content">          
            
-         <h1>{% block header %}{% endblock %}</h1>
+        <div class="grid_12">
+          <h1>{% block header %}{% endblock %}</h1>
+        </div>
+        <div class="clear"></div>
 
-         {% block run_choosing %}{% endblock %}
+        <div class="grid_5">
+             {% block run_choosing %}{% endblock %}
+        </div>
+        <div class="grid_7"></div>
 
+        <div class="clear"></div>
+
+        <div class="grid_12">        
          {% if error_message %}
            <div class = "red_message">
              {{ error_message }}
            </div>
          {% else %}
+        </div>
+        <div class="clear"></div>         
 
+        <div class="grid_12">        
            {% block some_content %}{% endblock %}
+        </div>
+        <div class="clear"></div>
        
-           {% block first_green_message %}{% endblock %}
+        <div class="grid_12">        
+          {% block first_green_message %}{% endblock %}
+        </div>
+        <div class="clear"></div>          
            
+        <div class="grid_12">        
            {% block some_more_content %}{% endblock %}
-           
-         {% endif %}
-       
+        </div>
+        <div class="clear"></div>           
+         {% endif %} <!-- end if else error_message -->
 
        </div> <!-- end content -->
 
 
     {% endblock %} 
-    {% block footer %}{% endblock %}
+      <div class="grid_12">       
+          {% block footer %}{% endblock %}
+      </div>
+      <div class="clear"></div>
     </div> <!-- end container_12 -->
   </body> 
  </html>
