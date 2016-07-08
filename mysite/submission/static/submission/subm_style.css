@@ -1,7 +1,11 @@
 * {
     margin: 0;
     padding: 0;
-    font-size: small;
+}
+
+body {
+  background: #F8F8F8;  
+  font-size: small;
 }
 
 #content {
@@ -13,7 +17,7 @@
 h1 {
   margin: 1em;
   font-size: large;
-  text-align:center
+  text-align: center;
 }
 /*padding: 20px;
     font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -22,10 +26,13 @@ h1 {
 /**************************** Menu ***************************/
 /* http://www.devinrolsen.com/pure-css-menu-with-infinite-sub-menus-tutorial/#comment-8304 */
 
+.centered {
+  text-align: center;
+}
+
 #navigation {
   color: black;
   border-radius: 0;
-/*  margin: 1ex;*/
   padding-bottom: 1.2em;
 }
 
