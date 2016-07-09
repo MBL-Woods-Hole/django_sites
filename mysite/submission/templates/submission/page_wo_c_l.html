@@ -7,7 +7,7 @@
   {% block first_copy_command %}
 
     <div class = "red_message">
-    Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}
+    Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}{{ run_data.find_machine }}
     </div>
 
     <div class = "is_cluster"> This command line(s) can be run on any <span class="emph">{{ is_cluster }}</span> cluster: </div>
