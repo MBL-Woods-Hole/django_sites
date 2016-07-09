@@ -72,7 +72,7 @@ def chimera_checking(request):
         form, run_data, error_message = get_run(request)
     except:
         form, error_message = get_run(request)
-    return render(request, 'submission/chimera_checking.html', {'form': form, 'run_data': run_data, 'header': 'Chimera checking (for v4v5 region only)', 'is_cluster': '', 'pipeline_command': 'illumina_chimera_only',  'error_message': error_message})
+    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Chimera checking (for v4v5 region only)', 'is_cluster': '', 'pipeline_command': 'illumina_chimera_only', 'what_to_check': 'statistics ', 'check_command': 'chimera/; chimera_stats.py', 'error_message': error_message})
 
 def demultiplex(request):
     run_data = {}
@@ -96,7 +96,7 @@ def overlap_only(request):
         form, run_data, error_message = get_run(request)
     except:
         form, error_message = get_run(request)
-    return render(request, 'submission/page_wo_c_l_check.html', {'form': form, 'run_data': run_data, 'header': 'Overlap reads in already demultiplexed files', 'is_cluster': '', 'command': '; run_partial_overlap_clust.sh; date', 'what_to_check': 'the overlap percentage ', 'check_command': 'reads_overlap/; take_ms_stats.py',  'error_message': error_message })
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Overlap reads in already demultiplexed files', 'is_cluster': '', 'command': '; run_partial_overlap_clust.sh; date', 'what_to_check': 'the overlap percentage ', 'check_command': 'reads_overlap/; take_ms_stats.py', 'error_message': error_message })
 
 
 def filter_mismatch(request):
@@ -117,7 +117,7 @@ def gast(request):
         # print run_data['find_rundate']
     except:
         form, error_message = get_run(request)
-    return render(request, 'submission/page_wo_c_l_check.html', {'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': 'not', 'command': 'reads_overlap/; run_gast_ill_nonchim_sge.sh; date', 'what_to_check': 'the percent of "Unknown" taxa ', 'check_command': 'gast/; percent10_gast_unknowns.sh', 'error_message': error_message})
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': 'not', 'command': 'reads_overlap/; run_gast_ill_nonchim_sge.sh; date', 'what_to_check': 'the percent of "Unknown" taxa ', 'check_command': 'gast/; percent10_gast_unknowns.sh', 'error_message': error_message})
 
 def gzip_all(request):
     run_data = {}
