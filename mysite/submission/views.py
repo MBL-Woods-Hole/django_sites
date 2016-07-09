@@ -96,7 +96,7 @@ def overlap_only(request):
         form, run_data, error_message = get_run(request)
     except:
         form, error_message = get_run(request)
-    return render(request, 'submission/overlap_only.html', {'form': form, 'run_data': run_data, 'header': 'Overlap reads in already demultiplexed files', 'is_cluster': '', 'command': '; run_partial_overlap_clust.sh; date',  'error_message': error_message })
+    return render(request, 'submission/page_wo_c_l_check.html', {'form': form, 'run_data': run_data, 'header': 'Overlap reads in already demultiplexed files', 'is_cluster': '', 'command': '; run_partial_overlap_clust.sh; date', 'what_to_check': 'the overlap percentage ', 'check_command': 'reads_overlap/; take_ms_stats.py',  'error_message': error_message })
 
 
 def filter_mismatch(request):
