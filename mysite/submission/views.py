@@ -84,11 +84,15 @@ def demultiplex(request):
 
 def overlap(request):
     run_data = {}
+    check_command = ''
     try:
         form, run_data, error_message = get_run(request)
+        print "GGG run_data['find_machine']"
+        print run_data['find_machine']
+        check_command = 'reads_overlap/; take_%s_stats.py' % run_data['find_machine']
     except:
         form, error_message = get_run(request)
-    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Overlap, filter and unique reads in already demultiplexed files', 'is_cluster': '', 'pipeline_command': 'illumina_files',  'error_message': error_message })
+    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Overlap, filter and unique reads in already demultiplexed files', 'is_cluster': '', 'pipeline_command': 'illumina_files', 'what_to_check': 'the overlap percentage ', 'check_command': check_command, 'error_message': error_message })
 
 def overlap_only(request):
     run_data = {}

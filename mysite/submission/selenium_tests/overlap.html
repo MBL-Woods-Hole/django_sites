@@ -61,6 +61,31 @@
 	<td>css=div.copy_command</td>
 	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160504ms; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160504ms/metadata_20160504ms_lane_1_B.csv -s illumina_files -l debug -p illumina -r 20160504 -ft fastq -i /xraid2-2/sequencing/Illumina/20160504ms/ -cp True -lane_name lane_1_B -do_perfect False</td>
 </tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.notes</td>
+	<td>Afterwards you can check the overlap percentage by using the following command on any not cluster:</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='content']/div[13]/div[2]</td>
+	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/20160504_ms/lane_1_B/analysis/reads_overlap/; take_ms_stats.py; date</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_find_machine</td>
+	<td>label=hiseq</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='content']/div[13]/div[2]</td>
+	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/20160504_hs/lane_1_B/analysis/reads_overlap/; take_hs_stats.py; date</td>
+</tr>
 </tbody></table>
 </body>
 </html>
