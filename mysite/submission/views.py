@@ -87,8 +87,6 @@ def overlap(request):
     check_command = ''
     try:
         form, run_data, error_message = get_run(request)
-        print "GGG run_data['find_machine']"
-        print run_data['find_machine']
         check_command = 'reads_overlap/; take_%s_stats.py' % run_data['find_machine']
     except:
         form, error_message = get_run(request)
@@ -96,11 +94,13 @@ def overlap(request):
 
 def overlap_only(request):
     run_data = {}
+    check_command = ''
     try:
         form, run_data, error_message = get_run(request)
+        check_command = 'reads_overlap/; take_%s_stats.py' % run_data['find_machine']
     except:
         form, error_message = get_run(request)
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Overlap reads in already demultiplexed files', 'is_cluster': '', 'command': '; run_partial_overlap_clust.sh; date', 'what_to_check': 'the overlap percentage ', 'check_command': 'reads_overlap/; take_ms_stats.py', 'error_message': error_message })
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Overlap reads in already demultiplexed files', 'is_cluster': '', 'command': '; run_partial_overlap_clust.sh; date', 'what_to_check': 'the overlap percentage ', 'check_command': check_command, 'error_message': error_message })
 
 
 def filter_mismatch(request):
