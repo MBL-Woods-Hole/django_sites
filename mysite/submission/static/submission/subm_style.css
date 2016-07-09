@@ -50,7 +50,8 @@ h1 {
   font-weight: 600;
   text-transform: capitalize;
 /*      border-bottom: 1px solid #DEDEDE;*/
-  background: lightgrey;
+  background: #E0E0E0;
+/*  lightgrey;*/
 }
 /*  color: black;
   border-radius: 0;
