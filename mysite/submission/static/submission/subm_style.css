@@ -46,7 +46,7 @@ h1 {
   display: inline;
   cursor: pointer;
   list-style: none;
-  padding: 1px 0.5em 0px 0.5em;
+  padding: 1px 0.55em 0px 0.55em;
   border: 0.1em #000 solid;
   /*border-right: 0.2em #fff solid;*/
   position: relative;
@@ -155,3 +155,10 @@ ol.help_list li
   font-weight: bold;
 }
 
+.bordered {
+  border-collapse: separate;
+  -webkit-border-horizontal-spacing: 0.3em;
+  -webkit-border-vertical-spacing: 0.1em;
+  border-color: grey;
+  border: 0.1em solid;
+}
