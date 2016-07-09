@@ -27,11 +27,40 @@ h1 {
 
 /* http://www.devinrolsen.com/pure-css-menu-with-infinite-sub-menus-tutorial/#comment-8304 */
 
+#navigation:before, #navigation:after {
+    display: table;
+    content: "";
+    line-height: 0;
+}
+
+#navigation:after {
+    clear: both;
+}
+
 #navigation {
-  color: black;
+  font-size: 1.1em;
+  margin: 0 auto;
+  width: 100%;
+/*      padding: 2em 0 1em;*/
+  padding-top: 1.5em;
+  padding-right: 0px;
+  padding-bottom: 1.5em;
+  padding-left: 0px;
+  font-family: "PT Sans Narrow", sans-serif;
+  font-weight: 600;
+  text-transform: capitalize;
+/*      border-bottom: 1px solid #DEDEDE;*/
+  background: lightgrey;
+}
+/*  color: black;
   border-radius: 0;
   padding-bottom: 1.2em;
-}
+  font-family: "PT Sans Narrow", sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0 auto;
+  width: 100%;
+}*/
 
 #nav, .nav, #nav .nav li { 
   margin: 0px;
@@ -40,14 +69,14 @@ h1 {
 
 #nav li {
   margin: 0px;
-  background-color: #eee;
+/*  background-color: #eee;*/
 /*  #a8b6c0;*/
   float: left;
   display: inline;
   cursor: pointer;
   list-style: none;
-  padding: 1px 0.55em 0px 0.55em;
-  border: 0.1em #000 solid;
+  padding: 0px 0.6em 0px 0.6em;
+/*  border: 0.1em #000 solid;*/
   /*border-right: 0.2em #fff solid;*/
   position: relative;
 }
