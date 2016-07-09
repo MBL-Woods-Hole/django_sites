@@ -53,12 +53,12 @@
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[@id='content']/div[8]/div[2]</td>
+	<td>//div[@id='content']/div[9]/div[2]</td>
 	<td>mysql -h newbpcdb2 env454 -e 'DELETE FROM run_info_ill USING run_info_ill JOIN project using(project_id) JOIN dataset using(dataset_id) JOIN run using(run_id) JOIN primer_suite using(primer_suite_id) WHERE primer_suite = &quot;Bacterial V4-V5 Suite&quot; AND run = &quot;20160504&quot; AND lane = &quot;1&quot;;'</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[@id='content']/div[8]/div[3]</td>
+	<td>//div[@id='content']/div[9]/div[3]</td>
 	<td>mysql -h newbpcdb2 env454 -e 'DELETE FROM sequence_uniq_info_ill USING sequence_uniq_info_ill LEFT JOIN sequence_pdr_info_ill USING(sequence_ill_id) WHERE sequence_pdr_info_ill_id is NULL; DELETE FROM sequence_ill USING sequence_ill LEFT JOIN sequence_pdr_info_ill USING(sequence_ill_id) WHERE sequence_pdr_info_ill_id IS NULL; '</td>
 </tr>
 <tr>
