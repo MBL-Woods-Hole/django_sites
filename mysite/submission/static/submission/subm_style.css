@@ -168,10 +168,21 @@ ol.help_list li
 }
 
 .green_message {
-    color: #006600; font-weight: bold;
+    color: #006600; 
+    font-weight: bold;
     margin: 0.2em;
   	margin-top: 0.5em;
   	margin-bottom: 0.5em;
+}
+
+.copy_command {
+  margin: 0.2em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+  border-collapse: separate;
+  border-color: grey;
+  border: 0.1em solid;
+  padding: .2em;
 }
 
 .blue_message {
@@ -191,4 +202,8 @@ ol.help_list li
   -webkit-border-vertical-spacing: 0.1em;
   border-color: grey;
   border: 0.1em solid;
+}
+
+#run_form {
+  align: center; 
 }

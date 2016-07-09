@@ -1,6 +1,6 @@
 {% csrf_token %}
 
-<table class="bordered">
+<table>
 {% for field in form %}
     <div class="fieldWrapper">
        <tr><td>{{ field.label_tag }} </td><td>{{ field }}</td> <td>{{ field.errors }}</td>
