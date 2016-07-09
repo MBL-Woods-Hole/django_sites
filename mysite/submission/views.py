@@ -117,7 +117,7 @@ def gast(request):
         # print run_data['find_rundate']
     except:
         form, error_message = get_run(request)
-    return render(request, 'submission/gast.html', {'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': 'not', 'command': 'reads_overlap/; run_gast_ill_nonchim_sge.sh; date',  'error_message': error_message})
+    return render(request, 'submission/page_wo_c_l_check.html', {'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': 'not', 'command': 'reads_overlap/; run_gast_ill_nonchim_sge.sh; date', 'what_to_check': 'the percent of "Unknown" taxa ', 'check_command': 'gast/; percent10_gast_unknowns.sh', 'error_message': error_message})
 
 def gzip_all(request):
     run_data = {}

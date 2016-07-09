@@ -1,0 +1,20 @@
+{% extends 'submission/page_wo_c_l.html' %}
+  
+  {% block copy_check_command %}
+  
+    <div class = "notes">
+    Afterwards you can check {{ what_to_check }} by using:
+    </div>
+
+    {% block is_cluster %}
+      {% if is_cluster2 %}
+      <div class = "is_cluster"> This command line(s) can be run on any <span class="emph">{{ is_cluster2 }}</span> cluster: </div>
+      {% endif %}
+    {% endblock %}
+    
+    <div class = "copy_command">
+    cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/{{ check_command }}; date
+    </div>
+  
+  {% endblock %}
+  

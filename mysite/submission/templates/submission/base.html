@@ -90,7 +90,10 @@
         <div class="clear"></div>
 
         <div class="grid_12">
-           {% block some_more_content %}{% endblock %}
+           {% block copy_check_command %}
+             {% block is_cluster %}
+             {% endblock %}
+           {% endblock %}
         </div>
         <div class="clear"></div>
          {% endif %} <!-- end if else error_message -->
