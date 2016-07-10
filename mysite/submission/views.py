@@ -20,7 +20,9 @@ from .utils import get_run
 def index(request):
     latest_run_list = Run.objects.order_by('-run')[:10]
     context = {'latest_run_list': latest_run_list}
-    return render(request, 'submission/index.html', context)
+    current_url = request.META["HTTP_REFERER"]
+    
+    return render(request, current_url, context)
 
 # def detail(request, run_id):
 #     return HttpResponse("You're looking at run %s." % run_id)
