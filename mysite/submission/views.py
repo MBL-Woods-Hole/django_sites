@@ -51,7 +51,7 @@ def help(request):
     return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
 def metadata_upload(request):
-    pass
+    return render(request, 'submission/metadata_upload.html', {'header': 'Upload submission metadata'})
 
 def data_upload(request):
     run_data = {}
