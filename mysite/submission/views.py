@@ -105,11 +105,13 @@ def overlap_only(request):
 
 def filter_mismatch(request):
     run_data = {}
+    header = '''Filtering partial (Ev4, v4v5 and ITS1) merged\n
+    Maximum number of mismatches allowed in the overlapped region is 3'''
     try:
         form, run_data, error_message = get_run(request)
     except:
         form, error_message = get_run(request)
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Filtering partial (Ev4, v4v5 and ITS1) merged. Maximum number of mismatches allowed in the overlapped region is 3', 'is_cluster': '', 'command': 'reads_overlap/; run_mismatch_filter.sh; date',  'error_message': error_message })
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': header, 'is_cluster': '', 'command': 'reads_overlap/; run_mismatch_filter.sh; date',  'error_message': error_message })
     
 def gast(request):
     run_data = {}
