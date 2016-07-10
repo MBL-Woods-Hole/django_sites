@@ -1,8 +1,7 @@
 {% extends "submission/base.html" %}
   
-  {% block run_choosing %}{% include 'submission/select_run.html' %}{% endblock %}
-
   {% block first_copy_command %}
+  
     <div class = "red_message">
     Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}{{ run_data.find_machine }}
     </div>

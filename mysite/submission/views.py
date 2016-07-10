@@ -50,6 +50,9 @@ def vote(request, run_id):
 def help(request):
     return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
+def metadata_upload(request):
+    pass
+
 def data_upload(request):
     run_data = {}
     try:
