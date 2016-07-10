@@ -43,4 +43,30 @@
 
   </div>
 
+<div id = "csv_load">
+  <!-- todo: move to snipet? -->
+<form action="" method="POST" enctype="multipart/form-data" name="form_upload_csv" id="form_upload_csv">
+  {% csrf_token %}
+  Upload this file: <input name="csv" type="file" id="csv"/>
+  <input type="submit" name="Submit" value="Submit" />
+  <input type="hidden" name="upload_file_step" value="1">  
+</form> 
+</div>
+
+
+<br />
+<input type="button" value="Add new project" class="hide_project" />
+
+<table>
+     <tr style="display:none;" class="hide_project_tr {{ show_class }}">
+       <td colspan="3">
+        <form method="post" name="form_project" id="form_project" action="">
+            {% include "submission/form_snippet.html" %}
+        </form>
+    </td>
+  </tr>
+</table>
+<br />
+<!-- see step_subm_metadata_form_project.php -->
+
 {% endblock %}
