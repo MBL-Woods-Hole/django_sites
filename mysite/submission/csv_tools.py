@@ -79,9 +79,19 @@ class CodeCSvModel():
                           self.HEADERS.items() if values['required']]
       print "required_headers = "
       print required_headers
+      
+      for index, row in enumerate(reader):
+        print "III index, row"
+        print index, row
+      
+      
       a = self.check_headers_presence(reader, required_headers)
       print "self.check_headers_presence(reader)"
       print a
+      for index, row in enumerate(reader):
+        print "III index, row"
+        print index, row
+      
 
     def check_headers_presence(self, reader, required_headers):
       for y_index, row in enumerate(reader):
