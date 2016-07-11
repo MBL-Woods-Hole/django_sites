@@ -5,6 +5,7 @@ import csv
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
+from collections import defaultdict
 
 class CodeCSvModel():
   
@@ -95,8 +96,21 @@ class CodeCSvModel():
         print "self.csv_content"
         print self.csv_content
         
-        self.csv_by_header = zip(*self.csv_content)
+        # self.csv_by_header = zip(*self.csv_content)
+
+        self.csv_by_header = defaultdict( list )
+        aa = defaultdict( list )
+        
+        # for tuple in a:
+        for x, y, z in zip(*self.csv_content):
+            self.csv_by_header[x] = (y,z)
+            
+        aa = {key: (value1, value2) for (key, value1, value2) in zip(*self.csv_content) }
+        
+        print aa
+        print "*" * 8
         print self.csv_by_header
+        print set(self.csv_by_header['rundate'])
         print "*" * 8
 
         a = self.check_headers_presence(reader, required_headers)
