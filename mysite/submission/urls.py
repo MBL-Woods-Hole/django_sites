@@ -6,7 +6,7 @@ app_name = 'submission'
 
 urlpatterns = [
     # ex: /submission/
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.upload_metadata, name='upload_metadata'),
     url(r'^upload_metadata/$', views.upload_metadata, name='upload_metadata'),
     url(r'^demultiplex/$', views.demultiplex, name='demultiplex'),
     url(r'^overlap/$', views.overlap, name='overlap'),
