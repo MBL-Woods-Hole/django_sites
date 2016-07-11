@@ -46,6 +46,7 @@ def upload_metadata(request):
 
     # If we had a POST then get the request post values.
     if request.method == 'POST':
+        print "IN views.upload_metadata if request.method == 'POST'"
         form = CodeUploadForm(request.POST, request.FILES)
         print request.FILES
         my_file = request.FILES
@@ -54,11 +55,11 @@ def upload_metadata(request):
         m.import_from_file(my_file)
         return render_to_response('submission/upload_metadata.html', context_instance=RequestContext(request))
 
-
     else:
-         form = CodeUploadForm()
-         context = {'form':form}
-         return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
+        print "IN views.upload_metadata else"
+        form = CodeUploadForm()
+        context = {'form':form}
+        return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
 
 
     # if request.method == 'POST':

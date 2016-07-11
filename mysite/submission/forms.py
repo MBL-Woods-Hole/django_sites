@@ -13,6 +13,6 @@ class RunForm(forms.Form):
 class CodeUploadForm(forms.Form):
 
     my_file = forms.FileField()
-    print "my_file from CodeUploadForm"
+    print "my_file from forms.CodeUploadForm"
     print my_file
     # place = forms.ModelChoiceField(queryset=Incentive.objects.all())
