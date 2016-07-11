@@ -97,9 +97,16 @@ class CodeCSvModel():
         print self.csv_content
         
         self.csv_by_header = defaultdict( list )
+        self.csv_by_header_uniqued = defaultdict( list )
+        
         for row in zip(*self.csv_content):
             self.csv_by_header[row[0]] = row[1:]
+            
+        self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
         
+        # TODO: time benchmark
+        print "self.csv_by_header_uniqued"
+        print self.csv_by_header_uniqued
         print "*" * 8
         print self.csv_by_header
         print set(self.csv_by_header['rundate'])
@@ -109,6 +116,7 @@ class CodeCSvModel():
         print "self.check_headers_presence(reader)"
         print a
     
+      
         # writer = csv.DictWriter(doc, 
         #                         ["dna_region", "rundate"])
         #                         
