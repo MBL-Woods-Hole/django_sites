@@ -21,8 +21,9 @@
     </div>
     <div class="clear"></div> -->
 
-    <div class="grid_12" id="navigation">
+    <div class="grid_12">
     {% block navigation %}
+      <div  id="navigation" class="centered">
         <ul id="nav">
           <li class="nav-li {% active 'upload_metadata' %}"><a href="/submission/upload_metadata">Submission Metadata</a></li>
           <li class="nav-li {% active 'demultiplex' %}"><a href="/submission/demultiplex">Demultiplex</a></li>
@@ -50,6 +51,7 @@
             </ul>
           </li> <!-- end nav first -->
         </ul> <!-- end nav -->
+      </div>
     {% endblock %} <!-- end navigation -->
     </div> <!-- end grid_12 -->
     <div class="clear"></div>

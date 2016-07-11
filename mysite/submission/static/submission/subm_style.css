@@ -28,6 +28,12 @@ h1 {
 
 /* http://www.devinrolsen.com/pure-css-menu-with-infinite-sub-menus-tutorial/#comment-8304 */
 
+.centered {
+  display: table;
+  margin: 0 auto;  
+}
+
+
 #navigation:before, #navigation:after {
     display: table;
     content: "";
@@ -40,8 +46,8 @@ h1 {
 
 #navigation {
   font-size: 1.1em;
-  margin: 0 auto;
-  width: 100%;
+/*  display: inline-block;*/
+/*  width: 100%;*/
 /*      padding: 2em 0 1em;*/
   padding-top: 1.5em;
   padding-right: 0px;
@@ -53,6 +59,7 @@ h1 {
 /*      border-bottom: 1px solid #DEDEDE;*/
   background: #E0E0E0;
 /*  lightgrey;*/
+
 }
 /*  color: black;
   border-radius: 0;
@@ -178,13 +185,15 @@ ol.help_list li
 
 .copy_command {
   color: #006600; 
-  margin: 0.2em;
+/*  margin: 0.2em;*/
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
 /*  border-collapse: separate;
   border-color: grey;
   border: 0.1em solid;
-*/  padding: .2em;
+  padding: .2em;
+
+*/
 }
 
 .blue_message {
