@@ -28,6 +28,10 @@ h1 {
 
 /* http://www.devinrolsen.com/pure-css-menu-with-infinite-sub-menus-tutorial/#comment-8304 */
 
+.darker_bg {
+  background: #E0E0E0;
+}
+
 .centered {
   display: table;
   margin: 0 auto;  
@@ -84,7 +88,7 @@ h1 {
   display: inline;
   cursor: pointer;
   list-style: none;
-  padding: 0px 0.6em 0px 0.6em;
+  padding: 0px 0.4em 0px 0.4em;
 /*  border: 0.1em #000 solid;*/
   /*border-right: 0.2em #fff solid;*/
   position: relative;
