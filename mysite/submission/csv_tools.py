@@ -96,18 +96,10 @@ class CodeCSvModel():
         print "self.csv_content"
         print self.csv_content
         
-        # self.csv_by_header = zip(*self.csv_content)
-
         self.csv_by_header = defaultdict( list )
-        aa = defaultdict( list )
+        for row in zip(*self.csv_content):
+            self.csv_by_header[row[0]] = row[1:]
         
-        # for tuple in a:
-        for x, y, z in zip(*self.csv_content):
-            self.csv_by_header[x] = (y,z)
-            
-        aa = {key: (value1, value2) for (key, value1, value2) in zip(*self.csv_content) }
-        
-        print aa
         print "*" * 8
         print self.csv_by_header
         print set(self.csv_by_header['rundate'])
