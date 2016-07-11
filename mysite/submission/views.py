@@ -1,11 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-# from django.http import HttpResponseRedirect
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 
 from .models_l_env454 import Run
-from .forms import RunForm
+from .forms import RunForm, CodeUploadForm
 from .utils import get_run
+
+from .csv_tools import CodeCSvModel
 
 
 # def index(request):
@@ -35,25 +38,48 @@ def index(request):
 #     return render(request, 'submission/detail.html', {'run': run})
 
 
-def detail(request, run_id):
-    run = get_object_or_404(Run, pk=run_id)
-    return render(request, 'submission/detail.html', {'run': run})
-
-
-def results(request, run_id):
-    response = "You're looking at the results of run %s."
-    return HttpResponse(response % run_id)
-
-
-def vote(request, run_id):
-    return HttpResponse("You're voting on run %s." % run_id)
-
 
 def help(request):
     return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
 def upload_metadata(request):
-    return render(request, 'submission/upload_metadata.html', {'header': 'Upload submission metadata'})
+
+    # If we had a POST then get the request post values.
+    if request.method == 'POST':
+        form = CodeUploadForm(request.POST, request.FILES)
+        print request.FILES
+        my_file = request.FILES
+        # ['file']
+        m = CodeCSvModel()
+        m.import_from_file(my_file)
+        return render_to_response('submission/upload_metadata.html', context_instance=RequestContext(request))
+
+
+    else:
+         form = CodeUploadForm()
+         context = {'form':form}
+         return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
+
+
+    # if request.method == 'POST':
+    #     form = CodeUploadForm(request.POST, request.FILES)
+    #     if form.is_valid():
+    #         uploaded_file = request.FILES['csv']
+    # 
+    #         # Write the file to disk
+    #         fout = open("path/to/save/file/to/%s" % uploaded_file.name, 'wb')
+    #         for chunk in uploaded_file.chunks():
+    #             fout.write(chunk)
+    #         fout.close()
+    #     
+    #     m = CodeCSvModel()
+    #     m.import_from_file(form['file'])
+    # else:
+    #      form = CodeUploadForm()
+    #      context = {'form':form}
+    #      return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
+
+    # return render(request, 'submission/upload_metadata.html', {'header': 'Upload submission metadata'})
 
 def data_upload(request):
     run_data = {}

@@ -9,3 +9,10 @@ class RunForm(forms.Form):
     find_machine = forms.ChoiceField(Machine.MACHINE_CHOICES, label = 'Machine name')
     find_domain  = forms.ChoiceField(Domain.DOMAIN_SHORTCUTS_CHOICES, label = 'Domain')
     find_lane    = forms.CharField(label = 'Lane number', max_length = 3)
+
+class CodeUploadForm(forms.Form):
+
+    my_file = forms.FileField()
+    print "my_file from CodeUploadForm"
+    print my_file
+    # place = forms.ModelChoiceField(queryset=Incentive.objects.all())
