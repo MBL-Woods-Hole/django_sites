@@ -57,8 +57,8 @@ class CodeCSvModel():
       self.csv_headers = []
       self.csv_content = []
 
-    class Meta:
-        delimiter = ";"
+    # class Meta:
+        # delimiter = ";"
         # dbModel = Code
 
     def import_from_file(self, file_name):
@@ -94,13 +94,10 @@ class CodeCSvModel():
       print "self.csv_content"
       print self.csv_content
 
-
       a = self.check_headers_presence(reader, required_headers)
       print "self.check_headers_presence(reader)"
       print a
 
-
-      
     def parce_csv(self, reader):
       print "parce_csv 00"
       print reader
@@ -124,19 +121,21 @@ class CodeCSvModel():
       return self.csv_headers, self.csv_content
 
     def check_headers_presence(self, reader, required_headers):
-      for y_index, row in enumerate(reader):
+      print "self.csv_headers 7 = "
+      print self.csv_headers
+      
+      # for y_index, row in enumerate(reader):
           # check that all headers are present
-          if y_index == 0:
-              # store header_names to sanity check required cells later
-              # self.csv_headers = [header_name.lower() for header_name in row if header_name]
-              missing_headers = set(required_headers) - set([r.lower() for r in row])
-              if missing_headers:
-                  missing_headers_str = ', '.join(missing_headers)
-                  raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
-              continue
-          # ignore blank rows
-          if not ''.join(str(x) for x in row):
-              continue
+      missing_headers = set(required_headers) - set([r.lower() for r in self.csv_headers])
+      print "missing_headers: "
+      print missing_headers
+      if missing_headers:
+          missing_headers_str = ', '.join(missing_headers)
+          raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
+      # continue
+      # ignore blank rows
+      # if not ''.join(str(x) for x in row):
+      #     continue
       return True
 
     def required_cell_values_validation(row):
