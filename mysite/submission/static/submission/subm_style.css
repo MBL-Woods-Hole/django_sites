@@ -177,13 +177,14 @@ ol.help_list li
 }
 
 .copy_command {
+  color: #006600; 
   margin: 0.2em;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
-  border-collapse: separate;
+/*  border-collapse: separate;
   border-color: grey;
   border: 0.1em solid;
-  padding: .2em;
+*/  padding: .2em;
 }
 
 .blue_message {
