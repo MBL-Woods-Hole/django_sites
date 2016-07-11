@@ -47,13 +47,15 @@ class CodeCSvModel():
     	'trim_distal': {'field':'trim_distal', 'required':True},
     	'env_sample_source_id': {'field':'env_sample_source_id', 'required':True},																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																												    }
     
-
-    codeid = models.SmallIntegerField(primary_key=True)
-    remotecode = models.CharField(max_length=32)
-    active = models.BooleanField()
-    created = models.DateField()
-    modified = models.DateField()
-    incentiveid = models.CharField(max_length=32)
+      codeid = models.SmallIntegerField(primary_key=True)
+      remotecode = models.CharField(max_length=32)
+      active = models.BooleanField()
+      created = models.DateField()
+      modified = models.DateField()
+      incentiveid = models.CharField(max_length=32)
+    
+      self.csv_headers = []
+      self.csv_content = []
 
     class Meta:
         delimiter = ";"
@@ -74,31 +76,59 @@ class CodeCSvModel():
       reader = csv.reader(doc.read().splitlines(), dialect)
       print "reader = "
       print reader
-      csv_headers = []
+      self.csv_headers = []
       required_headers = [header_name for header_name, values in
                           self.HEADERS.items() if values['required']]
       print "required_headers = "
       print required_headers
       
-      for index, row in enumerate(reader):
-        print "III index, row"
-        print index, row
+      # for index, row in enumerate(reader):
+      #   print "III index, row"
+      #   print index, row
       
-      
+      self.csv_headers, self.csv_content = self.parce_csv(reader)
+
+      print "self.csv_headers"
+      print self.csv_headers
+
+      print "self.csv_content"
+      print self.csv_content
+
+
       a = self.check_headers_presence(reader, required_headers)
       print "self.check_headers_presence(reader)"
       print a
-      for index, row in enumerate(reader):
-        print "III index, row"
-        print index, row
+
+
       
+    def parce_csv(self, reader):
+      print "parce_csv 00"
+      print reader
+      print "*" * 10
+      for y_index, row in enumerate(reader):
+          print "parce_csv 11"
+          if y_index == 0:
+              print "parce_csv 2"
+              # store header_names to sanity check required cells later
+              self.csv_headers = [header_name.lower() for header_name in row if header_name]
+              print "self.csv_headers 1 = "
+              print self.csv_headers
+              continue
+          else:
+              print "parce_csv 3"
+              # row_content = [row for row in reader]
+              self.csv_content.append(row)
+              # dict((rows[0],rows[1]) for rows in reader)
+              print "self.csv_content 1 = "
+              print self.csv_content
+      return self.csv_headers, self.csv_content
 
     def check_headers_presence(self, reader, required_headers):
       for y_index, row in enumerate(reader):
           # check that all headers are present
           if y_index == 0:
               # store header_names to sanity check required cells later
-              csv_headers = [header_name.lower() for header_name in row if header_name]
+              # self.csv_headers = [header_name.lower() for header_name in row if header_name]
               missing_headers = set(required_headers) - set([r.lower() for r in row])
               if missing_headers:
                   missing_headers_str = ', '.join(missing_headers)
@@ -111,14 +141,15 @@ class CodeCSvModel():
 
     def required_cell_values_validation(row):
       # sanity check required cell values
-      for x_index, cell_value in enumerate(row):
-          # if indexerror, probably an empty cell past the headers col count
-          try:
-              csv_headers[x_index]
-          except IndexError:
-              continue
-          if csv_headers[x_index] in required_headers:
-              if not cell_value:
-                  raise ValidationError(u'Missing required value %s for row %s' %
-                                          (csv_headers[x_index], y_index + 1))
+      for y_index, row in enumerate(reader):
+        for x_index, cell_value in enumerate(row):
+            # if indexerror, probably an empty cell past the headers col count
+            try:
+                self.csv_headers[x_index]
+            except IndexError:
+                continue
+            if self.csv_headers[x_index] in required_headers:
+                if not cell_value:
+                    raise ValidationError(u'Missing required value %s for row %s' %
+                                            (self.csv_headers[x_index], y_index + 1))
     
