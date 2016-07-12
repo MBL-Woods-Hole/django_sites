@@ -3,7 +3,7 @@ from django.shortcuts import render, render_to_response
 from django.template import RequestContext, loader, Context
 
 from .models_l_env454 import Run
-from .forms import RunForm, CsvUploadForm
+from .forms import RunForm, CsvUploadForm, RunInfoForm
 from .utils import get_run, get_csv_data
 
 from .csv_tools import CodeCSvModel
@@ -77,15 +77,17 @@ def upload_metadata(request):
 # def upload_metadata(request):
 
     # If we had a POST then get the request post values.
+    error_message = ""
     if request.method == 'POST':
         print "IN views.upload_metadata if request.method == 'POST'"
-        form = CsvUploadForm(request.POST, request.FILES)
+        form = RunInfoForm(request.POST, request.FILES)
         print request.FILES
         my_file = request.FILES
         # ['file']
         m = CodeCSvModel()
         m.import_from_file(my_file)
-        return render_to_response('submission/upload_metadata.html', context_instance=RequestContext(request))
+        # return render_to_response('submission/upload_metadata.html', context_instance=RequestContext(request))
+        return render(request, 'submission/upload_metadata.html', {'form': form, 'header': 'upload_metadata',  'error_message': error_message })
 
     else:
         print "IN views.upload_metadata else"

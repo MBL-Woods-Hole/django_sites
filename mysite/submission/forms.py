@@ -19,7 +19,6 @@ class CsvUploadForm(forms.Form):
 
 class RunInfoForm(forms.Form):
 
-    query = Run.objects.filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
     find_rundate          = forms.CharField(label = 'Run date', max_length = 8,)
     find_path_to_raw_data = forms.CharField(label = 'Path to raw data <span class="emph">/xraid2-2/sequencing/Illumina/</span>', max_length = 12)
     find_dna_region       = forms.ChoiceField(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region')
