@@ -1,0 +1,117 @@
+{% extends "submission/base.html" %}
+
+{% block some_content %}
+
+
+<div id="run_info_form_run_info">
+  <form method="post" name="run_info_form" id="run_info_form" action="">
+      {% include "submission/form_snippet.html" %}
+  </form>
+</div>
+
+{% endblock %}
+
+<!--
+<form method="post" name="run_info_form" id="run_info_form" action="/~ashipunova/illumina_submission/step_upload_subm_metadata.php">
+<input type="hidden" name="form_name" id="run_info_form_form_name" value="run_info_form">
+<table class="form" id="run_info_form-form"><tbody>
+<tr><td>
+<table class="fields" id="run_info_form-fields"><tbody>
+
+<tr class="fields">
+<td class="fields" colspan="2">
+<fieldset id="run_info_form_run_info">
+<legend id="run_info_form_run_info-legend">Run info</legend>
+<table class="fields" id="run_info_form_run_info-fields"><tbody>
+
+  <tr class="fields">
+  <td class="fields" align="left"><label for="run_infoForm_rundate">rundate</label></td>
+  <td align="left"><input class="text_inp size_long_input" type="text" name="rundate" id="run_infoForm_rundate" value="20151111"></td>
+  </tr>
+  
+  <tr class="fields">
+  <td class="fields" align="left"><label for="run_infoForm_path to raw data">path to raw data</label></td>
+  <td align="left" colspan="5"><span class="emph">/xraid2-2/sequencing/Illumina/</span><input class="text_inp size_long_input" type="text" name="path to raw data" id="run_infoForm_path to raw data" value="20151111hs/"></td>
+  </tr>
+
+  <tr class="fields">
+  <td class="fields" align="left"><label for="run_infoForm_dna_region">dna_region</label></td>
+  <td>
+  <select name="dna_region_0" id="form_dna_region_0">
+   <option value="v6" selected="selected">v6</option><option value="v4v5">v4v5</option><option value="v4">v4</option><option value="its1">its1</option>    </select>
+    </td>
+  </tr>
+  
+  
+  <tr class="fields">
+  <td class="fields" align="left"><label for="run_infoForm_overlap">overlap</label></td>
+  <td>
+  <select name="overlap" id="form_overlap">
+   <option value=""></option><option value="partial">partial</option><option value="complete" selected="selected">complete</option>      <option value="None"></option>
+    </select>
+    </td>
+    <td class="message"></td>
+  </tr>
+  
+<tr class="fields">
+<td class="fields" align="left"><label for="run_infoForm_has_ns">has_Ns</label></td>
+<td>
+<select name="has_ns" id="form_has_ns">
+ <option value="Has NNNN in run_key">Has NNNN in run_key</option><option value="Does not have NNNN in run_key (NextSeq)">Does not have NNNN in run_key (NextSeq)</option>    <option value="None"></option>
+  </select>
+  </td>
+  <td class="message"></td>
+</tr>
+
+  
+
+    <tr class="fields">
+
+    <td class="fields"><label for="run_info_form_seq_operator">seq_operator</label></td>
+
+    <td class="fields"><input class="text_inp size_abbr" type="text" name="seq_operator" id="run_info_form_seq_operator" value="JV"></td>
+
+    <td class="message"></td>
+
+    </tr>
+
+    
+
+    <tr class="fields">
+
+    <td class="fields"><label for="run_info_form_insert_size">insert_size</label></td>
+
+    <td class="fields"><input class="text_inp size_abbr" type="text" name="insert_size" id="run_info_form_insert_size" value="100"></td>
+
+    <td class="message"></td>
+
+    </tr>
+
+    
+
+    <tr class="fields">
+
+    <td class="fields"><label for="run_info_form_read_length">read_length</label></td>
+
+    <td class="fields"><input class="text_inp size_abbr" type="text" name="read_length" id="run_info_form_read_length" value="100"></td>
+
+    <td class="message"></td>
+
+    </tr>
+
+      
+</tbody></table>
+</fieldset>
+</td>
+</tr>
+</tbody></table>
+</td></tr>
+<tr><td>
+<table class="buttons" id="run_info_form-buttons"><tbody>
+<tr class="buttons"><td class="buttons"><input type="submit" name="add" id="run_info_form_add" value="Submit Run info">
+<input type="hidden" name="run_info_process" value="1"></td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+</form>
+-->

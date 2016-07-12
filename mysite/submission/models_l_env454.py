@@ -45,7 +45,7 @@ class Dataset(models.Model):
 
 class DnaRegion(models.Model):
     dna_region_id = models.AutoField(primary_key=True)
-    dna_region = models.CharField(unique=True, max_length=32)
+    dna_region    = models.CharField(unique=True, max_length=32)
 
     class Meta:
         managed = False

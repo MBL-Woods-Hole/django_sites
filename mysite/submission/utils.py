@@ -1,6 +1,7 @@
-from .forms import RunForm
+from .forms import RunForm, CsvUploadForm, RunInfoForm
 import models 
 from models_l_env454 import RunInfoIll
+from .csv_tools import CodeCSvModel
 
 def get_overlap(machine_name):
     overlap_choices = dict(models.Overlap.COMPLETE_OVERLAP_CHOICES)
@@ -60,3 +61,27 @@ def get_run(request):
     else:
         form = RunForm()
     return (form, error_message)
+
+def get_csv_data(request):
+  pass
+#   error_message = ""
+#   # If we had a POST then get the request post values.
+#   if request.method == 'POST':
+#       print "IN utils.get_csv_data if request.method == 'POST'"
+#       form = CsvUploadForm(request.POST, request.FILES)
+#       print request.FILES
+#       my_file = request.FILES
+#       # ['file']
+#       m = CodeCSvModel()
+#       m.import_from_file(my_file)
+#       run_info_data = {}
+#       # return render_to_response('submission/upload_metadata_run_info_form.html', context_instance=RequestContext(request))
+#       return (form, run_info_data, error_message)
+# 
+#   else:
+#       print "IN views.upload_metadata else"
+#       form = CsvUploadForm()
+#       context = {'form':form}
+#       # return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
+#       return (form, error_message)
+#   

@@ -3,8 +3,8 @@ from django.shortcuts import render, render_to_response
 from django.template import RequestContext, loader, Context
 
 from .models_l_env454 import Run
-from .forms import RunForm, CodeUploadForm
-from .utils import get_run
+from .forms import RunForm, CsvUploadForm
+from .utils import get_run, get_csv_data
 
 from .csv_tools import CodeCSvModel
 
@@ -41,11 +41,45 @@ def help(request):
     return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
 def upload_metadata(request):
+    # csv_data = {}
+    # 
+    # try:
+    #     form, csv_data, error_message = get_csv_data(request)
+    #     print "csv_data from views.upload_metadata"
+    #     print csv_data
+    # except:
+    #     form, error_message = get_csv_data(request)
+    #     return render(request, 'submission/upload_metadata.html', {'form': form, 'csv_data': csv_data, 'header': 'Data upload to db', 'is_cluster': 'not', 'pipeline_command': 'env454upload',  'error_message': error_message})
+    # return render(request, 'submission/upload_metadata_run_info_form.html', {'form': form, 'csv_data': csv_data, 'header': 'Data upload to db', 'is_cluster': 'not', 'pipeline_command': 'env454upload',  'error_message': error_message})
+
+    # error_message = ""
+    #   # If we had a POST then get the request post values.
+    #   if request.method == 'POST':
+    #       print "IN utils.get_csv_data if request.method == 'POST'"
+    #       form = CsvUploadForm(request.POST, request.FILES)
+    #       print request.FILES
+    #       my_file = request.FILES
+    #       # ['file']
+    #       m = CodeCSvModel()
+    #       m.import_from_file(my_file)
+    #       run_info_data = {}
+    #       # return render_to_response('submission/upload_metadata_run_info_form.html', context_instance=RequestContext(request))
+    #       return (form, run_info_data, error_message)
+    # 
+    #   else:
+    #       print "IN views.upload_metadata else"
+    #       form = CsvUploadForm()
+    #       context = {'form':form}
+    #       # return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
+    #       return (form, error_message)
+
+
+# def upload_metadata(request):
 
     # If we had a POST then get the request post values.
     if request.method == 'POST':
         print "IN views.upload_metadata if request.method == 'POST'"
-        form = CodeUploadForm(request.POST, request.FILES)
+        form = CsvUploadForm(request.POST, request.FILES)
         print request.FILES
         my_file = request.FILES
         # ['file']
@@ -55,30 +89,9 @@ def upload_metadata(request):
 
     else:
         print "IN views.upload_metadata else"
-        form = CodeUploadForm()
+        form = CsvUploadForm()
         context = {'form':form}
         return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
-
-
-    # if request.method == 'POST':
-    #     form = CodeUploadForm(request.POST, request.FILES)
-    #     if form.is_valid():
-    #         uploaded_file = request.FILES['csv']
-    # 
-    #         # Write the file to disk
-    #         fout = open("path/to/save/file/to/%s" % uploaded_file.name, 'wb')
-    #         for chunk in uploaded_file.chunks():
-    #             fout.write(chunk)
-    #         fout.close()
-    #     
-    #     m = CodeCSvModel()
-    #     m.import_from_file(form['file'])
-    # else:
-    #      form = CodeUploadForm()
-    #      context = {'form':form}
-    #      return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
-
-    # return render(request, 'submission/upload_metadata.html', {'header': 'Upload submission metadata'})
 
 def data_upload(request):
     run_data = {}

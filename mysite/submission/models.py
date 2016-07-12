@@ -20,6 +20,11 @@ class Overlap(models.Model):
         ('ns', 'True'),
     )
     
+    OVERLAP_CHOICES = (
+        ('ms', 'partial'),
+        ('hs', 'complete'),
+        ('ns', 'complete'),
+    )
 
 class Domain(models.Model):
 
@@ -35,4 +40,20 @@ class Domain(models.Model):
         ('A', 'Archaeal'),
         ('E', 'Eukaryal'),
         ('F', 'Fungal'),
+    )
+
+  
+class Ill_dna_region(models.Model):
+  
+    DNA_REGION_CHOICES = (
+        ('v6', 'v6'),
+        ('v4v5', 'v4v5'),
+        ('v4', 'v4'),
+        ('ITS1', 'ITS1'),
+    )
+
+class Has_ns(models.Model):
+    HAVING_NS_CHOICES = (
+        ('yes', 'Has NNNN in run_key'),
+        ('no', 'Does not have NNNN in run_key (NextSeq)'),
     )
