@@ -81,8 +81,8 @@ class CodeCSvModel():
         self.csv_headers = []
         required_headers = [header_name for header_name, values in
                             self.HEADERS.items() if values['required']]
-        print "required_headers = "
-        print required_headers
+        # print "required_headers = "
+        # print required_headers
     
         # for index, row in enumerate(reader):
         #   print "III index, row"
@@ -90,11 +90,11 @@ class CodeCSvModel():
     
         self.csv_headers, self.csv_content = self.parce_csv(reader)
 
-        print "self.csv_headers"
-        print self.csv_headers
-
-        print "self.csv_content"
-        print self.csv_content
+        # print "self.csv_headers"
+        # print self.csv_headers
+        # 
+        # print "self.csv_content"
+        # print self.csv_content
         
         self.csv_by_header = defaultdict( list )
         self.csv_by_header_uniqued = defaultdict( list )
@@ -108,9 +108,9 @@ class CodeCSvModel():
         print "self.csv_by_header_uniqued"
         print self.csv_by_header_uniqued
         print "*" * 8
-        print self.csv_by_header
-        print set(self.csv_by_header['rundate'])
-        print "*" * 8
+        # print self.csv_by_header
+        # print set(self.csv_by_header['rundate'])
+        # print "*" * 8
 
         a = self.check_headers_presence(reader, required_headers)
         print "self.check_headers_presence(reader)"
@@ -129,12 +129,12 @@ class CodeCSvModel():
     def parce_csv(self, reader):
       for y_index, row in enumerate(reader):
           self.csv_content.append(row)
-          print "self.csv_content 1 = "
-          print self.csv_content
+          # print "self.csv_content 1 = "
+          # print self.csv_content
           if y_index == 0:
               self.csv_headers = [header_name.lower() for header_name in row if header_name]
-              print "self.csv_headers 1 = "
-              print self.csv_headers
+              # print "self.csv_headers 1 = "
+              # print self.csv_headers
               continue
       return self.csv_headers, self.csv_content
 

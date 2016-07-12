@@ -82,6 +82,13 @@ def upload_metadata(request):
         print "IN views.upload_metadata if request.method == 'POST'"
         form = RunInfoForm(request.POST, request.FILES)
         print request.FILES
+        
+        print "request.POST = "
+        print request.POST
+        if form.is_valid():
+            print "FFF form.cleaned_data"
+            print form.cleaned_data
+        
         my_file = request.FILES
         # ['file']
         m = CodeCSvModel()
