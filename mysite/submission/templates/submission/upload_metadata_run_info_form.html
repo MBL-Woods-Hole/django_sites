@@ -6,6 +6,19 @@
     I have a message
     {{ message }}
 {% endif %}
+
+<div class="grid_12">
+  <form action="" method="post">
+    <table>
+      {{ CsvRunInfoUploadForm.as_table }}
+    </table>
+      {% csrf_token %}
+      <input type="submit" value="Submit Run Info">
+  </form>
+</div>
+<div class="clear"></div>
+
+<!--
 <br />
 <div class="grid_12">
   <form method="post" name="csv_run_info" id="csv_run_info" action="">
@@ -14,10 +27,11 @@
   </form>
 </div>
 <div class="clear"></div>
+-->
 
+<!--
 <br />
 <input type="button" value="Add new project" class="hide_project" />
-
 <table .message>
      <tr style="display:none;" class="hide_project_tr {{ show_class }}">
        <td colspan="3">
@@ -28,6 +42,7 @@
   </tr>
 </table>
 <br />
+-->
 <!-- see step_subm_metadata_form_project.php -->
 
 

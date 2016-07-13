@@ -44,13 +44,38 @@ def upload_metadata(request):
     return render(request, 'submission/upload_metadata.html')
 
 def upload_metadata_file(request):
+    error_message = ""
     if request.method == 'POST':
-        file_upload_form = FileUploadForm(request.POST, request.FILE)
+        print "request.POST PPP: "
+        print request.POST
+        
+        print "request.FILES: "
+        print request.FILES
+        
+        # <QueryDict: {u'find_seq_operator': [u'33'], u'find_insert_size': [u'44'], u'find_rundate': [u'11'], u'find_read_length': [u'55'], u'find_path_to_raw_data': [u'22'], u'find_dna_region': [u'v4v5'], u'find_overlap': [u'hs'], u'csrfmiddlewaretoken': [u'7p7t28ZZm9bg4uTlbFYcx4GGVeSWvLqh'], u'find_has_ns': [u'no']}>
+        
+        file_upload_form = FileUploadForm(request.POST)
+        metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
         if file_upload_form.is_valid():
+            print "file_upload_form.cleaned_data: "
             print file_upload_form.cleaned_data
+        return render(request, 'submission/upload_metadata_run_info_form.html', {'CsvRunInfoUploadForm': CsvRunInfoUploadForm, 'header': 'upload_metadata_run_info_form',  'error_message': error_message })
     else:
+        print "EEE"
+        
         file_upload_form = FileUploadForm()
-    return render(request, 'submission/upload_metadata_file.html', {'file_upload_form': file_upload_form})
+        context = {'file_upload_form':file_upload_form}
+        
+    # return render(request, 'submission/upload_metadata_file.html', {'file_upload_form': file_upload_form})
+        return render_to_response('submission/upload_metadata_file.html', context, context_instance=RequestContext(request))  
+
+    #     return render(request, 'submission/upload_metadata.html', {'form': form, 'header': 'upload_metadata',  'error_message': error_message })
+    # 
+    # else:
+    #     print "IN views.upload_metadata else"
+    #     form = FileUploadForm()
+    #     context = {'form':form}
+    #     return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
     
     # return render(request, 'submission/upload_metadata_file.html')
     

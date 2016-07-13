@@ -8,11 +8,14 @@
     </p>
 {% endif %}
 
-<form action="" method="post">
-    {{ file_upload_form }}
-    {% csrf_token %}
-    <input type="submit" value="Submit">
-</form>
+<div class="grid_12">
+  <form action="" method="post" enctype="multipart/form-data">
+      {{ file_upload_form }}
+      {% csrf_token %}
+      <input type="submit" value="Submit">
+  </form>
+</div>
+<div class="clear"></div>
 
   <!-- <div id = "csv_load">-->
   <!-- todo: move to snipet? -->

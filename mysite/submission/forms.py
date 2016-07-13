@@ -15,7 +15,6 @@ class FileUploadForm(forms.Form):
     upload_this_file = forms.FileField()
     print "upload_this_file from forms.FileUploadForm"
     print upload_this_file
-    # place = forms.ModelChoiceField(queryset=Incentive.objects.all())
 
 class CsvRunInfoUploadForm(forms.Form):
 
