@@ -59,7 +59,8 @@ class CsvMetadata():
         #     
         self.csv_headers = []
         self.csv_content = []
-
+        self.run_info_from_csv = {}
+        
     # class Meta:
         # delimiter = ";"
         # dbModel = Code
@@ -131,7 +132,17 @@ class CsvMetadata():
         #     writer.writerow({'dna_region': row.dna_region, 'rundate': row.rundate})
         #     print writer
             
+    def get_initial_run_info_data_dict(self):
+        csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
 
+        self.run_info_from_csv = {'csv_rundate': csv_rundate, 
+        'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate, 
+        'csv_dna_region': "".join(self.csv_by_header_uniqued['dna_region']), 
+        'csv_overlap': "".join(self.csv_by_header_uniqued['overlap']), 
+        'csv_has_ns': "".join(self.csv_by_header_uniqued['rundate']), 
+        'csv_seq_operator': "".join(self.csv_by_header_uniqued['op_seq']), 
+        'csv_insert_size': "".join(self.csv_by_header_uniqued['insert_size']), 
+        'csv_read_length': "".join(self.csv_by_header_uniqued['read_length'])}
 
     def parce_csv(self, reader):
       for y_index, row in enumerate(reader):
