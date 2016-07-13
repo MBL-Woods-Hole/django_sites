@@ -1,7 +1,7 @@
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm
 import models 
 from models_l_env454 import RunInfoIll
-from .csv_tools import CodeCSvModel
+from .csv_tools import CsvMetadata
 
 def get_overlap(machine_name):
     overlap_choices = dict(models.Overlap.COMPLETE_OVERLAP_CHOICES)
@@ -72,7 +72,7 @@ def get_csv_data(request):
 #       print request.FILES
 #       my_file = request.FILES
 #       # ['file']
-#       m = CodeCSvModel()
+#       m = CsvMetadata()
 #       m.import_from_file(my_file)
 #       run_info_data = {}
 #       # return render_to_response('submission/upload_metadata_run_info_form.html', context_instance=RequestContext(request))

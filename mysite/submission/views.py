@@ -6,7 +6,7 @@ from .models_l_env454 import Run
 from .forms import RunForm, CsvRunInfoUploadForm, FileUploadForm
 from .utils import get_run, get_csv_data
 
-from .csv_tools import CodeCSvModel
+from .csv_tools import CsvMetadata
 
 
 # def index(request):
@@ -46,19 +46,27 @@ def upload_metadata(request):
 def upload_metadata_file(request):
     error_message = ""
     if request.method == 'POST':
-        print "request.POST PPP: "
-        print request.POST
-        
-        print "request.FILES: "
-        print request.FILES
-        
+        # file
+        # request.POST: 
+        # <QueryDict: {u'csrfmiddlewaretoken': [u'7p7t28ZZm9bg4uTlbFYcx4GGVeSWvLqh']}>
+        # request.FILES: 
+        # <MultiValueDict: {u'upload_this_file': [<InMemoryUploadedFile: metadata_upload_good_csv.html (text/html)>]}>
+        # [13/Jul/2016 16:29:26] "POST /submission/upload_metadata_file/ HTTP/1.1" 200 6815
+
+        # info
+        # request.POST: 
         # <QueryDict: {u'find_seq_operator': [u'33'], u'find_insert_size': [u'44'], u'find_rundate': [u'11'], u'find_read_length': [u'55'], u'find_path_to_raw_data': [u'22'], u'find_dna_region': [u'v4v5'], u'find_overlap': [u'hs'], u'csrfmiddlewaretoken': [u'7p7t28ZZm9bg4uTlbFYcx4GGVeSWvLqh'], u'find_has_ns': [u'no']}>
         
-        file_upload_form = FileUploadForm(request.POST)
+        file_upload_form = FileUploadForm(request.POST, request.FILES)
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
         if file_upload_form.is_valid():
             print "file_upload_form.cleaned_data: "
             print file_upload_form.cleaned_data
+            
+            csv_handler = CsvMetadata()
+            csv_handler.import_from_file(request.FILES['upload_this_file'])
+            # return HttpResponseRedirect('submission/upload_metadata_run_info_form.html')
+            
         return render(request, 'submission/upload_metadata_run_info_form.html', {'CsvRunInfoUploadForm': CsvRunInfoUploadForm, 'header': 'upload_metadata_run_info_form',  'error_message': error_message })
     else:
         print "EEE"
@@ -93,8 +101,8 @@ def run_info_csv(request):
 
     my_file = request.GET['csv_file']
     message = 'request.GET[csv_file]: %s' % request.GET['csv_file']
-    m = CodeCSvModel()
-    m.import_from_file(my_file)
+    csv_handler = CsvMetadata()
+    csv_handler.import_from_file(my_file)
     
     print "HHHH"
     
@@ -123,14 +131,14 @@ def csv_run_info_post(request):
         print form.cleaned_data
     
     my_file = request.FILES
-    m = CodeCSvModel()
+    m = CsvMetadata()
     m.import_from_file(my_file)
     return form
     
     
     # my_file = request.POST['upload_this_file']
     # print my_file
-    # m = CodeCSvModel()
+    # m = CsvMetadata()
     # m.import_from_file(my_file)
     
 
@@ -175,7 +183,7 @@ def upload_metadata_all(request):
     #     
     #     my_file = request.FILES
     #     # ['file']
-    #     m = CodeCSvModel()
+    #     m = CsvMetadata()
     #     m.import_from_file(my_file)
     #     # return render_to_response('submission/upload_metadata.html', context_instance=RequestContext(request))
     #     return render(request, 'submission/upload_metadata.html', {'form': form, 'header': 'upload_metadata',  'error_message': error_message })
