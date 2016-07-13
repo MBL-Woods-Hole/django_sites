@@ -8,8 +8,9 @@
 {% endif %}
 
 <div class="grid_12">
+  {{ csv_by_header_uniqued }}
   <form action="" method="post">
-    <table>
+    <table class="normal_table">
       {{ CsvRunInfoUploadForm.as_table }}
     </table>
       {% csrf_token %}

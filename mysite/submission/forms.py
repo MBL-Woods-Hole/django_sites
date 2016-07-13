@@ -18,11 +18,11 @@ class FileUploadForm(forms.Form):
 
 class CsvRunInfoUploadForm(forms.Form):
 
-    find_rundate          = forms.CharField(label = 'Run date', max_length = 8,)
-    find_path_to_raw_data = forms.CharField(label = 'Path to raw data <span class="emph">/xraid2-2/sequencing/Illumina/</span>', max_length = 12)
-    find_dna_region       = forms.ChoiceField(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region')
-    find_overlap          = forms.ChoiceField(Overlap.OVERLAP_CHOICES, label = 'Overlap')
-    find_has_ns           = forms.ChoiceField(Has_ns.HAVING_NS_CHOICES, label = 'Has Ns')
-    find_seq_operator     = forms.CharField(label = 'Seq Operator', max_length = 3)
-    find_insert_size      = forms.CharField(label = 'Insert Size', max_length = 3)
-    find_read_length      = forms.CharField(label = 'Read Length', max_length = 3)
+    csv_rundate          = forms.CharField(label = 'Run date', max_length = 8,)
+    csv_path_to_raw_data = forms.CharField(label = 'Path to raw data <span class="emph">/xraid2-2/sequencing/Illumina/</span>', max_length = 12)
+    csv_dna_region       = forms.ChoiceField(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region')
+    csv_overlap          = forms.ChoiceField(Overlap.OVERLAP_CHOICES, label = 'Overlap')
+    csv_has_ns           = forms.ChoiceField(Has_ns.HAVING_NS_CHOICES, label = 'Has Ns')
+    csv_seq_operator     = forms.CharField(label = 'Seq Operator', max_length = 3)
+    csv_insert_size      = forms.CharField(label = 'Insert Size', max_length = 3)
+    csv_read_length      = forms.CharField(label = 'Read Length', max_length = 3)

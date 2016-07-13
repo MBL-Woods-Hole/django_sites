@@ -46,7 +46,7 @@ def upload_metadata(request):
 
 def upload_metadata_file(request):
     error_message = ""
-    if request.method == 'POST':
+    if request.method == 'POST' and request.FILES:
         # file
         # request.POST: 
         # <QueryDict: {u'csrfmiddlewaretoken': [u'7p7t28ZZm9bg4uTlbFYcx4GGVeSWvLqh']}>
@@ -72,9 +72,29 @@ def upload_metadata_file(request):
     
         print "csv_handler.csv_by_header_uniqued from views"
         print csv_handler.csv_by_header_uniqued
+        # {'domain': ['archaea', 'bacteria'], 'dna_region': ['v6'], 'submit_code': ['ashipunova354276'], 'date_updated': ['2013-03-27'], 'rundate': ['20151111'], 'dataset_description': ['Sample Dataset Description temp', 'Sample Dataset Description temp 2'], 'tube_number': ['1', '2'], 'op_amp': ['JV'], 'concentration': ['1'], 'id': ['7308', '7309'], 'insert_size': ['100'], 'on_vamps': [''], 'trim_distal': [''], 'read_length': ['100'], 'env_sample_source_id': ['120'], 'enzyme': [''], 'overlap': ['complete'], 'platform': [''], 'duplicate': ['no'], 'tube_label': ['Tube_Label_2_temp', 'Tube_Label_1_temp'], 'op_seq': ['JV'], 'barcode_index': [''], 'direction': [''], 'project_name': ['AS_AS_Bv6', 'AS_AS_Av6'], 'sample_received': [''], 'adaptor': [''], 'barcode': [''], 'runkey': [''], 'op_empcr': [''], 'quant_method': ['3'], 'date_initial': ['2013-03-27'], 'user': ['ashipunova'], 'pool': [''], 'lane': ['1', '2'], 'primer_suite': ['Archaeal V6 Suite', 'Bacterial V6 Suite'], 'dataset_name': ['dat_test1']}
         
         # file_upload_form = FileUploadForm(request.POST, request.FILES)
-        metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
+        # form = MyForm(initial={'charfield1': 'foo', 'charfield2': 'bar'})
+        
+        csv_rundate = "".join(csv_handler.csv_by_header_uniqued['rundate'])
+        csv_dna_region = "".join(csv_handler.csv_by_header_uniqued['dna_region'])
+        # 'csv_rundate': csv_rundate, 
+        # 'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate, 
+        # 'csv_dna_region': csv_dna_region, 
+        # 'csv_overlap': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
+        # 'csv_has_ns': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
+        # 'csv_seq_operator': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
+        # 'csv_insert_size': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
+        # 'csv_read_length': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
+        
+        metadata_run_info_form = CsvRunInfoUploadForm({'csv_rundate': csv_rundate, 
+                    'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate,
+                    'csv_dna_region': csv_dna_region, 
+                    
+                    })
+                    
+        # metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
         # if file_upload_form.is_valid():
         #     print "file_upload_form.cleaned_data: "
         #     print file_upload_form.cleaned_data
@@ -83,7 +103,7 @@ def upload_metadata_file(request):
             # csv_handler.import_from_file(request.FILES['upload_this_file'])
             # return HttpResponseRedirect('submission/upload_metadata_run_info_form.html')
             
-        return render(request, 'submission/upload_metadata_run_info_form.html', {'CsvRunInfoUploadForm': CsvRunInfoUploadForm, 'header': 'upload_metadata_run_info_form',  'error_message': error_message })
+        return render(request, 'submission/upload_metadata_run_info_form.html', {'CsvRunInfoUploadForm': metadata_run_info_form, 'header': 'upload_metadata_run_info_form', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'error_message': error_message })
     else:
         print "EEE"
         

@@ -228,3 +228,7 @@ ol.help_list li
 .notes {
   padding-top: 1em;
 }
+
+.normal_table th, .normal_table td {
+    text-align: left;
+}
