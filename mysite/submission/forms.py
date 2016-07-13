@@ -10,14 +10,14 @@ class RunForm(forms.Form):
     find_domain  = forms.ChoiceField(Domain.DOMAIN_SHORTCUTS_CHOICES, label = 'Domain')
     find_lane    = forms.CharField(label = 'Lane number', max_length = 3)
 
-class CsvUploadForm(forms.Form):
-
-    my_file = forms.FileField()
-    print "my_file from forms.CsvUploadForm"
-    print my_file
+# class FileUploadForm(forms.Form):
+# 
+#     upload_this_file = forms.FileField()
+#     print "upload_this_file from forms.FileUploadForm"
+#     print upload_this_file
     # place = forms.ModelChoiceField(queryset=Incentive.objects.all())
 
-class RunInfoForm(forms.Form):
+class CsvRunInfoUploadForm(forms.Form):
 
     find_rundate          = forms.CharField(label = 'Run date', max_length = 8,)
     find_path_to_raw_data = forms.CharField(label = 'Path to raw data <span class="emph">/xraid2-2/sequencing/Illumina/</span>', max_length = 12)

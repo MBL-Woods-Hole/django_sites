@@ -1,72 +1,47 @@
 {% extends "submission/base.html" %}
 
 {% block some_content %}
-  <div class="how_to">
 
-  <!--
-    <div class="red_message">
-      This page is under construction, please do not upload any metadata yet.
-    </div>
-  -->
+<div class="how_to">
 
-  <H3>How to download a user filled submission form from VAMPS</H3>
-  <ol>
-  <li>
-  Have the user create a submisson on VAMPS (<a href="http://vamps.mbl.edu/utils/submissions/project_submit.php" target="_blank">Project Submission</a>).
-  </li>
-
-  <li>
-  After you log into <a href="http://vamps.mbl.edu" target="_blank">VAMPS</a>, 
-  click on the link 
-  "<a href="http://vamps.mbl.edu/utils/submissions/admin_submission.php" target="_blank">CSV File Download/Upload</a>".
-  <p/>
-  (If you go from VAMPS it will be on the 
-  "<a href="http://vamps.mbl.edu/utils/submissions/admin_submission.php" target="_blank">Project Submission-ADMIN</a>" page.)
-
-  </li>
-
-  <li>
-  Select the submission you want, e.g. <span class="emph">sgrim123456</span>, then click "go" and then "Download csv". 
-  <p/>
-  That will download the CSV file to your local machine.
-  </li>
-
-  <li>
-  Modify the downloaded CSV, 
-  save as a UNIX csv (Microsoft does not do this by default -- you may have to open the csv in TextWrangler and save as a UNIX csv).
-  </li>
-
-  <li>
-  Then you can upload the csv below on this page to use it for Illumina processing.
-  </li>
-  </ol>
-
+<!--
+  <div class="red_message">
+    This page is under construction, please do not upload any metadata yet.
   </div>
+-->
 
-<div id = "csv_load">
-  <!-- todo: move to snipet? -->
-<form action="" method="POST" enctype="multipart/form-data" name="form_upload_csv" id="form_upload_csv">
-  {% csrf_token %}
-  Upload this file 1: <input name="csv" type="file" id="csv"/>
-  <input type="submit" name="Submit" value="Submit" />
-  <input type="hidden" name="upload_file_step" value="1">  
-</form> 
+<H3>How to download a user filled submission form from VAMPS</H3>
+<ol>
+<li>
+Have the user create a submisson on VAMPS (<a href="http://vamps.mbl.edu/utils/submissions/project_submit.php" target="_blank">Project Submission</a>).
+</li>
+
+<li>
+After you log into <a href="http://vamps.mbl.edu" target="_blank">VAMPS</a>, 
+click on the link 
+"<a href="http://vamps.mbl.edu/utils/submissions/admin_submission.php" target="_blank">CSV File Download/Upload</a>".
+<p/>
+(If you go from VAMPS it will be on the 
+"<a href="http://vamps.mbl.edu/utils/submissions/admin_submission.php" target="_blank">Project Submission-ADMIN</a>" page.)
+
+</li>
+
+<li>
+Select the submission you want, e.g. <span class="emph">sgrim123456</span>, then click "go" and then "Download csv". 
+<p/>
+That will download the CSV file to your local machine.
+</li>
+
+<li>
+Modify the downloaded CSV, 
+save as a UNIX csv (Microsoft does not do this by default -- you may have to open the csv in TextWrangler and save as a UNIX csv).
+</li>
+
+<li>
+Then you can upload the csv below on this page to use it for Illumina processing.
+</li>
+</ol>
+
 </div>
-
-
-<br />
-<input type="button" value="Add new project" class="hide_project" />
-
-<table .message>
-     <tr style="display:none;" class="hide_project_tr {{ show_class }}">
-       <td colspan="3">
-        <form method="post" name="form_project" id="form_project" action="">
-            {% include "submission/form_snippet.html" %}
-        </form>
-    </td>
-  </tr>
-</table>
-<br />
-<!-- see step_subm_metadata_form_project.php -->
 
 {% endblock %}

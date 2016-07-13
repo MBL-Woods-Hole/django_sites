@@ -1,0 +1,15 @@
+{% extends "submission/base.html" %}
+
+{% block some_content %}
+
+<div id = "csv_load">
+  <!-- todo: move to snipet? -->
+  <form action="/submission/run_info_csv/" method="GET" enctype="multipart/form-data" name="form_upload_csv" id="form_upload_csv">
+    {% csrf_token %}
+    Upload this file 1: <input name="csv_file" type="file" id="csv_file"/>
+    <input type="submit" name="Submit" value="Submit" />
+    <input type="hidden" name="file_upload" value="1"> 
+  </form> 
+</div>
+
+{% endblock %}

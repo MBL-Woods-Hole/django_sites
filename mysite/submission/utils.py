@@ -1,4 +1,5 @@
-from .forms import RunForm, CsvUploadForm, RunInfoForm
+from .forms import RunForm, CsvRunInfoUploadForm
+# FileUploadForm
 import models 
 from models_l_env454 import RunInfoIll
 from .csv_tools import CodeCSvModel
@@ -68,7 +69,7 @@ def get_csv_data(request):
 #   # If we had a POST then get the request post values.
 #   if request.method == 'POST':
 #       print "IN utils.get_csv_data if request.method == 'POST'"
-#       form = CsvUploadForm(request.POST, request.FILES)
+#       form = FileUploadForm(request.POST, request.FILES)
 #       print request.FILES
 #       my_file = request.FILES
 #       # ['file']
@@ -80,7 +81,7 @@ def get_csv_data(request):
 # 
 #   else:
 #       print "IN views.upload_metadata else"
-#       form = CsvUploadForm()
+#       form = FileUploadForm()
 #       context = {'form':form}
 #       # return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
 #       return (form, error_message)
