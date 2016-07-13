@@ -58,12 +58,20 @@ def upload_metadata_file(request):
         # request.POST: 
         # <QueryDict: {u'find_seq_operator': [u'33'], u'find_insert_size': [u'44'], u'find_rundate': [u'11'], u'find_read_length': [u'55'], u'find_path_to_raw_data': [u'22'], u'find_dna_region': [u'v4v5'], u'find_overlap': [u'hs'], u'csrfmiddlewaretoken': [u'7p7t28ZZm9bg4uTlbFYcx4GGVeSWvLqh'], u'find_has_ns': [u'no']}>
         # https://gist.github.com/imkevinxu/3365661
-        csvfile = request.FILES['csv_file']
-        dialect = csv.Sniffer().sniff(codecs.EncodedFile(csvfile, "utf-8").read(1024))
-        csvfile.open()
-        reader = csv.reader(codecs.EncodedFile(csvfile, "utf-8"), delimiter=',', dialect=dialect)
-        for row in reader:
-            print row
+        # csvfile = request.FILES['csv_file']
+        # dialect = csv.Sniffer().sniff(codecs.EncodedFile(csvfile, "utf-8").read(1024))
+        # csvfile.open()
+        # reader = csv.reader(codecs.EncodedFile(csvfile, "utf-8"), delimiter=',', dialect=dialect)
+        # print "printing from views"
+        # for row in reader:
+        #     print row
+        
+        csv_file = request.FILES['csv_file']
+        csv_handler = CsvMetadata()
+        csv_handler.import_from_file(csv_file)
+    
+        print "csv_handler.csv_by_header_uniqued from views"
+        print csv_handler.csv_by_header_uniqued
         
         # file_upload_form = FileUploadForm(request.POST, request.FILES)
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)

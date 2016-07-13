@@ -1,6 +1,7 @@
 from datetime import datetime
 from .models import *
 import csv
+import codecs
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -63,24 +64,26 @@ class CsvMetadata():
         # delimiter = ";"
         # dbModel = Code
 
-    def import_from_file(self, file_name):
-        print "file_name from CodeCSvModel.import_from_file"
-        print file_name
+    def import_from_file(self, csvfile):
+        print "csvfile from CodeCSvModel.import_from_file"
+        print csvfile
         try:
-            for chunk in file_name.chunks():
-                print chunk
             
             # doc = file_name['csv']
-            doc = file_name
-            dialect = csv.Sniffer().sniff(doc.read(1024))
-            doc.seek(0, 0)
+            # doc = file_name
+            # dialect = csv.Sniffer().sniff(doc.read(1024))
+            # doc.seek(0, 0)
+            dialect = csv.Sniffer().sniff(codecs.EncodedFile(csvfile, "utf-8").read(1024))
             print "dialect = "
             print dialect
         except csv.Error:
             raise ValidationError(u'Not a valid CSV file')
     
-        reader = csv.reader(doc.read().splitlines(), dialect)
-        print "reader = "
+        csvfile.open()
+        reader = csv.reader(codecs.EncodedFile(csvfile, "utf-8"), delimiter=',', dialect=dialect)
+
+        # reader = csv.reader(doc.read().splitlines(), dialect)
+        print "from csv_tools reader = "
         print reader
         self.csv_headers = []
         required_headers = [header_name for header_name, values in
