@@ -12,9 +12,9 @@ class RunForm(forms.Form):
 
 class FileUploadForm(forms.Form):
 
-    upload_this_file = forms.FileField()
-    print "upload_this_file from forms.FileUploadForm"
-    print upload_this_file
+    csv_file = forms.FileField()
+    print "csv_file from forms.FileUploadForm"
+    print csv_file
 
 class CsvRunInfoUploadForm(forms.Form):
 

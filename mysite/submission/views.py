@@ -7,7 +7,8 @@ from .forms import RunForm, CsvRunInfoUploadForm, FileUploadForm
 from .utils import get_run, get_csv_data
 
 from .csv_tools import CsvMetadata
-
+import csv
+import codecs
 
 # def index(request):
 #     latest_run_list = Run.objects.order_by('-run')[:15]
@@ -56,15 +57,22 @@ def upload_metadata_file(request):
         # info
         # request.POST: 
         # <QueryDict: {u'find_seq_operator': [u'33'], u'find_insert_size': [u'44'], u'find_rundate': [u'11'], u'find_read_length': [u'55'], u'find_path_to_raw_data': [u'22'], u'find_dna_region': [u'v4v5'], u'find_overlap': [u'hs'], u'csrfmiddlewaretoken': [u'7p7t28ZZm9bg4uTlbFYcx4GGVeSWvLqh'], u'find_has_ns': [u'no']}>
+        # https://gist.github.com/imkevinxu/3365661
+        csvfile = request.FILES['csv_file']
+        dialect = csv.Sniffer().sniff(codecs.EncodedFile(csvfile, "utf-8").read(1024))
+        csvfile.open()
+        reader = csv.reader(codecs.EncodedFile(csvfile, "utf-8"), delimiter=',', dialect=dialect)
+        for row in reader:
+            print row
         
-        file_upload_form = FileUploadForm(request.POST, request.FILES)
+        # file_upload_form = FileUploadForm(request.POST, request.FILES)
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-        if file_upload_form.is_valid():
-            print "file_upload_form.cleaned_data: "
-            print file_upload_form.cleaned_data
+        # if file_upload_form.is_valid():
+        #     print "file_upload_form.cleaned_data: "
+        #     print file_upload_form.cleaned_data
             
-            csv_handler = CsvMetadata()
-            csv_handler.import_from_file(request.FILES['upload_this_file'])
+            # csv_handler = CsvMetadata()
+            # csv_handler.import_from_file(request.FILES['upload_this_file'])
             # return HttpResponseRedirect('submission/upload_metadata_run_info_form.html')
             
         return render(request, 'submission/upload_metadata_run_info_form.html', {'CsvRunInfoUploadForm': CsvRunInfoUploadForm, 'header': 'upload_metadata_run_info_form',  'error_message': error_message })

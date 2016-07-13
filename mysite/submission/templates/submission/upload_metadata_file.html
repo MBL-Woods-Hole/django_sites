@@ -9,11 +9,19 @@
 {% endif %}
 
 <div class="grid_12">
-  <form action="" method="POST" enctype="multipart/form-data" name="form_upload_csv" id="form_upload_csv">
+  <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+      <input type="file" name="csv_file" />
+      <input type="submit" value="Upload" />
+
+  </form>
+  
+<!--  <form action="" method="POST" enctype="multipart/form-data" name="form_upload_csv" id="form_upload_csv">
       {{ file_upload_form }}
       {% csrf_token %}
       <input type="submit" value="Submit">
   </form>
+  -->
 </div>
 <div class="clear"></div>
 
