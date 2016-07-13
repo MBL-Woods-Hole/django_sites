@@ -67,20 +67,22 @@ class CodeCSvModel():
         print "file_name from CodeCSvModel.import_from_file"
         print file_name
         try:
-            doc = file_name['csv']
-            dialect = csv.Sniffer().sniff(doc.read(1024))
-            doc.seek(0, 0)
-            print "dialect = "
-            print dialect
+            with open(file_name, 'rb') as doc:
+                dialect = csv.Sniffer().sniff(doc.read(1024))
+                doc.seek(0, 0)
+                print "dialect = "
+                print dialect
+                
+                reader = csv.reader(doc.read().splitlines(), dialect)
+                print "reader = "
+                print reader
+                self.csv_headers = []
+                required_headers = [header_name for header_name, values in
+                                    self.HEADERS.items() if values['required']]
+                
         except csv.Error:
             raise ValidationError(u'Not a valid CSV file')
     
-        reader = csv.reader(doc.read().splitlines(), dialect)
-        print "reader = "
-        print reader
-        self.csv_headers = []
-        required_headers = [header_name for header_name, values in
-                            self.HEADERS.items() if values['required']]
         # print "required_headers = "
         # print required_headers
     
@@ -115,7 +117,6 @@ class CodeCSvModel():
         a = self.check_headers_presence(reader, required_headers)
         print "self.check_headers_presence(reader)"
         print a
-    
       
         # writer = csv.DictWriter(doc, 
         #                         ["dna_region", "rundate"])

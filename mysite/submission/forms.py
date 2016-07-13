@@ -10,11 +10,11 @@ class RunForm(forms.Form):
     find_domain  = forms.ChoiceField(Domain.DOMAIN_SHORTCUTS_CHOICES, label = 'Domain')
     find_lane    = forms.CharField(label = 'Lane number', max_length = 3)
 
-# class FileUploadForm(forms.Form):
-# 
-#     upload_this_file = forms.FileField()
-#     print "upload_this_file from forms.FileUploadForm"
-#     print upload_this_file
+class FileUploadForm(forms.Form):
+
+    upload_this_file = forms.FileField()
+    print "upload_this_file from forms.FileUploadForm"
+    print upload_this_file
     # place = forms.ModelChoiceField(queryset=Incentive.objects.all())
 
 class CsvRunInfoUploadForm(forms.Form):

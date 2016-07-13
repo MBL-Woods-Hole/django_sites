@@ -2,14 +2,26 @@
 
 {% block some_content %}
 
-<div id = "csv_load">
+{% if form.errors %}
+    <p style="color: red;">
+        Please correct the error{{ form.errors|pluralize }} below.
+    </p>
+{% endif %}
+
+<form action="" method="post">
+    {{ file_upload_form }}
+    {% csrf_token %}
+    <input type="submit" value="Submit">
+</form>
+
+  <!-- <div id = "csv_load">-->
   <!-- todo: move to snipet? -->
-  <form action="/submission/run_info_csv/" method="GET" enctype="multipart/form-data" name="form_upload_csv" id="form_upload_csv">
+  <!--   <form action="/submission/run_info_csv/" method="GET" enctype="multipart/form-data" name="form_upload_csv" id="form_upload_csv">
     {% csrf_token %}
     Upload this file 1: <input name="csv_file" type="file" id="csv_file"/>
     <input type="submit" name="Submit" value="Submit" />
     <input type="hidden" name="file_upload" value="1"> 
   </form> 
 </div>
-
+-->
 {% endblock %}

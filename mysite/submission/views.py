@@ -3,8 +3,7 @@ from django.shortcuts import render, render_to_response
 from django.template import RequestContext, loader, Context
 
 from .models_l_env454 import Run
-from .forms import RunForm, CsvRunInfoUploadForm
-# , FileUploadForm
+from .forms import RunForm, CsvRunInfoUploadForm, FileUploadForm
 from .utils import get_run, get_csv_data
 
 from .csv_tools import CodeCSvModel
@@ -45,7 +44,15 @@ def upload_metadata(request):
     return render(request, 'submission/upload_metadata.html')
 
 def upload_metadata_file(request):
-    return render(request, 'submission/upload_metadata_file.html')
+    if request.method == 'POST':
+        file_upload_form = FileUploadForm(request.POST, request.FILE)
+        if file_upload_form.is_valid():
+            print file_upload_form.cleaned_data
+    else:
+        file_upload_form = FileUploadForm()
+    return render(request, 'submission/upload_metadata_file.html', {'file_upload_form': file_upload_form})
+    
+    # return render(request, 'submission/upload_metadata_file.html')
     
 def run_info_csv(request):
     print "request.GET = "
@@ -54,9 +61,17 @@ def run_info_csv(request):
     print "request.POST = "
     print request.POST
 
+    print "request.FILES = "
+    print request.FILES
 
+
+
+    my_file = request.GET['csv_file']
     message = 'request.GET[csv_file]: %s' % request.GET['csv_file']
-
+    m = CodeCSvModel()
+    m.import_from_file(my_file)
+    
+    print "HHHH"
     
     # message = "Filename = "
     # return HttpResponse(message)
@@ -145,6 +160,7 @@ def upload_metadata_all(request):
     #     form = FileUploadForm()
     #     context = {'form':form}
     #     return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))  
+# =======
 
 def data_upload(request):
     run_data = {}
