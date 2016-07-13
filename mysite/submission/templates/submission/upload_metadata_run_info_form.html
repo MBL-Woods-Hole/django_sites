@@ -8,8 +8,8 @@
 {% endif %}
 
 <div class="grid_12">
-  {{ csv_by_header_uniqued }}
-  <form action="" method="post">
+  <!-- {{ csv_by_header_uniqued }} -->
+  <form action="/submission/upload_metadata_run_info_form" method="post">
     <table class="normal_table">
       {{ CsvRunInfoUploadForm.as_table }}
     </table>

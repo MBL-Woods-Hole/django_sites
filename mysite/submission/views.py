@@ -76,23 +76,19 @@ def upload_metadata_file(request):
         
         # file_upload_form = FileUploadForm(request.POST, request.FILES)
         # form = MyForm(initial={'charfield1': 'foo', 'charfield2': 'bar'})
-        
+
         csv_rundate = "".join(csv_handler.csv_by_header_uniqued['rundate'])
-        csv_dna_region = "".join(csv_handler.csv_by_header_uniqued['dna_region'])
-        # 'csv_rundate': csv_rundate, 
-        # 'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate, 
-        # 'csv_dna_region': csv_dna_region, 
-        # 'csv_overlap': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
-        # 'csv_has_ns': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
-        # 'csv_seq_operator': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
-        # 'csv_insert_size': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
-        # 'csv_read_length': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
+
+        run_info_from_csv = {'csv_rundate': csv_rundate, 
+        'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate, 
+        'csv_dna_region': "".join(csv_handler.csv_by_header_uniqued['dna_region']), 
+        'csv_overlap': "".join(csv_handler.csv_by_header_uniqued['overlap']), 
+        'csv_has_ns': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
+        'csv_seq_operator': "".join(csv_handler.csv_by_header_uniqued['op_seq']), 
+        'csv_insert_size': "".join(csv_handler.csv_by_header_uniqued['insert_size']), 
+        'csv_read_length': "".join(csv_handler.csv_by_header_uniqued['read_length'])} 
         
-        metadata_run_info_form = CsvRunInfoUploadForm({'csv_rundate': csv_rundate, 
-                    'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate,
-                    'csv_dna_region': csv_dna_region, 
-                    
-                    })
+        metadata_run_info_form = CsvRunInfoUploadForm(run_info_from_csv)
                     
         # metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
         # if file_upload_form.is_valid():

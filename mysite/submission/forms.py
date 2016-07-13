@@ -19,7 +19,7 @@ class FileUploadForm(forms.Form):
 class CsvRunInfoUploadForm(forms.Form):
 
     csv_rundate          = forms.CharField(label = 'Run date', max_length = 8,)
-    csv_path_to_raw_data = forms.CharField(label = 'Path to raw data <span class="emph">/xraid2-2/sequencing/Illumina/</span>', max_length = 12)
+    csv_path_to_raw_data = forms.CharField(label = 'Path to raw data', max_length = 12) # <span class="emph">/xraid2-2/sequencing/Illumina/</span>
     csv_dna_region       = forms.ChoiceField(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region')
     csv_overlap          = forms.ChoiceField(Overlap.OVERLAP_CHOICES, label = 'Overlap')
     csv_has_ns           = forms.ChoiceField(Has_ns.HAVING_NS_CHOICES, label = 'Has Ns')
