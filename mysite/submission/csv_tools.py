@@ -11,9 +11,9 @@ from django.core.exceptions import ValidationError
 from collections import defaultdict
 
 class CsvMetadata():
-  
+
     def __init__(self):
-        
+
         self.RUN_INFO_FORM_FIELD_HEADERS = ["dna_region", "insert_size", "op_seq", "overlap", "read_length", "rundate"]
         self.csv_headers = []
         self.csv_content = []
@@ -21,101 +21,50 @@ class CsvMetadata():
         self.errors = []
         self.csv_by_header_uniqued = defaultdict( list )
         self.csvfile = ""
-        
+
         # error = True
-        
+
         self.HEADERS = {'id': {'field':'id', 'required':True},
-          'submit_code': {'field':'submit_code', 'required':True},
-        	'user': {'field':'user', 'required':True},
-        	'tube_number': {'field':'tube_number', 'required':True},
-        	'tube_label': {'field':'tube_label', 'required':True},
-        	'dataset_description': {'field':'dataset_description', 'required':True},
-        	'duplicate': {'field':'duplicate', 'required':True},
-        	'domain': {'field':'domain', 'required':True},
-        	'primer_suite': {'field':'primer_suite', 'required':True},
-        	'dna_region': {'field':'dna_region', 'required':True},
-        	'project_name': {'field':'project_name', 'required':True},
-        	'dataset_name': {'field':'dataset_name', 'required':True},
-        	'runkey': {'field':'runkey', 'required':True},
-        	'barcode': {'field':'barcode', 'required':True},
-        	'pool': {'field':'pool', 'required':True},
-        	'lane': {'field':'lane', 'required':True},
-        	'direction': {'field':'direction', 'required':True},
-        	'platform': {'field':'platform', 'required':True},
-        	'op_amp': {'field':'op_amp', 'required':True},
-        	'op_seq': {'field':'op_seq', 'required':True},
-        	'op_empcr': {'field':'op_empcr', 'required':True},
-        	'enzyme': {'field':'enzyme', 'required':True},
-        	'rundate': {'field':'rundate', 'required':True},
-        	'adaptor': {'field':'adaptor', 'required':True},
-        	'date_initial': {'field':'date_initial', 'required':True},
-        	'date_updated': {'field':'date_updated', 'required':True},
-        	'on_vamps': {'field':'on_vamps', 'required':True},
-        	'sample_received': {'field':'sample_received', 'required':True},
-        	'concentration': {'field':'concentration', 'required':True},
-        	'quant_method': {'field':'quant_method', 'required':True},
-        	'overlap': {'field':'overlap', 'required':True},
-        	'insert_size': {'field':'insert_size', 'required':True},
-        	'barcode_index': {'field':'barcode_index', 'required':True},
-        	'read_length': {'field':'read_length', 'required':True},
-        	'trim_distal': {'field':'trim_distal', 'required':True},
-        	'env_sample_source_id': {'field':'env_sample_source_id', 'required':True},}
+                        'submit_code': {'field':'submit_code', 'required':True},
+                        'user': {'field':'user', 'required':True},
+                        'tube_number': {'field':'tube_number', 'required':True},
+                        'tube_label': {'field':'tube_label', 'required':True},
+                        'dataset_description': {'field':'dataset_description', 'required':True},
+                        'duplicate': {'field':'duplicate', 'required':True},
+                        'domain': {'field':'domain', 'required':True},
+                        'primer_suite': {'field':'primer_suite', 'required':True},
+                        'dna_region': {'field':'dna_region', 'required':True},
+                        'project_name': {'field':'project_name', 'required':True},
+                        'dataset_name': {'field':'dataset_name', 'required':True},
+                        'runkey': {'field':'runkey', 'required':True},
+                        'barcode': {'field':'barcode', 'required':True},
+                        'pool': {'field':'pool', 'required':True},
+                        'lane': {'field':'lane', 'required':True},
+                        'direction': {'field':'direction', 'required':True},
+                        'platform': {'field':'platform', 'required':True},
+                        'op_amp': {'field':'op_amp', 'required':True},
+                        'op_seq': {'field':'op_seq', 'required':True},
+                        'op_empcr': {'field':'op_empcr', 'required':True},
+                        'enzyme': {'field':'enzyme', 'required':True},
+                        'rundate': {'field':'rundate', 'required':True},
+                        'adaptor': {'field':'adaptor', 'required':True},
+                        'date_initial': {'field':'date_initial', 'required':True},
+                        'date_updated': {'field':'date_updated', 'required':True},
+                        'on_vamps': {'field':'on_vamps', 'required':True},
+                        'sample_received': {'field':'sample_received', 'required':True},
+                        'concentration': {'field':'concentration', 'required':True},
+                        'quant_method': {'field':'quant_method', 'required':True},
+                        'overlap': {'field':'overlap', 'required':True},
+                        'insert_size': {'field':'insert_size', 'required':True},
+                        'barcode_index': {'field':'barcode_index', 'required':True},
+                        'read_length': {'field':'read_length', 'required':True},
+                        'trim_distal': {'field':'trim_distal', 'required':True},
+                        'env_sample_source_id': {'field':'env_sample_source_id', 'required':True},}
+
+        self.required_headers = [header_name for header_name, values in
+                                 self.HEADERS.items() if values['required']]
 
 
-        # codeid = models.SmallIntegerField(primary_key=True)
-        # remotecode = models.CharField(max_length=32)
-        # active = models.BooleanField()
-        # created = models.DateField()
-        # modified = models.DateField()
-        # incentiveid = models.CharField(max_length=32)
-        #     
-
-
-        
-    # class Meta:
-        # delimiter = ";"
-        # dbModel = Code
-        
-    def get_dialect(self):
-        try:
-            
-            dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024))
-            # print "dialect = "
-            # print dialect
-            return dialect
-            
-        except csv.Error as e:
-            self.errors.append('%s is not a valid CSV file' % (self.csvfile))
-            # print "self.errors 1"
-            # print self.errors
-            # print "except csv.Error as e:"
-            # print e
-        except:
-            raise
-            
-    def get_reader(self, dialect):
-
-        try:
-            self.csvfile.open()
-            return csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
-        except csv.Error as e:
-            self.errors.append('%s is not a valid CSV file' % (self.csvfile))
-            # print "self.errors 1"
-            # print self.errors
-            # print "except csv.Error as e:"
-            # print e
-        except:
-            raise
-            
-    def get_csv_by_header(self):
-        self.csv_by_header = defaultdict( list )
-
-        for row in zip(*self.csv_content):
-            self.csv_by_header[row[0]] = row[1:]
-            
-    def get_csv_by_header_uniqued(self):
-        self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
-        
     def import_from_file(self, csvfile):
         self.csvfile = csvfile
         dialect = self.get_dialect()
@@ -123,33 +72,59 @@ class CsvMetadata():
 
         self.csv_headers, self.csv_content = self.parce_csv(reader)
 
-        required_headers = [header_name for header_name, values in
-                            self.HEADERS.items() if values['required']]
-    
-        self.check_headers_presence(reader, required_headers)            
-        
+        self.check_headers_presence(reader)
+
         self.get_csv_by_header_uniqued()
-        
-      
-        # writer = csv.DictWriter(doc, 
+
+
+        # writer = csv.DictWriter(doc,
         #                         ["dna_region", "rundate"])
-        #                         
+        #
         # for row in self.csv_content:
         #     writer.writerow({'dna_region': row.dna_region, 'rundate': row.rundate})
         #     print writer
-            
+
+    def get_dialect(self):
+        try:
+            dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024))
+            return dialect
+        except csv.Error as e:
+            self.errors.append('%s is not a valid CSV file' % (self.csvfile))
+        except:
+            raise
+
+    def get_reader(self, dialect):
+
+        try:
+            self.csvfile.open()
+            return csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
+        except csv.Error as e:
+            self.errors.append('%s is not a valid CSV file' % (self.csvfile))
+        except:
+            raise
+
+    def get_csv_by_header(self):
+        self.csv_by_header = defaultdict( list )
+
+        for row in zip(*self.csv_content):
+            self.csv_by_header[row[0]] = row[1:]
+
+    def get_csv_by_header_uniqued(self):
+        self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
+
+
     def get_initial_run_info_data_dict(self):
         try:
             csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
 
-            self.run_info_from_csv = {'csv_rundate': csv_rundate, 
-            'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate, 
-            'csv_dna_region': "".join(self.csv_by_header_uniqued['dna_region']), 
-            'csv_overlap': "".join(self.csv_by_header_uniqued['overlap']), 
-            'csv_has_ns': "".join(self.csv_by_header_uniqued['rundate']), 
-            'csv_seq_operator': "".join(self.csv_by_header_uniqued['op_seq']), 
-            'csv_insert_size': "".join(self.csv_by_header_uniqued['insert_size']), 
-            'csv_read_length': "".join(self.csv_by_header_uniqued['read_length'])}
+            self.run_info_from_csv = {'csv_rundate': csv_rundate,
+            'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate,
+            'csv_dna_region':	    "".join(self.csv_by_header_uniqued['dna_region']),
+            'csv_overlap':		    "".join(self.csv_by_header_uniqued['overlap']),
+            'csv_has_ns':		    "".join(self.csv_by_header_uniqued['rundate']),
+            'csv_seq_operator':	    "".join(self.csv_by_header_uniqued['op_seq']),
+            'csv_insert_size':	    "".join(self.csv_by_header_uniqued['insert_size']),
+            'csv_read_length':	    "".join(self.csv_by_header_uniqued['read_length'])}
         except KeyError as e:
             cause = e.args[0]
             self.errors.append('There is no data for %s in the file %s' % (cause, self.csvfile))
@@ -159,27 +134,19 @@ class CsvMetadata():
     def parce_csv(self, reader):
       for y_index, row in enumerate(reader):
           self.csv_content.append(row)
-          # print "self.csv_content 1 = "
-          # print self.csv_content
           if y_index == 0:
               self.csv_headers = [header_name.lower() for header_name in row if header_name]
-              # print "self.csv_headers 1 = "
-              # print self.csv_headers
               continue
       return self.csv_headers, self.csv_content
 
-    def check_headers_presence(self, reader, required_headers):
-      missing_headers = set(required_headers) - set([r.lower() for r in self.csv_headers])
-      print "missing_headers: "
-      print missing_headers
+    def check_headers_presence(self, reader):
+      missing_headers = set(self.required_headers) - set([r.lower() for r in self.csv_headers])
       if missing_headers:
           missing_headers_str = ', '.join(missing_headers)
-          # todo: return error_message instead
           self.errors.append('Missing headers: %s' % (missing_headers_str))
           # print "self.errors 3"
           # print self.errors
           # raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
-          
           return False
       return True
 
@@ -196,14 +163,13 @@ class CsvMetadata():
                 self.csv_headers[x_index]
             except IndexError:
                 continue
-            if self.csv_headers[x_index] in required_headers:
+            if self.csv_headers[x_index] in self.required_headers:
                 if not cell_value:
                     self.errors.append('Missing required value %s for row %s' %
                                             (self.csv_headers[x_index], y_index + 1))
                     # print "self.errors 4"
                     # print self.errors
 
-                    
+
                     # raise ValidationError(u'Missing required value %s for row %s' %
                                             # (self.csv_headers[x_index], y_index + 1))
-    
