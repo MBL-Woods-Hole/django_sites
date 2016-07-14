@@ -49,9 +49,9 @@
 
   {% block file_upload_form %}
 
-    {% if file_upload_form.errors %}
+    {% if errors %}
         <p style="color: red;">
-            Please correct the error{{ form.errors|pluralize }} below.
+            Please correct the error{{ errors|pluralize }} below.
         </p>
     {% endif %}
 
@@ -68,6 +68,7 @@
 
   {% endblock %}
 
+  {{ errors }}
   
   {% if metadata_run_info_form %}
       {% block upload_metadata_run_info_form %}
@@ -76,10 +77,10 @@
           <fieldset id="run_info_form_run_info">
           <legend id="run_info_form_run_info-legend">Run info</legend>
         
-          {% if metadata_run_info_form.errors %}
+          {% if errors %}
             <div class="grid_12">
               <p style="color: red;">
-                  Please correct the error{{ form.errors|pluralize }} below.
+                  Please correct the error{{ errors|pluralize }} below.
               </p>
             </div>  
           {% endif %}

@@ -17,6 +17,7 @@ class CsvMetadata():
         self.csv_content = []
         self.run_info_from_csv = {}
         self.errors = []
+        self.csv_by_header_uniqued = defaultdict( list )
         
         # error = True
         
@@ -85,8 +86,9 @@ class CsvMetadata():
             print "dialect = "
             print dialect
         except csv.Error:
-            self.errors.append('Not a valid CSV file')
-            return errors
+            self.errors.append('E Not a valid CSV file')
+            print "self.errors 1"
+            print self.errors
             # raise ValidationError(u'Not a valid CSV file')
     
         csvfile.open()
@@ -114,7 +116,6 @@ class CsvMetadata():
         # print self.csv_content
         
         self.csv_by_header = defaultdict( list )
-        self.csv_by_header_uniqued = defaultdict( list )
         
         for row in zip(*self.csv_content):
             self.csv_by_header[row[0]] = row[1:]
@@ -132,6 +133,8 @@ class CsvMetadata():
         # a = self.check_headers_presence(reader, required_headers)
         if (self.check_headers_presence(reader, required_headers)):
             self.errors.append('Not a valid CSV file')
+            print "self.errors 2"
+            print self.errors
         
         # print "self.check_headers_presence(reader)"
         # print a
@@ -145,16 +148,21 @@ class CsvMetadata():
         #     print writer
             
     def get_initial_run_info_data_dict(self):
-        csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
+        try:
+            csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
 
-        self.run_info_from_csv = {'csv_rundate': csv_rundate, 
-        'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate, 
-        'csv_dna_region': "".join(self.csv_by_header_uniqued['dna_region']), 
-        'csv_overlap': "".join(self.csv_by_header_uniqued['overlap']), 
-        'csv_has_ns': "".join(self.csv_by_header_uniqued['rundate']), 
-        'csv_seq_operator': "".join(self.csv_by_header_uniqued['op_seq']), 
-        'csv_insert_size': "".join(self.csv_by_header_uniqued['insert_size']), 
-        'csv_read_length': "".join(self.csv_by_header_uniqued['read_length'])}
+            self.run_info_from_csv = {'csv_rundate': csv_rundate, 
+            'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate, 
+            'csv_dna_region': "".join(self.csv_by_header_uniqued['dna_region']), 
+            'csv_overlap': "".join(self.csv_by_header_uniqued['overlap']), 
+            'csv_has_ns': "".join(self.csv_by_header_uniqued['rundate']), 
+            'csv_seq_operator': "".join(self.csv_by_header_uniqued['op_seq']), 
+            'csv_insert_size': "".join(self.csv_by_header_uniqued['insert_size']), 
+            'csv_read_length': "".join(self.csv_by_header_uniqued['read_length'])}
+        except KeyError:
+            self.errors.append('Something is wrong with the csv file')
+        except:
+            raise
 
     def parce_csv(self, reader):
       for y_index, row in enumerate(reader):
@@ -175,8 +183,11 @@ class CsvMetadata():
       if missing_headers:
           missing_headers_str = ', '.join(missing_headers)
           # todo: return error_message instead
+          self.errors.append('Missing headers e: %s' % (missing_headers_str))
+          print "self.errors 3"
+          print self.errors
           # raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
-          self.errors.append('Missing headers: %s' % (missing_headers_str))
+          
           return False
       return True
 
@@ -197,6 +208,9 @@ class CsvMetadata():
                 if not cell_value:
                     self.errors.append('Missing required value %s for row %s' %
                                             (self.csv_headers[x_index], y_index + 1))
+                    print "self.errors 4"
+                    print self.errors
+
                     
                     # raise ValidationError(u'Missing required value %s for row %s' %
                                             # (self.csv_headers[x_index], y_index + 1))
