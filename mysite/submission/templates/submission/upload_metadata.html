@@ -2,130 +2,121 @@
 
 {% block some_content %}
 
-  {% block csv_upload_instruction %}
+ {% block csv_upload_instruction %}
 
-    <div class="how_to">
+  <div class="how_to">
 
-  <!--
-    <div class="red_message">
-      This page is under construction, please do not upload any metadata yet.
-    </div>
-  -->
+   <H3>How to download a user filled submission form from VAMPS</H3>
+   <ol>
+   <li>
+   Have the user create a submisson on VAMPS (<a href="http://vamps.mbl.edu/utils/submissions/project_submit.php" target="_blank">Project Submission</a>).
+   </li>
 
-  <H3>How to download a user filled submission form from VAMPS</H3>
-  <ol>
-  <li>
-  Have the user create a submisson on VAMPS (<a href="http://vamps.mbl.edu/utils/submissions/project_submit.php" target="_blank">Project Submission</a>).
-  </li>
+   <li>
+   After you log into <a href="http://vamps.mbl.edu" target="_blank">VAMPS</a>, 
+   click on the link 
+   "<a href="http://vamps.mbl.edu/utils/submissions/admin_submission.php" target="_blank">CSV File Download/Upload</a>".
+   <p/>
+   (If you go from VAMPS it will be on the 
+   "<a href="http://vamps.mbl.edu/utils/submissions/admin_submission.php" target="_blank">Project Submission-ADMIN</a>" page.)
 
-  <li>
-  After you log into <a href="http://vamps.mbl.edu" target="_blank">VAMPS</a>, 
-  click on the link 
-  "<a href="http://vamps.mbl.edu/utils/submissions/admin_submission.php" target="_blank">CSV File Download/Upload</a>".
-  <p/>
-  (If you go from VAMPS it will be on the 
-  "<a href="http://vamps.mbl.edu/utils/submissions/admin_submission.php" target="_blank">Project Submission-ADMIN</a>" page.)
+   </li>
 
-  </li>
+   <li>
+   Select the submission you want, e.g. <span class="emph">sgrim123456</span>, then click "go" and then "Download csv". 
+   <p/>
+   That will download the CSV file to your local machine.
+   </li>
 
-  <li>
-  Select the submission you want, e.g. <span class="emph">sgrim123456</span>, then click "go" and then "Download csv". 
-  <p/>
-  That will download the CSV file to your local machine.
-  </li>
+   <li>
+   Modify the downloaded CSV, 
+   save as a UNIX csv (Microsoft does not do this by default -- you may have to open the csv in TextWrangler and save as a UNIX csv).
+   </li>
 
-  <li>
-  Modify the downloaded CSV, 
-  save as a UNIX csv (Microsoft does not do this by default -- you may have to open the csv in TextWrangler and save as a UNIX csv).
-  </li>
-
-  <li>
-  Then you can upload the csv below on this page to use it for Illumina processing.
-  </li>
-  </ol>
+   <li>
+   Then you can upload the csv below on this page to use it for Illumina processing.
+   </li>
+   </ol>
 
   </div>
-  {% endblock %}
+ {% endblock %}
 
-  {% block file_upload_form %}
-
-    {% if errors %}
-        <p style="color: red;">
-            Please correct the error{{ errors|pluralize }} below.
-        </p>
-    {% endif %}
-
-
-    <div class="grid_12 form">
-      <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
-
-          <input type="file" name="csv_file" />
-          <input type="submit" value="Upload" />
-
-      </form>
+ {% if errors %}
+  {% block errors %}
+    <div class="red_message">
+     Please correct the error{{ errors|pluralize }} below.
+     {% for err in errors %}
+      <p class="notes">
+       {{ err }}
+      </p>
+     {% endfor %}
     </div>
-    <div class="clear"></div>
+   {% endblock %}
+ {% endif %}
 
-  {% endblock %}
 
-  {{ errors }}
+ {% block file_upload_form %}
+
+  <div class="grid_12 form">
+   <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+     <input type="file" name="csv_file" />
+     <input type="submit" value="Upload" />
+
+   </form>
+  </div>
+  <div class="clear"></div>
+
+ {% endblock %}
+ 
+ {% if metadata_run_info_form %}
+   {% block upload_metadata_run_info_form %}
   
-  {% if metadata_run_info_form %}
-      {% block upload_metadata_run_info_form %}
-    
-        <div class="grid_5 form">
-          <fieldset id="run_info_form_run_info">
-          <legend id="run_info_form_run_info-legend">Run info</legend>
-        
-          {% if errors %}
-            <div class="grid_12">
-              <p style="color: red;">
-                  Please correct the error{{ errors|pluralize }} below.
-              </p>
-            </div>  
-          {% endif %}
-    
-            <!-- {{ csv_by_header_uniqued }} -->
-            <form action="" method="post">
-              <table class="normal_table">
-                {{ metadata_run_info_form.as_table }}
-              </table>
-                {% csrf_token %}
-                <input type="submit" value="Submit Run Info">
-            </form>
-          </fieldset>
-          </div>
-          <div class="grid_7"></div>
-          <div class="clear"></div>
-
-          <!--
-          <br />
-          <div class="grid_12">
-            <form method="post" name="csv_run_info" id="csv_run_info" action="">
-                {% include "submission/form_snippet.html" %}
-                <input type="hidden" name="csv_run_info" value="1"> 
-            </form>
-          </div>
-          <div class="clear"></div>
-          -->
-
-          <!--
-          <br />
-          <input type="button" value="Add new project" class="hide_project" />
-          <table .message>
-               <tr style="display:none;" class="hide_project_tr {{ show_class }}">
-                 <td colspan="3">
-                  <form method="post" name="form_project" id="form_project" action="">
-                      {% include "submission/form_snippet.html" %}
-                  </form>
-              </td>
-            </tr>
-          </table>
-          <br />
-          -->
-          <!-- see step_subm_metadata_form_project.php -->
-
-      {% endblock %}
-    {% endif %}
+    <div class="grid_5 form">
+     <fieldset id="run_info_form_run_info">
+     <legend id="run_info_form_run_info-legend">Run info</legend>
   
+      <!-- {{ csv_by_header_uniqued }} -->
+      <form action="" method="post">
+       <table class="normal_table">
+        {{ metadata_run_info_form.as_table }}
+       </table>
+        {% csrf_token %}
+        <input type="submit" value="Submit Run Info">
+      </form>
+     </fieldset>
+     </div>
+     <div class="grid_7"></div>
+     <div class="clear"></div>
+
+     <!--
+     <br />
+     <div class="grid_12">
+      <form method="post" name="csv_run_info" id="csv_run_info" action="">
+        {% include "submission/form_snippet.html" %}
+        <input type="hidden" name="csv_run_info" value="1"> 
+      </form>
+     </div>
+     <div class="clear"></div>
+     -->
+
+     <!--
+     <br />
+     <input type="button" value="Add new project" class="hide_project" />
+     <table .message>
+        <tr style="display:none;" class="hide_project_tr {{ show_class }}">
+         <td colspan="3">
+         <form method="post" name="form_project" id="form_project" action="">
+           {% include "submission/form_snippet.html" %}
+         </form>
+       </td>
+      </tr>
+     </table>
+     <br />
+     -->
+     <!-- see step_subm_metadata_form_project.php -->
+
+   {% endblock %}
+  {% endif %}
+ 
 {% endblock %}
