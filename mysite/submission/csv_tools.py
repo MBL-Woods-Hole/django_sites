@@ -73,20 +73,14 @@ class CsvMetadata():
     # class Meta:
         # delimiter = ";"
         # dbModel = Code
-
-    def import_from_file(self, csvfile):
-        print "csvfile from CodeCSvModel.import_from_file"
-        self.csvfile = csvfile
-        print self.csvfile
+        
+    def get_dialect(self):
         try:
             
-            # doc = file_name['csv']
-            # doc = file_name
-            # dialect = csv.Sniffer().sniff(doc.read(1024))
-            # doc.seek(0, 0)
             dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024))
             print "dialect = "
             print dialect
+            return dialect
             
         except csv.Error as e:
             self.errors.append('%s is not a valid CSV file' % (self.csvfile))
@@ -94,6 +88,27 @@ class CsvMetadata():
             print self.errors
             print "except csv.Error as e:"
             print e
+        except:
+            raise
+
+
+    def import_from_file(self, csvfile):
+        # print "csvfile from CodeCSvModel.import_from_file"
+        self.csvfile = csvfile
+        # print self.csvfile
+        dialect = self.get_dialect()
+        # try:
+        #
+        #     dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024))
+        #     print "dialect = "
+        #     print dialect
+        #
+        # except csv.Error as e:
+        #     self.errors.append('%s is not a valid CSV file' % (self.csvfile))
+        #     print "self.errors 1"
+        #     print self.errors
+        #     print "except csv.Error as e:"
+        #     print e
             # sys.exit('file %s, line %d: %s' % (filename, reader.line_num, e))
             
         # except csv.Error:
@@ -101,8 +116,8 @@ class CsvMetadata():
         #     print "self.errors 1"
         #     print self.errors
             # raise ValidationError(u'Not a valid CSV file')
-        except:
-            raise
+        # except:
+        #     raise
     
         try:
             self.csvfile.open()
