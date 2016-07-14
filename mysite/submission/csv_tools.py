@@ -92,38 +92,12 @@ class CsvMetadata():
             print e
         except:
             raise
-
-
-    def import_from_file(self, csvfile):
-        # print "csvfile from CodeCSvModel.import_from_file"
-        self.csvfile = csvfile
-        # print self.csvfile
-        dialect = self.get_dialect()
-        # try:
-        #
-        #     dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024))
-        #     print "dialect = "
-        #     print dialect
-        #
-        # except csv.Error as e:
-        #     self.errors.append('%s is not a valid CSV file' % (self.csvfile))
-        #     print "self.errors 1"
-        #     print self.errors
-        #     print "except csv.Error as e:"
-        #     print e
-            # sys.exit('file %s, line %d: %s' % (filename, reader.line_num, e))
             
-        # except csv.Error:
-        #     self.errors.append('E Not a valid CSV file')
-        #     print "self.errors 1"
-        #     print self.errors
-            # raise ValidationError(u'Not a valid CSV file')
-        # except:
-        #     raise
-    
+    def get_reader(self, dialect):
+
         try:
             self.csvfile.open()
-            reader = csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
+            return csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
         except csv.Error as e:
             self.errors.append('%s is not a valid CSV file' % (self.csvfile))
             print "self.errors 1"
@@ -132,11 +106,29 @@ class CsvMetadata():
             print e
         except:
             raise
+
+    def import_from_file(self, csvfile):
+        # print "csvfile from CodeCSvModel.import_from_file"
+        self.csvfile = csvfile
+        # print self.csvfile
+        dialect = self.get_dialect()
+        reader = self.get_reader(dialect)
+
+        # try:
+        #     self.csvfile.open()
+        #     reader = csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
+        # except csv.Error as e:
+        #     self.errors.append('%s is not a valid CSV file' % (self.csvfile))
+        #     print "self.errors 1"
+        #     print self.errors
+        #     print "except csv.Error as e:"
+        #     print e
+        # except:
+        #     raise
             
 
-        # reader = csv.reader(doc.read().splitlines(), dialect)
-        print "from csv_tools reader = "
-        print reader
+        # print "from csv_tools reader = "
+        # print reader
         self.csv_headers = []
         required_headers = [header_name for header_name, values in
                             self.HEADERS.items() if values['required']]
