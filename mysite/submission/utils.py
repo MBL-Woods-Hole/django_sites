@@ -1,7 +1,22 @@
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm
 import models 
 from models_l_env454 import RunInfoIll
-from .csv_tools import CsvMetadata
+# from .csv_tools import CsvMetadata
+
+import time
+
+class Utils():
+
+    def benchmark_w_return_1(self):
+        print  "\n"
+        print "-" * 10
+        return time.time()
+
+    def benchmark_w_return_2(self, t0):
+        t1 = time.time()
+        total = float(t1-t0) / 60
+        # print 'time: %.2f m' % total
+        print 'time: %f s' % total
 
 def get_overlap(machine_name):
     overlap_choices = dict(models.Overlap.COMPLETE_OVERLAP_CHOICES)

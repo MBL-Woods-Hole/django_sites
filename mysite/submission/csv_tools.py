@@ -2,6 +2,8 @@ from datetime import datetime
 from .models import *
 import csv
 import codecs
+import time
+from .utils import Utils
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -143,12 +145,24 @@ class CsvMetadata():
         
         self.csv_by_header = defaultdict( list )
         
+        utils = Utils()
+        t0 = utils.benchmark_w_return_1()
         for row in zip(*self.csv_content):
             self.csv_by_header[row[0]] = row[1:]
-            
-        self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
+        utils.benchmark_w_return_2(t0)
         
-        # TODO: time benchmark
+        t0 = utils.benchmark_w_return_1()
+        self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
+        utils.benchmark_w_return_2(t0)
+        
+        """TODO: time benchmark
+        
+        import time
+        return time.time()
+        t1 = time.time()
+        print 'time: %.2f m' % total
+        
+        """
         print "self.csv_by_header_uniqued"
         print self.csv_by_header_uniqued
         print "*" * 8
