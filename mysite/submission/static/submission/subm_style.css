@@ -221,7 +221,7 @@ ol.help_list li
 
 #run_form {
   align: center; 
-	margin-bottom: 2em;
+  margin-bottom: 2em;
   
 }
 
@@ -231,4 +231,13 @@ ol.help_list li
 
 .normal_table th, .normal_table td {
     text-align: left;
+}
+
+#file_upload_form {
+    padding-top: 1em; 
+}
+
+.how_to ol {
+    padding-top: .5em; 
+    padding-left: 1em;
 }

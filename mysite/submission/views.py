@@ -68,7 +68,7 @@ def upload_metadata(request):
       
         return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))
 
-def upload_metadata_file(request):
+# def upload_metadata_file(request):
     error_message = ""
     if request.method == 'POST' and request.FILES:
         csv_file = request.FILES['csv_file']
@@ -103,7 +103,7 @@ def upload_metadata_file(request):
     
     # return render(request, 'submission/upload_metadata_file.html')
     
-def run_info_csv(request):
+# def run_info_csv(request):
     print "request.GET = "
     print request.GET
 
@@ -129,12 +129,12 @@ def run_info_csv(request):
 
 # =======
 
-def file_upload_post(request):
+# def file_upload_post(request):
     print "file_upload_post method"
     form = CsvRunInfoUploadForm(request.POST, request.FILES)
     return form
 
-def csv_run_info_post(request):
+# def csv_run_info_post(request):
     print "csv_run_info_post method"
     print "2) request.method == 'POST', request.POST:"
     print request.POST
@@ -158,7 +158,7 @@ def csv_run_info_post(request):
     # m.import_from_file(my_file)
     
 
-def first_call():
+# def first_call():
     print "first_call"
     error_message = ""
     print "IN views.upload_metadata first_call"
@@ -166,7 +166,7 @@ def first_call():
     # FileUploadForm(prefix='file_upload')
     return form
 
-def upload_metadata_all(request):
+# def upload_metadata_all(request):
     error_message = ""
     if request.method == 'POST':
         print "1) request.method == 'POST', request.POST:"
