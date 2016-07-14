@@ -90,6 +90,8 @@ class CsvMetadata():
             print "self.errors 1"
             print self.errors
             # raise ValidationError(u'Not a valid CSV file')
+        except:
+            raise
     
         csvfile.open()
         reader = csv.reader(codecs.EncodedFile(csvfile, "utf-8"), delimiter=',', dialect=dialect)
@@ -131,7 +133,7 @@ class CsvMetadata():
         # print "*" * 8
 
         # a = self.check_headers_presence(reader, required_headers)
-        if (self.check_headers_presence(reader, required_headers)):
+        if not (self.check_headers_presence(reader, required_headers)):
             self.errors.append('Not a valid CSV file')
             print "self.errors 2"
             print self.errors
