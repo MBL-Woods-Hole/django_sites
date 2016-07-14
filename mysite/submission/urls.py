@@ -8,9 +8,6 @@ urlpatterns = [
     # ex: /submission/
     url(r'^$', views.upload_metadata, name='upload_metadata'),
     url(r'^upload_metadata/$', views.upload_metadata, name='upload_metadata'),
-    # url(r'^upload_metadata_file/$', views.upload_metadata_file, name='upload_metadata_file'),
-    # url(r'^run_info_csv/$', views.run_info_csv, name='run_info_csv'),
-    # url(r'^upload_metadata/$', views.upload_metadata, name='upload_metadata'),
     url(r'^demultiplex/$', views.demultiplex, name='demultiplex'),
     url(r'^overlap/$', views.overlap, name='overlap'),
     url(r'^overlap_only/$', views.overlap_only, name='overlap_only'),
@@ -28,15 +25,3 @@ urlpatterns = [
     url(r'^check_db_counts/$', views.check_db_counts, name='check_db_counts'),
     
 ]
-
-# from django.conf.urls import url
-#
-# from . import views
-#
-# app_name = 'submission'
-# urlpatterns = [
-#     url(r'^$', views.IndexView.as_view(), name='index'),
-#     url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),
-#     url(r'^(?P<pk>[0-9]+)/results/$', views.ResultsView.as_view(), name='results'),
-#     url(r'^(?P<run_id>[0-9]+)/vote/$', views.vote, name='vote'),
-# ]
