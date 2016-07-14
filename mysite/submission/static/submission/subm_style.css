@@ -233,8 +233,12 @@ ol.help_list li
     text-align: left;
 }
 
-#file_upload_form {
-    padding-top: 1em; 
+.form {
+    margin-top: 1em; 
+    display: table;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: 0px;
 }
 
 .how_to ol {
