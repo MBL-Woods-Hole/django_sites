@@ -42,8 +42,8 @@ def upload_metadata(request):
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
         
-        print "csv_handler.errors"
-        print csv_handler.errors
+        # print "csv_handler.errors"
+        # print csv_handler.errors
           
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors })
     else:

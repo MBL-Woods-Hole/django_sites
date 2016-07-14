@@ -94,7 +94,6 @@ class CsvMetadata():
             raise
 
     def get_reader(self, dialect):
-
         try:
             self.csvfile.open()
             return csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
@@ -103,7 +102,7 @@ class CsvMetadata():
         except:
             raise
 
-    def get_csv_by_header(self):
+    def get_csv_by_header(self): # not using it
         self.csv_by_header = defaultdict( list )
 
         for row in zip(*self.csv_content):
@@ -111,7 +110,6 @@ class CsvMetadata():
 
     def get_csv_by_header_uniqued(self):
         self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
-
 
     def get_initial_run_info_data_dict(self):
         try:
