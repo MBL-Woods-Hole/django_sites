@@ -41,8 +41,32 @@ def index(request):
 def help(request):
     return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
+# def upload_metadata(request):
+#     return render(request, 'submission/upload_metadata.html')
+
 def upload_metadata(request):
-    return render(request, 'submission/upload_metadata.html')
+    error_message = ""
+    if request.method == 'POST' and request.FILES:
+        csv_file = request.FILES['csv_file']
+        csv_handler = CsvMetadata()
+        csv_handler.import_from_file(csv_file)
+  
+        # print "csv_handler.csv_by_header_uniqued from views"
+        # print csv_handler.csv_by_header_uniqued
+        #
+        # print "csv_handler.run_info_from_csv"
+        # print csv_handler.run_info_from_csv
+        csv_handler.get_initial_run_info_data_dict()
+        metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
+          
+        return render(request, 'submission/upload_metadata_run_info_form.html', {'CsvRunInfoUploadForm': metadata_run_info_form, 'header': 'upload_metadata_run_info_form', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'error_message': error_message })
+    else:
+        # print "EEE"
+      
+        file_upload_form = FileUploadForm()
+        context = {'file_upload_form':file_upload_form}
+      
+        return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))
 
 def upload_metadata_file(request):
     error_message = ""

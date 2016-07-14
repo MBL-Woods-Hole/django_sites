@@ -47,4 +47,24 @@ Then you can upload the csv below on this page to use it for Illumina processing
 </div>
 {% endblock %}
 
+  {% block file_upload_form %}
+
+    {% if file_upload_form.errors %}
+        <p style="color: red;">
+            Please correct the error{{ form.errors|pluralize }} below.
+        </p>
+    {% endif %}
+
+
+    <div class="grid_12">
+      <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+          <input type="file" name="csv_file" />
+          <input type="submit" value="Upload" />
+
+      </form>
+    </div>
+    <div class="clear"></div>
+
+  {% endblock %}
 {% endblock %}
