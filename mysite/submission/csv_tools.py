@@ -143,17 +143,12 @@ class CsvMetadata():
     
         self.csv_headers, self.csv_content = self.parce_csv(reader)
         
-        self.csv_by_header = defaultdict( list )
+        # self.csv_by_header = defaultdict( list )
         
-        utils = Utils()
-        t0 = utils.benchmark_w_return_1()
-        for row in zip(*self.csv_content):
-            self.csv_by_header[row[0]] = row[1:]
-        utils.benchmark_w_return_2(t0)
+        # for row in zip(*self.csv_content):
+        #     self.csv_by_header[row[0]] = row[1:]
         
-        t0 = utils.benchmark_w_return_1()
         self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
-        utils.benchmark_w_return_2(t0)
         
         """TODO: time benchmark
         
