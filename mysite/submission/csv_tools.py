@@ -11,6 +11,15 @@ from collections import defaultdict
 class CsvMetadata():
   
     def __init__(self):
+        
+        self.RUN_INFO_FORM_FIELD_HEADERS = ["dna_region", "insert_size", "op_seq", "overlap", "read_length", "rundate"]
+        self.csv_headers = []
+        self.csv_content = []
+        self.run_info_from_csv = {}
+        self.errors = []
+        
+        # error = True
+        
         self.HEADERS = {'id': {'field':'id', 'required':True},
           'submit_code': {'field':'submit_code', 'required':True},
         	'user': {'field':'user', 'required':True},
@@ -48,7 +57,6 @@ class CsvMetadata():
         	'trim_distal': {'field':'trim_distal', 'required':True},
         	'env_sample_source_id': {'field':'env_sample_source_id', 'required':True},}
 
-        self.RUN_INFO_FORM_FIELD_HEADERS = ["dna_region", "insert_size", "op_seq", "overlap", "read_length", "rundate"]
 
         # codeid = models.SmallIntegerField(primary_key=True)
         # remotecode = models.CharField(max_length=32)
@@ -57,9 +65,8 @@ class CsvMetadata():
         # modified = models.DateField()
         # incentiveid = models.CharField(max_length=32)
         #     
-        self.csv_headers = []
-        self.csv_content = []
-        self.run_info_from_csv = {}
+
+
         
     # class Meta:
         # delimiter = ";"
@@ -78,7 +85,9 @@ class CsvMetadata():
             print "dialect = "
             print dialect
         except csv.Error:
-            raise ValidationError(u'Not a valid CSV file')
+            self.errors.append('Not a valid CSV file')
+            return errors
+            # raise ValidationError(u'Not a valid CSV file')
     
         csvfile.open()
         reader = csv.reader(codecs.EncodedFile(csvfile, "utf-8"), delimiter=',', dialect=dialect)
@@ -120,9 +129,12 @@ class CsvMetadata():
         # print set(self.csv_by_header['rundate'])
         # print "*" * 8
 
-        a = self.check_headers_presence(reader, required_headers)
-        print "self.check_headers_presence(reader)"
-        print a
+        # a = self.check_headers_presence(reader, required_headers)
+        if (self.check_headers_presence(reader, required_headers)):
+            self.errors.append('Not a valid CSV file')
+        
+        # print "self.check_headers_presence(reader)"
+        # print a
     
       
         # writer = csv.DictWriter(doc, 
@@ -163,7 +175,9 @@ class CsvMetadata():
       if missing_headers:
           missing_headers_str = ', '.join(missing_headers)
           # todo: return error_message instead
-          raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
+          # raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
+          self.errors.append('Missing headers: %s' % (missing_headers_str))
+          return False
       return True
 
     def required_cell_values_validation(reader):
@@ -181,6 +195,9 @@ class CsvMetadata():
                 continue
             if self.csv_headers[x_index] in required_headers:
                 if not cell_value:
-                    raise ValidationError(u'Missing required value %s for row %s' %
+                    self.errors.append('Missing required value %s for row %s' %
                                             (self.csv_headers[x_index], y_index + 1))
+                    
+                    # raise ValidationError(u'Missing required value %s for row %s' %
+                                            # (self.csv_headers[x_index], y_index + 1))
     

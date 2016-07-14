@@ -22,11 +22,17 @@ def help(request):
 #     return render(request, 'submission/upload_metadata.html')
 
 def upload_metadata(request):
+    
     error_message = ""
+    """TODO:
+    https://docs.djangoproject.com/en/dev/ref/forms/api/#dynamic-initial-values
+    Form.errors
+    """
     if request.method == 'POST' and request.FILES:
         csv_file = request.FILES['csv_file']
         csv_handler = CsvMetadata()
-        csv_handler.import_from_file(csv_file)
+        error = csv_handler.import_from_file(csv_file)
+        
   
         # print "csv_handler.csv_by_header_uniqued from views"
         # print csv_handler.csv_by_header_uniqued
@@ -36,7 +42,7 @@ def upload_metadata(request):
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
           
-        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'error_message': error_message })
+        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'error_message': error_message, 'error': error })
     else:
         # print "EEE"
       
