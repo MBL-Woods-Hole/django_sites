@@ -18,6 +18,7 @@ class CsvMetadata():
         self.run_info_from_csv = {}
         self.errors = []
         self.csv_by_header_uniqued = defaultdict( list )
+        self.csvfile = ""
         
         # error = True
         
@@ -75,26 +76,46 @@ class CsvMetadata():
 
     def import_from_file(self, csvfile):
         print "csvfile from CodeCSvModel.import_from_file"
-        print csvfile
+        self.csvfile = csvfile
+        print self.csvfile
         try:
             
             # doc = file_name['csv']
             # doc = file_name
             # dialect = csv.Sniffer().sniff(doc.read(1024))
             # doc.seek(0, 0)
-            dialect = csv.Sniffer().sniff(codecs.EncodedFile(csvfile, "utf-8").read(1024))
+            dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024))
             print "dialect = "
             print dialect
-        except csv.Error:
-            self.errors.append('E Not a valid CSV file')
+            
+        except csv.Error as e:
+            self.errors.append('%s is not a valid CSV file' % (self.csvfile))
             print "self.errors 1"
             print self.errors
+            print "except csv.Error as e:"
+            print e
+            # sys.exit('file %s, line %d: %s' % (filename, reader.line_num, e))
+            
+        # except csv.Error:
+        #     self.errors.append('E Not a valid CSV file')
+        #     print "self.errors 1"
+        #     print self.errors
             # raise ValidationError(u'Not a valid CSV file')
         except:
             raise
     
-        csvfile.open()
-        reader = csv.reader(codecs.EncodedFile(csvfile, "utf-8"), delimiter=',', dialect=dialect)
+        try:
+            self.csvfile.open()
+            reader = csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
+        except csv.Error as e:
+            self.errors.append('%s is not a valid CSV file' % (self.csvfile))
+            print "self.errors 1"
+            print self.errors
+            print "except csv.Error as e:"
+            print e
+        except:
+            raise
+            
 
         # reader = csv.reader(doc.read().splitlines(), dialect)
         print "from csv_tools reader = "
@@ -102,20 +123,8 @@ class CsvMetadata():
         self.csv_headers = []
         required_headers = [header_name for header_name, values in
                             self.HEADERS.items() if values['required']]
-        # print "required_headers = "
-        # print required_headers
-    
-        # for index, row in enumerate(reader):
-        #   print "III index, row"
-        #   print index, row
     
         self.csv_headers, self.csv_content = self.parce_csv(reader)
-
-        # print "self.csv_headers"
-        # print self.csv_headers
-        # 
-        # print "self.csv_content"
-        # print self.csv_content
         
         self.csv_by_header = defaultdict( list )
         
@@ -133,10 +142,7 @@ class CsvMetadata():
         # print "*" * 8
 
         # a = self.check_headers_presence(reader, required_headers)
-        if not (self.check_headers_presence(reader, required_headers)):
-            self.errors.append('Not a valid CSV file')
-            print "self.errors 2"
-            print self.errors
+        self.check_headers_presence(reader, required_headers)        
         
         # print "self.check_headers_presence(reader)"
         # print a
@@ -161,8 +167,9 @@ class CsvMetadata():
             'csv_seq_operator': "".join(self.csv_by_header_uniqued['op_seq']), 
             'csv_insert_size': "".join(self.csv_by_header_uniqued['insert_size']), 
             'csv_read_length': "".join(self.csv_by_header_uniqued['read_length'])}
-        except KeyError:
-            self.errors.append('Something is wrong with the csv file')
+        except KeyError as e:
+            cause = e.args[0]
+            self.errors.append('There is no data for %s in the file %s' % (cause, self.csvfile))
         except:
             raise
 
@@ -185,7 +192,7 @@ class CsvMetadata():
       if missing_headers:
           missing_headers_str = ', '.join(missing_headers)
           # todo: return error_message instead
-          self.errors.append('Missing headers e: %s' % (missing_headers_str))
+          self.errors.append('Missing headers: %s' % (missing_headers_str))
           print "self.errors 3"
           print self.errors
           # raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
