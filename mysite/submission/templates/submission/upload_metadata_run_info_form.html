@@ -7,45 +7,48 @@
     {{ message }}
 {% endif %}
 
-<div class="grid_12">
-  <!-- {{ csv_by_header_uniqued }} -->
-  <form action="/submission/upload_metadata_run_info_form" method="post">
-    <table class="normal_table">
-      {{ CsvRunInfoUploadForm.as_table }}
-    </table>
-      {% csrf_token %}
-      <input type="submit" value="Submit Run Info">
-  </form>
-</div>
-<div class="clear"></div>
+    {% block upload_metadata_run_info_form %}
 
-<!--
-<br />
-<div class="grid_12">
-  <form method="post" name="csv_run_info" id="csv_run_info" action="">
-      {% include "submission/form_snippet.html" %}
-      <input type="hidden" name="csv_run_info" value="1"> 
-  </form>
-</div>
-<div class="clear"></div>
--->
+        <div class="grid_12">
+          <!-- {{ csv_by_header_uniqued }} -->
+          <form action="/submission/upload_metadata_run_info_form" method="post">
+            <table class="normal_table">
+              {{ CsvRunInfoUploadForm.as_table }}
+            </table>
+              {% csrf_token %}
+              <input type="submit" value="Submit Run Info">
+          </form>
+        </div>
+        <div class="clear"></div>
 
-<!--
-<br />
-<input type="button" value="Add new project" class="hide_project" />
-<table .message>
-     <tr style="display:none;" class="hide_project_tr {{ show_class }}">
-       <td colspan="3">
-        <form method="post" name="form_project" id="form_project" action="">
-            {% include "submission/form_snippet.html" %}
-        </form>
-    </td>
-  </tr>
-</table>
-<br />
--->
-<!-- see step_subm_metadata_form_project.php -->
+        <!--
+        <br />
+        <div class="grid_12">
+          <form method="post" name="csv_run_info" id="csv_run_info" action="">
+              {% include "submission/form_snippet.html" %}
+              <input type="hidden" name="csv_run_info" value="1"> 
+          </form>
+        </div>
+        <div class="clear"></div>
+        -->
 
+        <!--
+        <br />
+        <input type="button" value="Add new project" class="hide_project" />
+        <table .message>
+             <tr style="display:none;" class="hide_project_tr {{ show_class }}">
+               <td colspan="3">
+                <form method="post" name="form_project" id="form_project" action="">
+                    {% include "submission/form_snippet.html" %}
+                </form>
+            </td>
+          </tr>
+        </table>
+        <br />
+        -->
+        <!-- see step_subm_metadata_form_project.php -->
+
+    {% endblock %}
 
 {% endblock %}
 
