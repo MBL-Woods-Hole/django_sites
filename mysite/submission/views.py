@@ -47,64 +47,21 @@ def upload_metadata(request):
 def upload_metadata_file(request):
     error_message = ""
     if request.method == 'POST' and request.FILES:
-        # file
-        # request.POST: 
-        # <QueryDict: {u'csrfmiddlewaretoken': [u'7p7t28ZZm9bg4uTlbFYcx4GGVeSWvLqh']}>
-        # request.FILES: 
-        # <MultiValueDict: {u'upload_this_file': [<InMemoryUploadedFile: metadata_upload_good_csv.html (text/html)>]}>
-        # [13/Jul/2016 16:29:26] "POST /submission/upload_metadata_file/ HTTP/1.1" 200 6815
-
-        # info
-        # request.POST: 
-        # <QueryDict: {u'find_seq_operator': [u'33'], u'find_insert_size': [u'44'], u'find_rundate': [u'11'], u'find_read_length': [u'55'], u'find_path_to_raw_data': [u'22'], u'find_dna_region': [u'v4v5'], u'find_overlap': [u'hs'], u'csrfmiddlewaretoken': [u'7p7t28ZZm9bg4uTlbFYcx4GGVeSWvLqh'], u'find_has_ns': [u'no']}>
-        # https://gist.github.com/imkevinxu/3365661
-        # csvfile = request.FILES['csv_file']
-        # dialect = csv.Sniffer().sniff(codecs.EncodedFile(csvfile, "utf-8").read(1024))
-        # csvfile.open()
-        # reader = csv.reader(codecs.EncodedFile(csvfile, "utf-8"), delimiter=',', dialect=dialect)
-        # print "printing from views"
-        # for row in reader:
-        #     print row
-        
         csv_file = request.FILES['csv_file']
         csv_handler = CsvMetadata()
         csv_handler.import_from_file(csv_file)
     
-        print "csv_handler.csv_by_header_uniqued from views"
-        print csv_handler.csv_by_header_uniqued
-        # {'domain': ['archaea', 'bacteria'], 'dna_region': ['v6'], 'submit_code': ['ashipunova354276'], 'date_updated': ['2013-03-27'], 'rundate': ['20151111'], 'dataset_description': ['Sample Dataset Description temp', 'Sample Dataset Description temp 2'], 'tube_number': ['1', '2'], 'op_amp': ['JV'], 'concentration': ['1'], 'id': ['7308', '7309'], 'insert_size': ['100'], 'on_vamps': [''], 'trim_distal': [''], 'read_length': ['100'], 'env_sample_source_id': ['120'], 'enzyme': [''], 'overlap': ['complete'], 'platform': [''], 'duplicate': ['no'], 'tube_label': ['Tube_Label_2_temp', 'Tube_Label_1_temp'], 'op_seq': ['JV'], 'barcode_index': [''], 'direction': [''], 'project_name': ['AS_AS_Bv6', 'AS_AS_Av6'], 'sample_received': [''], 'adaptor': [''], 'barcode': [''], 'runkey': [''], 'op_empcr': [''], 'quant_method': ['3'], 'date_initial': ['2013-03-27'], 'user': ['ashipunova'], 'pool': [''], 'lane': ['1', '2'], 'primer_suite': ['Archaeal V6 Suite', 'Bacterial V6 Suite'], 'dataset_name': ['dat_test1']}
-        
-        # file_upload_form = FileUploadForm(request.POST, request.FILES)
-        # form = MyForm(initial={'charfield1': 'foo', 'charfield2': 'bar'})
-
-        # csv_rundate = "".join(csv_handler.csv_by_header_uniqued['rundate'])
-        # 
-        #         run_info_from_csv = {'csv_rundate': csv_rundate, 
-        #         'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate, 
-        #         'csv_dna_region': "".join(csv_handler.csv_by_header_uniqued['dna_region']), 
-        #         'csv_overlap': "".join(csv_handler.csv_by_header_uniqued['overlap']), 
-        #         'csv_has_ns': "".join(csv_handler.csv_by_header_uniqued['rundate']), 
-        #         'csv_seq_operator': "".join(csv_handler.csv_by_header_uniqued['op_seq']), 
-        #         'csv_insert_size': "".join(csv_handler.csv_by_header_uniqued['insert_size']), 
-        #         'csv_read_length': "".join(csv_handler.csv_by_header_uniqued['read_length'])} 
-        
-        print "csv_handler.run_info_from_csv"
-        print csv_handler.run_info_from_csv
+        # print "csv_handler.csv_by_header_uniqued from views"
+        # print csv_handler.csv_by_header_uniqued
+        #
+        # print "csv_handler.run_info_from_csv"
+        # print csv_handler.run_info_from_csv
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
-                    
-        # metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-        # if file_upload_form.is_valid():
-        #     print "file_upload_form.cleaned_data: "
-        #     print file_upload_form.cleaned_data
-            
-            # csv_handler = CsvMetadata()
-            # csv_handler.import_from_file(request.FILES['upload_this_file'])
-            # return HttpResponseRedirect('submission/upload_metadata_run_info_form.html')
             
         return render(request, 'submission/upload_metadata_run_info_form.html', {'CsvRunInfoUploadForm': metadata_run_info_form, 'header': 'upload_metadata_run_info_form', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'error_message': error_message })
     else:
-        print "EEE"
+        # print "EEE"
         
         file_upload_form = FileUploadForm()
         context = {'file_upload_form':file_upload_form}
