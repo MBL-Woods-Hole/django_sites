@@ -210,12 +210,12 @@ class CsvMetadata():
             
     def create_path_to_csv(self):
         #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
-        self.selected_machine = self.csv_by_header_uniqued['platform']
-        for rundate in self.csv_by_header_uniqued['rundate']:
-            self.path_to_csv =  "/xraid2-2/g454/run_new_pipeline/illumina/%s_info/%s" % ("".join(self.selected_machine).lower(), rundate)
-            print self.path_to_csv
-        # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info
-
+        self.selected_machine = "".join(self.csv_by_header_uniqued['platform']).lower()
+        self.selected_rundate = "".join(self.csv_by_header_uniqued['rundate']).lower()
+        self.path_to_csv =  "/xraid2-2/g454/run_new_pipeline/illumina/%s_info/%s" % (self.selected_machine, self.selected_rundate)
+        print self.path_to_csv
+        # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160516
+        
     def create_ini_name(self): 
         #20160711_1_B_run_info.ini
         self.selected_machine = self.csv_by_header_uniqued['platform']
