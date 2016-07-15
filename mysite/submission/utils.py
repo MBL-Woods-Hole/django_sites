@@ -4,6 +4,7 @@ from models_l_env454 import RunInfoIll
 # from .csv_tools import CsvMetadata
 
 import time
+import os
 
 class Utils():
 
@@ -24,6 +25,41 @@ class Utils():
             return True
         else:
             return False
+            
+
+class Dirs:
+    """
+        input_dir - directory with fastq files
+    """
+    def __init__(self):
+        self.utils = Utils()
+        self.output_dir_name = None
+        self.get_path()
+        
+    def check_and_make_dir(self, dir_name):
+        try:
+            os.makedirs(dir_name)
+        except OSError:
+            if os.path.isdir(dir_name):
+                print "\nDirectory %s already exists."  % (dir_name)
+            else:
+                raise    
+        return dir_name
+    
+    def check_dir(self, dir_name):
+        if os.path.isdir(dir_name):
+            return dir_name
+        else:            
+            return self.check_and_make_dir(dir_name) 
+            
+    def get_path(self):
+        if self.utils.is_local():
+            root_dir  = C.output_root_mbl_local
+    
+        self.output_dir = os.path.join(root_dir, platform, id_number)    
+        if (lane_name != ''):
+            self.output_dir = os.path.join(root_dir, platform, id_number, lane_name)
+
 
 def get_overlap(machine_name):
     overlap_choices = dict(models.Overlap.COMPLETE_OVERLAP_CHOICES)
@@ -83,27 +119,3 @@ def get_run(request):
     else:
         form = RunForm()
     return (form, error_message)
-
-def get_csv_data(request):
-  pass
-#   error_message = ""
-#   # If we had a POST then get the request post values.
-#   if request.method == 'POST':
-#       print "IN utils.get_csv_data if request.method == 'POST'"
-#       form = FileUploadForm(request.POST, request.FILES)
-#       print request.FILES
-#       my_file = request.FILES
-#       # ['file']
-#       m = CsvMetadata()
-#       m.import_from_file(my_file)
-#       run_info_data = {}
-#       # return render_to_response('submission/upload_metadata_run_info_form.html', context_instance=RequestContext(request))
-#       return (form, run_info_data, error_message)
-#
-#   else:
-#       print "IN views.upload_metadata else"
-#       form = FileUploadForm()
-#       context = {'form':form}
-#       # return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))
-#       return (form, error_message)
-#

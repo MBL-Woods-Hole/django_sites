@@ -1,15 +1,19 @@
-from datetime import datetime
 from .models import *
+from .utils import Utils
+
+from datetime import datetime
+
 import csv
 import codecs
 import time
-from .utils import Utils
+import os
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import connection, transaction
 
 from collections import defaultdict
+
 
 class CsvMetadata():
 
@@ -23,7 +27,8 @@ class CsvMetadata():
         self.csv_by_header_uniqued = defaultdict( list )
         self.csvfile = ""
         self.cause = ""
-
+        self.path_to_csv = ""
+        
         # error = True
 
         self.HEADERS = {'id': {'field':'id', 'required':True},
@@ -202,3 +207,24 @@ class CsvMetadata():
             self.errors.append(self.no_data_message())
         except:
             raise
+            
+    def create_path_to_csv(self):
+        #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
+        self.selected_machine = self.csv_by_header_uniqued['platform']
+        print "self.selected_machine"
+        print self.selected_machine
+        self.path_to_csv =  "/xraid2-2/g454/run_new_pipeline/illumina/%s_info" % ("".join(self.selected_machine).lower())
+        print self.path_to_csv
+        # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info
+
+    def create_ini_name(self): 
+        #20160711_1_B_run_info.ini
+        self.selected_machine = self.csv_by_header_uniqued['platform']
+        machine_choices = dict(models.Machine.MACHINE_CHOICES)
+        return machine_choices[self.selected_machine.lower()]
+        
+        self.ini_name = "%s_%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, self.selected_lane, self.domain_letter)
+
+    def create_path_to_ini(self): 
+        #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711/20160711_1_B_run_info.ini
+    	self.path_to_ini    = os.path.join(self.path_to_csv, self.selected_rundate, self.ini_name)

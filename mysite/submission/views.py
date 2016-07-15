@@ -4,7 +4,7 @@ from django.template import RequestContext, loader, Context
 
 from .models_l_env454 import Run
 from .forms import RunForm, CsvRunInfoUploadForm, FileUploadForm
-from .utils import get_run, get_csv_data, Utils
+from .utils import get_run, Utils
 
 from .csv_tools import CsvMetadata
 
@@ -37,6 +37,7 @@ def upload_metadata(request):
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
         csv_handler.get_vamps_submission_info()
+        csv_handler.create_path_to_csv()
 
         utils.is_local(request)
         # HOSTNAME = request.get_host()

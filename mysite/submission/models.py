@@ -18,7 +18,6 @@ class Machine(models.Model):
         ('ns', 'NextSeq'),
     )
 
-
 class Overlap(models.Model):
 
     COMPLETE_OVERLAP_CHOICES = (
@@ -32,6 +31,7 @@ class Overlap(models.Model):
         ('hs_complete', 'complete'),
         ('ns_complete', 'complete'),
     )
+
 
 class Domain(models.Model):
 
@@ -58,6 +58,7 @@ class Ill_dna_region(models.Model):
         ('v4', 'v4'),
         ('ITS1', 'ITS1'),
     )
+
 
 class Has_ns(models.Model):
     HAVING_NS_CHOICES = (
