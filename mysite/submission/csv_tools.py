@@ -7,6 +7,7 @@ from .utils import Utils
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.db import connection, transaction  
 
 from collections import defaultdict
 
@@ -110,6 +111,8 @@ class CsvMetadata():
 
     def get_csv_by_header_uniqued(self):
         self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
+        print "self.csv_by_header_uniqued: "
+        print self.csv_by_header_uniqued
 
     def get_initial_run_info_data_dict(self):
         try:
@@ -148,7 +151,7 @@ class CsvMetadata():
           return False
       return True
 
-    def required_cell_values_validation(reader):
+    def required_cell_values_validation(self, reader):
       # sanity check required cell values
       for y_index, row in enumerate(reader):
         # ignore blank rows
@@ -171,3 +174,23 @@ class CsvMetadata():
 
                     # raise ValidationError(u'Missing required value %s for row %s' %
                                             # (self.csv_headers[x_index], y_index + 1))
+
+    def create_csv(self, query, out_file_name): 
+        cursor = connection.cursor()  
+        cursor.execute(query)  
+        csv_writer = csv.writer(open(out_file_name, "wb"), delimiter=',')  
+        csv_writer.writerow([i[0] for i in cursor.description]) # write headers  
+        csv_writer.writerows(cursor)  
+        del csv_writer # this will close the CSV file 
+        
+    def get_vamps_submission_info(self):
+        db_name = "test_vamps" 
+        out_file_name = "temp_subm_info"
+        for submit_code in self.csv_by_header_uniqued['submit_code']:            
+            query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added 
+                FROM %s.vamps_submissions AS subm
+                JOIN %s.vamps_auth AS auth
+                  ON (auth.id = subm.vamps_auth_id)
+                WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
+            self.create_csv(query_subm, out_file_name)
+    
