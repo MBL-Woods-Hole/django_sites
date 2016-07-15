@@ -14,7 +14,7 @@ from django.db import connection, transaction
 
 from collections import defaultdict
 
-
+# Assuming that in each csv one rundate and one platform!
 class CsvMetadata():
 
     def __init__(self):
@@ -211,10 +211,9 @@ class CsvMetadata():
     def create_path_to_csv(self):
         #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
         self.selected_machine = self.csv_by_header_uniqued['platform']
-        print "self.selected_machine"
-        print self.selected_machine
-        self.path_to_csv =  "/xraid2-2/g454/run_new_pipeline/illumina/%s_info" % ("".join(self.selected_machine).lower())
-        print self.path_to_csv
+        for rundate in self.csv_by_header_uniqued['rundate']:
+            self.path_to_csv =  "/xraid2-2/g454/run_new_pipeline/illumina/%s_info/%s" % ("".join(self.selected_machine).lower(), rundate)
+            print self.path_to_csv
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info
 
     def create_ini_name(self): 
