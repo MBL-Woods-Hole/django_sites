@@ -159,8 +159,13 @@ li:hover { position: relative;
 }
 
 .emph {
-	font-weight:bold;
+	font-weight: bold;
 }
+
+.emph_it {
+	 font-style: italic;
+}
+
 
 ol.help_list
 {

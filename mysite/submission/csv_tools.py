@@ -7,7 +7,7 @@ from .utils import Utils
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db import connection, transaction  
+from django.db import connection, transaction
 
 from collections import defaultdict
 
@@ -22,6 +22,7 @@ class CsvMetadata():
         self.errors = []
         self.csv_by_header_uniqued = defaultdict( list )
         self.csvfile = ""
+        self.cause = ""
 
         # error = True
 
@@ -65,6 +66,8 @@ class CsvMetadata():
         self.required_headers = [header_name for header_name, values in
                                  self.HEADERS.items() if values['required']]
 
+    def no_data_message(self):
+        return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
 
     def import_from_file(self, csvfile):
         self.csvfile = csvfile
@@ -127,8 +130,8 @@ class CsvMetadata():
             'csv_insert_size':	    "".join(self.csv_by_header_uniqued['insert_size']),
             'csv_read_length':	    "".join(self.csv_by_header_uniqued['read_length'])}
         except KeyError as e:
-            cause = e.args[0]
-            self.errors.append('There is no data for %s in the file %s' % (cause, self.csvfile))
+            self.cause = e.args[0]
+            self.errors.append(self.no_data_message())
         except:
             raise
 
@@ -175,22 +178,27 @@ class CsvMetadata():
                     # raise ValidationError(u'Missing required value %s for row %s' %
                                             # (self.csv_headers[x_index], y_index + 1))
 
-    def create_csv(self, query, out_file_name): 
-        cursor = connection.cursor()  
-        cursor.execute(query)  
-        csv_writer = csv.writer(open(out_file_name, "wb"), delimiter=',')  
-        csv_writer.writerow([i[0] for i in cursor.description]) # write headers  
-        csv_writer.writerows(cursor)  
-        del csv_writer # this will close the CSV file 
-        
+    def create_csv(self, query, out_file_name):
+        cursor = connection.cursor()
+        cursor.execute(query)
+        csv_writer = csv.writer(open(out_file_name, "wb"), delimiter=',')
+        csv_writer.writerow([i[0] for i in cursor.description]) # write headers
+        csv_writer.writerows(cursor)
+        del csv_writer # this will close the CSV file
+
     def get_vamps_submission_info(self):
-        db_name = "test_vamps" 
+        db_name = "test_vamps"
         out_file_name = "temp_subm_info"
-        for submit_code in self.csv_by_header_uniqued['submit_code']:            
-            query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added 
-                FROM %s.vamps_submissions AS subm
-                JOIN %s.vamps_auth AS auth
-                  ON (auth.id = subm.vamps_auth_id)
-                WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
-            self.create_csv(query_subm, out_file_name)
-    
+        try:
+            for submit_code in self.csv_by_header_uniqued['submit_code']:
+                query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
+                    FROM %s.vamps_submissions AS subm
+                    JOIN %s.vamps_auth AS auth
+                      ON (auth.id = subm.vamps_auth_id)
+                    WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
+                self.create_csv(query_subm, out_file_name)
+        except KeyError as e:
+            self.cause = e.args[0]
+            self.errors.append(self.no_data_message())
+        except:
+            raise

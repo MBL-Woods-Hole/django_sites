@@ -47,7 +47,7 @@
      Please correct the error{{ errors|pluralize }} below.
      {% for err in errors %}
       <p class="notes">
-       {{ err }}
+       {{ err|safe }}
       </p>
      {% endfor %}
     </div>
