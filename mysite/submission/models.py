@@ -11,19 +11,26 @@ class Machine(models.Model):
         ('hs', 'hiseq'),
         ('ns', 'nextseq'),
     )
-    
+
+    PLATFORM_CHOICES = (
+        ('ms', 'MiSeq'),
+        ('hs', 'HiSeq'),
+        ('ns', 'NextSeq'),
+    )
+
+
 class Overlap(models.Model):
-  
+
     COMPLETE_OVERLAP_CHOICES = (
         ('ms', 'False'),
         ('hs', 'True'),
         ('ns', 'True'),
     )
-    
+
     OVERLAP_CHOICES = (
-        ('ms', 'partial'),
-        ('hs', 'complete'),
-        ('ns', 'complete'),
+        ('ms_partial', 'partial'),
+        ('hs_complete', 'complete'),
+        ('ns_complete', 'complete'),
     )
 
 class Domain(models.Model):
@@ -34,7 +41,7 @@ class Domain(models.Model):
         ('E', 'Eukarya'),
         ('F', 'ITS1'),
     )
-    
+
     SUITE_DOMAIN_CHOICES = (
         ('B', 'Bacterial'),
         ('A', 'Archaeal'),
@@ -42,9 +49,9 @@ class Domain(models.Model):
         ('F', 'Fungal'),
     )
 
-  
+
 class Ill_dna_region(models.Model):
-  
+
     DNA_REGION_CHOICES = (
         ('v6', 'v6'),
         ('v4v5', 'v4v5'),

@@ -199,23 +199,23 @@ class RunInfoIll(models.Model):
         unique_together = (('run', 'run_key', 'barcode_index', 'lane'),)
 
     def __str__(self):
-        return """run_info_ill_id: %s; 
-run_key: %s; 
-run: %s; 
-lane: %s; 
-dataset: %s; 
-project: %s; 
-tubelabel: %s; 
-barcode: %s; 
-adaptor: %s; 
-dna_region: %s; 
-amp_operator: %s; 
-seq_operator: %s; 
-barcode_index: %s; 
-overlap: %s; 
-insert_size: %s; 
-file_prefix: %s; 
-read_length: %s; 
+        return """run_info_ill_id: %s;
+run_key: %s;
+run: %s;
+lane: %s;
+dataset: %s;
+project: %s;
+tubelabel: %s;
+barcode: %s;
+adaptor: %s;
+dna_region: %s;
+amp_operator: %s;
+seq_operator: %s;
+barcode_index: %s;
+overlap: %s;
+insert_size: %s;
+file_prefix: %s;
+read_length: %s;
 primer_suite: %s; """ %  (self.run_info_ill_id, self.run_key, self.run, self.lane, self.dataset, self.project, self.tubelabel, self.barcode, self.adaptor, self.dna_region, self.amp_operator, self.seq_operator, self.barcode_index, self.overlap, self.insert_size, self.file_prefix, self.read_length, self.primer_suite)
 
 

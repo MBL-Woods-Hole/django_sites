@@ -66,7 +66,7 @@
           <h1>{% block header %}{{ header|linebreaks }}{% endblock %}</h1>
         </div>
         <div class="clear"></div>
-        
+
         {% if form %}
           <div class="grid_5">&nbsp;</div>
           <div class="grid_4">
@@ -102,7 +102,7 @@
               <div class = "notes">
               Afterwards you can check {{ what_to_check }} by using the following command on any <span class="emph">not</span> cluster:
               </div>
-  
+
               <div class = "copy_command">
               cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/{{ check_command }}; date
               </div>

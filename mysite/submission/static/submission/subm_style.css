@@ -4,7 +4,7 @@
 }
 
 body {
-  background: #F8F8F8;  
+  background: #F8F8F8;
   font-size: small;
 }
 
@@ -34,7 +34,7 @@ h1 {
 
 .centered {
   display: table;
-  margin: 0 auto;  
+  margin: 0 auto;
 }
 
 
@@ -75,7 +75,7 @@ h1 {
   width: 100%;
 }*/
 
-#nav, .nav, #nav .nav li { 
+#nav, .nav, #nav .nav li {
   margin: 0px;
   padding: 0px;
 }
@@ -105,10 +105,10 @@ h1 {
   text-decoration: none;
 }
 
-#nav .nav li { 
+#nav .nav li {
   width: 100%;
   text-indent: .5em;
-  line-height: 1.5em;  
+  line-height: 1.5em;
   margin-right: 1em;
   background: #eee;
 }
@@ -119,16 +119,16 @@ h1 {
   height: inherit;
 }
 
-ul.nav { 
+ul.nav {
   display: none;
 }
 
-#nav li:hover > a, #nav li:hover { 
+#nav li:hover > a, #nav li:hover {
   background: lightblue;
 
 }
 
-li:hover > .nav { 
+li:hover > .nav {
   display: block;
   position: absolute;
   width: 20em;
@@ -185,7 +185,7 @@ ol.help_list li
 }
 
 .green_message {
-    color: #006600; 
+    color: #006600;
     font-weight: bold;
     margin: 0.2em;
   	margin-top: 0.5em;
@@ -193,7 +193,7 @@ ol.help_list li
 }
 
 .copy_command {
-  color: #006600; 
+  color: #006600;
 /*  margin: 0.2em;*/
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
@@ -212,7 +212,7 @@ ol.help_list li
 .red_message {
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
-  color: red; 
+  color: red;
   font-weight: bold;
 }
 
@@ -225,9 +225,9 @@ ol.help_list li
 }
 
 #run_form {
-  align: center; 
+  align: center;
   margin-bottom: 2em;
-  
+
 }
 
 .notes {
@@ -239,7 +239,7 @@ ol.help_list li
 }
 
 .form {
-    margin-top: 1em; 
+    margin-top: 1em;
     display: table;
     margin-right: auto;
     margin-bottom: 0px;
@@ -247,6 +247,6 @@ ol.help_list li
 }
 
 .how_to ol {
-    padding-top: .5em; 
+    padding-top: .5em;
     padding-left: 1em;
 }

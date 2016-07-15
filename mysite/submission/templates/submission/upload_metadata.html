@@ -13,23 +13,23 @@
    </li>
 
    <li>
-   After you log into <a href="http://vamps.mbl.edu" target="_blank">VAMPS</a>, 
-   click on the link 
+   After you log into <a href="http://vamps.mbl.edu" target="_blank">VAMPS</a>,
+   click on the link
    "<a href="http://vamps.mbl.edu/utils/submissions/admin_submission.php" target="_blank">CSV File Download/Upload</a>".
    <p/>
-   (If you go from VAMPS it will be on the 
+   (If you go from VAMPS it will be on the
    "<a href="http://vamps.mbl.edu/utils/submissions/admin_submission.php" target="_blank">Project Submission-ADMIN</a>" page.)
 
    </li>
 
    <li>
-   Select the submission you want, e.g. <span class="emph">sgrim123456</span>, then click "go" and then "Download csv". 
+   Select the submission you want, e.g. <span class="emph">sgrim123456</span>, then click "go" and then "Download csv".
    <p/>
    That will download the CSV file to your local machine.
    </li>
 
    <li>
-   Modify the downloaded CSV, 
+   Modify the downloaded CSV,
    save as a UNIX csv (Microsoft does not do this by default -- you may have to open the csv in TextWrangler and save as a UNIX csv).
    </li>
 
@@ -68,14 +68,14 @@
   <div class="clear"></div>
 
  {% endblock %}
- 
+
  {% if metadata_run_info_form %}
    {% block upload_metadata_run_info_form %}
-  
+
     <div class="grid_5 form">
      <fieldset id="run_info_form_run_info">
      <legend id="run_info_form_run_info-legend">Run info</legend>
-  
+
       <!-- {{ csv_by_header_uniqued }} -->
       <form action="" method="post">
        <table class="normal_table">
@@ -94,7 +94,7 @@
      <div class="grid_12">
       <form method="post" name="csv_run_info" id="csv_run_info" action="">
         {% include "submission/form_snippet.html" %}
-        <input type="hidden" name="csv_run_info" value="1"> 
+        <input type="hidden" name="csv_run_info" value="1">
       </form>
      </div>
      <div class="clear"></div>
@@ -118,5 +118,5 @@
 
    {% endblock %}
   {% endif %}
- 
+
 {% endblock %}

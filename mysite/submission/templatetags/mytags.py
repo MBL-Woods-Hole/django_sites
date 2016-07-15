@@ -16,7 +16,7 @@ def active(context, pattern_or_urlname):
     if re.search(pattern, path):
         return 'active'
     return ''
-    
+
 # from django import template
 # register = template.Library()
 #

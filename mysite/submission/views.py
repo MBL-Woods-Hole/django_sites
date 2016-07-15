@@ -12,7 +12,7 @@ def index(request):
     latest_run_list = Run.objects.order_by('-run')[:10]
     context = {'latest_run_list': latest_run_list}
     current_url = request.META["HTTP_REFERER"]
-    
+
     return render(request, current_url, context)
 
 def help(request):
@@ -22,7 +22,7 @@ def help(request):
 #     return render(request, 'submission/upload_metadata.html')
 
 def upload_metadata(request):
-    
+
     # error_message = ""
     """TODO:
     https://docs.djangoproject.com/en/dev/ref/forms/api/#dynamic-initial-values
@@ -33,23 +33,23 @@ def upload_metadata(request):
         csv_file = request.FILES['csv_file']
         csv_handler = CsvMetadata()
         csv_handler.import_from_file(csv_file)
-        
+
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
         csv_handler.get_vamps_submission_info()
-        
+
         utils.is_local(request)
         # HOSTNAME = request.get_host()
         # if HOSTNAME.startswith("localhost"):
         #     print "local"
-        
+
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors })
     else:
         # print "EEE"
-      
+
         file_upload_form = FileUploadForm()
         context = {'file_upload_form':file_upload_form, 'header': 'Upload metadata'}
-      
+
         return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))
 
 def data_upload(request):
@@ -114,7 +114,7 @@ def filter_mismatch(request):
     except:
         form, error_message = get_run(request)
     return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': header, 'is_cluster': '', 'command': 'reads_overlap/; run_mismatch_filter.sh; date',  'error_message': error_message })
-    
+
 def gast(request):
     run_data = {}
     try:

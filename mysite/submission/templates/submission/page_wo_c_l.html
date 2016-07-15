@@ -1,5 +1,5 @@
 {% extends "submission/base.html" %}
-  
+
   {% block first_copy_command %}
 
     <div class = "red_message">
@@ -7,9 +7,9 @@
     </div>
 
     <div class = "is_cluster"> This command line(s) can be run on any <span class="emph">{{ is_cluster }}</span> cluster: </div>
-    
+
     <div class = "copy_command">
       cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/{{ command }}
-    </div>    
+    </div>
 
   {% endblock %}
