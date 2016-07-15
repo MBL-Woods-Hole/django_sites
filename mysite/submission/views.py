@@ -4,7 +4,7 @@ from django.template import RequestContext, loader, Context
 
 from .models_l_env454 import Run
 from .forms import RunForm, CsvRunInfoUploadForm, FileUploadForm
-from .utils import get_run, get_csv_data
+from .utils import get_run, get_csv_data, Utils
 
 from .csv_tools import CsvMetadata
 
@@ -28,23 +28,21 @@ def upload_metadata(request):
     https://docs.djangoproject.com/en/dev/ref/forms/api/#dynamic-initial-values
     Form.errors
     """
+    utils = Utils()
     if request.method == 'POST' and request.FILES:
         csv_file = request.FILES['csv_file']
         csv_handler = CsvMetadata()
         csv_handler.import_from_file(csv_file)
         
-  
-        # print "csv_handler.csv_by_header_uniqued from views"
-        # print csv_handler.csv_by_header_uniqued
-        #
-        # print "csv_handler.run_info_from_csv"
-        # print csv_handler.run_info_from_csv
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
         csv_handler.get_vamps_submission_info()
-        # print "csv_handler.errors"
-        # print csv_handler.errors
-          
+        
+        utils.is_local(request)
+        # HOSTNAME = request.get_host()
+        # if HOSTNAME.startswith("localhost"):
+        #     print "local"
+        
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors })
     else:
         # print "EEE"

@@ -17,6 +17,13 @@ class Utils():
         total = float(t1-t0) / 60
         # print 'time: %.2f m' % total
         print 'time: %f s' % total
+        
+    def is_local(self, request):
+        hostname = request.get_host()
+        if hostname.startswith("localhost"):
+            return True
+        else:
+            return False
 
 def get_overlap(machine_name):
     overlap_choices = dict(models.Overlap.COMPLETE_OVERLAP_CHOICES)
