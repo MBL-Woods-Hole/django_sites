@@ -41,7 +41,8 @@ def upload_metadata(request):
         # TODO: move to one method in csv_tools, call from here as create info and create csv
         csv_handler.get_vamps_submission_info()
         csv_handler.create_path_to_csv()
-        csv_handler.create_ini_name()
+        csv_handler.create_ini_names()
+        csv_handler.create_path_to_ini()
 
         utils.is_local(request)
         # HOSTNAME = request.get_host()
