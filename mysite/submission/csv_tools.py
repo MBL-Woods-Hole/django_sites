@@ -133,7 +133,7 @@ class CsvMetadata():
             csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
 
             self.run_info_from_csv = {'csv_rundate': csv_rundate,
-            'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s" % csv_rundate,
+            'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s%s" % (csv_rundate, self.selected_machine_short),
             'csv_dna_region':	    "".join(self.csv_by_header_uniqued['dna_region']),
             'csv_overlap':		    "".join(self.csv_by_header_uniqued['overlap']),
             'csv_has_ns':		    "".join(self.csv_by_header_uniqued['rundate']),
@@ -228,28 +228,22 @@ class CsvMetadata():
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160516
         
     def create_ini_name(self): 
-        #20160711_1_B_run_info.ini
-        # machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
-        # print "=" * 10
-        # print "AAA"
-
-        # print machine_shortcuts_choices
-        print "BBB"
-        # print self.selected_machine
-        print self.selected_machine_short
-        #ms
+        # 20160711_ms_1_B_run_info.ini
+        # 20150101_hs_hiseq_A_run_info.ini
+        # 20150101_hs_hiseq_B_run_info.ini
         
-        domain_choices = dict(models.Domain.DOMAIN_SHORTCUTS_CHOICES)
+        domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
         print "DDD domain_choices"
         print domain_choices
-        # print domain_choices[domain_name]
-        #
-        # for lane in self.csv_by_header_uniqued['platform']:
-        #     for domain_letter in domain_choices:
-        #         self.ini_name = "%s_%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane, domain_letter)
-        #         print "self.ini_name"
-        #         print self.ini_name
+        
+        for domain_name in self.csv_by_header_uniqued['domain']:
+            domain_letter = domain_choices[domain_name]
+            for lane in self.csv_by_header_uniqued['lane']:
+                self.ini_name = "%s_%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane, domain_letter)
+                print "self.ini_name"
+                print self.ini_name
 
     def create_path_to_ini(self): 
         #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711/20160711_1_B_run_info.ini
+        #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711/20160711_ms_1_B_run_info.ini
     	self.path_to_ini    = os.path.join(self.path_to_csv, self.selected_rundate, self.ini_name)

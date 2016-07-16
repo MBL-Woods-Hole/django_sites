@@ -35,11 +35,11 @@ def upload_metadata(request):
         csv_handler = CsvMetadata()
         csv_handler.import_from_file(csv_file)
 
+        csv_handler.get_selected_variables()
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
         # TODO: move to one method in csv_tools, call from here as create info and create csv
         csv_handler.get_vamps_submission_info()
-        csv_handler.get_selected_variables()
         csv_handler.create_path_to_csv()
         csv_handler.create_ini_name()
 

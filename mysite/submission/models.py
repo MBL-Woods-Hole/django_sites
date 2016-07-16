@@ -56,6 +56,13 @@ class Domain(models.Model):
         ('F', 'Fungal'),
     )
 
+    LETTER_BY_DOMAIN_CHOICES = (
+        ('bacteria', 'B'),
+        ('archaea' , 'A'),
+        ('eukarya' , 'E'),
+        ('its1'    , 'F'),
+    )
+
 
 class Ill_dna_region(models.Model):
 
