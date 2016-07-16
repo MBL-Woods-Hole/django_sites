@@ -100,10 +100,18 @@ class CsvMetadata():
 
     def get_dialect(self):
         try:
-            dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024))
+            # dialect = csv.Sniffer().sniff(self.csvfile.read(1024), delimiters=";,")
+            # dialect = csv.Sniffer().sniff(self.csvfile.read(1024), ",")
+            dialect = csv.Sniffer().sniff(self.csvfile.read(1024), delimiters=";,")
+            
+            self.csvfile.seek(0)
+            print "dialect.delimiter"
+            print dialect.delimiter
+            
+            # dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8", delimiter=',').read(1024), delimiter=',')
             return dialect
         except csv.Error as e:
-            self.errors.append('%s is not a valid CSV file' % (self.csvfile))
+            self.errors.append('Warning for %s: %s' % (self.csvfile, e))
         except:
             raise
 
@@ -112,7 +120,7 @@ class CsvMetadata():
             self.csvfile.open()
             return csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
         except csv.Error as e:
-            self.errors.append('%s is not a valid CSV file' % (self.csvfile))
+            self.errors.append('%s is not a valid CSV file: %s' % (self.csvfile, e))
         except:
             raise
 
