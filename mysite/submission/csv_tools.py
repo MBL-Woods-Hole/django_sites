@@ -1,4 +1,4 @@
-from .models import *
+import models
 from .utils import Utils
 
 from datetime import datetime
@@ -215,6 +215,8 @@ class CsvMetadata():
             
     def get_selected_variables(self):
         self.selected_machine = "".join(self.csv_by_header_uniqued['platform']).lower()
+        print "SSS"
+        print self.selected_machine
         self.selected_rundate = "".join(self.csv_by_header_uniqued['rundate']).lower()
         
     def create_path_to_csv(self):
@@ -227,16 +229,23 @@ class CsvMetadata():
     def create_ini_name(self): 
         #20160711_1_B_run_info.ini
         machine_choices = dict(models.Machine.MACHINE_CHOICES)
-        print machine_choices[self.selected_machine.lower()]
+        print "=" * 10
+        print "AAA"
+
+        print machine_choices
+        print "BBB"
+        print self.selected_machine
         
         domain_choices = dict(models.Domain.DOMAIN_SHORTCUTS_CHOICES)
         print "DDD domain_choices"
         print domain_choices
         # print domain_choices[domain_name]
-        
-        for lane in self.csv_by_header_uniqued['platform']:
-            for domain_letter in 
-            self.ini_name = "%s_%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane, self.domain_letter)
+        #
+        # for lane in self.csv_by_header_uniqued['platform']:
+        #     for domain_letter in domain_choices:
+        #         self.ini_name = "%s_%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane, domain_letter)
+        #         print "self.ini_name"
+        #         print self.ini_name
 
     def create_path_to_ini(self): 
         #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711/20160711_1_B_run_info.ini
