@@ -12,6 +12,13 @@ class Machine(models.Model):
         ('ns', 'nextseq'),
     )
 
+    MACHINE_SHORTCUTS_CHOICES = (
+        ('miseq'  , 'ms'),
+        ('hiseq'  , 'hs'),
+        ('nextseq', 'ns'),
+    )
+
+
     PLATFORM_CHOICES = (
         ('ms', 'MiSeq'),
         ('hs', 'HiSeq'),

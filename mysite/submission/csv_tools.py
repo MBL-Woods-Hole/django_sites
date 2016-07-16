@@ -30,6 +30,7 @@ class CsvMetadata():
         self.path_to_csv = ""
         self.selected_lane = ""
         self.domain_letter = ""
+        self.selected_machine_short = ""
         # error = True
 
         self.HEADERS = {'id': {'field':'id', 'required':True},
@@ -215,9 +216,9 @@ class CsvMetadata():
             
     def get_selected_variables(self):
         self.selected_machine = "".join(self.csv_by_header_uniqued['platform']).lower()
-        print "SSS"
-        print self.selected_machine
         self.selected_rundate = "".join(self.csv_by_header_uniqued['rundate']).lower()
+        machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
+        self.selected_machine_short = machine_shortcuts_choices[self.selected_machine]
         
     def create_path_to_csv(self):
         #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
@@ -228,13 +229,15 @@ class CsvMetadata():
         
     def create_ini_name(self): 
         #20160711_1_B_run_info.ini
-        machine_choices = dict(models.Machine.MACHINE_CHOICES)
-        print "=" * 10
-        print "AAA"
+        # machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
+        # print "=" * 10
+        # print "AAA"
 
-        print machine_choices
+        # print machine_shortcuts_choices
         print "BBB"
-        print self.selected_machine
+        # print self.selected_machine
+        print self.selected_machine_short
+        #ms
         
         domain_choices = dict(models.Domain.DOMAIN_SHORTCUTS_CHOICES)
         print "DDD domain_choices"
