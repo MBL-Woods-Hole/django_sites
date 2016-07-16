@@ -37,6 +37,7 @@ def upload_metadata(request):
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
         csv_handler.get_vamps_submission_info()
+        csv_handler.get_selected_variables()
         csv_handler.create_path_to_csv()
 
         utils.is_local(request)
