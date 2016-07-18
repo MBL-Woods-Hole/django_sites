@@ -140,14 +140,20 @@ class CsvMetadata():
         try:
             csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
 
-            self.run_info_from_csv = {'csv_rundate': csv_rundate,
-            'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s%s" % (csv_rundate, self.selected_machine_short),
-            'csv_dna_region':	    "".join(self.csv_by_header_uniqued['dna_region']),
-            'csv_overlap':		    "".join(self.csv_by_header_uniqued['overlap']),
-            'csv_has_ns':		    "".join(self.csv_by_header_uniqued['rundate']),
-            'csv_seq_operator':	    "".join(self.csv_by_header_uniqued['op_seq']),
-            'csv_insert_size':	    "".join(self.csv_by_header_uniqued['insert_size']),
-            'csv_read_length':	    "".join(self.csv_by_header_uniqued['read_length'])}
+            self.run_info_from_csv = {
+                'csv_rundate':          csv_rundate,
+                'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s%s" % (csv_rundate, self.selected_machine_short),
+                'csv_platform':	        "".join(self.csv_by_header_uniqued['platform']),
+                'csv_dna_region':	    "".join(self.csv_by_header_uniqued['dna_region']),
+                'csv_overlap':		    "".join(self.csv_by_header_uniqued['overlap']),
+                'csv_has_ns':		    "".join(self.csv_by_header_uniqued['rundate']),
+                'csv_seq_operator':	    "".join(self.csv_by_header_uniqued['op_seq']),
+                'csv_insert_size':	    "".join(self.csv_by_header_uniqued['insert_size']),
+                'csv_read_length':	    "".join(self.csv_by_header_uniqued['read_length'])
+            }
+            
+            print "RRR self.run_info_from_csv"
+            print self.run_info_from_csv
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
@@ -252,10 +258,9 @@ class CsvMetadata():
         print self.ini_names
 
     def create_path_to_ini(self): 
-        # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711/20160711_1_B_run_info.ini
-        # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711/20160711_ms_1_B_run_info.ini
         # /xraid2-2/g454/run_new_pipeline/illumina/hiseq_info/20150101/20150101_hs_5_B_run_info.ini
+        # todo: collect into a dictionary?
+        print "self.path_to_ini"
         for ini_name in self.ini_names:
             self.path_to_ini = os.path.join(self.path_to_csv, ini_name)
-            print "self.path_to_ini"
             print self.path_to_ini

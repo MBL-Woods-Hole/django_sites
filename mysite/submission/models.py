@@ -18,7 +18,6 @@ class Machine(models.Model):
         ('nextseq', 'ns'),
     )
 
-
     PLATFORM_CHOICES = (
         ('ms', 'MiSeq'),
         ('hs', 'HiSeq'),
