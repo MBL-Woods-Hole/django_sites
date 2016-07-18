@@ -32,6 +32,7 @@ class CsvMetadata():
         self.domain_letter = ""
         self.selected_machine_short = ""
         self.ini_names = []
+        self.reader = csv.reader
         # error = True
 
         self.HEADERS_FROM_CSV = {
@@ -85,7 +86,9 @@ class CsvMetadata():
         print "dialect = "
         print dialect
 
-        self.reader = self.get_reader(dialect)
+        self.get_reader(dialect)
+        print "LLL self.reader"
+        print self.reader
 
         self.csv_headers, self.csv_content = self.parce_csv()
 
@@ -271,15 +274,15 @@ class CsvMetadata():
 class Validation(CsvMetadata):
     def __init__(self):
         CsvMetadata.__init__(self)        
-        # print "AAA"
-        # print self.HEADERS_FROM_CSV
+        print "AAA"
+        print self.HEADERS_FROM_CSV
 
     def required_cell_values_validation(self):
         print "CCC required_cell_values_validation"
         print self.reader
         
         # sanity check required cell values
-        for y_index, row in enumerate(reader):
+        for y_index, row in enumerate(self.reader):
             print "YYY y_index"
             print y_index
             print "WWW row"
