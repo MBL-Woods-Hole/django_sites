@@ -33,10 +33,10 @@ def upload_metadata(request):
     if request.method == 'POST' and request.FILES:
         csv_file = request.FILES['csv_file']
         csv_handler = CsvMetadata()
-        csv_validation = Validation()
         
         csv_handler.import_from_file(csv_file)
-        csv_validation.required_cell_values_validation()
+        # csv_validation = Validation()
+        # csv_validation.required_cell_values_validation()
 
         csv_handler.get_selected_variables()
         csv_handler.get_initial_run_info_data_dict()

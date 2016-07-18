@@ -32,7 +32,7 @@ class CsvMetadata():
         self.domain_letter = ""
         self.selected_machine_short = ""
         self.ini_names = []
-        self.reader = csv.reader
+
         # error = True
 
         self.HEADERS_FROM_CSV = {
@@ -81,6 +81,8 @@ class CsvMetadata():
         return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
 
     def import_from_file(self, csvfile):
+        print "csvfile"
+        print csvfile
         self.csvfile = csvfile
         dialect = self.get_dialect()
         print "dialect = "
@@ -133,7 +135,7 @@ class CsvMetadata():
         self.csv_by_header = defaultdict( list )
 
         for row in zip(*self.csv_content):
-            self.csv_by_header[row[0]] = row[1:]
+            self.csv_by_header[row[0]] = row[1:]            
 
     def get_csv_by_header_uniqued(self):
         self.csv_by_header_uniqued = ""
@@ -167,6 +169,9 @@ class CsvMetadata():
 
     def parce_csv(self):
       for y_index, row in enumerate(self.reader):
+          print "parce_csv row"
+          print row
+          
           self.csv_content.append(row)
           if y_index == 0:
               self.csv_headers = [header_name.lower() for header_name in row if header_name]
@@ -234,9 +239,15 @@ class CsvMetadata():
             raise
 
     def get_selected_variables(self):
+        print "self.csv_by_header_uniqued['platform']"
+        print self.csv_by_header_uniqued['platform']
         self.selected_machine = "".join(self.csv_by_header_uniqued['platform']).lower()
+        print "self.selected_machine"
+        print self.selected_machine
         self.selected_rundate = "".join(self.csv_by_header_uniqued['rundate']).lower()
         machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
+        print "MMM machine_shortcuts_choices"
+        print machine_shortcuts_choices
         self.selected_machine_short = machine_shortcuts_choices[self.selected_machine]
 
     def create_path_to_csv(self):
@@ -274,8 +285,10 @@ class CsvMetadata():
 class Validation(CsvMetadata):
     def __init__(self):
         CsvMetadata.__init__(self)        
-        print "AAA"
-        print self.HEADERS_FROM_CSV
+        # print "AAA"
+        # print self.HEADERS_FROM_CSV
+        print "CCC1 required_cell_values_validation"
+        print self.reader
 
     def required_cell_values_validation(self):
         print "CCC required_cell_values_validation"
