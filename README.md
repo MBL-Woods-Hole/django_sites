@@ -4,8 +4,8 @@ mysite - from Django tutorial (https://docs.djangoproject.com/en/1.9/intro etc.)
 
 illumina_submission_py - to replace the old php version
 
-START:
----
+## START:
+
 sudo pip install Django
 
 django-admin startproject illumina_submission_py
@@ -25,6 +25,8 @@ mysql> flush privileges;
 python manage.py runserver 0.0.0.0:8000
 
 python manage.py migrate
+
+## Run
 
 python manage.py runserver
 
