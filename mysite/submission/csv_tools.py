@@ -252,7 +252,8 @@ class CsvMetadata():
 
     def create_path_to_csv(self):
         #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
-        self.path_to_csv =  "/xraid2-2/g454/run_new_pipeline/illumina/%s_info/%s" % (self.selected_machine, self.selected_rundate)
+        # self.path_to_csv =  "/xraid2-2/g454/run_new_pipeline/illumina/%s_info/%s" % (self.selected_machine, self.selected_rundate)
+        self.path_to_csv = os.path.join(settings.LOCAL_ILLUMINA_RES_DIR, self.selected_machine + "_info", self.selected_rundate)
         print "self.path_to_csv"
         print self.path_to_csv
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160516
