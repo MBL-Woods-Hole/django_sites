@@ -219,4 +219,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+import socket
+
+try:
+    HOSTNAME = socket.gethostname()
+except:
+    HOSTNAME = 'localhost'
+
 from settings_local import *

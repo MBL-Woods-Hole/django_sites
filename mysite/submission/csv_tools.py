@@ -75,9 +75,12 @@ class CsvMetadata():
             'trim_distal': {'field': 'trim_distal', 'required': False},
             'env_sample_source_id': {'field': 'env_sample_source_id', 'required': True},
         }
+        
+        self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
         self.required_headers = [header_name for header_name, values in
                                  self.HEADERS_FROM_CSV.items() if values['required']]
+        print "self.required_headers = %s" % self.required_headers
 
     def no_data_message(self):
         return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
@@ -190,30 +193,6 @@ class CsvMetadata():
           # raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
           return False
       return True
-
-    def required_cell_values_validation(self):
-      # sanity check required cell values
-      for y_index, row in enumerate(self.reader):
-        # ignore blank rows
-        # if not ''.join(str(x) for x in row):
-        #     continue
-
-        for x_index, cell_value in enumerate(row):
-            # if indexerror, probably an empty cell past the headers col count
-            try:
-                self.csv_headers[x_index]
-            except IndexError:
-                continue
-            if self.csv_headers[x_index] in self.required_headers:
-                if not cell_value:
-                    self.errors.append('Missing required value %s for row %s' %
-                                            (self.csv_headers[x_index], y_index + 1))
-                    # print "self.errors 4"
-                    # print self.errors
-
-
-                    # raise ValidationError(u'Missing required value %s for row %s' %
-                                            # (self.csv_headers[x_index], y_index + 1))
 
     def create_csv(self, query, out_file_name):
         cursor = connection.cursor()
