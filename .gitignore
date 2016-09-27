@@ -3,4 +3,4 @@
 RCS
 *.pyc
 flake_res
-local_settings.py
+settings_local.py
