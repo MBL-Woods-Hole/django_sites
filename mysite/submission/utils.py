@@ -46,7 +46,7 @@ class Dirs:
     def __init__(self):
         self.utils = Utils()
         self.output_dir_name = None
-        self.get_path()
+        # self.get_path()
         
     def check_and_make_dir(self, dir_name):
         try:
@@ -65,8 +65,9 @@ class Dirs:
             return self.check_and_make_dir(dir_name) 
             
     def get_path(self):
-        if self.utils.is_local():
-            root_dir  = C.output_root_mbl_local
+        # print "request.META['HTTP_HOST'] = %s" % (request.META['HTTP_HOST'])
+        # if self.utils.is_local(request.META['HTTP_HOST']):
+        #     root_dir  = C.output_root_mbl_local
     
         self.output_dir = os.path.join(root_dir, platform, id_number)    
         if (lane_name != ''):

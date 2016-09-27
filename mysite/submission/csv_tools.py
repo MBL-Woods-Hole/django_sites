@@ -1,5 +1,5 @@
 import models
-from .utils import Utils
+from .utils import Utils, Dirs
 
 from datetime import datetime
 
@@ -32,6 +32,7 @@ class CsvMetadata():
         self.domain_letter = ""
         self.selected_machine_short = ""
         self.ini_names = []
+        self.dirs = Dirs()
 
         # error = True
 
@@ -282,6 +283,10 @@ class CsvMetadata():
             self.path_to_ini = os.path.join(self.path_to_csv, ini_name)
             print "self.path_to_ini"
             print self.path_to_ini
+            new_dir = self.dirs.check_and_make_dir(self.path_to_ini)
+            print "new_dir"
+            print new_dir
+            
 
 class Validation(CsvMetadata):
     def __init__(self):
