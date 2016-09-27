@@ -302,15 +302,23 @@ class CsvMetadata():
 
     def write_ini(self):
         for lane_domain, ini_name in self.ini_names.items():    
-            a = os.path.join(self.path_to_csv, ini_name)
-            print '''{"rundate":"20160428 = %s",
-                "lane_domain":"1_A = %s",
-                "dna_region":"v6 = %s",
-                "path_to_raw_data":"\/xraid2-2\/sequencing\/Illumina\/20160428ns\/v6 = %s",
-                "overlap":"complete"}
-                os.path.join(self.path_to_csv, ini_name) = path_to_ini = %s
+            # a = os.path.join(self.path_to_csv, ini_name)
+            # print '''{"rundate":"20160428 = %s",
+            #     "lane_domain":"1_A = %s",
+            #     "dna_region":"v6 = %s",
+            #     "path_to_raw_data":"\/xraid2-2\/sequencing\/Illumina\/20160428ns\/v6 = %s",
+            #     "overlap":"complete"}
+            #     os.path.join(self.path_to_csv, ini_name) = path_to_ini = %s
+            # 
+            #     ''' % (self.run_info_from_csv['csv_rundate'], lane_domain, self.run_info_from_csv['csv_dna_region'], self.run_info_from_csv['csv_path_to_raw_data'], a)
+            ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s"}
+            ''' % (self.run_info_from_csv['csv_rundate'], lane_domain, self.run_info_from_csv['csv_dna_region'], self.run_info_from_csv['csv_path_to_raw_data'], self.run_info_from_csv['csv_overlap']) 
 
-                ''' % (self.run_info_from_csv['csv_rundate'], lane_domain, self.run_info_from_csv['csv_dna_region'], self.run_info_from_csv['csv_path_to_raw_data'], a)
+            ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
+            ini_file.write(ini_text)
+            ini_file.close()
+            
+                
 
         # should be {"rundate":"20160428","lane_domain":"1_A","dna_region":"v6","path_to_raw_data":"\/xraid2-2\/sequencing\/Illumina\/20160428ns\/v6","overlap":"complete"}
         # RRR self.run_info_from_csv
