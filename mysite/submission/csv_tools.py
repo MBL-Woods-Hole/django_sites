@@ -31,7 +31,7 @@ class CsvMetadata():
         self.selected_lane = ""
         self.domain_letter = ""
         self.selected_machine_short = ""
-        self.ini_names = []
+        self.ini_names = {}
         self.dirs = Dirs()
         self.lanes_domains = []
 
@@ -137,7 +137,7 @@ class CsvMetadata():
         self.csv_by_header = defaultdict( list )
 
         for row in zip(*self.csv_content):
-            self.csv_by_header[row[0]] = row[1:]            
+            self.csv_by_header[row[0]] = row[1:]
 
     def get_csv_by_header_uniqued(self):
         self.csv_by_header_uniqued = ""
@@ -173,7 +173,7 @@ class CsvMetadata():
       for y_index, row in enumerate(self.reader):
           print "parce_csv row"
           print row
-          
+
           self.csv_content.append(row)
           if y_index == 0:
               self.csv_headers = [header_name.lower() for header_name in row if header_name]
@@ -260,7 +260,7 @@ class CsvMetadata():
         new_dir = self.dirs.check_and_make_dir(self.path_to_csv)
         # print "new_dir"
         # print new_dir
-        
+
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160516
 
     def create_ini_names(self):
@@ -269,34 +269,23 @@ class CsvMetadata():
         # 20150101_hs_hiseq_B_run_info.ini
         for lane_domain in self.lanes_domains:
             print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
-            self.ini_names.append("%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain))
+            self.ini_names[lane_domain] = "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain)
 
         print "self.ini_names"
         print self.ini_names
 
     def get_lanes_domains(self):
         domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
-        
+
         for domain_name in self.csv_by_header_uniqued['domain']:
             domain_letter = domain_choices[domain_name]
             for lane in self.csv_by_header_uniqued['lane']:
                 self.lanes_domains.append("%s_%s" % (lane, domain_letter))
-        
+
     def create_ini_info(self):
-        # 20160711_ms_1_B_run_info.ini
-        # 20150101_hs_hiseq_A_run_info.ini
-        # 20150101_hs_hiseq_B_run_info.ini
-
-        domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
-        # print "DDD domain_choices"
-        # print domain_choices
-
-        for domain_name in self.csv_by_header_uniqued['domain']:
-            domain_letter = domain_choices[domain_name]
-            for lane in self.csv_by_header_uniqued['lane']:
-                self.ini_names.append("%s_%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane, domain_letter))
-        print "self.ini_names"
-        print self.ini_names
+        pass
+        # print "self.ini_names"
+        # print self.ini_names
 
 
     # def create_path_to_ini(self):
@@ -311,21 +300,26 @@ class CsvMetadata():
     #         # print "new_dir"
     #         # print new_dir
 
-    def write_ini(self):    
-        print '''{"rundate":"20160428 = %s",
+    def write_ini(self):
+        for lane_domain, ini_name in self.ini_names.items():    
+            a = os.path.join(self.path_to_csv, ini_name)
+            print '''{"rundate":"20160428 = %s",
                 "lane_domain":"1_A = %s",
                 "dna_region":"v6 = %s",
                 "path_to_raw_data":"\/xraid2-2\/sequencing\/Illumina\/20160428ns\/v6 = %s",
-                "overlap":"complete"}''' % (self.run_info_from_csv['csv_rundate'], self.run_info_from_csv['lane_domain'], self.run_info_from_csv['csv_dna_region'], self.run_info_from_csv['csv_path_to_raw_data'])
-                
+                "overlap":"complete"}
+                os.path.join(self.path_to_csv, ini_name) = path_to_ini = %s
+
+                ''' % (self.run_info_from_csv['csv_rundate'], lane_domain, self.run_info_from_csv['csv_dna_region'], self.run_info_from_csv['csv_path_to_raw_data'], a)
+
         # should be {"rundate":"20160428","lane_domain":"1_A","dna_region":"v6","path_to_raw_data":"\/xraid2-2\/sequencing\/Illumina\/20160428ns\/v6","overlap":"complete"}
         # RRR self.run_info_from_csv
         # {'csv_rundate': '20151111', 'csv_seq_operator': 'JV', 'csv_overlap': 'complete', 'csv_read_length': '100', 'csv_has_ns': '20151111', 'csv_path_to_raw_data': '/xraid2-2/sequencing/Illumina/20151111hs', 'csv_insert_size': '100', 'csv_platform': 'hiseq', 'csv_dna_region': 'v6'}
-        
+
 
 class Validation(CsvMetadata):
     def __init__(self):
-        CsvMetadata.__init__(self)        
+        CsvMetadata.__init__(self)
         # print "AAA"
         # print self.HEADERS_FROM_CSV
         print "CCC1 required_cell_values_validation"
@@ -334,7 +328,7 @@ class Validation(CsvMetadata):
     def required_cell_values_validation(self):
         print "CCC required_cell_values_validation"
         print self.reader
-        
+
         # sanity check required cell values
         for y_index, row in enumerate(self.reader):
             print "YYY y_index"

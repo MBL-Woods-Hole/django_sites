@@ -46,6 +46,7 @@ def upload_metadata(request):
         csv_handler.get_lanes_domains()
         csv_handler.create_path_to_csv()
         csv_handler.create_ini_names()
+        csv_handler.write_ini()
         
 
         utils.is_local(request)
