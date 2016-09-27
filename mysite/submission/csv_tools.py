@@ -265,17 +265,18 @@ class CsvMetadata():
         # 20150101_hs_hiseq_A_run_info.ini
         # 20150101_hs_hiseq_B_run_info.ini
 
-        domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
+        # domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
         # print "DDD domain_choices"
         # print domain_choices
         self.get_lanes_domains()
         for lane_domain in self.lanes_domains:
             print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
+            self.ini_names.append("%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain))
 
-        for domain_name in self.csv_by_header_uniqued['domain']:
-            domain_letter = domain_choices[domain_name]
-            for lane in self.csv_by_header_uniqued['lane']:
-                self.ini_names.append("%s_%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane, domain_letter))
+        # # for domain_name in self.csv_by_header_uniqued['domain']:
+        # #     domain_letter = domain_choices[domain_name]
+        #     for lane in self.csv_by_header_uniqued['lane']:
+        #         self.ini_names.append("%s_%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane, domain_letter))
         print "self.ini_names"
         print self.ini_names
 
