@@ -7,7 +7,7 @@ from .models_l_env454 import Run
 from .forms import RunForm, CsvRunInfoUploadForm, FileUploadForm
 from .utils import Run, Utils
 
-from .csv_tools import CsvMetadata, Validation
+from .metadata_tools import CsvMetadata, Validation
 
 def index(request):
     latest_run_list = Run.objects.order_by('-run')[:10]
@@ -41,7 +41,7 @@ def upload_metadata(request):
         csv_handler.get_selected_variables()
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
-        # TODO: move to one method in csv_tools, call from here as create info and create csv
+        # TODO: move to one method in metadata_tools, call from here as create info and create csv
         csv_handler.get_vamps_submission_info()
         csv_handler.get_lanes_domains()
         csv_handler.create_path_to_csv()

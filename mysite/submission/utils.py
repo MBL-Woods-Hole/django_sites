@@ -1,7 +1,6 @@
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm
 import models
 from models_l_env454 import RunInfoIll
-# from .csv_tools import CsvMetadata
 
 import time
 import os
