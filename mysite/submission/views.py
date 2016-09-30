@@ -1,7 +1,10 @@
 from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from django.template import RequestContext, loader, Context
 
+def my_view(request):
+    context = {'foo': 'bar'}
+    return render(request, 'my_template.html', context)
 from .models_l_env454 import Run
 
 from .forms import RunForm, CsvRunInfoUploadForm, FileUploadForm
@@ -61,7 +64,15 @@ def upload_metadata(request):
         file_upload_form = FileUploadForm()
         context = {'file_upload_form':file_upload_form, 'header': 'Upload metadata'}
 
-        return render_to_response('submission/upload_metadata.html', context, context_instance=RequestContext(request))
+        return render(request, 'submission/upload_metadata.html', context)
+
+# def my_view(request):
+#     context = {'foo': 'bar'}
+#     return render_to_response('my_template.html', context, context_instance=RequestContext(request))
+# 
+# def my_view(request):
+#     context = {'foo': 'bar'}
+#     return render(request, 'my_template.html', context)
 
 def data_upload(request):
     run_utils = Run()
