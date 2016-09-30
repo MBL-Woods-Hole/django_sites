@@ -1,3 +1,4 @@
+import sys
 import models
 from .utils import Utils, Dirs
 
@@ -25,7 +26,8 @@ class CsvMetadata():
         self.run_info_from_csv = {}
         self.errors = []
         self.csv_by_header_uniqued = defaultdict( list )
-        self.csvfile = ""
+        # self.csv_file_name = "submission/selenium_tests/ashipunova354276_VAMPS_submission_good.csv"
+        self.csv_file = ""
         self.cause = ""
         self.path_to_csv = ""
         self.selected_lane = ""
@@ -83,17 +85,35 @@ class CsvMetadata():
         print "self.required_headers = %s" % self.required_headers
 
     def no_data_message(self):
-        return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
+        return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csv_file)
 
-    def import_from_file(self, csvfile):
-        print "csvfile"
-        print csvfile
-        self.csvfile = csvfile
-        dialect = self.get_dialect()
-        print "dialect = "
-        print dialect
+    def import_from_file(self, csv_file):
+        print "csv_file"
+        print csv_file
+        self.csv_file = csv_file
+        
+        # lines = ["'A','bunch+of','multiline','CSV,LIKE,STRING'"]
+        # 
+        # reader = csv.reader(lines, quotechar="'")
+        # 
+        # with open('out.csv', 'wb') as f:
+        #    writer = csv.writer(f)
+        #    writer.writerows(list(reader))
+        # 
+        
+        
+        # dialect = csv.get_dialect(self.csv_file)
+        # print "dialect = "
+        # print dialect
+        csv_file_name = "submission/selenium_tests/ashipunova354276_VAMPS_submission_good.csv"
+        csvfile_o = open(csv_file_name, 'rb')
+        dialect = csv.Sniffer().sniff(csvfile_o.read(1024))
+        csvfile_o.seek(0)
+        self.reader = csv.reader(csvfile_o, dialect)
 
-        self.get_reader(dialect)
+
+        # self.get_reader(dialect)
+        # self.get_reader()
         print "LLL self.reader"
         print self.reader
 
@@ -111,28 +131,40 @@ class CsvMetadata():
         #     writer.writerow({'dna_region': row.dna_region, 'rundate': row.rundate})
         #     print writer
 
-    def get_dialect(self):
-        try:
-            # dialect = csv.Sniffer().sniff(self.csvfile.read(1024), delimiters=";,")
-            # dialect = csv.Sniffer().sniff(self.csvfile.read(1024), ",")
-            # dialect = csv.Sniffer().sniff(self.csvfile.read(1024), delimiters=";,")
+    # def get_dialect(self):
+    #     try:
+    #         # dialect = csv.Sniffer().sniff(self.csv_file.read(1024), delimiters=";,")
+    #         # dialect = csv.Sniffer().sniff(self.csv_file.read(1024), ",")
+    #         # dialect = csv.Sniffer().sniff(self.csv_file.read(1024), delimiters=";,")
+    #         try:
+    #             # with open(r'ashipunova354276_VAMPS_submission_good.csv', 'rb') as csv_file:
+    #             with open(self.csv_file_name, 'rb') as o_csv_file:
+    #                 reader = csv.reader(o_csv_file, delimiter=',') 
+    #                 for row in reader:
+    #                     print (', '.join(row))
+    #         except IOError:
+    #             print ("IOError: " + self.csv_file_name)
+    #             sys.exit()
 
-            dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024), delimiters=',')
-            self.csvfile.seek(0)
-            print "dialect.delimiter"
-            print dialect.delimiter
-            return dialect
-        except csv.Error as e:
-            self.errors.append('Warning for %s: %s' % (self.csvfile, e))
-        except:
-            raise
+            # dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csv_file, "utf-8").read(1024), delimiters=',')
+            # self.csv_file.seek(0)
+            # print "dialect.delimiter"
+            # print dialect.delimiter
+            # return dialect
+        # except csv.Error as e:
+        #     self.errors.append('Warning for %s: %s' % (self.csv_file, e))
+        # except:
+        #     raise
 
-    def get_reader(self, dialect):
+    # def get_reader(self, dialect):
+    def get_reader(self):
         try:
-            self.csvfile.open()
-            self.reader = csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
+            self.csv_file.open()
+            # self.reader = csv.reader(codecs.EncodedFile(self.csv_file, "utf-8"), delimiter=',', dialect=dialect)
+            self.reader = csv.reader(codecs.EncodedFile(self.csv_file, "utf-8"), delimiter=',')
+            
         except csv.Error as e:
-            self.errors.append('%s is not a valid CSV file: %s' % (self.csvfile, e))
+            self.errors.append('%s is not a valid CSV file: %s' % (self.csv_file, e))
         except:
             raise
 

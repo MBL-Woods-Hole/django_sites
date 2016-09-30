@@ -15,7 +15,7 @@ mysql as root:
 mysql> CREATE USER 'dj_admin'@'localhost';
 
 mysql> GRANT ALL PRIVILEGES ON *.* TO 'dj_admin'@'localhost'
-
+ashipunova
 mysql> SET PASSWORD = PASSWORD('some_password');
 
 mysql> create database dj_test;
