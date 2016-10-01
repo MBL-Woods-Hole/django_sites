@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext, loader, Context
+import csv
 
 def my_view(request):
     context = {'foo': 'bar'}
@@ -33,9 +34,35 @@ def upload_metadata(request):
     Form.errors
     """
     utils = Utils()
-    if request.method == 'POST' and request.FILES:
+    if request.method == 'POST':
+     # and request.FILES:
+        # payload = {}
+        try:
+          payload = request.FILES
+          print "=== DDD101 ==="
+          for k, v in payload.items():
+            print "k ="
+            print k
+            print "v ="
+            print v
+          print "=== DDD11 ==="
+          print type(payload)
+          file = payload['csv_file']
+          print "File size:", file.size
+          
+          #   input_file = request.FILES.get('csv_file')
+          #   input_file.seek(0)
+          #
+          #   print "=== DDD11 ==="
+          #   print input_file.size
+          #   print "==="
+        except:
+            raise
+        
+      
         csv_file = request.FILES['csv_file']
         csv_handler = CsvMetadata()
+        csv_handler.upload(request)
         
         csv_handler.import_from_file(csv_file)
         # csv_validation = Validation()
