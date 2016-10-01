@@ -90,6 +90,8 @@ class CsvMetadata():
     def import_from_file(self, csv_file):
         print "csv_file"
         print csv_file
+        print "csv_file.name"
+        print csv_file.name
         self.csv_file = csv_file
         
         # lines = ["'A','bunch+of','multiline','CSV,LIKE,STRING'"]
@@ -101,12 +103,15 @@ class CsvMetadata():
         #    writer.writerows(list(reader))
         # 
         
-        
-        # dialect = csv.get_dialect(self.csv_file)
-        # print "dialect = "
-        # print dialect
-        csv_file_name = "submission/selenium_tests/ashipunova354276_VAMPS_submission_good.csv"
-        csvfile_o = open(csv_file_name, 'rb')
+        # try:
+        #   dialect = csv.get_dialect(self.csv_file)
+        #   print "dialect = "
+        #   print dialect
+        #   if (dialect)
+        # csv_file_name = "submission/selenium_tests/ashipunova354276_VAMPS_submission_good.csv"
+        # TODO: get path from where?
+        csvfile_o = open(os.path.join("submission/selenium_tests", csv_file.name), 'rb')
+        # csvfile_o = open(csv_file_name, 'rb')
         dialect = csv.Sniffer().sniff(csvfile_o.read(1024))
         csvfile_o.seek(0)
         self.reader = csv.reader(csvfile_o, dialect)
