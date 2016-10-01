@@ -118,10 +118,18 @@ class CsvMetadata():
             # dialect = csv.Sniffer().sniff(self.csvfile.read(1024), delimiters=";,")
 
             dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024), delimiters=',')
-            self.csvfile.seek(0)
-            print "dialect.delimiter"
-            print dialect.delimiter
-            return dialect
+            if dialect:
+              self.csvfile.seek(0)
+              print "dialect.delimiter"
+              print dialect.delimiter
+              # print dir(dialect)
+              # ['__doc__', '__init__', '__module__', '_name', '_valid', '_validate', 'delimiter', 'doublequote', 'escapechar', 'lineterminator', 'quotechar', 'quoting', 'skipinitialspace']
+              
+              # print "----"
+              return dialect
+            else:
+              print("WARNING, file %s is empty (size = %s), check it's path" % (self.csvfile.name, self.csvfile.size))
+
         except csv.Error as e:
             self.errors.append('Warning for %s: %s' % (self.csvfile, e))
         except:
