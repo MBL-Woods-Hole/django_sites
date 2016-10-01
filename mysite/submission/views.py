@@ -50,6 +50,7 @@ def upload_metadata(request):
         csv_handler.create_path_to_csv()
         csv_handler.create_ini_names()
         csv_handler.write_ini()
+        csv_handler.make_metadata_table()
         
 
         utils.is_local(request)
