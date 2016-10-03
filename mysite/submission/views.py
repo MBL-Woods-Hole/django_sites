@@ -45,11 +45,11 @@ def upload_metadata(request):
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
         # TODO: move to one method in metadata_tools, call from here as create info and create csv
-        csv_handler.get_vamps_submission_info()
         csv_handler.get_lanes_domains()
         csv_handler.create_path_to_csv()
         csv_handler.create_ini_names()
         csv_handler.write_ini()
+        csv_handler.get_vamps_submission_info()
         csv_handler.make_metadata_table()
         
 

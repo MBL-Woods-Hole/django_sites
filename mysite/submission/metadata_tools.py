@@ -208,6 +208,8 @@ class CsvMetadata():
         csv_writer = csv.writer(open(out_file_name, "wb"), delimiter=',')
         csv_writer.writerow([i[0] for i in cursor.description]) # write headers
         csv_writer.writerows(cursor)
+        print "IIIIN HERE, out_file_name = %s, self.path_to_csv = %s" % (out_file_name, self.path_to_csv)
+
         del csv_writer # this will close the CSV file
 
     def get_vamps_submission_info(self):
@@ -281,6 +283,8 @@ class CsvMetadata():
         self.get_csv_by_header()
         for h in self.HEADERS_TO_CSV:
           print "cell.count = %s" % (len(self.csv_by_header[h]))
+          # if (cell.count > 0):
+          #     for
           # cell.count = 2
           # col = primer_suite, cell = ('Archaeal V6 Suite', 'Bacterial V6 Suite')
           # cell.count = 0
