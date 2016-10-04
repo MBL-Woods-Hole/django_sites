@@ -37,7 +37,7 @@ class CsvMetadata():
         self.lanes_domains = []
         self.out_metadata = defaultdict( lambda: defaultdict(int) )
         self.out_metadata_table = defaultdict( list )
-        self.vamps_submissions = []
+        self.vamps_submissions = {}
         
         # error = True
 
@@ -229,34 +229,20 @@ class CsvMetadata():
         return res_dict
       # dump it to a json string
       # self.vamps_submissions = json.dumps(info)
-          
-        
 
     def get_vamps_submission_info(self):
         db_name = "test_vamps"
         out_file_name = "temp_subm_info"
         try:
             for submit_code in self.csv_by_header_uniqued['submit_code']:
+                print "submit_code = %s" % submit_code
                 query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
                     FROM %s.vamps_submissions AS subm
                     JOIN %s.vamps_auth AS auth
                       ON (auth.id = subm.vamps_auth_id)
                     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
-                self.create_csv(query_subm, out_file_name)
-                # cursor = connection.cursor()
-                # cursor.execute(query_subm)
-                # 
-                # column_names = [d[0] for d in cursor.description]
-                # 
-                # for row in cursor:
-                #   # build dict
-                #   self.vamps_submissions = dict(zip(column_names, row))
-
-                  # dump it to a json string
-                  # self.vamps_submissions = json.dumps(info)
-                
-                self.vamps_submissions = self.run_query_to_dict(query_subm)
-                print " self.vamps_submissions = %s" %  self.vamps_submissions
+                self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
+            print "self.vamps_submissions = %s" % self.vamps_submissions
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
