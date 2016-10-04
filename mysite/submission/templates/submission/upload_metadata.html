@@ -129,6 +129,20 @@
         <form action="" method="post">
          <table class="normal_table">
           {{ metadata_submission_metadata_form.as_table }}
+<!--          {{ metadata_out_csv_form }} -->
+          <tr>
+          {% for header in metadata_out_csv_form.headers %}
+              <th>{{ header }}</th>
+          {% endfor %}
+          </tr>
+          {% for row in metadata_out_csv_form.rows %}
+            <tr>    
+              {% for value in row %}
+                <td>{{ value }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+          
          </table>
           {% csrf_token %}
           <input type="submit" value="Create submission metadata file">

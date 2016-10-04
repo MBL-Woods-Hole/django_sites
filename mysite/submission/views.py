@@ -50,8 +50,10 @@ def upload_metadata(request):
         csv_handler.create_ini_names()
         csv_handler.write_ini()
         csv_handler.get_vamps_submission_info()
+        csv_handler.make_all_out_metadata()
         csv_handler.make_metadata_table()
         
+        # TODO: create form
         # metadata_out_csv_form = 
 
         utils.is_local(request)
@@ -59,7 +61,7 @@ def upload_metadata(request):
         # if HOSTNAME.startswith("localhost"):
         #     print "local"
 
-        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'metadata_out_csv_form': csv_handler.out_metadata, 'errors': csv_handler.errors })
+        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'metadata_out_csv_form': csv_handler.out_metadata_table, 'errors': csv_handler.errors })
     else:
         # print "EEE"
 

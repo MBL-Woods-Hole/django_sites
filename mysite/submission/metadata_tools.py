@@ -36,6 +36,7 @@ class CsvMetadata():
         self.dirs = Dirs()
         self.lanes_domains = []
         self.out_metadata = defaultdict( lambda: defaultdict(int) )
+        self.out_metadata_table = defaultdict( list )
         
         # error = True
 
@@ -77,8 +78,10 @@ class CsvMetadata():
             'trim_distal': {'field': 'trim_distal', 'required': False},
             'env_sample_source_id': {'field': 'env_sample_source_id', 'required': True},
         }
-        
+            
         self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
+
+        self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
 
         self.required_headers = [header_name for header_name, values in
                                  self.HEADERS_FROM_CSV.items() if values['required']]
@@ -276,24 +279,11 @@ class CsvMetadata():
             ini_file.write(ini_text)
             ini_file.close()
 
-
-    def make_metadata_table(self):
-        print "self.HEADERS_TO_CSV = %s" % self.HEADERS_TO_CSV
-        # 'adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel'
-        # out_metadata.append(self.HEADERS_TO_CSV)
+    def make_all_out_metadata(self):
         self.get_csv_by_header()
-        for k, v in self.csv_by_header.items():
-            print "for k, v in self.csv_by_header: k = %s, v = %s" % (k, v)
-        print "=" * 8 
-        print "self.csv_content:"
-        print self.csv_content
-        print "=" * 8 
-        # print "len(self.csv_content)"
-        # print len(self.csv_content)
-        
-        
+        # print "self.HEADERS_TO_CSV from make_all_out_metadata LLL"
         for header in self.HEADERS_TO_CSV:
-            self.out_metadata['headers'] = self.HEADERS_TO_CSV
+            # print "header HHH: %s" % header
             for idx, item in enumerate(self.csv_by_header[header]):
                 print "idx = %s, header = %s, item = %s" % (idx, header, item)
                 # print "idx = %s, col = %s, cell = %s" % (idx, header, self.csv_by_header[header])
@@ -303,10 +293,70 @@ class CsvMetadata():
                     self.out_metadata[idx][header] = ""
                 except:
                     raise
+        # TODO: add info for each header from other sources (vamps, user)
 
-        print "OOO self.out_metadata"
-        print self.out_metadata
-        print "OOO self.out_metadata  end"
+
+    def make_metadata_table(self):
+        # field = {
+        #     'headers': [u'Birthday:', u'Education', u'Job', u'Child Sex'],
+        #     'rows': [
+        #               [1, u'A1', u'job1', u'M']
+        #             , [22, u'A2', u'job2', u'F']
+        #             ]
+        # }
+        
+                # self.out_metadata_table = {
+                # 'headers': ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator'], 
+                # 'rows': [
+                #             ['1', 0, 0, '', '', 0, 0, 'Sample Dataset Description temp', 0, 0, '', 0], 
+                #             ['2', 0, 0, '', '', 0, 0, 'Sample Dataset Description temp 2', 0, 0, '', 0]
+                #         ]
+                # })
+        
+        # 
+        # print "-" * 8
+        # print self.HEADERS_TO_EDIT_METADATA
+        # print "-" * 8
+        # out_metadata
+        # defaultdict(<function <lambda> at 0x101e11668>, {
+        # 0: defaultdict(<type 'int'>, {'barcode_index': '', 'lane': '1', 'read_length': '100', 'dna_region': 'v6', 'adaptor': '', 'env_sample_source_id': '120', 'barcode': '', 'overlap': 'complete', 'dataset_description': 'Sample Dataset Description temp', 'primer_suite': 'Archaeal V6 Suite', 'insert_size': '100'}), 
+        # 1: defaultdict(<type 'int'>, {'barcode_index': '', 'lane': '2', 'read_length': '100', 'dna_region': 'v6', 'adaptor': '', 'env_sample_source_id': '120', 'barcode': '', 'overlap': 'complete', 'dataset_description': 'Sample Dataset Description temp 2', 'primer_suite': 'Bacterial V6 Suite', 'insert_size': '100'})})
+        self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
+
+        for r_num, v in self.out_metadata.items():
+            print "r_num, v in self.out_metadata.items(); r_num = %s, v = %s" % (r_num, v)
+            for header in self.HEADERS_TO_EDIT_METADATA:
+                print "header = %s, self.out_metadata[i][header] = %s" % (header, self.out_metadata[r_num][header])
+                try:
+                    self.out_metadata_table['rows'][r_num].append(self.out_metadata[r_num][header])
+                except IndexError:
+                    self.out_metadata_table['rows'].append([])
+                except:
+                    raise
+                        
+        # for header in self.HEADERS_TO_EDIT_METADATA:
+        #     print "i = %s, header = %s, self.out_metadata[i][header] = %s" % (i, header, self.out_metadata[i][header])
+            # self.out_metadata_table['rows'][i].append()
+        # self.out_metadata_table['rows']
+        
+        print "self.out_metadata_table = %s" % self.out_metadata_table
+        # 'adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel'
+        # out_metadata.append(self.HEADERS_TO_CSV)
+        # self.get_csv_by_header()
+        # for k, v in self.csv_by_header.items():
+        #     print "for k, v in self.csv_by_header: k = %s, v = %s" % (k, v)
+        # print "=" * 8 
+        # print "self.csv_content:"
+        # print self.csv_content
+        # print "=" * 8 
+        # # print "len(self.csv_content)"
+        # # print len(self.csv_content)
+        # 
+        # 
+        # 
+        # print "OOO self.out_metadata"
+        # print self.out_metadata
+        # print "OOO self.out_metadata  end"
         
         # for k1, v1 in out_metadata.items():
         #     print "\n=======\nfor k1, v1 in out_metadata: k1 = %s, v1 = %s" % (k1, v1)
