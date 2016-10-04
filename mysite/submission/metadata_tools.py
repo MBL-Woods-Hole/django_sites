@@ -275,9 +275,11 @@ class CsvMetadata():
             ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
             ini_file.write(ini_text)
             ini_file.close()
-            
+
+
     def make_metadata_table(self):
-        out_metadata = []
+        num = 0
+        out_metadata = defaultdict( list )
         print "self.HEADERS_TO_CSV = %s" % self.HEADERS_TO_CSV
         out_metadata.append(self.HEADERS_TO_CSV)
         self.get_csv_by_header()
@@ -293,6 +295,7 @@ class CsvMetadata():
           # cell.dir = ['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__delslice__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getslice__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__setslice__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
 #
           print "col = %s, cell = %s" % (h, self.csv_by_header[h])
+        num += 1
 
 class Validation(CsvMetadata):
     def __init__(self):
