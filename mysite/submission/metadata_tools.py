@@ -37,6 +37,7 @@ class CsvMetadata():
         self.lanes_domains = []
         self.out_metadata = defaultdict( lambda: defaultdict(int) )
         self.out_metadata_table = defaultdict( list )
+        self.vamps_submissions = []
         
         # error = True
 
@@ -226,6 +227,19 @@ class CsvMetadata():
                       ON (auth.id = subm.vamps_auth_id)
                     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
                 self.create_csv(query_subm, out_file_name)
+                cursor = connection.cursor()
+                cursor.execute(query_subm)
+                
+                column_names = [d[0] for d in cursor.description]
+
+                for row in cursor:
+                  # build dict
+                  self.vamps_submissions = dict(zip(column_names, row))
+
+                  # dump it to a json string
+                  # self.vamps_submissions = json.dumps(info)
+                
+                print " self.vamps_submissions = %s" %  self.vamps_submissions
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
@@ -278,21 +292,69 @@ class CsvMetadata():
             ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
             ini_file.write(ini_text)
             ini_file.close()
+            
+    def get_user_info(self):
+        return []
 
     def make_all_out_metadata(self):
         self.get_csv_by_header()
-        # print "self.HEADERS_TO_CSV from make_all_out_metadata LLL"
-        for header in self.HEADERS_TO_CSV:
-            # print "header HHH: %s" % header
-            for idx, item in enumerate(self.csv_by_header[header]):
-                print "idx = %s, header = %s, item = %s" % (idx, header, item)
-                # print "idx = %s, col = %s, cell = %s" % (idx, header, self.csv_by_header[header])
-                try:
-                    self.out_metadata[idx][header] = self.csv_by_header[header][idx]
-                except IndexError:
-                    self.out_metadata[idx][header] = ""
-                except:
-                    raise
+        idx = 0
+        print "self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content))
+        print "self.csv_content[0] =  head = %s" % (self.csv_content[0])
+        
+        print " &&&&&&& list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))"
+        a = list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))
+        print a
+        # ['barcode_index', 'lane', 'dna_region', 'read_length', 'env_sample_source_id', 'barcode', 'overlap', 'dataset_description', 'adaptor', 'primer_suite', 'insert_size']
+        
+        user_info_arr = self.get_user_info()
+        for i in xrange(len(self.csv_content)-1):
+            # print i
+            self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
+            self.out_metadata[i]['amp_operator']		 = self.csv_by_header['op_amp'][i]
+            self.out_metadata[i]['barcode']				 = self.csv_by_header['barcode'][i]
+            self.out_metadata[i]['barcode_index']		 = self.csv_by_header['barcode_index'][i]
+            # TODO:
+            # self.out_metadata[i]['data_owner']           = user_info_arr[0] + ', ' + user_info_arr[1]
+            self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
+            self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
+            self.out_metadata[i]['dna_region']			 = self.csv_by_header['dna_region'][i]
+            # TODO:
+            # self.out_metadata[i]['email']              = user_info_arr[2]
+            self.out_metadata[i]['env_sample_source_id'] = self.csv_by_header['env_sample_source_id'][i]
+            # TODO:
+            # self.out_metadata[i]['first_name']             = user_info_arr[1]
+            # TODO: get from vamps
+            #  $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["funding"];
+            # self.out_metadata[i]['funding']                = self.csv_by_header['funding'][i]
+            self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
+            self.out_metadata[i]['institution']			 = self.csv_by_header['institution'][i]
+            self.out_metadata[i]['lane']				 = self.csv_by_header['lane'][i]
+            self.out_metadata[i]['last_name']			 = self.csv_by_header['last_name'][i]
+            self.out_metadata[i]['overlap']				 = self.csv_by_header['overlap'][i]
+            self.out_metadata[i]['primer_suite']		 = self.csv_by_header['primer_suite'][i]
+            self.out_metadata[i]['project']				 = self.csv_by_header['project'][i]
+            self.out_metadata[i]['project_description']	 = self.csv_by_header['project_description'][i]
+            self.out_metadata[i]['project_title']		 = self.csv_by_header['project_title'][i]
+            self.out_metadata[i]['read_length']			 = self.csv_by_header['read_length'][i]
+            self.out_metadata[i]['run']					 = self.csv_by_header['run'][i]
+            self.out_metadata[i]['run_key']				 = self.csv_by_header['run_key'][i]
+            self.out_metadata[i]['seq_operator']		 = self.csv_by_header['seq_operator'][i]
+            self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tubelabel'][i]
+     
+        print "self.out_metadata = %s" % self.out_metadata
+        # # print "self.HEADERS_TO_CSV from make_all_out_metadata LLL"
+        # for header in self.HEADERS_TO_CSV:
+        #     # print "header HHH: %s" % header
+        #     for idx, item in enumerate(self.csv_by_header[header]):
+        #         print "idx = %s, header = %s, item = %s" % (idx, header, item)
+        #         # print "idx = %s, col = %s, cell = %s" % (idx, header, self.csv_by_header[header])
+        #         try:
+        #             self.out_metadata[idx][header] = self.csv_by_header[header][idx]
+        #         except IndexError:
+        #             self.out_metadata[idx][header] = ""
+        #         except:
+        #             raise
         # TODO: add info for each header from other sources (vamps, user)
         # 'adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel'
 
@@ -301,9 +363,9 @@ class CsvMetadata():
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
 
         for r_num, v in self.out_metadata.items():
-            print "r_num, v in self.out_metadata.items(); r_num = %s, v = %s" % (r_num, v)
+            # print "r_num, v in self.out_metadata.items(); r_num = %s, v = %s" % (r_num, v)
             for header in self.HEADERS_TO_EDIT_METADATA:
-                print "header = %s, self.out_metadata[i][header] = %s" % (header, self.out_metadata[r_num][header])
+                # print "header = %s, self.out_metadata[i][header] = %s" % (header, self.out_metadata[r_num][header])
                 try:
                     self.out_metadata_table['rows'][r_num].append(self.out_metadata[r_num][header])
                 except IndexError:
