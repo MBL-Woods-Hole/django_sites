@@ -118,5 +118,29 @@
 
    {% endblock %}
   {% endif %}
+  
+  {% if metadata_out_csv_form %}
+    {% block upload_metadata_out_csv_form %}
+      <div class="grid_5 form">
+       <fieldset id="submission_metadata_form_submission_metadata">
+       <legend id="submission_metadata_form_submission_metadata-legend">Submission metadata</legend>
+
+        <!-- {{ csv_by_header_uniqued }} -->
+        <form action="" method="post">
+         <table class="normal_table">
+          {{ metadata_submission_metadata_form.as_table }}
+         </table>
+          {% csrf_token %}
+          <input type="submit" value="Create submission metadata file">
+          <!-- cancel button! -->
+        </form>
+       </fieldset>
+       </div>
+       <div class="grid_7"></div>
+       <div class="clear"></div>
+
+   {% endblock %}
+  {% endif %}
+  
 
 {% endblock %}

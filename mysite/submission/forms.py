@@ -27,3 +27,6 @@ class CsvRunInfoUploadForm(forms.Form):
     csv_seq_operator     = forms.CharField(label = 'Seq Operator', max_length = 3)
     csv_insert_size      = forms.CharField(label = 'Insert Size', max_length = 3)
     csv_read_length      = forms.CharField(label = 'Read Length', max_length = 3)
+
+# class MetadataOutCsvForm(forms.Form):
+    

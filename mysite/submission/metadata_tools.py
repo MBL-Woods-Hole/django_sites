@@ -35,7 +35,8 @@ class CsvMetadata():
         self.ini_names = {}
         self.dirs = Dirs()
         self.lanes_domains = []
-
+        self.out_metadata = defaultdict( lambda: defaultdict(int) )
+        
         # error = True
 
         self.HEADERS_FROM_CSV = {
@@ -277,8 +278,6 @@ class CsvMetadata():
 
 
     def make_metadata_table(self):
-        num = 0
-        out_metadata = defaultdict( lambda: defaultdict(int) )
         print "self.HEADERS_TO_CSV = %s" % self.HEADERS_TO_CSV
         # 'adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel'
         # out_metadata.append(self.HEADERS_TO_CSV)
@@ -289,24 +288,25 @@ class CsvMetadata():
         print "self.csv_content:"
         print self.csv_content
         print "=" * 8 
-        print "len(self.csv_content)"
-        print len(self.csv_content)
+        # print "len(self.csv_content)"
+        # print len(self.csv_content)
         
         
         for header in self.HEADERS_TO_CSV:
+            self.out_metadata['headers'] = self.HEADERS_TO_CSV
             for idx, item in enumerate(self.csv_by_header[header]):
                 print "idx = %s, header = %s, item = %s" % (idx, header, item)
                 # print "idx = %s, col = %s, cell = %s" % (idx, header, self.csv_by_header[header])
                 try:
-                    out_metadata[idx][header] = self.csv_by_header[header][idx]
+                    self.out_metadata[idx][header] = self.csv_by_header[header][idx]
                 except IndexError:
-                    out_metadata[idx][header] = ""
+                    self.out_metadata[idx][header] = ""
                 except:
                     raise
 
-        print "OOO out_metadata"
-        print out_metadata
-        print "OOO out_metadata  end"
+        print "OOO self.out_metadata"
+        print self.out_metadata
+        print "OOO self.out_metadata  end"
         
         # for k1, v1 in out_metadata.items():
         #     print "\n=======\nfor k1, v1 in out_metadata: k1 = %s, v1 = %s" % (k1, v1)
@@ -322,7 +322,6 @@ class CsvMetadata():
           
           # cell.dir = ['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__delslice__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getslice__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__setslice__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
 #
-        num += 1
 
 class Validation(CsvMetadata):
     def __init__(self):
