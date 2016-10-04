@@ -25,6 +25,7 @@ class CsvMetadata():
         self.run_info_from_csv = {}
         self.errors = []
         self.csv_by_header_uniqued = defaultdict( list )
+        self.csv_by_header = defaultdict( list )
         self.csvfile = ""
         self.cause = ""
         self.path_to_csv = ""
@@ -145,8 +146,6 @@ class CsvMetadata():
             raise
 
     def get_csv_by_header(self): # not using it
-        self.csv_by_header = defaultdict( list )
-
         for row in zip(*self.csv_content):
             self.csv_by_header[row[0]] = row[1:]
 
@@ -279,12 +278,41 @@ class CsvMetadata():
 
     def make_metadata_table(self):
         num = 0
-        out_metadata = defaultdict( list )
+        out_metadata = defaultdict( lambda: defaultdict(int) )
         print "self.HEADERS_TO_CSV = %s" % self.HEADERS_TO_CSV
-        out_metadata.append(self.HEADERS_TO_CSV)
+        # 'adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel'
+        # out_metadata.append(self.HEADERS_TO_CSV)
         self.get_csv_by_header()
-        for h in self.HEADERS_TO_CSV:
-          print "cell.count = %s" % (len(self.csv_by_header[h]))
+        for k, v in self.csv_by_header.items():
+            print "for k, v in self.csv_by_header: k = %s, v = %s" % (k, v)
+        print "=" * 8 
+        print "self.csv_content:"
+        print self.csv_content
+        print "=" * 8 
+        print "len(self.csv_content)"
+        print len(self.csv_content)
+        
+        
+        for header in self.HEADERS_TO_CSV:
+            for idx, item in enumerate(self.csv_by_header[header]):
+                print "idx = %s, header = %s, item = %s" % (idx, header, item)
+                # print "idx = %s, col = %s, cell = %s" % (idx, header, self.csv_by_header[header])
+                try:
+                    out_metadata[idx][header] = self.csv_by_header[header][idx]
+                except IndexError:
+                    out_metadata[idx][header] = ""
+                except:
+                    raise
+
+        print "OOO out_metadata"
+        print out_metadata
+        print "OOO out_metadata  end"
+        
+        # for k1, v1 in out_metadata.items():
+        #     print "\n=======\nfor k1, v1 in out_metadata: k1 = %s, v1 = %s" % (k1, v1)
+
+            
+        #   print "cell.count = %s" % (len(self.csv_by_header[h]))
           # if (cell.count > 0):
           #     for
           # cell.count = 2
@@ -294,7 +322,6 @@ class CsvMetadata():
           
           # cell.dir = ['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__delslice__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getslice__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__setslice__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
 #
-          print "col = %s, cell = %s" % (h, self.csv_by_header[h])
         num += 1
 
 class Validation(CsvMetadata):
