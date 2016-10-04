@@ -310,8 +310,12 @@ class CsvMetadata():
         print a
         # ['barcode_index', 'lane', 'dna_region', 'read_length', 'env_sample_source_id', 'barcode', 'overlap', 'dataset_description', 'adaptor', 'primer_suite', 'insert_size']
         
+        print "self.csv_by_header = %s" % self.csv_by_header
+        
         user_info_arr = self.get_user_info()
         for i in xrange(len(self.csv_content)-1):
+            curr_submit_code = self.csv_by_header['submit_code'][i]
+            
             # print i
             self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
             self.out_metadata[i]['amp_operator']		 = self.csv_by_header['op_amp'][i]
@@ -322,28 +326,51 @@ class CsvMetadata():
             self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
             self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
             self.out_metadata[i]['dna_region']			 = self.csv_by_header['dna_region'][i]
+            # TODO: make dropdown menu, camelize, choose
+            self.out_metadata[i]['domain']			     = self.csv_by_header['domain'][i]
             # TODO:
             # self.out_metadata[i]['email']              = user_info_arr[2]
             self.out_metadata[i]['env_sample_source_id'] = self.csv_by_header['env_sample_source_id'][i]
             # TODO:
             # self.out_metadata[i]['first_name']             = user_info_arr[1]
-            # TODO: get from vamps
+            # TODO: from vamps, use vamps_submissions by submit_code
             #  $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["funding"];
-            # self.out_metadata[i]['funding']                = self.csv_by_header['funding'][i]
+            self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
+            
+            # print "self.csv_by_header['submit_code'][i] = %s" % self.csv_by_header['submit_code'][i]
+            # print "self.vamps_submissions[curr_submit_code]['institution'] = %s" % self.vamps_submissions[curr_submit_code]['institution']
+            
             self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
-            self.out_metadata[i]['institution']			 = self.csv_by_header['institution'][i]
+            self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
             self.out_metadata[i]['lane']				 = self.csv_by_header['lane'][i]
-            self.out_metadata[i]['last_name']			 = self.csv_by_header['last_name'][i]
+            # TODO:
+            # self.out_metadata[i]['last_name']          = user_info_arr[0]
             self.out_metadata[i]['overlap']				 = self.csv_by_header['overlap'][i]
             self.out_metadata[i]['primer_suite']		 = self.csv_by_header['primer_suite'][i]
-            self.out_metadata[i]['project']				 = self.csv_by_header['project'][i]
-            self.out_metadata[i]['project_description']	 = self.csv_by_header['project_description'][i]
-            self.out_metadata[i]['project_title']		 = self.csv_by_header['project_title'][i]
+            self.out_metadata[i]['project']				 = self.csv_by_header['project_name'][i]
+            self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
+            try:
+                self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['project_title']
+            except KeyError:
+                self.out_metadata[i]['project_title']       = ""
+            except:
+                raise
+                
             self.out_metadata[i]['read_length']			 = self.csv_by_header['read_length'][i]
-            self.out_metadata[i]['run']					 = self.csv_by_header['run'][i]
-            self.out_metadata[i]['run_key']				 = self.csv_by_header['run_key'][i]
-            self.out_metadata[i]['seq_operator']		 = self.csv_by_header['seq_operator'][i]
-            self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tubelabel'][i]
+            
+            # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
+            # self.out_metadata[i]['run']                    = self.csv_by_header['rundate'][i]
+            # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
+            # try:
+            #     self.out_metadata[i]['run_key']                = self.csv_by_header['run_key'][i]
+            # except KeyError:
+            #     self.out_metadata[i]['run_key']                = ""
+            # except:
+            #     raise
+                
+            # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
+            # self.out_metadata[i]['seq_operator']       = self.csv_by_header['seq_operator'][i]
+            self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tube_label'][i]
      
         print "self.out_metadata = %s" % self.out_metadata
         # # print "self.HEADERS_TO_CSV from make_all_out_metadata LLL"
@@ -368,13 +395,18 @@ class CsvMetadata():
         for r_num, v in self.out_metadata.items():
             # print "r_num, v in self.out_metadata.items(); r_num = %s, v = %s" % (r_num, v)
             for header in self.HEADERS_TO_EDIT_METADATA:
-                # print "header = %s, self.out_metadata[i][header] = %s" % (header, self.out_metadata[r_num][header])
+                self.out_metadata_table['rows'].append([])
+                # todo: remove empty
+                #                 self.out_metadata_table = defaultdict(<type 'list'>, {'headers': ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator'], 'rows': [['archaea', '1', 0, 0, '', '', 'AS_AS_Av6', 'dat_test1', 'Sample Dataset Description temp', 0, 'Tube_Label_1_temp', '', 'JV'], ['bacteria', '2', 0, 0, '', '', 'AS_AS_Bv6', 'dat_test1', 'Sample Dataset Description temp 2', 0, 'Tube_Label_2_temp', '', 'JV'], ['bacteria', '1', 0, 0, '', 'A08', 'HGM_FFHS_Bv4v5', 'FRF_Near_1', 'FRF_Near_1', 0, 'KDF', '', 'HGM'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]})
+                #                 
+                
+                print "header = %s, self.out_metadata[i][header] = %s" % (header, self.out_metadata[r_num][header])
                 try:
                     self.out_metadata_table['rows'][r_num].append(self.out_metadata[r_num][header])
-                except IndexError:
-                    self.out_metadata_table['rows'].append([])
+                # except IndexError:
                 except:
-                    raise                        
+                    raise           
+                         
         print "self.out_metadata_table = %s" % self.out_metadata_table
 
 class Validation(CsvMetadata):
