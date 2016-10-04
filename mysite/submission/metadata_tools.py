@@ -294,33 +294,10 @@ class CsvMetadata():
                 except:
                     raise
         # TODO: add info for each header from other sources (vamps, user)
+        # 'adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel'
 
 
     def make_metadata_table(self):
-        # field = {
-        #     'headers': [u'Birthday:', u'Education', u'Job', u'Child Sex'],
-        #     'rows': [
-        #               [1, u'A1', u'job1', u'M']
-        #             , [22, u'A2', u'job2', u'F']
-        #             ]
-        # }
-        
-                # self.out_metadata_table = {
-                # 'headers': ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator'], 
-                # 'rows': [
-                #             ['1', 0, 0, '', '', 0, 0, 'Sample Dataset Description temp', 0, 0, '', 0], 
-                #             ['2', 0, 0, '', '', 0, 0, 'Sample Dataset Description temp 2', 0, 0, '', 0]
-                #         ]
-                # })
-        
-        # 
-        # print "-" * 8
-        # print self.HEADERS_TO_EDIT_METADATA
-        # print "-" * 8
-        # out_metadata
-        # defaultdict(<function <lambda> at 0x101e11668>, {
-        # 0: defaultdict(<type 'int'>, {'barcode_index': '', 'lane': '1', 'read_length': '100', 'dna_region': 'v6', 'adaptor': '', 'env_sample_source_id': '120', 'barcode': '', 'overlap': 'complete', 'dataset_description': 'Sample Dataset Description temp', 'primer_suite': 'Archaeal V6 Suite', 'insert_size': '100'}), 
-        # 1: defaultdict(<type 'int'>, {'barcode_index': '', 'lane': '2', 'read_length': '100', 'dna_region': 'v6', 'adaptor': '', 'env_sample_source_id': '120', 'barcode': '', 'overlap': 'complete', 'dataset_description': 'Sample Dataset Description temp 2', 'primer_suite': 'Bacterial V6 Suite', 'insert_size': '100'})})
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
 
         for r_num, v in self.out_metadata.items():
@@ -332,46 +309,8 @@ class CsvMetadata():
                 except IndexError:
                     self.out_metadata_table['rows'].append([])
                 except:
-                    raise
-                        
-        # for header in self.HEADERS_TO_EDIT_METADATA:
-        #     print "i = %s, header = %s, self.out_metadata[i][header] = %s" % (i, header, self.out_metadata[i][header])
-            # self.out_metadata_table['rows'][i].append()
-        # self.out_metadata_table['rows']
-        
+                    raise                        
         print "self.out_metadata_table = %s" % self.out_metadata_table
-        # 'adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel'
-        # out_metadata.append(self.HEADERS_TO_CSV)
-        # self.get_csv_by_header()
-        # for k, v in self.csv_by_header.items():
-        #     print "for k, v in self.csv_by_header: k = %s, v = %s" % (k, v)
-        # print "=" * 8 
-        # print "self.csv_content:"
-        # print self.csv_content
-        # print "=" * 8 
-        # # print "len(self.csv_content)"
-        # # print len(self.csv_content)
-        # 
-        # 
-        # 
-        # print "OOO self.out_metadata"
-        # print self.out_metadata
-        # print "OOO self.out_metadata  end"
-        
-        # for k1, v1 in out_metadata.items():
-        #     print "\n=======\nfor k1, v1 in out_metadata: k1 = %s, v1 = %s" % (k1, v1)
-
-            
-        #   print "cell.count = %s" % (len(self.csv_by_header[h]))
-          # if (cell.count > 0):
-          #     for
-          # cell.count = 2
-          # col = primer_suite, cell = ('Archaeal V6 Suite', 'Bacterial V6 Suite')
-          # cell.count = 0
-          # col = run_key, cell = []
-          
-          # cell.dir = ['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__delslice__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getslice__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__setslice__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
-#
 
 class Validation(CsvMetadata):
     def __init__(self):
