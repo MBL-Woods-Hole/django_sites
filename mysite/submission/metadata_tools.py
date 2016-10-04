@@ -216,6 +216,22 @@ class CsvMetadata():
 
         del csv_writer # this will close the CSV file
 
+    def run_query_to_dict(self, query):
+        res_dict = {}
+        cursor = connection.cursor()
+        cursor.execute(query)
+        
+        column_names = [d[0] for d in cursor.description]
+
+        for row in cursor:
+          res_dict =  dict(zip(column_names, row))
+         
+        return res_dict
+      # dump it to a json string
+      # self.vamps_submissions = json.dumps(info)
+          
+        
+
     def get_vamps_submission_info(self):
         db_name = "test_vamps"
         out_file_name = "temp_subm_info"
@@ -227,18 +243,19 @@ class CsvMetadata():
                       ON (auth.id = subm.vamps_auth_id)
                     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
                 self.create_csv(query_subm, out_file_name)
-                cursor = connection.cursor()
-                cursor.execute(query_subm)
-                
-                column_names = [d[0] for d in cursor.description]
-
-                for row in cursor:
-                  # build dict
-                  self.vamps_submissions = dict(zip(column_names, row))
+                # cursor = connection.cursor()
+                # cursor.execute(query_subm)
+                # 
+                # column_names = [d[0] for d in cursor.description]
+                # 
+                # for row in cursor:
+                #   # build dict
+                #   self.vamps_submissions = dict(zip(column_names, row))
 
                   # dump it to a json string
                   # self.vamps_submissions = json.dumps(info)
                 
+                self.vamps_submissions = self.run_query_to_dict(query_subm)
                 print " self.vamps_submissions = %s" %  self.vamps_submissions
         except KeyError as e:
             self.cause = e.args[0]
