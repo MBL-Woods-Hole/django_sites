@@ -34,7 +34,7 @@ def upload_metadata(request):
     csv_handler = CsvMetadata()
     if request.method == 'POST' and request.FILES:
         form = CsvRunInfoUploadForm(request.POST)
-        print "form: %s \n=======" % form
+        # print "form: %s \n=======" % form
         
         
         csv_file = request.FILES['csv_file']
@@ -70,20 +70,14 @@ def upload_metadata(request):
         
     elif 'submit_run_info' in request.POST:
         print "EEE: request.POST = %s" % request.POST
-        metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-        # FFF csv_handler.run_info_from_csv = {'csv_rundate': '2015111120160516', 'csv_seq_operator': 'JVJHV', 'csv_overlap': 'partialcomplete', 'csv_read_length': '301100', 'csv_has_ns': '2015111120160516', 'csv_path_to_raw_data': '/xraid2-2/sequencing/Illumina/2015111120160516hs', 'csv_insert_size': '100550', 'csv_platform': 'hiseq', 'csv_dna_region': 'v4v5v6'}
-        # EEE: request.POST = <QueryDict: {u'csv_rundate': [u'20151111'], u'csv_overlap': [u'hs_complete'], u'submit_run_info': [u'Submit Run Info'], u'csv_read_length': [u'100'], u'csv_platform': [u'hs'], u'csv_dna_region': [u'v6'], u'csv_insert_size': [u'100'], u'csv_has_ns': [u'no'], u'csv_path_to_raw_data': [u'/xraid2-2/sequencing/Illumina/20151111hs'], u'csrfmiddlewaretoken': [u'PwZjImzHqWDBMSYqKU0u1uI4iaO8kLm3MLWCAkowCVEHGcHBLpOwooeA3ewUFmCa'], u'csv_seq_operator': [u'JVJ']}>
-        
+        metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
         return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
 
     # elif 'create_submission_metadata_file' in request.POST:
     #     print "EEE: request.POST = %s" % request.POST
     #     return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
 
-        
     else:
-        # print "EEE"
-
         file_upload_form = FileUploadForm()
         context = {'file_upload_form':file_upload_form, 'header': 'Upload metadata'}
 
@@ -96,16 +90,6 @@ def upload_metadata(request):
 # def my_view(request):
 #     context = {'foo': 'bar'}
 #     return render(request, 'my_template.html', context)
-
-# def upload_metadata__run_info_form(request):
-#     print "EEE1: request.POST = %s" % request.POST
-#     
-#     metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-#     if metadata_run_info_form.is_valid():
-#         print "form CsvRunInfoUploadForm: form.cleaned_data: %s \n=======" % metadata_run_info_form.cleaned_data
-#     
-#     return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
-    
     
 def data_upload(request):
     run_utils = Run()
