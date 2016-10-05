@@ -387,7 +387,10 @@ class CsvMetadata():
             try:
                 self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['title']
             except KeyError:
-                self.out_metadata[i]['project_title']       = self.vamps_submissions[curr_submit_code]['project_title']
+                try:
+                    self.out_metadata[i]['project_title']       = self.vamps_submissions[curr_submit_code]['project_title']
+                except KeyError:
+                    self.out_metadata[i]['project_title']       = ""
             except:
                 raise
                 
