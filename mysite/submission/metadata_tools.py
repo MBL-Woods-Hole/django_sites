@@ -347,17 +347,15 @@ class CsvMetadata():
             # {'first_name': u'Hilary', 'last_name': u'Morrison', 'contact_id': 255, 'institution': u'Marine Biological Laboratory', 'contact': u'Hilary Morrison', 'vamps_name': u'morrison', 'email': u'morrison@mbl.edu'
             # }}
             # print "CCC curr_submit_code = %s, self.user_info_arr[curr_submit_code] = %s\nself.user_info_arr[curr_submit_code]['last_name'] = %s, self.user_info_arr[curr_submit_code]['first_name'] = %s" % (curr_submit_code, self.user_info_arr[curr_submit_code], self.user_info_arr[curr_submit_code]['last_name'], self.user_info_arr[curr_submit_code]['first_name'])
-            self.out_metadata[i]['contact_name']           = self.user_info_arr[curr_submit_code]['last_name'] + ', ' + self.user_info_arr[curr_submit_code]['first_name']
+            self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['last_name'] + ', ' + self.user_info_arr[curr_submit_code]['first_name']
             self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
             self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
             self.out_metadata[i]['dna_region']			 = self.csv_by_header['dna_region'][i]
             # TODO: make dropdown menu, camelize, choose
             self.out_metadata[i]['domain']			     = self.csv_by_header['domain'][i]
-            # TODO:
-            # self.out_metadata[i]['email']              = user_info_arr[2]
-            self.out_metadata[i]['env_sample_source_id'] = self.csv_by_header['env_sample_source_id'][i]
-            # TODO:
-            # self.out_metadata[i]['first_name']             = user_info_arr[1]
+            self.out_metadata[i]['email']                = self.user_info_arr[curr_submit_code]['email']
+            self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
+            self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
             # TODO: from vamps, use vamps_submissions by submit_code
             #  $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["funding"];
             self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
@@ -368,8 +366,7 @@ class CsvMetadata():
             self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
             self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
             self.out_metadata[i]['lane']				 = self.csv_by_header['lane'][i]
-            # TODO:
-            # self.out_metadata[i]['last_name']          = user_info_arr[0]
+            self.out_metadata[i]['last_name']            = self.user_info_arr[curr_submit_code]['last_name']
             self.out_metadata[i]['overlap']				 = self.csv_by_header['overlap'][i]
             self.out_metadata[i]['primer_suite']		 = self.csv_by_header['primer_suite'][i]
             self.out_metadata[i]['project']				 = self.csv_by_header['project_name'][i]
