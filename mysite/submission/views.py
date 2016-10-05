@@ -31,101 +31,14 @@ def upload_metadata(request):
     Form.errors
     """
     utils = Utils()
+    csv_handler = CsvMetadata()
     if request.method == 'POST' and request.FILES:
-        # print "POST, request"
-        # print HttpResponse(escape(repr(request)))
-        
-        # for key, value in request.POST.items():
-        #   print(key, value)
-        # 
-        # print "===="
-        # print "request.META = %s" % (request.META)
-#         request.META = {'RUN_MAIN': 'true'
-# , 'HTTP_REFERER': 'http://localhost:8000/submission/upload_metadata/'
-# , 'rvm_version': '1.25.25 (stable)'
-# , 'SERVER_PROTOCOL': 'HTTP/1.1'
-# , 'SERVER_SOFTWARE': 'WSGIServer/0.1 Python/2.7.12'
-# , 'rvm_path': '/Users/ashipunova/.rvm'
-# , 'TERM_PROGRAM_VERSION': '377'
-# , 'RUBY_VERSION': 'ruby-1.9.3-p448'
-# , 'REQUEST_METHOD': 'POST'
-# , 'LOGNAME': 'ashipunova'
-# , 'USER': 'ashipunova'
-# , 'PATH': '/usr/local/bin:/opt/local/bin:/opt/local/sbin:/Users/ashipunova/.rvm/gems/ruby-1.9.3-p448@rails3tutorial2ndEd/bin:/Users/ashipunova/.rvm/gems/ruby-1.9.3-p448@global/bin:/Users/ashipunova/.rvm/rubies/ruby-1.9.3-p448/bin:/Users/ashipunova/.rvm/bin:/Users/ashipunova/.rvm/bin:/usr/local/bin:/usr/local/mysql/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/opt/local/bin:/opt/local/sbin:/Developer/usr/bin:/Users/ashipunova/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/Applications/OpenOffice.app/Contents/MacOS'
-# , 'QUERY_STRING': ''
-# , 'HOME': '/Users/ashipunova'
-# , 'DISPLAY': '/private/tmp/com.apple.launchd.IgL8qcIfe7/org.macosforge.xquartz:0'
-# , 'TERM_PROGRAM': 'Apple_Terminal'
-# , 'LANG': 'C'
-# , 'HISTCONTROL': 'ignoreboth'
-# , 'TERM': 'xterm-256color'
-# , 'SHELL': '/bin/bash'
-# , 'TZ': 'America/New_York'
-# , 'HTTP_COOKIE': '_ga=GA1.1.793822726.1445886513; csrftoken=JUxrGn2ToAH84e4fJeAQzyQVexaPQmXtG9uKylRIAzIeYyNqKJoSWsmrZBSBbXdA; PHPSESSID=h1pgtp94mvq25mibu2a25dt754; djdt=show'
-# , 'SERVER_NAME': '1.0.0.127.in-addr.arpa'
-# , 'REMOTE_ADDR': '127.0.0.1'
-# , 'SHLVL': '1'
-# , 'SECURITYSESSIONID': '186a7'
-# , '_system_name': 'OSX'
-# , 'XPC_FLAGS': '0x0'
-# , 'HISTSIZE': '100000'
-# , 'wsgi.url_scheme': 'http'
-# , 'SERVER_PORT': '8000'
-# , '_': '/usr/local/bin/python'
-# , 'MANPATH': '/opt/local/share/man:'
-# , 'CONTENT_LENGTH': '1452'
-# , 'SVN_EDITOR': 'mate'
-# , 'GEM_PATH': '/Users/ashipunova/.rvm/gems/ruby-1.9.3-p448@rails3tutorial2ndEd:/Users/ashipunova/.rvm/gems/ruby-1.9.3-p448@global'
-# , 'rvm_bin_path': '/Users/ashipunova/.rvm/bin'
-# , 'HTTP_ACCEPT': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-# , 'TERM_SESSION_ID': 'A8E25A18-81BE-443C-B964-A4DB261E75B9'
-# , 'XPC_SERVICE_NAME': '0'
-# , 'CONTENT_TYPE': 'multipart/form-data; boundary=---------------------------220127776015557552142047856'
-# , 'rvm_prefix': '/Users/ashipunova'
-# , 'PYTHONPATH': '/usr/local/bin:'
-# , 'SSH_AUTH_SOCK': '/private/tmp/com.apple.launchd.OITrIGZplo/Listeners'
-# , 'IRBRC': '/Users/ashipunova/.rvm/rubies/ruby-1.9.3-p448/.irbrc'
-# , 'LC_CTYPE': 'en_US.UTF-8'
-# , 'MY_RUBY_HOME': '/Users/ashipunova/.rvm/rubies/ruby-1.9.3-p448'
-# , 'wsgi.input': <socket._fileobject object at 0x104a636d0>
-# , 'Apple_PubSub_Socket_Render': '/private/tmp/com.apple.launchd.2erxpCm2fa/Render'
-# , 'HTTP_HOST': 'localhost:8000'
-# , 'SCRIPT_NAME': u''
-# , 'wsgi.multithread': True
-# , 'HTTP_CONNECTION': 'keep-alive'
-# , 'HTTP_UPGRADE_INSECURE_REQUESTS': '1'
-# , '_system_type': 'Darwin'
-# , 'TMPDIR': '/var/folders/hk/ttq4v2596xq66wxc6f5j987m0000gn/T/'
-# , 'HISTIGNORE': '&:bg:fg:ll:h: cd'
-# , '_system_arch': 'x86_64'
-# , 'wsgi.version': (1
-# , 0)
-# , 'HTTP_USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:49.0) Gecko/20100101 Firefox/49.0'
-# , 'GATEWAY_INTERFACE': 'CGI/1.1'
-# , 'wsgi.run_once': False
-# , u'CSRF_COOKIE': 'JUxrGn2ToAH84e4fJeAQzyQVexaPQmXtG9uKylRIAzIeYyNqKJoSWsmrZBSBbXdA'
-# , 'OLDPWD': '/Users/ashipunova'
-# , 'wsgi.multiprocess': False
-# , 'HTTP_ACCEPT_LANGUAGE': 'en-US,en;q=0.5'
-# , 'wsgi.errors': <open file '<stderr>'
-# , mode 'w' at 0x102c141e0>
-# , 'HTTP_ACCEPT_ENCODING': 'gzip
-# , deflate'
-# , '__CF_USER_TEXT_ENCODING': '0x1F5:0x0:0x0'
-# , 'PWD': '/Users/ashipunova/BPC/python_web/django_sites/mysite'
-# , 'DJANGO_SETTINGS_MODULE': 'mysite.settings'
-# , '_system_version': '10.12'
-# , 'wsgi.file_wrapper': <class wsgiref.util.FileWrapper at 0x103f6bbb0>
-# , 'REMOTE_HOST': ''
-# , 'GEM_HOME': '/Users/ashipunova/.rvm/gems/ruby-1.9.3-p448@rails3tutorial2ndEd'
-# , 'PATH_INFO': u'/submission/upload_metadata/'}
-#       
         form = CsvRunInfoUploadForm(request.POST)
         print "form: %s \n=======" % form
         
         
         csv_file = request.FILES['csv_file']
-        csv_handler = CsvMetadata()
+        # csv_handler = CsvMetadata()
         
         csv_handler.import_from_file(csv_file)
         # csv_validation = Validation()
@@ -134,6 +47,8 @@ def upload_metadata(request):
         csv_handler.get_selected_variables()
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
+        print "FFF csv_handler.run_info_from_csv = %s" % csv_handler.run_info_from_csv
+        
         # TODO: move to one method in metadata_tools, call from here as create info and create csv
         csv_handler.get_lanes_domains()
         csv_handler.create_path_to_csv()
@@ -155,6 +70,10 @@ def upload_metadata(request):
         
     elif 'submit_run_info' in request.POST:
         print "EEE: request.POST = %s" % request.POST
+        metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
+        # FFF csv_handler.run_info_from_csv = {'csv_rundate': '2015111120160516', 'csv_seq_operator': 'JVJHV', 'csv_overlap': 'partialcomplete', 'csv_read_length': '301100', 'csv_has_ns': '2015111120160516', 'csv_path_to_raw_data': '/xraid2-2/sequencing/Illumina/2015111120160516hs', 'csv_insert_size': '100550', 'csv_platform': 'hiseq', 'csv_dna_region': 'v4v5v6'}
+        # EEE: request.POST = <QueryDict: {u'csv_rundate': [u'20151111'], u'csv_overlap': [u'hs_complete'], u'submit_run_info': [u'Submit Run Info'], u'csv_read_length': [u'100'], u'csv_platform': [u'hs'], u'csv_dna_region': [u'v6'], u'csv_insert_size': [u'100'], u'csv_has_ns': [u'no'], u'csv_path_to_raw_data': [u'/xraid2-2/sequencing/Illumina/20151111hs'], u'csrfmiddlewaretoken': [u'PwZjImzHqWDBMSYqKU0u1uI4iaO8kLm3MLWCAkowCVEHGcHBLpOwooeA3ewUFmCa'], u'csv_seq_operator': [u'JVJ']}>
+        
         return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
 
     # elif 'create_submission_metadata_file' in request.POST:
@@ -178,14 +97,14 @@ def upload_metadata(request):
 #     context = {'foo': 'bar'}
 #     return render(request, 'my_template.html', context)
 
-def upload_metadata__run_info_form(request):
-    print "EEE1: request.POST = %s" % request.POST
-    
-    metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-    if metadata_run_info_form.is_valid():
-        print "form CsvRunInfoUploadForm: form.cleaned_data: %s \n=======" % metadata_run_info_form.cleaned_data
-    
-    return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
+# def upload_metadata__run_info_form(request):
+#     print "EEE1: request.POST = %s" % request.POST
+#     
+#     metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
+#     if metadata_run_info_form.is_valid():
+#         print "form CsvRunInfoUploadForm: form.cleaned_data: %s \n=======" % metadata_run_info_form.cleaned_data
+#     
+#     return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
     
     
 def data_upload(request):
