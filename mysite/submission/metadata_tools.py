@@ -394,10 +394,11 @@ class CsvMetadata():
 
         for r_num, v in self.out_metadata.items():
             # print "r_num, v in self.out_metadata.items(); r_num = %s, v = %s" % (r_num, v)
+            self.out_metadata_table['rows'].append([])
             for header in self.HEADERS_TO_EDIT_METADATA:
-                self.out_metadata_table['rows'].append([])
-                # todo: remove empty
-                #                 self.out_metadata_table = defaultdict(<type 'list'>, {'headers': ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator'], 'rows': [['archaea', '1', 0, 0, '', '', 'AS_AS_Av6', 'dat_test1', 'Sample Dataset Description temp', 0, 'Tube_Label_1_temp', '', 'JV'], ['bacteria', '2', 0, 0, '', '', 'AS_AS_Bv6', 'dat_test1', 'Sample Dataset Description temp 2', 0, 'Tube_Label_2_temp', '', 'JV'], ['bacteria', '1', 0, 0, '', 'A08', 'HGM_FFHS_Bv4v5', 'FRF_Near_1', 'FRF_Near_1', 0, 'KDF', '', 'HGM'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]})
+                # self.out_metadata_table = defaultdict(<type 'list'>, 
+                # {'headers': ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator'], 
+                # 'rows': [['archaea', '1', 0, 0, '', '', 'AS_AS_Av6', 'dat_test1', 'Sample Dataset Description temp', 0, 'Tube_Label_1_temp', '', 'JV'], ['bacteria', '2', 0, 0, '', '', 'AS_AS_Bv6', 'dat_test1', 'Sample Dataset Description temp 2', 0, 'Tube_Label_2_temp', '', 'JV'], ['bacteria', '1', 0, 0, '', 'A08', 'HGM_FFHS_Bv4v5', 'FRF_Near_1', 'FRF_Near_1', 0, 'KDF', '', 'HGM']]})
                 #                 
                 
                 print "header = %s, self.out_metadata[i][header] = %s" % (header, self.out_metadata[r_num][header])
