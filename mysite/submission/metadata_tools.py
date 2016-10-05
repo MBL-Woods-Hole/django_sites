@@ -317,6 +317,8 @@ class CsvMetadata():
             ini_file.close()
 
     def make_all_out_metadata(self):
+        # todo:
+        # redo if data came from a form
         self.get_csv_by_header()
         idx = 0
         print "self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content))
@@ -338,22 +340,24 @@ class CsvMetadata():
             self.out_metadata[i]['amp_operator']		 = self.csv_by_header['op_amp'][i]
             self.out_metadata[i]['barcode']				 = self.csv_by_header['barcode'][i]
             self.out_metadata[i]['barcode_index']		 = self.csv_by_header['barcode_index'][i]
-            # TODO:
-            # self.user_info_arr = {
-            # 'ashipunova354276': 
-            # {'first_name': u'Anna', 'last_name': u'Shipunova', 'contact_id': 4648, 'institution': u'Marine Biological Laboratory', 'contact': u'Anna Shipunova', 'vamps_name': u'ashipunova', 'email': u'ashipunova@mbl.edu'
-            # }, 
-            # 'morrison_910119': 
-            # {'first_name': u'Hilary', 'last_name': u'Morrison', 'contact_id': 255, 'institution': u'Marine Biological Laboratory', 'contact': u'Hilary Morrison', 'vamps_name': u'morrison', 'email': u'morrison@mbl.edu'
-            # }}
-            # print "CCC curr_submit_code = %s, self.user_info_arr[curr_submit_code] = %s\nself.user_info_arr[curr_submit_code]['last_name'] = %s, self.user_info_arr[curr_submit_code]['first_name'] = %s" % (curr_submit_code, self.user_info_arr[curr_submit_code], self.user_info_arr[curr_submit_code]['last_name'], self.user_info_arr[curr_submit_code]['first_name'])
             self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['last_name'] + ', ' + self.user_info_arr[curr_submit_code]['first_name']
             self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
             self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
+            # TODO:
+            # $combined_metadata[$num]["dataset_id"]         = get_id($combined_metadata[$num], "dataset", $db_name, $connection);
+            # TODO:
+            # $combined_metadata[$num]["date_initial"]       = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["date_initial"];
+            # TODO:
+            # $combined_metadata[$num]["date_updated"]       = date("Y-m-d");
+
             self.out_metadata[i]['dna_region']			 = self.csv_by_header['dna_region'][i]
+            # TODO:
+            # $combined_metadata[$num]["dna_region_id"]      = get_id($session["run_info"], "dna_region_0", $db_name, $connection);
+
             # TODO: make dropdown menu, camelize, choose
             self.out_metadata[i]['domain']			     = self.csv_by_header['domain'][i]
             self.out_metadata[i]['email']                = self.user_info_arr[curr_submit_code]['email']
+            # $combined_metadata[$num]["env_sample_source_id"] = $csv_metadata_row["env_sample_source_id"];
             self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
             self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
             # TODO: from vamps, use vamps_submissions by submit_code
@@ -367,14 +371,23 @@ class CsvMetadata():
             self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
             self.out_metadata[i]['lane']				 = self.csv_by_header['lane'][i]
             self.out_metadata[i]['last_name']            = self.user_info_arr[curr_submit_code]['last_name']
+            # TODO:
+            # $combined_metadata[$num]["locked"]             = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["locked"];
+            # $combined_metadata[$num]["num_of_tubes"]       = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["num_of_tubes"];
+            # $combined_metadata[$num]["nnnn"]               = $nnnn;
+            # $combined_metadata[$num]["op_empcr"]           = $csv_metadata_row["op_empcr"];
+
             self.out_metadata[i]['overlap']				 = self.csv_by_header['overlap'][i]
             self.out_metadata[i]['primer_suite']		 = self.csv_by_header['primer_suite'][i]
+            # TODO:
+            # $combined_metadata[$num]["primer_suite_id"]    = get_primer_suite_id($combined_metadata[$num]["dna_region"], $combined_metadata[$num]["domain"], $db_name, $connection);
+            
             self.out_metadata[i]['project']				 = self.csv_by_header['project_name'][i]
             self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
             try:
-                self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['project_title']
+                self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['title']
             except KeyError:
-                self.out_metadata[i]['project_title']       = ""
+                self.out_metadata[i]['project_title']       = self.vamps_submissions[curr_submit_code]['project_title']
             except:
                 raise
                 
