@@ -44,12 +44,37 @@ def upload_metadata(request):
         # csv_validation = Validation()
         # csv_validation.required_cell_values_validation()
 
-        csv_handler.get_selected_variables()
+        csv_handler.get_selected_variables(request.POST)
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
         print "FFF csv_handler.run_info_from_csv = %s" % csv_handler.run_info_from_csv
         
+        # # TODO: move to one method in metadata_tools, call from here as create info and create csv
+        # csv_handler.get_lanes_domains()
+        # csv_handler.create_path_to_csv()
+        # csv_handler.create_ini_names()
+        # csv_handler.write_ini()
+        # csv_handler.get_vamps_submission_info()
+        # csv_handler.make_all_out_metadata()
+        # csv_handler.make_metadata_table()
+        
+        # TODO: create form
+        # metadata_out_csv_form = 
+
+        print "utils.is_local(request) = %s" % utils.is_local(request)
+        # utils.is_local(request) = True
+        
+        # utils.is_local(request)
+        # HOSTNAME = request.get_host()
+        # if HOSTNAME.startswith("localhost"):
+        #     print "local"
+
+        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors })
+        
+    elif 'submit_run_info' in request.POST:
+        print "EEE: request.POST = %s" % request.POST
         # TODO: move to one method in metadata_tools, call from here as create info and create csv
+        csv_handler.get_selected_variables(request.POST)
         csv_handler.get_lanes_domains()
         csv_handler.create_path_to_csv()
         csv_handler.create_ini_names()
@@ -58,20 +83,8 @@ def upload_metadata(request):
         csv_handler.make_all_out_metadata()
         csv_handler.make_metadata_table()
         
-        # TODO: create form
-        # metadata_out_csv_form = 
-
-        utils.is_local(request)
-        # HOSTNAME = request.get_host()
-        # if HOSTNAME.startswith("localhost"):
-        #     print "local"
-
-        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'metadata_out_csv_form': csv_handler.out_metadata_table, 'errors': csv_handler.errors })
-        
-    elif 'submit_run_info' in request.POST:
-        print "EEE: request.POST = %s" % request.POST
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
-        return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
+        return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': csv_handler.out_metadata_table})
 
     # elif 'create_submission_metadata_file' in request.POST:
     #     print "EEE: request.POST = %s" % request.POST

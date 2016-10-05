@@ -265,17 +265,30 @@ class CsvMetadata():
         except:
             raise
 
-    def get_selected_variables(self):
-        print "self.csv_by_header_uniqued['platform']"
-        print self.csv_by_header_uniqued['platform']
-        self.selected_machine = "".join(self.csv_by_header_uniqued['platform']).lower()
-        print "self.selected_machine"
-        print self.selected_machine
-        self.selected_rundate = "".join(self.csv_by_header_uniqued['rundate']).lower()
-        machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
-        print "MMM machine_shortcuts_choices"
-        print machine_shortcuts_choices
-        self.selected_machine_short = machine_shortcuts_choices[self.selected_machine]
+    def get_selected_variables(self, request_post):
+        # change from form if needed
+        if 'submit_run_info' in request_post:
+            print "===\nrequest_post = %s\n====\n" % (request_post) 
+            # is_private = request.POST.get('is_private', False)
+            
+            # "request_post['csv_platform'] = %s" % (request_post, request_post['csv_platform'])
+            self.selected_machine = request_post.get('csv_platform', False)
+            print "self.selected_machine 1 = %s" % self.selected_machine
+            self.selected_machine_short = self.selected_machine
+            print "self.selected_machine_short 1 = %s" % self.selected_machine_short
+        else:
+            print "self.csv_by_header_uniqued['platform']"
+            print self.csv_by_header_uniqued['platform']
+            self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
+            print "self.selected_machine 2 = %s" % self.selected_machine
+            machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
+            # print "MMM machine_shortcuts_choices"
+            # print machine_shortcuts_choices
+            self.selected_machine_short = machine_shortcuts_choices[self.selected_machine]
+            print "self.selected_machine_short 2 = %s" % self.selected_machine_short
+
+        self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
+
 
     def create_path_to_csv(self):
         #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
