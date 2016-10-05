@@ -80,7 +80,7 @@ def upload_metadata(request):
         csv_handler.create_ini_names()
         csv_handler.write_ini()
         csv_handler.get_vamps_submission_info()
-        csv_handler.make_all_out_metadata()
+        csv_handler.make_all_out_metadata(request.POST)
         csv_handler.make_metadata_table()
         
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
