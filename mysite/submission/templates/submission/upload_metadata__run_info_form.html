@@ -77,7 +77,7 @@
      <legend id="run_info_form_run_info-legend">Run info</legend>
 
       <!-- {{ csv_by_header_uniqued }} -->
-      <form action="/submission/upload_metadata__run_info_form/" method="post">
+      <form action="" method="post">
        <table class="normal_table">
         {{ metadata_run_info_form.as_table }}
        </table>
@@ -146,7 +146,7 @@
          </table>
           {% csrf_token %}
           <input type="submit" name="create_submission_metadata_file" value="Create submission metadata file">
-          <!-- cancel button! -->
+          <!-- TODO: cancel button! -->
         </form>
        </fieldset>
        </div>

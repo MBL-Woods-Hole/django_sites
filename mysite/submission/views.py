@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext, loader, Context
+from django.utils.html import escape
 
 def my_view(request):
     context = {'foo': 'bar'}
@@ -22,9 +23,6 @@ def index(request):
 def help(request):
     return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
-# def upload_metadata(request):
-#     return render(request, 'submission/upload_metadata.html')
-
 def upload_metadata(request):
 
     # error_message = ""
@@ -34,6 +32,98 @@ def upload_metadata(request):
     """
     utils = Utils()
     if request.method == 'POST' and request.FILES:
+        # print "POST, request"
+        # print HttpResponse(escape(repr(request)))
+        
+        # for key, value in request.POST.items():
+        #   print(key, value)
+        # 
+        # print "===="
+        # print "request.META = %s" % (request.META)
+#         request.META = {'RUN_MAIN': 'true'
+# , 'HTTP_REFERER': 'http://localhost:8000/submission/upload_metadata/'
+# , 'rvm_version': '1.25.25 (stable)'
+# , 'SERVER_PROTOCOL': 'HTTP/1.1'
+# , 'SERVER_SOFTWARE': 'WSGIServer/0.1 Python/2.7.12'
+# , 'rvm_path': '/Users/ashipunova/.rvm'
+# , 'TERM_PROGRAM_VERSION': '377'
+# , 'RUBY_VERSION': 'ruby-1.9.3-p448'
+# , 'REQUEST_METHOD': 'POST'
+# , 'LOGNAME': 'ashipunova'
+# , 'USER': 'ashipunova'
+# , 'PATH': '/usr/local/bin:/opt/local/bin:/opt/local/sbin:/Users/ashipunova/.rvm/gems/ruby-1.9.3-p448@rails3tutorial2ndEd/bin:/Users/ashipunova/.rvm/gems/ruby-1.9.3-p448@global/bin:/Users/ashipunova/.rvm/rubies/ruby-1.9.3-p448/bin:/Users/ashipunova/.rvm/bin:/Users/ashipunova/.rvm/bin:/usr/local/bin:/usr/local/mysql/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/opt/local/bin:/opt/local/sbin:/Developer/usr/bin:/Users/ashipunova/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/Applications/OpenOffice.app/Contents/MacOS'
+# , 'QUERY_STRING': ''
+# , 'HOME': '/Users/ashipunova'
+# , 'DISPLAY': '/private/tmp/com.apple.launchd.IgL8qcIfe7/org.macosforge.xquartz:0'
+# , 'TERM_PROGRAM': 'Apple_Terminal'
+# , 'LANG': 'C'
+# , 'HISTCONTROL': 'ignoreboth'
+# , 'TERM': 'xterm-256color'
+# , 'SHELL': '/bin/bash'
+# , 'TZ': 'America/New_York'
+# , 'HTTP_COOKIE': '_ga=GA1.1.793822726.1445886513; csrftoken=JUxrGn2ToAH84e4fJeAQzyQVexaPQmXtG9uKylRIAzIeYyNqKJoSWsmrZBSBbXdA; PHPSESSID=h1pgtp94mvq25mibu2a25dt754; djdt=show'
+# , 'SERVER_NAME': '1.0.0.127.in-addr.arpa'
+# , 'REMOTE_ADDR': '127.0.0.1'
+# , 'SHLVL': '1'
+# , 'SECURITYSESSIONID': '186a7'
+# , '_system_name': 'OSX'
+# , 'XPC_FLAGS': '0x0'
+# , 'HISTSIZE': '100000'
+# , 'wsgi.url_scheme': 'http'
+# , 'SERVER_PORT': '8000'
+# , '_': '/usr/local/bin/python'
+# , 'MANPATH': '/opt/local/share/man:'
+# , 'CONTENT_LENGTH': '1452'
+# , 'SVN_EDITOR': 'mate'
+# , 'GEM_PATH': '/Users/ashipunova/.rvm/gems/ruby-1.9.3-p448@rails3tutorial2ndEd:/Users/ashipunova/.rvm/gems/ruby-1.9.3-p448@global'
+# , 'rvm_bin_path': '/Users/ashipunova/.rvm/bin'
+# , 'HTTP_ACCEPT': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+# , 'TERM_SESSION_ID': 'A8E25A18-81BE-443C-B964-A4DB261E75B9'
+# , 'XPC_SERVICE_NAME': '0'
+# , 'CONTENT_TYPE': 'multipart/form-data; boundary=---------------------------220127776015557552142047856'
+# , 'rvm_prefix': '/Users/ashipunova'
+# , 'PYTHONPATH': '/usr/local/bin:'
+# , 'SSH_AUTH_SOCK': '/private/tmp/com.apple.launchd.OITrIGZplo/Listeners'
+# , 'IRBRC': '/Users/ashipunova/.rvm/rubies/ruby-1.9.3-p448/.irbrc'
+# , 'LC_CTYPE': 'en_US.UTF-8'
+# , 'MY_RUBY_HOME': '/Users/ashipunova/.rvm/rubies/ruby-1.9.3-p448'
+# , 'wsgi.input': <socket._fileobject object at 0x104a636d0>
+# , 'Apple_PubSub_Socket_Render': '/private/tmp/com.apple.launchd.2erxpCm2fa/Render'
+# , 'HTTP_HOST': 'localhost:8000'
+# , 'SCRIPT_NAME': u''
+# , 'wsgi.multithread': True
+# , 'HTTP_CONNECTION': 'keep-alive'
+# , 'HTTP_UPGRADE_INSECURE_REQUESTS': '1'
+# , '_system_type': 'Darwin'
+# , 'TMPDIR': '/var/folders/hk/ttq4v2596xq66wxc6f5j987m0000gn/T/'
+# , 'HISTIGNORE': '&:bg:fg:ll:h: cd'
+# , '_system_arch': 'x86_64'
+# , 'wsgi.version': (1
+# , 0)
+# , 'HTTP_USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:49.0) Gecko/20100101 Firefox/49.0'
+# , 'GATEWAY_INTERFACE': 'CGI/1.1'
+# , 'wsgi.run_once': False
+# , u'CSRF_COOKIE': 'JUxrGn2ToAH84e4fJeAQzyQVexaPQmXtG9uKylRIAzIeYyNqKJoSWsmrZBSBbXdA'
+# , 'OLDPWD': '/Users/ashipunova'
+# , 'wsgi.multiprocess': False
+# , 'HTTP_ACCEPT_LANGUAGE': 'en-US,en;q=0.5'
+# , 'wsgi.errors': <open file '<stderr>'
+# , mode 'w' at 0x102c141e0>
+# , 'HTTP_ACCEPT_ENCODING': 'gzip
+# , deflate'
+# , '__CF_USER_TEXT_ENCODING': '0x1F5:0x0:0x0'
+# , 'PWD': '/Users/ashipunova/BPC/python_web/django_sites/mysite'
+# , 'DJANGO_SETTINGS_MODULE': 'mysite.settings'
+# , '_system_version': '10.12'
+# , 'wsgi.file_wrapper': <class wsgiref.util.FileWrapper at 0x103f6bbb0>
+# , 'REMOTE_HOST': ''
+# , 'GEM_HOME': '/Users/ashipunova/.rvm/gems/ruby-1.9.3-p448@rails3tutorial2ndEd'
+# , 'PATH_INFO': u'/submission/upload_metadata/'}
+#       
+        form = CsvRunInfoUploadForm(request.POST)
+        print "form: %s \n=======" % form
+        
+        
         csv_file = request.FILES['csv_file']
         csv_handler = CsvMetadata()
         
@@ -62,6 +152,16 @@ def upload_metadata(request):
         #     print "local"
 
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'metadata_out_csv_form': csv_handler.out_metadata_table, 'errors': csv_handler.errors })
+        
+    elif 'submit_run_info' in request.POST:
+        print "EEE: request.POST = %s" % request.POST
+        return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
+
+    # elif 'create_submission_metadata_file' in request.POST:
+    #     print "EEE: request.POST = %s" % request.POST
+    #     return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
+
+        
     else:
         # print "EEE"
 
@@ -78,6 +178,16 @@ def upload_metadata(request):
 #     context = {'foo': 'bar'}
 #     return render(request, 'my_template.html', context)
 
+def upload_metadata__run_info_form(request):
+    print "EEE1: request.POST = %s" % request.POST
+    
+    metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
+    if metadata_run_info_form.is_valid():
+        print "form CsvRunInfoUploadForm: form.cleaned_data: %s \n=======" % metadata_run_info_form.cleaned_data
+    
+    return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
+    
+    
 def data_upload(request):
     run_utils = Run()
     
