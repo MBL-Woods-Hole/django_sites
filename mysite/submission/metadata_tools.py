@@ -120,11 +120,12 @@ class CsvMetadata():
 
     def get_dialect(self):
         try:
-            # dialect = csv.Sniffer().sniff(self.csvfile.read(1024), delimiters=";,")
-            # dialect = csv.Sniffer().sniff(self.csvfile.read(1024), ",")
-            # dialect = csv.Sniffer().sniff(self.csvfile.read(1024), delimiters=";,")
-
             dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024), delimiters=',')
+        except csv.Error as e:
+            self.errors.append('Warning for %s: %s' % (self.csvfile, e))
+        except:
+            raise
+        else:
             if dialect:
               self.csvfile.seek(0)
               print "dialect.delimiter"
@@ -136,11 +137,6 @@ class CsvMetadata():
               return dialect
             else:
               print("WARNING, file %s is empty (size = %s), check it's path" % (self.csvfile.name, self.csvfile.size))
-
-        except csv.Error as e:
-            self.errors.append('Warning for %s: %s' % (self.csvfile, e))
-        except:
-            raise
 
     def get_reader(self, dialect):
         try:
@@ -411,21 +407,6 @@ class CsvMetadata():
             self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tube_label'][i]
      
         print "self.out_metadata = %s" % self.out_metadata
-        # # print "self.HEADERS_TO_CSV from make_all_out_metadata LLL"
-        # for header in self.HEADERS_TO_CSV:
-        #     # print "header HHH: %s" % header
-        #     for idx, item in enumerate(self.csv_by_header[header]):
-        #         print "idx = %s, header = %s, item = %s" % (idx, header, item)
-        #         # print "idx = %s, col = %s, cell = %s" % (idx, header, self.csv_by_header[header])
-        #         try:
-        #             self.out_metadata[idx][header] = self.csv_by_header[header][idx]
-        #         except IndexError:
-        #             self.out_metadata[idx][header] = ""
-        #         except:
-        #             raise
-        # TODO: add info for each header from other sources (vamps, user)
-        # 'adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel'
-
 
     def make_metadata_table(self):
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
@@ -433,12 +414,6 @@ class CsvMetadata():
         for r_num, v in self.out_metadata.items():
             self.out_metadata_table['rows'].append([])
             for header in self.HEADERS_TO_EDIT_METADATA:
-                # self.out_metadata_table = defaultdict(<type 'list'>, 
-                # {'headers': ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator'], 
-                # 'rows': [['archaea', '1', 0, 0, '', '', 'AS_AS_Av6', 'dat_test1', 'Sample Dataset Description temp', 0, 'Tube_Label_1_temp', '', 'JV'], ['bacteria', '2', 0, 0, '', '', 'AS_AS_Bv6', 'dat_test1', 'Sample Dataset Description temp 2', 0, 'Tube_Label_2_temp', '', 'JV'], ['bacteria', '1', 0, 0, '', 'A08', 'HGM_FFHS_Bv4v5', 'FRF_Near_1', 'FRF_Near_1', 0, 'KDF', '', 'HGM']]})
-                #                 
-                
-                # print "header = %s, self.out_metadata[i][header] = %s" % (header, self.out_metadata[r_num][header])
                 try:
                     self.out_metadata_table['rows'][r_num].append(self.out_metadata[r_num][header])
                 # except IndexError:
