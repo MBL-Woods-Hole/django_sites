@@ -60,7 +60,8 @@ def upload_metadata(request):
         
         # TODO: create form
         # metadata_out_csv_form = 
-
+        
+        # TODO: use to get db_names
         print "utils.is_local(request) = %s" % utils.is_local(request)
         # utils.is_local(request) = True
         
@@ -85,11 +86,11 @@ def upload_metadata(request):
         csv_handler.make_metadata_table()
         
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
-        return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': csv_handler.out_metadata_table})
+        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': csv_handler.out_metadata_table})
 
     # elif 'create_submission_metadata_file' in request.POST:
     #     print "EEE: request.POST = %s" % request.POST
-    #     return render(request, 'submission/upload_metadata__run_info_form.html', {'metadata_run_info_form': metadata_run_info_form})
+    #     return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form})
 
     else:
         file_upload_form = FileUploadForm()
