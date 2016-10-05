@@ -38,6 +38,7 @@ class CsvMetadata():
         self.out_metadata = defaultdict( lambda: defaultdict(int) )
         self.out_metadata_table = defaultdict( list )
         self.vamps_submissions = {}
+        self.user_info_arr = {}
         
         # error = True
 
@@ -230,8 +231,8 @@ class CsvMetadata():
       # dump it to a json string
       # self.vamps_submissions = json.dumps(info)
 
-    def get_vamps_submission_info(self):
-        db_name = "test_vamps"
+    def get_vamps_submission_info(self, db_name = "test_vamps"):
+        # todo: get db_name depending on local/not
         out_file_name = "temp_subm_info"
         try:
             for submit_code in self.csv_by_header_uniqued['submit_code']:
@@ -243,6 +244,25 @@ class CsvMetadata():
                     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
                 self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
             print "self.vamps_submissions = %s" % self.vamps_submissions
+        except KeyError as e:
+            self.cause = e.args[0]
+            self.errors.append(self.no_data_message())
+        except:
+            raise
+
+    def get_user_info(self, db_name = "test_env454"):
+        # todo: get db_name depending on local/not
+        db_name = "test_env454"
+        try:
+            for submit_code in self.csv_by_header_uniqued['submit_code']:
+                # print "submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user'])
+                vamps_user_id = self.vamps_submissions[submit_code]['user']
+                
+                query_user = """SELECT contact_id, contact, email, institution, vamps_name, first_name, last_name
+                    FROM %s.contact
+                    WHERE vamps_name = \"%s\"""" % (db_name, vamps_user_id)
+                self.user_info_arr[submit_code] = self.run_query_to_dict(query_user)
+            # print "self.user_info_arr = %s" % self.user_info_arr
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
@@ -295,9 +315,6 @@ class CsvMetadata():
             ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
             ini_file.write(ini_text)
             ini_file.close()
-            
-    def get_user_info(self):
-        return []
 
     def make_all_out_metadata(self):
         self.get_csv_by_header()
@@ -312,7 +329,7 @@ class CsvMetadata():
         
         print "self.csv_by_header = %s" % self.csv_by_header
         
-        user_info_arr = self.get_user_info()
+        self.get_user_info()
         for i in xrange(len(self.csv_content)-1):
             curr_submit_code = self.csv_by_header['submit_code'][i]
             
@@ -322,7 +339,15 @@ class CsvMetadata():
             self.out_metadata[i]['barcode']				 = self.csv_by_header['barcode'][i]
             self.out_metadata[i]['barcode_index']		 = self.csv_by_header['barcode_index'][i]
             # TODO:
-            # self.out_metadata[i]['data_owner']           = user_info_arr[0] + ', ' + user_info_arr[1]
+            # self.user_info_arr = {
+            # 'ashipunova354276': 
+            # {'first_name': u'Anna', 'last_name': u'Shipunova', 'contact_id': 4648, 'institution': u'Marine Biological Laboratory', 'contact': u'Anna Shipunova', 'vamps_name': u'ashipunova', 'email': u'ashipunova@mbl.edu'
+            # }, 
+            # 'morrison_910119': 
+            # {'first_name': u'Hilary', 'last_name': u'Morrison', 'contact_id': 255, 'institution': u'Marine Biological Laboratory', 'contact': u'Hilary Morrison', 'vamps_name': u'morrison', 'email': u'morrison@mbl.edu'
+            # }}
+            # print "CCC curr_submit_code = %s, self.user_info_arr[curr_submit_code] = %s\nself.user_info_arr[curr_submit_code]['last_name'] = %s, self.user_info_arr[curr_submit_code]['first_name'] = %s" % (curr_submit_code, self.user_info_arr[curr_submit_code], self.user_info_arr[curr_submit_code]['last_name'], self.user_info_arr[curr_submit_code]['first_name'])
+            self.out_metadata[i]['contact_name']           = self.user_info_arr[curr_submit_code]['last_name'] + ', ' + self.user_info_arr[curr_submit_code]['first_name']
             self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
             self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
             self.out_metadata[i]['dna_region']			 = self.csv_by_header['dna_region'][i]
@@ -393,7 +418,6 @@ class CsvMetadata():
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
 
         for r_num, v in self.out_metadata.items():
-            # print "r_num, v in self.out_metadata.items(); r_num = %s, v = %s" % (r_num, v)
             self.out_metadata_table['rows'].append([])
             for header in self.HEADERS_TO_EDIT_METADATA:
                 # self.out_metadata_table = defaultdict(<type 'list'>, 
@@ -401,7 +425,7 @@ class CsvMetadata():
                 # 'rows': [['archaea', '1', 0, 0, '', '', 'AS_AS_Av6', 'dat_test1', 'Sample Dataset Description temp', 0, 'Tube_Label_1_temp', '', 'JV'], ['bacteria', '2', 0, 0, '', '', 'AS_AS_Bv6', 'dat_test1', 'Sample Dataset Description temp 2', 0, 'Tube_Label_2_temp', '', 'JV'], ['bacteria', '1', 0, 0, '', 'A08', 'HGM_FFHS_Bv4v5', 'FRF_Near_1', 'FRF_Near_1', 0, 'KDF', '', 'HGM']]})
                 #                 
                 
-                print "header = %s, self.out_metadata[i][header] = %s" % (header, self.out_metadata[r_num][header])
+                # print "header = %s, self.out_metadata[i][header] = %s" % (header, self.out_metadata[r_num][header])
                 try:
                     self.out_metadata_table['rows'][r_num].append(self.out_metadata[r_num][header])
                 # except IndexError:
