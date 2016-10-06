@@ -299,50 +299,12 @@ class CsvMetadata():
         new_dir = self.dirs.check_and_make_dir(self.path_to_csv)
 
     def get_lanes_domains(self):
-        # function create_lane_dom_names($session_or_posr_content)
-        # {
-        #   //   NOT uniqued arrays!
-        #   $lane_dom_names = array();
-        #   foreach ($session_or_posr_content as $session_or_posr_content_arr)
-        #   {
-        #     $lane   = '';
-        #     $domain = '';
-        #     if (isset($session_or_posr_content_arr["domain"]))
-        #     {
-        #       $data   = $session_or_posr_content_arr["lane"];
-        #       $lane   = get_lane_or_domain($data, "lane");
-        #       $data   = strtoupper($session_or_posr_content_arr["domain"][0]);
-        #       $domain = get_lane_or_domain($data, "domain");
-        #     }
-        #     if (isset($session_or_posr_content_arr["find_domain"]))
-        #     {
-        #       $data   = $session_or_posr_content_arr["find_lane"];
-        #       $lane   = get_lane_or_domain($data, "lane");
-        #       $data   = strtoupper($session_or_posr_content_arr["find_domain"][0]);
-        #       $domain = get_lane_or_domain($data, "domain");
-        #     }
-        #
-        #     $lane_dom_names[] = $lane . "_" . $domain;
-        #   }
-        #   return array_unique($lane_dom_names);
-        
-        print "FFF self.out_metadata from get_lanes_domains"
         domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
         
         for idx, val in self.out_metadata.items():
-            print "idx, val = %s" % val
-            # idx, val = {'env_source_name': '120', 'domain': 'bacteria', 'last_name': 'Shipunova', 'dna_region': 'v6', 'dataset': 'dat_test1', 'dataset_description': 'Sample Dataset Description temp 2', 'contact_name': 'Shipunova, Anna', 'insert_size': '100', 'first_name': 'Anna', 'funding': '0', 'read_length': '100', 'path_to_raw_data': '/xraid2-2/sequencing/Illumina/20151111hs', 'seq_operator': 'JVJ', 'overlap': 'hs_complete', 'platform': 'hiseq', 'email': 'ashipunova@mbl.ed', 'barcode_index': '', 'project_description': 'temp project description', 'run': '20151111', 'adaptor': '', 'barcode': '', 'has_ns': 'no', 'institution': 'Marine Biological Laboratory', 'lane': '2', 'project_title': 'temp project title', 'primer_suite': 'Bacterial V6 Suite', 'project': 'AS_AS_Bv6', 'tubelabel': 'Tube_Label_2_temp', 'amp_operator': 'JV'}
             domain_letter = domain_choices[val['domain']]
             self.lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
-            
-
-        # for domain_name in self.csv_by_header_uniqued['domain']:
-        #     domain_letter = domain_choices[domain_name]
-        #     for lane in self.csv_by_header_uniqued['lane']:
-        #         self.lanes_domains.append("%s_%s" % (lane, domain_letter))
-
-        print "self.lanes_domains = %s" % self.lanes_domains
-        # TODO: why 4?
+        # print "self.lanes_domains = %s" % self.lanes_domains
         return self.lanes_domains
 
     def create_ini_names(self):
