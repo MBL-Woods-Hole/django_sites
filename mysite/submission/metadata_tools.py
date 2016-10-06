@@ -442,16 +442,21 @@ class CsvMetadata():
         print "field['rows'][0] = %s" % field['rows'][0]
         print "field['rows'][1] = %s" % field['rows'][1]
         
+        for i in xrange(len(self.out_metadata.keys())):
+            self.out_metadata_table['rows'].append([])
+        
+        
         for r_num, v in self.out_metadata.items():
             print "r_num, v in self.out_metadata.items().\n r_num = %s,\n type(r_num) = %s,\n v  = %s" % (r_num, type(r_num), v)
             for header in self.HEADERS_TO_EDIT_METADATA:
                 try:
                     print "self.out_metadata[r_num][header] = %s" % self.out_metadata[r_num][header]
-                    # print "v = %s" % v
-                    self.out_metadata_table['rows'].append(self.out_metadata[r_num][header])
+                    print "self.out_metadata_table['rows'][int(r_num)] = %s" % (self.out_metadata_table['rows'][int(r_num)])
+                    self.out_metadata_table['rows'][int(r_num)].append(self.out_metadata[r_num][header])
                 except KeyError, e:
                     print "KeyError, e = %s" % e
-                    continue
+                    self.out_metadata_table['rows'][int(r_num)].append("")
+                    # continue
                 except:
                     raise
                     
