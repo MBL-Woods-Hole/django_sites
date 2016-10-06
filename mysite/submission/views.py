@@ -50,7 +50,8 @@ def upload_metadata(request):
         print "FFF csv_handler.run_info_from_csv = %s" % csv_handler.run_info_from_csv
         
         # # TODO: move to one method in metadata_tools, call from here as create info and create csv
-        # csv_handler.get_lanes_domains()
+        request.session['lanes_domains'] = csv_handler.get_lanes_domains()
+        
         # csv_handler.create_path_to_csv()
         # csv_handler.create_ini_names()
         # csv_handler.write_ini()
@@ -77,21 +78,22 @@ def upload_metadata(request):
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors })
         
     elif 'submit_run_info' in request.POST:
-        print "EEE: request.POST = %s" % request.POST
-        # TODO: move to one method in metadata_tools, call from here as create info and create csv
+        # print "EEE: request.POST = %s" % request.POST
         csv_handler.get_selected_variables(request.POST)
-        csv_handler.get_lanes_domains()
+        # csv_handler.get_lanes_domains()
+        
+        #0) ini and csv machine_info/run dir
+        #1) ini files
+        #2) metadata table to show and edit
+        #3) metadata csv files
+        csv_handler.edit_out_metadata(request)        
+        csv_handler.make_metadata_table()
+
+        csv_handler.lanes_domains = request.session['lanes_domains']
+        
         csv_handler.create_path_to_csv()
         csv_handler.create_ini_names()
         csv_handler.write_ini()
-        # csv_handler.get_vamps_submission_info()
-        # TODO: call to ajust?
-        csv_handler.edit_out_metadata(request)
-        print "request.session.keys()1 = %s" % request.session.keys()
-        print "request.session 1= %s" % request.session
-        print "request.session.values()1 = %s" % request.session.values()
-        
-        csv_handler.make_metadata_table()
         
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': csv_handler.out_metadata_table})

@@ -268,18 +268,20 @@ class CsvMetadata():
 
     def get_selected_variables(self, request_post):
         # change from form if needed
+        machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
+        
         if 'submit_run_info' in request_post:
-            self.selected_machine       = request_post.get('csv_platform', False)
-            print "self.selected_machine in request_post= %s" % (self.selected_machine)
-            self.selected_machine_short = self.selected_machine
-            self.selected_rundate       = request_post.get('csv_rundate', False)
-            
+            self.selected_machine		= request_post.get('csv_platform', False)
+            print "self.selected_machine				in request_post= %s" % (self.selected_machine)
+            self.selected_machine_short	= machine_shortcuts_choices[self.selected_machine]
+            self.selected_rundate		= request_post.get('csv_rundate', False)
+            self.selected_dna_region	= request_post.get('csv_dna_region', False)
+            self.selected_overlap       = request_post.get('csv_overlap', False)
         else:
             # print "self.csv_by_header_uniqued['platform']"
             # print self.csv_by_header_uniqued['platform']
             self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
             print "self.selected_machine 2 = %s" % self.selected_machine
-            machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
             # print "MMM machine_shortcuts_choices"
             # print machine_shortcuts_choices
             self.selected_machine_short = machine_shortcuts_choices[self.selected_machine]
@@ -296,17 +298,6 @@ class CsvMetadata():
         print self.path_to_csv
         new_dir = self.dirs.check_and_make_dir(self.path_to_csv)
 
-    def create_ini_names(self):
-        # 20160711_ms_1_B_run_info.ini
-        # 20150101_hs_hiseq_A_run_info.ini
-        # 20150101_hs_hiseq_B_run_info.ini
-        for lane_domain in self.lanes_domains:
-            print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
-            self.ini_names[lane_domain] = "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain)
-
-        print "self.ini_names"
-        print self.ini_names
-
     def get_lanes_domains(self):
         domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
 
@@ -314,12 +305,37 @@ class CsvMetadata():
             domain_letter = domain_choices[domain_name]
             for lane in self.csv_by_header_uniqued['lane']:
                 self.lanes_domains.append("%s_%s" % (lane, domain_letter))
+        return self.lanes_domains
+
+    def create_ini_names(self):
+        print "555 in create_ini_names"
+        # 20160711_ms_1_B_run_info.ini
+        # 20150101_hs_hiseq_A_run_info.ini
+        # 20150101_hs_hiseq_B_run_info.ini
+        print "lanes_domains = %s" % self.lanes_domains
+
+        for lane_domain in self.lanes_domains:
+            # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
+            print "FROM create_ini_names: self.selected_rundate = %s, self.selected_machine_short = %s, lane_domain = %s" % (self.selected_rundate, self.selected_machine_short, lane_domain)
+            self.ini_names[lane_domain] = "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain)
+
+        print "self.ini_names"
+        print self.ini_names
 
     def write_ini(self):
-        for lane_domain, ini_name in self.ini_names.items():    
+        # {"rundate":"20160803","lane_domain":"1_B","dna_region":"v6","path_to_raw_data":"\/xraid2-2\/sequencing\/Illumina\/20160803ns\/SHB_2015_Bv6_295-390","overlap":"complete"}
+        # {"rundate":"20151111","lane_domain":"2_B","dna_region":"v6","path_to_raw_data":"/xraid2-2/sequencing/Illumina/20151111hs","overlap":"hs_complete"}
+        
+        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s" % (self.selected_rundate, self.selected_machine_short)
+        
+        for lane_domain, ini_name in self.ini_names.items():
             ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s"}
-            ''' % (self.run_info_from_csv['csv_rundate'], lane_domain, self.run_info_from_csv['csv_dna_region'], self.run_info_from_csv['csv_path_to_raw_data'], self.run_info_from_csv['csv_overlap']) 
-
+                        ''' % (self.selected_rundate, lane_domain, self.selected_dna_region, path_to_raw_data, self.selected_overlap)
+                    # print 'ini_text = %s' % ini_text
+            
+        #     ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s"}
+        #     ''' % (self.run_info_from_csv['csv_rundate'], lane_domain, self.run_info_from_csv['csv_dna_region'], self.run_info_from_csv['csv_path_to_raw_data'], self.run_info_from_csv['csv_overlap'])
+        #
             ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
             ini_file.write(ini_text)
             ini_file.close()
