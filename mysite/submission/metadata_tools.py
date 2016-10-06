@@ -299,20 +299,59 @@ class CsvMetadata():
         new_dir = self.dirs.check_and_make_dir(self.path_to_csv)
 
     def get_lanes_domains(self):
+        # function create_lane_dom_names($session_or_posr_content)
+        # {
+        #   //   NOT uniqued arrays!
+        #   $lane_dom_names = array();
+        #   foreach ($session_or_posr_content as $session_or_posr_content_arr)
+        #   {
+        #     $lane   = '';
+        #     $domain = '';
+        #     if (isset($session_or_posr_content_arr["domain"]))
+        #     {
+        #       $data   = $session_or_posr_content_arr["lane"];
+        #       $lane   = get_lane_or_domain($data, "lane");
+        #       $data   = strtoupper($session_or_posr_content_arr["domain"][0]);
+        #       $domain = get_lane_or_domain($data, "domain");
+        #     }
+        #     if (isset($session_or_posr_content_arr["find_domain"]))
+        #     {
+        #       $data   = $session_or_posr_content_arr["find_lane"];
+        #       $lane   = get_lane_or_domain($data, "lane");
+        #       $data   = strtoupper($session_or_posr_content_arr["find_domain"][0]);
+        #       $domain = get_lane_or_domain($data, "domain");
+        #     }
+        #
+        #     $lane_dom_names[] = $lane . "_" . $domain;
+        #   }
+        #   return array_unique($lane_dom_names);
+        
+        print "FFF self.out_metadata from get_lanes_domains"
         domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
+        
+        for idx, val in self.out_metadata.items():
+            print "idx, val = %s" % val
+            # idx, val = {'env_source_name': '120', 'domain': 'bacteria', 'last_name': 'Shipunova', 'dna_region': 'v6', 'dataset': 'dat_test1', 'dataset_description': 'Sample Dataset Description temp 2', 'contact_name': 'Shipunova, Anna', 'insert_size': '100', 'first_name': 'Anna', 'funding': '0', 'read_length': '100', 'path_to_raw_data': '/xraid2-2/sequencing/Illumina/20151111hs', 'seq_operator': 'JVJ', 'overlap': 'hs_complete', 'platform': 'hiseq', 'email': 'ashipunova@mbl.ed', 'barcode_index': '', 'project_description': 'temp project description', 'run': '20151111', 'adaptor': '', 'barcode': '', 'has_ns': 'no', 'institution': 'Marine Biological Laboratory', 'lane': '2', 'project_title': 'temp project title', 'primer_suite': 'Bacterial V6 Suite', 'project': 'AS_AS_Bv6', 'tubelabel': 'Tube_Label_2_temp', 'amp_operator': 'JV'}
+            domain_letter = domain_choices[val['domain']]
+            self.lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
+            
 
-        for domain_name in self.csv_by_header_uniqued['domain']:
-            domain_letter = domain_choices[domain_name]
-            for lane in self.csv_by_header_uniqued['lane']:
-                self.lanes_domains.append("%s_%s" % (lane, domain_letter))
+        # for domain_name in self.csv_by_header_uniqued['domain']:
+        #     domain_letter = domain_choices[domain_name]
+        #     for lane in self.csv_by_header_uniqued['lane']:
+        #         self.lanes_domains.append("%s_%s" % (lane, domain_letter))
+
+        print "self.lanes_domains = %s" % self.lanes_domains
+        # TODO: why 4?
         return self.lanes_domains
 
     def create_ini_names(self):
-        print "555 in create_ini_names"
-        # 20160711_ms_1_B_run_info.ini
-        # 20150101_hs_hiseq_A_run_info.ini
-        # 20150101_hs_hiseq_B_run_info.ini
-        print "lanes_domains = %s" % self.lanes_domains
+        # print "555 in create_ini_names"
+        #
+        # print "lanes_domains = %s" % self.lanes_domains
+
+        # $path_to_ini    = $path_to_csv  . $selected_rundate . "/" . $selected_rundate . "_" . $selected_lane . "_" . $domain_letter . "_run_info.ini";
+        
 
         for lane_domain in self.lanes_domains:
             # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
@@ -323,21 +362,12 @@ class CsvMetadata():
         print self.ini_names
 
     def write_ini(self):
-        # {"rundate":"20160803","lane_domain":"1_B","dna_region":"v6","path_to_raw_data":"\/xraid2-2\/sequencing\/Illumina\/20160803ns\/SHB_2015_Bv6_295-390","overlap":"complete"}
-        # {"rundate":"20151111","lane_domain":"2_B","dna_region":"v6","path_to_raw_data":"/xraid2-2/sequencing/Illumina/20151111hs","overlap":"hs_complete"}
-        
         path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s" % (self.selected_rundate, self.selected_machine_short)
         overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
-        
         
         for lane_domain, ini_name in self.ini_names.items():
             ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
                         ''' % (self.selected_rundate, lane_domain, self.selected_dna_region, path_to_raw_data, overlap_choices[self.selected_overlap], self.selected_machine)
-                    # print 'ini_text = %s' % ini_text
-            
-        #     ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s"}
-        #     ''' % (self.run_info_from_csv['csv_rundate'], lane_domain, self.run_info_from_csv['csv_dna_region'], self.run_info_from_csv['csv_path_to_raw_data'], self.run_info_from_csv['csv_overlap'])
-        #
             ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
             ini_file.write(ini_text)
             ini_file.close()

@@ -50,7 +50,7 @@ def upload_metadata(request):
         print "FFF csv_handler.run_info_from_csv = %s" % csv_handler.run_info_from_csv
         
         # # TODO: move to one method in metadata_tools, call from here as create info and create csv
-        request.session['lanes_domains'] = csv_handler.get_lanes_domains()
+        # request.session['lanes_domains'] = csv_handler.get_lanes_domains()
         
         # csv_handler.create_path_to_csv()
         # csv_handler.create_ini_names()
@@ -80,17 +80,18 @@ def upload_metadata(request):
     elif 'submit_run_info' in request.POST:
         # print "EEE: request.POST = %s" % request.POST
         csv_handler.get_selected_variables(request.POST)
-        # csv_handler.get_lanes_domains()
         
         #0) ini and csv machine_info/run dir
         #1) ini files
         #2) metadata table to show and edit
         #3) metadata csv files
-        csv_handler.edit_out_metadata(request)        
+        csv_handler.edit_out_metadata(request)    
+            
         csv_handler.make_metadata_table()
 
-        csv_handler.lanes_domains = request.session['lanes_domains']
+        # csv_handler.lanes_domains = request.session['lanes_domains']
         
+        csv_handler.get_lanes_domains()
         csv_handler.create_path_to_csv()
         csv_handler.create_ini_names()
         csv_handler.write_ini()
