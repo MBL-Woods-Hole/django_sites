@@ -258,3 +258,34 @@ ol.help_list li
     padding-right: 1ex;
     text-align: center;
 }
+
+td .text_inp {	
+	border: 1.7px inset;	
+	border-collapse: separate;
+	border-color: rgb(238, 238, 238);
+	background-color: #eee; 
+}
+
+input[type="text"].size_number {
+	width: 4.5ex;
+}
+
+input[type="text"].size_abbr {
+	width: 6ex;
+}
+
+input[type="text"].size_run_key, input[type="text"].size_tubelabel {
+	width: 10ex;
+}
+
+input[type="text"].size_project, input[type="text"].size_data_owner {
+	width: 25ex;
+}
+
+input[type="text"].size_dataset, input[type="text"].size_long_input {
+	width: 30ex;
+}
+
+input[type="text"].size_env_source_name {
+	width: 46ex;
+}
