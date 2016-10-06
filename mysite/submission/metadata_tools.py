@@ -327,10 +327,12 @@ class CsvMetadata():
         # {"rundate":"20151111","lane_domain":"2_B","dna_region":"v6","path_to_raw_data":"/xraid2-2/sequencing/Illumina/20151111hs","overlap":"hs_complete"}
         
         path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s" % (self.selected_rundate, self.selected_machine_short)
+        overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
+        
         
         for lane_domain, ini_name in self.ini_names.items():
             ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s"}
-                        ''' % (self.selected_rundate, lane_domain, self.selected_dna_region, path_to_raw_data, self.selected_overlap)
+                        ''' % (self.selected_rundate, lane_domain, self.selected_dna_region, path_to_raw_data, overlap_choices[self.selected_overlap])
                     # print 'ini_text = %s' % ini_text
             
         #     ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s"}
