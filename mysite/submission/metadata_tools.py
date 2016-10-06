@@ -270,6 +270,7 @@ class CsvMetadata():
         # change from form if needed
         if 'submit_run_info' in request_post:
             self.selected_machine       = request_post.get('csv_platform', False)
+            print "self.selected_machine in request_post= %s" % (self.selected_machine)
             self.selected_machine_short = self.selected_machine
             self.selected_rundate       = request_post.get('csv_rundate', False)
             
@@ -277,7 +278,7 @@ class CsvMetadata():
             # print "self.csv_by_header_uniqued['platform']"
             # print self.csv_by_header_uniqued['platform']
             self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
-            # print "self.selected_machine 2 = %s" % self.selected_machine
+            print "self.selected_machine 2 = %s" % self.selected_machine
             machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
             # print "MMM machine_shortcuts_choices"
             # print machine_shortcuts_choices
@@ -289,6 +290,7 @@ class CsvMetadata():
 
     def create_path_to_csv(self):
         #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
+        print "self.selected_machine from create_path_to_csv = %s" % (self.selected_machine)
         self.path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.selected_machine + "_info", self.selected_rundate)
         print "self.path_to_csv"
         print self.path_to_csv

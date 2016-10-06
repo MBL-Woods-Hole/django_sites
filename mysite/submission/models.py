@@ -19,9 +19,9 @@ class Machine(models.Model):
     )
 
     PLATFORM_CHOICES = (
-        ('ms', 'MiSeq'),
-        ('hs', 'HiSeq'),
-        ('ns', 'NextSeq'),
+        ('miseq', 'MiSeq'),
+        ('hiseq', 'HiSeq'),
+        ('nextseq', 'NextSeq'),
     )
 
 class Overlap(models.Model):
