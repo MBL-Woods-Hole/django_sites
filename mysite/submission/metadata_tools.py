@@ -35,7 +35,8 @@ class CsvMetadata():
         self.ini_names = {}
         self.dirs = Dirs()
         self.lanes_domains = []
-        self.out_metadata = defaultdict( lambda: defaultdict(int) )
+        # self.out_metadata = defaultdict( lambda: defaultdict(int) )
+        self.out_metadata = defaultdict( defaultdict )
         self.out_metadata_table = defaultdict( list )
         self.vamps_submissions = {}
         self.user_info_arr = {}
@@ -327,8 +328,37 @@ class CsvMetadata():
         print request.session['out_metadata']
         
         self.out_metadata = request.session['out_metadata']
-        for a, b in self.out_metadata.items():
-            print "a, b in self.out_metadata.items() = %s, %s" % (a, b)
+                
+        for i, v in self.out_metadata.items():
+            print "i = %s" % i
+            self.out_metadata[i]['dna_region']		    = request.POST.get('csv_dna_region', False)
+            self.out_metadata[i]['has_ns']			    = request.POST.get('csv_has_ns', False)
+            self.out_metadata[i]['insert_size']		    = request.POST.get('csv_insert_size', False)
+            self.out_metadata[i]['overlap']			    = request.POST.get('csv_overlap', False)
+            self.out_metadata[i]['path_to_raw_data']	= request.POST.get('csv_path_to_raw_data', False)
+            self.out_metadata[i]['platform']			= request.POST.get('csv_platform', False)
+            self.out_metadata[i]['read_length']			= request.POST.get('csv_read_length', False)
+            self.out_metadata[i]['run']				    = request.POST.get('csv_rundate', False)
+            self.out_metadata[i]['seq_operator']		= request.POST.get('csv_seq_operator', False)
+
+            # 'overlap': 'hs_complete' now!
+
+            
+            # a, b in self.out_metadata.items() = 1, {u'env_source_name': u'120', u'domain': u'bacteria', u'last_name': u'Shipunova', u'dna_region': u'v6', u'dataset': u'dat_test1', u'dataset_description': u'Sample Dataset Description temp 2', u'contact_name': u'Shipunova, Anna', u'insert_size': u'100', u'first_name': u'Anna', u'funding': u'0', u'read_length': u'100', u'overlap': u'complete', u'email': u'ashipunova@mbl.edu', u'barcode_index': u'', u'project_description': u'temp project description', u'adaptor': u'', u'barcode': u'', u'institution': u'Marine Biological Laboratory', u'lane': u'2', u'project_title': u'temp project title', u'primer_suite': u'Bacterial V6 Suite', u'project': u'AS_AS_Bv6', u'tubelabel': u'Tube_Label_2_temp', u'amp_operator': u'JV'}
+#
+            # 'csv_rundate': ['20151111'],
+#             'csv_overlap': ['hs_complete'],
+#             'submit_run_info': ['Submit Run Info'],
+#             'csv_read_length': ['100'],
+#             'csv_platform': ['hs'],
+#             'csv_dna_region': ['v6'],
+#             'csv_insert_size': ['100'],
+#             'csv_has_ns': ['no'],
+#             'csv_path_to_raw_data': ['/xraid2-2/sequencing/Illumina/20151111hs'],
+#             'csrfmiddlewaretoken': ['vGjYAehQ7VElC6nKQeuHJOTC0WIZbFxl'],
+#             'csv_seq_operator': ['JVJ']
+        print "self.out_metadata = %s" % self.out_metadata
+            # request.POST.get('csv_platform', False)
       
     def make_new_out_metadata(self):
         # todo:
@@ -374,8 +404,6 @@ class CsvMetadata():
             # $combined_metadata[$num]["env_sample_source_id"] = $csv_metadata_row["env_sample_source_id"];
             self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
             self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
-            # TODO: from vamps, use vamps_submissions by submit_code
-            #  $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["funding"];
             self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
             
             # print "self.csv_by_header['submit_code'][i] = %s" % self.csv_by_header['submit_code'][i]
@@ -411,8 +439,6 @@ class CsvMetadata():
             self.out_metadata[i]['read_length']			 = self.csv_by_header['read_length'][i]
             
             # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-            # self.out_metadata[i]['run']                    = self.csv_by_header['rundate'][i]
-            # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
             # try:
             #     self.out_metadata[i]['run_key']                = self.csv_by_header['run_key'][i]
             # except KeyError:
@@ -428,84 +454,20 @@ class CsvMetadata():
 
     def make_metadata_table(self):
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
-
-        # for idx in self.out_metadata.keys():
-        #     self.out_metadata_table['rows'].append(int(idx))
-            
-            
-        field = {
-            'headers': [u'Birthday:', u'Education', u'Job', u'Child Sex'],
-            'rows': [[2012.6, u'A1', u'job1', u'M']
-                    ,[2012.27, u'A2', u'job2', u'F']]
-        }
-        
-        print "field['rows'][0] = %s" % field['rows'][0]
-        print "field['rows'][1] = %s" % field['rows'][1]
         
         for i in xrange(len(self.out_metadata.keys())):
             self.out_metadata_table['rows'].append([])
         
-        
         for r_num, v in self.out_metadata.items():
-            print "r_num, v in self.out_metadata.items().\n r_num = %s,\n type(r_num) = %s,\n v  = %s" % (r_num, type(r_num), v)
             for header in self.HEADERS_TO_EDIT_METADATA:
                 try:
-                    print "self.out_metadata[r_num][header] = %s" % self.out_metadata[r_num][header]
-                    print "self.out_metadata_table['rows'][int(r_num)] = %s" % (self.out_metadata_table['rows'][int(r_num)])
                     self.out_metadata_table['rows'][int(r_num)].append(self.out_metadata[r_num][header])
                 except KeyError, e:
                     print "KeyError, e = %s" % e
                     self.out_metadata_table['rows'][int(r_num)].append("")
-                    # continue
                 except:
                     raise
-                    
-            
-        
-        
-        # for i in xrange(len(self.out_metadata.keys())):
-        #     self.out_metadata_table['rows'].append([])
-            
-        # for arr in self.out_metadata_table['rows']:
-        #     # self.out_metadata_table['rows'][arr].append(self.out_metadata[r_num][header])
-        #     print "arr = %s" % arr
-        #     print "self.out_metadata_table['rows'][int(r_num)] = %s" % (self.out_metadata_table['rows'][int(r_num)])
-        #     print "self.out_metadata[r_num][header] = %s" % (self.out_metadata[r_num][header])
-        #
-        #
-        # for r_num, v in self.out_metadata.items():
-        #     print "\tr_num = %s,\t\t\t\t\t\n type(r_num) = %s,\t\t\t\t\t\n int(r_num) = %s,\t\t\t\t\t\n type(int(r_num)) = %s" % (r_num, type(r_num), int(r_num), type(int(r_num)))
-        #     print "v in self.out_metadata.items() = %s" % v
-        #     print "self.out_metadata.keys() len = %s" % len(self.out_metadata.keys())
-        #     for header in self.HEADERS_TO_EDIT_METADATA:
-        #         # self.out_metadata_table['rows'][int(r_num)].append(self.out_metadata[r_num][header])
-        #         print "self.out_metadata_table['rows'][int(r_num)] = %s" % (self.out_metadata_table['rows'][int(r_num)])
-        #         print "self.out_metadata[r_num][header] = %s" % (self.out_metadata[r_num][header])
-                
-            # self.out_metadata_table['rows'].append([])
-            # self.out_metadata_table = defaultdict(<type 'list'>, {'headers': ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator'], 'rows': [[], [], []]})
-            # print "self.out_metadata_table['rows'][0] = %s" % self.out_metadata_table['rows'][0]
-            # print "self.out_metadata_table['rows'][1] = %s" % self.out_metadata_table['rows'][1]
-            # for header in self.HEADERS_TO_EDIT_METADATA:
-            #     # try:
-            #     #     self.out_metadata_table['rows'][int(r_num)]
-            #     # except IndexError:
-            #     #     continue
-            #
-                # try:
-            #         print "\t\t\t\t\tr_num = %s,\t\t\t\t\t\n type(r_num) = %s,\t\t\t\t\t\n int(r_num) = %s,\t\t\t\t\t\n type(int(r_num)) = %s" % (r_num, type(r_num), int(r_num), type(int(r_num)))
-            #         print "self.out_metadata.keys() = %s" % self.out_metadata.keys()
-            #         print "self.out_metadata[r_num] = %s" % self.out_metadata[r_num][header]
-            #         print "self.out_metadata[r_num][header] = %s" % self.out_metadata[r_num][header]
-            #         print "self.out_metadata_table['rows'] = %s" % self.out_metadata_table['rows']
-            #
-            #         print "self.out_metadata_table['rows'][int(r_num)] = %s" % self.out_metadata_table['rows'][int(r_num)]
-                    # self.out_metadata_table['rows'][int(r_num)].append(self.out_metadata[r_num][header])
-            #     # except IndexError:
-            #     except:
-            #         raise
-                         
-        print "self.out_metadata_table = %s" % self.out_metadata_table
+        # print "self.out_metadata_table = %s" % self.out_metadata_table
 
 class Validation(CsvMetadata):
     def __init__(self):
