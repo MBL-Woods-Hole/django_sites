@@ -55,7 +55,11 @@ def upload_metadata(request):
         # csv_handler.create_ini_names()
         # csv_handler.write_ini()
         csv_handler.get_vamps_submission_info()
-        csv_handler.make_all_out_metadata(request.POST)
+        csv_handler.make_new_out_metadata()
+        
+        request.session['out_metadata'] = csv_handler.out_metadata
+        print "request.session.keys() = %s" % request.session.keys()
+        print "request.session.values() = %s" % request.session.values()
         # csv_handler.make_metadata_table()
         
         # TODO: create form
@@ -82,7 +86,11 @@ def upload_metadata(request):
         csv_handler.write_ini()
         # csv_handler.get_vamps_submission_info()
         # TODO: call to ajust?
-        # csv_handler.make_all_out_metadata(request.POST)
+        csv_handler.edit_out_metadata(request)
+        print "request.session.keys()1 = %s" % request.session.keys()
+        print "request.session 1= %s" % request.session
+        print "request.session.values()1 = %s" % request.session.values()
+        
         csv_handler.make_metadata_table()
         
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        

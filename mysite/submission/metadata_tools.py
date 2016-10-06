@@ -321,7 +321,16 @@ class CsvMetadata():
             ini_file.write(ini_text)
             ini_file.close()
 
-    def make_all_out_metadata(self, request_post):
+    def edit_out_metadata(self, request):
+        # request.session['out_metadata']
+        print "FROM edit_out_metadata: request.session['out_metadata']"
+        print request.session['out_metadata']
+        
+        self.out_metadata = request.session['out_metadata']
+        for a, b in self.out_metadata.items():
+            print "a, b in self.out_metadata.items() = %s, %s" % (a, b)
+      
+    def make_new_out_metadata(self):
         # todo:
         # redo if data came from a form
         self.get_csv_by_header()
@@ -420,14 +429,76 @@ class CsvMetadata():
     def make_metadata_table(self):
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
 
+        # for idx in self.out_metadata.keys():
+        #     self.out_metadata_table['rows'].append(int(idx))
+            
+            
+        field = {
+            'headers': [u'Birthday:', u'Education', u'Job', u'Child Sex'],
+            'rows': [[2012.6, u'A1', u'job1', u'M']
+                    ,[2012.27, u'A2', u'job2', u'F']]
+        }
+        
+        print "field['rows'][0] = %s" % field['rows'][0]
+        print "field['rows'][1] = %s" % field['rows'][1]
+        
         for r_num, v in self.out_metadata.items():
-            self.out_metadata_table['rows'].append([])
+            print "r_num, v in self.out_metadata.items().\n r_num = %s,\n type(r_num) = %s,\n v  = %s" % (r_num, type(r_num), v)
             for header in self.HEADERS_TO_EDIT_METADATA:
                 try:
-                    self.out_metadata_table['rows'][r_num].append(self.out_metadata[r_num][header])
-                # except IndexError:
+                    print "self.out_metadata[r_num][header] = %s" % self.out_metadata[r_num][header]
+                    # print "v = %s" % v
+                    self.out_metadata_table['rows'].append(self.out_metadata[r_num][header])
+                except KeyError, e:
+                    print "KeyError, e = %s" % e
+                    continue
                 except:
-                    raise           
+                    raise
+                    
+            
+        
+        
+        # for i in xrange(len(self.out_metadata.keys())):
+        #     self.out_metadata_table['rows'].append([])
+            
+        # for arr in self.out_metadata_table['rows']:
+        #     # self.out_metadata_table['rows'][arr].append(self.out_metadata[r_num][header])
+        #     print "arr = %s" % arr
+        #     print "self.out_metadata_table['rows'][int(r_num)] = %s" % (self.out_metadata_table['rows'][int(r_num)])
+        #     print "self.out_metadata[r_num][header] = %s" % (self.out_metadata[r_num][header])
+        #
+        #
+        # for r_num, v in self.out_metadata.items():
+        #     print "\tr_num = %s,\t\t\t\t\t\n type(r_num) = %s,\t\t\t\t\t\n int(r_num) = %s,\t\t\t\t\t\n type(int(r_num)) = %s" % (r_num, type(r_num), int(r_num), type(int(r_num)))
+        #     print "v in self.out_metadata.items() = %s" % v
+        #     print "self.out_metadata.keys() len = %s" % len(self.out_metadata.keys())
+        #     for header in self.HEADERS_TO_EDIT_METADATA:
+        #         # self.out_metadata_table['rows'][int(r_num)].append(self.out_metadata[r_num][header])
+        #         print "self.out_metadata_table['rows'][int(r_num)] = %s" % (self.out_metadata_table['rows'][int(r_num)])
+        #         print "self.out_metadata[r_num][header] = %s" % (self.out_metadata[r_num][header])
+                
+            # self.out_metadata_table['rows'].append([])
+            # self.out_metadata_table = defaultdict(<type 'list'>, {'headers': ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator'], 'rows': [[], [], []]})
+            # print "self.out_metadata_table['rows'][0] = %s" % self.out_metadata_table['rows'][0]
+            # print "self.out_metadata_table['rows'][1] = %s" % self.out_metadata_table['rows'][1]
+            # for header in self.HEADERS_TO_EDIT_METADATA:
+            #     # try:
+            #     #     self.out_metadata_table['rows'][int(r_num)]
+            #     # except IndexError:
+            #     #     continue
+            #
+                # try:
+            #         print "\t\t\t\t\tr_num = %s,\t\t\t\t\t\n type(r_num) = %s,\t\t\t\t\t\n int(r_num) = %s,\t\t\t\t\t\n type(int(r_num)) = %s" % (r_num, type(r_num), int(r_num), type(int(r_num)))
+            #         print "self.out_metadata.keys() = %s" % self.out_metadata.keys()
+            #         print "self.out_metadata[r_num] = %s" % self.out_metadata[r_num][header]
+            #         print "self.out_metadata[r_num][header] = %s" % self.out_metadata[r_num][header]
+            #         print "self.out_metadata_table['rows'] = %s" % self.out_metadata_table['rows']
+            #
+            #         print "self.out_metadata_table['rows'][int(r_num)] = %s" % self.out_metadata_table['rows'][int(r_num)]
+                    # self.out_metadata_table['rows'][int(r_num)].append(self.out_metadata[r_num][header])
+            #     # except IndexError:
+            #     except:
+            #         raise
                          
         print "self.out_metadata_table = %s" % self.out_metadata_table
 
