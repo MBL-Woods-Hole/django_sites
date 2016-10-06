@@ -323,14 +323,13 @@ class CsvMetadata():
             ini_file.close()
 
     def edit_out_metadata(self, request):
-        # request.session['out_metadata']
-        print "FROM edit_out_metadata: request.session['out_metadata']"
-        print request.session['out_metadata']
+        # print "FROM edit_out_metadata: request.session['out_metadata']"
+        # print request.session['out_metadata']
         
         self.out_metadata = request.session['out_metadata']
                 
         for i, v in self.out_metadata.items():
-            print "i = %s" % i
+            # print "i = %s" % i 
             self.out_metadata[i]['dna_region']		    = request.POST.get('csv_dna_region', False)
             self.out_metadata[i]['has_ns']			    = request.POST.get('csv_has_ns', False)
             self.out_metadata[i]['insert_size']		    = request.POST.get('csv_insert_size', False)
@@ -341,28 +340,12 @@ class CsvMetadata():
             self.out_metadata[i]['run']				    = request.POST.get('csv_rundate', False)
             self.out_metadata[i]['seq_operator']		= request.POST.get('csv_seq_operator', False)
 
-            # 'overlap': 'hs_complete' now!
+            # TODO: 
+            # ? 'overlap': 'hs_complete' now!
 
-            
-            # a, b in self.out_metadata.items() = 1, {u'env_source_name': u'120', u'domain': u'bacteria', u'last_name': u'Shipunova', u'dna_region': u'v6', u'dataset': u'dat_test1', u'dataset_description': u'Sample Dataset Description temp 2', u'contact_name': u'Shipunova, Anna', u'insert_size': u'100', u'first_name': u'Anna', u'funding': u'0', u'read_length': u'100', u'overlap': u'complete', u'email': u'ashipunova@mbl.edu', u'barcode_index': u'', u'project_description': u'temp project description', u'adaptor': u'', u'barcode': u'', u'institution': u'Marine Biological Laboratory', u'lane': u'2', u'project_title': u'temp project title', u'primer_suite': u'Bacterial V6 Suite', u'project': u'AS_AS_Bv6', u'tubelabel': u'Tube_Label_2_temp', u'amp_operator': u'JV'}
-#
-            # 'csv_rundate': ['20151111'],
-#             'csv_overlap': ['hs_complete'],
-#             'submit_run_info': ['Submit Run Info'],
-#             'csv_read_length': ['100'],
-#             'csv_platform': ['hs'],
-#             'csv_dna_region': ['v6'],
-#             'csv_insert_size': ['100'],
-#             'csv_has_ns': ['no'],
-#             'csv_path_to_raw_data': ['/xraid2-2/sequencing/Illumina/20151111hs'],
-#             'csrfmiddlewaretoken': ['vGjYAehQ7VElC6nKQeuHJOTC0WIZbFxl'],
-#             'csv_seq_operator': ['JVJ']
-        print "self.out_metadata = %s" % self.out_metadata
-            # request.POST.get('csv_platform', False)
+        # print "self.out_metadata = %s" % self.out_metadata
       
     def make_new_out_metadata(self):
-        # todo:
-        # redo if data came from a form
         self.get_csv_by_header()
         idx = 0
         print "self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content))
