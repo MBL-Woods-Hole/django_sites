@@ -250,3 +250,11 @@ ol.help_list li
     padding-top: .5em;
     padding-left: 1em;
 }
+
+
+.normal_table_w_borders th {
+	border: solid 1.6px;
+	border-color: #eee;	
+    padding-right: 1ex;
+    text-align: center;
+}

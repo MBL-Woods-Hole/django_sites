@@ -308,13 +308,6 @@ class CsvMetadata():
         return self.lanes_domains
 
     def create_ini_names(self):
-        # print "555 in create_ini_names"
-        #
-        # print "lanes_domains = %s" % self.lanes_domains
-
-        # $path_to_ini    = $path_to_csv  . $selected_rundate . "/" . $selected_rundate . "_" . $selected_lane . "_" . $domain_letter . "_run_info.ini";
-        
-
         for lane_domain in self.lanes_domains:
             # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
             print "FROM create_ini_names: self.selected_rundate = %s, self.selected_machine_short = %s, lane_domain = %s" % (self.selected_rundate, self.selected_machine_short, lane_domain)

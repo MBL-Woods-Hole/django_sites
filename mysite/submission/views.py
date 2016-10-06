@@ -8,7 +8,7 @@ def my_view(request):
     return render(request, 'my_template.html', context)
 from .models_l_env454 import Run
 
-from .forms import RunForm, CsvRunInfoUploadForm, FileUploadForm
+from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm
 from .utils import Run, Utils
 
 from .metadata_tools import CsvMetadata, Validation
@@ -33,7 +33,7 @@ def upload_metadata(request):
     utils = Utils()
     csv_handler = CsvMetadata()
     if request.method == 'POST' and request.FILES:
-        form = CsvRunInfoUploadForm(request.POST)
+        # form = CsvRunInfoUploadForm(request.POST)
         # print "form: %s \n=======" % form
         
         
@@ -86,10 +86,8 @@ def upload_metadata(request):
         #2) metadata table to show and edit
         #3) metadata csv files
         csv_handler.edit_out_metadata(request)    
-            
-        csv_handler.make_metadata_table()
 
-        # csv_handler.lanes_domains = request.session['lanes_domains']
+        csv_handler.make_metadata_table()
         
         csv_handler.get_lanes_domains()
         csv_handler.create_path_to_csv()
@@ -97,7 +95,10 @@ def upload_metadata(request):
         csv_handler.write_ini()
         
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
-        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': csv_handler.out_metadata_table})
+        
+        metadata_out_csv_form  = MetadataOutCsvForm(initial=csv_handler.out_metadata_table)
+        
+        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': metadata_out_csv_form, 'out_metadata_table': csv_handler.out_metadata_table})
 
     # elif 'create_submission_metadata_file' in request.POST:
     #     print "EEE: request.POST = %s" % request.POST
