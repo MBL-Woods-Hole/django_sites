@@ -93,6 +93,6 @@ class Has_ns(models.Model):
 #         app_label='domain'
 
 class FormsModel(models.Model):
-    myfield = models.CharField(max_length=5, blank=True, default='')
+    domain = models.CharField(max_length=5, blank=True, default='')
     class Meta:
         app_label='test'

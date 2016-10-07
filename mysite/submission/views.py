@@ -110,19 +110,19 @@ def upload_metadata(request):
         from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, FormsModel
 
         # class FormsModel(models.Model):
-        #     myfield = models.CharField(max_length=5, blank=True, default='')
+        #     domain = models.CharField(max_length=5, blank=True, default='')
         #     class Meta:
         #         app_label='test'
 
         class MyForm(forms.ModelForm):
-            choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)
-            myfield = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
+            # choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)
+            domain = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
             class Meta:
                 model = FormsModel
-                fields = ['myfield']
+                fields = ['domain']
 
 
-        a = FormsModel(myfield='Archaea')
+        a = FormsModel(domain='Archaea')
 
         f = MyForm(instance=a)
 
