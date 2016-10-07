@@ -35,7 +35,7 @@ class MetadataOutCsvForm(forms.ModelForm):
     class Meta:
         model = FormsModel
         fields = ['domain']
-    
+
     lane                    = forms.CharField(label = '', max_length = 1)
     contact_name_query = Contact.objects.all().order_by('last_name')
     contact_name            = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None)
@@ -54,12 +54,3 @@ class MetadataOutCsvForm(forms.ModelForm):
     tubelabel               = forms.CharField()
     barcode                 = forms.CharField()
     amp_operator            = forms.CharField()
-    
-    
-    
-# class MyForm(forms.ModelForm):
-#     # choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)
-#     domain = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
-#     class Meta:
-#         model = FormsModel
-#         fields = ['domain']

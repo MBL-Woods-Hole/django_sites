@@ -42,10 +42,10 @@ class Overlap(models.Model):
 class Domain(models.Model):
 
     DOMAIN_CHOICES = (
-        ('Bacteria', 'Bacteria'),
-        ('Archaea', 'Archaea'),
-        ('Eukarya', 'Eukarya'),
-        ('ITS1', 'ITS1'),
+        ('bacteria', 'Bacteria'),
+        ('archaea', 'Archaea'),
+        ('eukarya', 'Eukarya'),
+        ('its1', 'ITS1'),
     )
 
     DOMAIN_SHORTCUTS_CHOICES = (
