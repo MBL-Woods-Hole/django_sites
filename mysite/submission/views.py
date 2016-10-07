@@ -100,7 +100,13 @@ def upload_metadata(request):
         
         print "VVV csv_handler.out_metadata_table['rows'] = %s, type(csv_handler.out_metadata_table['rows']) = %s" % (csv_handler.out_metadata_table['rows'], type(csv_handler.out_metadata_table['rows']))
 
+        from django.forms import formset_factory
 
+        ArticleFormSet = formset_factory(MetadataOutCsvForm, extra=3)
+        formset = ArticleFormSet(initial=csv_handler.out_metadata_table['rows'])
+        for form in formset:
+            print(form.as_table())
+        print "AAA ArticleFormSet = %s" % (ArticleFormSet)
 # formset = ArticleFormSet(initial=[
 # {'title': 'Django is now open source',
 # 'pub_date': datetime.date.today(),}
