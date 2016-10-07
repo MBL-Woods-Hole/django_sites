@@ -102,8 +102,8 @@ def upload_metadata(request):
         
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))
         formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
-        for form in formset:
-            print(form.as_table())
+        # for form in formset:
+        #     print(form.as_table())
 
         context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
         
@@ -114,14 +114,37 @@ def upload_metadata(request):
         # return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form})
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
         
-        metadata_out_csv_form = MetadataOutCsvForm(request.POST)
-        # , max_num = len(csv_handler.out_metadata_table['rows']))
-        # formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
+        #works
+        # metadata_out_csv_form = MetadataOutCsvForm(request.POST)
+        # context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': metadata_out_csv_form},
+        
+        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm)
+
+        my_post_dict = request.POST.copy()
+        # my_post_dict['form-TOTAL_FORMS'] = value
+        # my_post_dict['form-INITIAL_FORMS'] = value
+        # my_post_dict['form-MAX_NUM_FORMS'] = value
+        formset = MetadataOutCsvFormSet(my_post_dict)
+
+
+        # formset = MetadataOutCsvFormSet(request.POST, {'form-TOTAL_FORMS': 3, 'form-INITIAL_FORMS': 0, 'form-MAX_NUM_FORMS': ''})
+        
+        # print formset
+        # print formset.management_form
+        
+        for form in formset:
+            print(form.as_table())
+        
+        '''
+        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))
+        formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
         # for form in formset:
         #     print(form.as_table())
 
-        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': metadata_out_csv_form},
-         # 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
+        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
+        
+        '''
+        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset}
         
         return render(request, 'submission/upload_metadata.html', context)
         

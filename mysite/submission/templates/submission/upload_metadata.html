@@ -120,7 +120,8 @@
 
   {% if metadata_out_csv_form %}
     {% block upload_metadata_out_csv_form %}
-
+    {{ metadata_out_csv_form.management_form }}
+    
     <!-- http://www.djangosnippets.org/snippets/1442/
     http://stackoverflow.com/questions/2233929/horizontal-per-row-forms-in-a-django-formset
       TODO: send out_metadata_table ad dict to metadata_out_csv_form! then print here
@@ -137,16 +138,17 @@
               <th>{{ header }}</th>
           {% endfor %}
           </tr>
-          
 
         {% for form in metadata_out_csv_form %}
-            <tr>
-              {% for field in form %}
-                <td>{{ field }}</td>
-              {% endfor %}
-            </tr>
+          <tr>
+            {% for field in form %}
+              <td>{{ field }}</td>
+            {% endfor %}
+          </tr>
         {% endfor %}
-
+      <input type="hidden" name="form-TOTAL_FORMS" value="3" id="id_form-TOTAL_FORMS" />
+      <input type="hidden" name="form-INITIAL_FORMS" value="3" id="id_form-INITIAL_FORMS" />
+      <input type="hidden" name="form-MAX_NUM_FORMS" id="id_form-MAX_NUM_FORMS" />
               
          </table>
           {% csrf_token %}
