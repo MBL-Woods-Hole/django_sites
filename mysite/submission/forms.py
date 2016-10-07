@@ -1,6 +1,6 @@
 from django import forms
 from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project, EnvSampleSource
-from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, FormsModel
+from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns
 
 
 class RunForm(forms.Form):
@@ -28,14 +28,10 @@ class CsvRunInfoUploadForm(forms.Form):
     csv_insert_size      = forms.CharField(label = 'Insert Size', max_length = 3)
     csv_read_length      = forms.CharField(label = 'Read Length', max_length = 3)
 
-class MetadataOutCsvForm(forms.ModelForm):
+class MetadataOutCsvForm(forms.Form):
     # todo: add css class size_number to input
-    # domain         = forms.ChoiceField(Domain.DOMAIN_CHOICES, label = '')
-    domain                  = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
-    class Meta:
-        model = FormsModel
-        fields = ['domain']
-
+    domain                  = forms.ChoiceField(Domain.DOMAIN_CHOICES, label = '')
+    # domain                  = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
     lane                    = forms.CharField(label = '', max_length = 1)
     contact_name_query = Contact.objects.all().order_by('last_name')
     contact_name            = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None)

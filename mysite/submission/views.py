@@ -104,10 +104,10 @@ def upload_metadata(request):
         # f = MetadataOutCsvForm(instance=a)
         # print f
 # ====
-        from django import forms
-
-        from django.db import models
-        from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, FormsModel
+        # from django import forms
+        #
+        # from django.db import models
+        # from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, FormsModel
 
         # class FormsModel(models.Model):
         #     domain = models.CharField(max_length=5, blank=True, default='')
@@ -122,9 +122,9 @@ def upload_metadata(request):
         #         fields = ['domain']
 
 
-        a = FormsModel(domain='Archaea')
-
-        f = MetadataOutCsvForm(instance=a)
+        # a = FormsModel(domain='Archaea')
+        #
+        # f = MetadataOutCsvForm(instance=a)
 
         # print f
 
