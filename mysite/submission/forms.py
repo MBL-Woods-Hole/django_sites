@@ -28,7 +28,7 @@ class CsvRunInfoUploadForm(forms.Form):
     csv_insert_size      = forms.CharField(label = 'Insert Size', max_length = 3)
     csv_read_length      = forms.CharField(label = 'Read Length', max_length = 3)
 
-class MetadataOutCsvForm(forms.Form):
+class MetadataOutCsvForm(forms.ModelForm):
     # todo: add css class size_number to input
     # domain         = forms.ChoiceField(Domain.DOMAIN_CHOICES, label = '')
     domain = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)

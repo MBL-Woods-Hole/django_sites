@@ -124,7 +124,7 @@ def upload_metadata(request):
 
         a = FormsModel(domain='Archaea')
 
-        f = MyForm(instance=a)
+        f = MetadataOutCsvForm(instance=a)
 
         print f
 
