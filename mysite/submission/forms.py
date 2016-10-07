@@ -1,6 +1,6 @@
 from django import forms
 from .models_l_env454 import Run
-from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns
+from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, FormsModel
 
 
 class RunForm(forms.Form):
@@ -38,3 +38,9 @@ class MetadataOutCsvForm(forms.Form):
     
     lane    = forms.CharField(label = '', max_length = 1)
     
+class MyForm(forms.ModelForm):
+    # choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)
+    domain = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
+    class Meta:
+        model = FormsModel
+        fields = ['domain']

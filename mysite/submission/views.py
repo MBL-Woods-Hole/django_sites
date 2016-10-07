@@ -114,12 +114,12 @@ def upload_metadata(request):
         #     class Meta:
         #         app_label='test'
 
-        class MyForm(forms.ModelForm):
-            # choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)
-            domain = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
-            class Meta:
-                model = FormsModel
-                fields = ['domain']
+        # class MyForm(forms.ModelForm):
+        #     # choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)
+        #     domain = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
+        #     class Meta:
+        #         model = FormsModel
+        #         fields = ['domain']
 
 
         a = FormsModel(domain='Archaea')
