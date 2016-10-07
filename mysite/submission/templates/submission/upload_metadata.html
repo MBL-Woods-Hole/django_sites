@@ -122,7 +122,12 @@
     {% block upload_metadata_out_csv_form %}
     {{ metadata_out_csv_form }}
     {{ out_metadata_table }}
+    <hr/>
+    <hr/>
 
+    {{ formset }}
+    <hr/>
+    <hr/>
     <!-- http://www.djangosnippets.org/snippets/1442/
     http://stackoverflow.com/questions/2233929/horizontal-per-row-forms-in-a-django-formset
       TODO: send out_metadata_table ad dict to metadata_out_csv_form! then print here
@@ -140,36 +145,15 @@
           {% endfor %}
           </tr>
 
-<!--
-          self.out_metadata_table = defaultdict(<type 'collections.defaultdict'>, {'headers': ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator'], 
-          
-          'rows': defaultdict(None, {
-          0: {'barcode_index': u'', 'project': u'AS_AS_Av6', 'domain': u'archaea', 'adaptor': u'', 'barcode': u'', 'lane': u'1', 'dataset': u'dat_test1', 'run_key': '', 'env_source_name': u'120', 'dataset_description': u'Sample Dataset Description temp', 'tubelabel': u'Tube_Label_1_temp', 'contact_name': u'Shipunova, Anna', 'amp_operator': u'JV'}, 
-          1: {'barcode_index': u'', 'project': u'AS_AS_Bv6', 'domain': u'bacteria', 'adaptor': u'', 'barcode': u'', 'lane': u'2', 'dataset': u'dat_test1', 'run_key': '', 'env_source_name': u'120', 'dataset_description': u'Sample Dataset Description temp 2', 'tubelabel': u'Tube_Label_2_temp', 'contact_name': u'Shipunova, Anna', 'amp_operator': u'JV'}, 
-          2: {'barcode_index': u'', 'project': u'HGM_FFHS_Bv4v5', 'domain': u'bacteria', 'adaptor': u'A08', 'barcode': u'', 'lane': u'1', 'dataset': u'FRF_Near_1', 'run_key': '', 'env_source_name': u'130', 'dataset_description': u'FRF_Near_1', 'tubelabel': u'KDF', 'contact_name': u'Morrison, Hilary', 'amp_operator': u'HGM'}})})
-          
-          
-           -->
-
           {% for row in out_metadata_table.rows %}
-          {{ row }}
             <tr>
-              <!-- <tr class="{% cycle row1,row2 %}"> -->
-              {% for field in metadata_out_csv_form %}
-                <td class="text_inp">{{ field }}</td>
+              {% for field in formset %}
+                <td>{{ field }}</td>
               {% endfor %}
+              
             </tr>
           {% endfor %}
-<!--
-          {% for row in metadata_out_csv_form.rows %}
-            <tr>
-              {% for value in row %}
-                <td>{{ value }}</td>
-              {% endfor %}
-            </tr>
-          {% endfor %}
-          -->
-
+              
          </table>
           {% csrf_token %}
           <input type="submit" name="create_submission_metadata_file" value="Create submission metadata file">

@@ -99,9 +99,22 @@ def upload_metadata(request):
         # initial = [ list of { dictionaries }, one per form ]
         
         print "VVV csv_handler.out_metadata_table['rows'] = %s, type(csv_handler.out_metadata_table['rows']) = %s" % (csv_handler.out_metadata_table['rows'], type(csv_handler.out_metadata_table['rows']))
+
+
+# formset = ArticleFormSet(initial=[
+# {'title': 'Django is now open source',
+# 'pub_date': datetime.date.today(),}
+# ])
+        # formset = MetadataOutCsvForm(initial = csv_handler.out_metadata_table)
+        formset = MetadataOutCsvForm(initial=csv_handler.out_metadata_table['rows'][0])
+        
+        # print "MMM formset = %s" % formset
+        
         metadata_out_csv_form  = MetadataOutCsvForm(initial = csv_handler.out_metadata_table)
         
-        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': metadata_out_csv_form, 'out_metadata_table': csv_handler.out_metadata_table})
+        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': metadata_out_csv_form, 'formset': formset, 'out_metadata_table': csv_handler.out_metadata_table}
+        
+        return render(request, 'submission/upload_metadata.html', context)
 
     # elif 'create_submission_metadata_file' in request.POST:
     #     print "EEE: request.POST = %s" % request.POST
@@ -109,7 +122,7 @@ def upload_metadata(request):
 
     else:
         file_upload_form = FileUploadForm()
-        context = {'file_upload_form':file_upload_form, 'header': 'Upload metadata'}
+        context = {'file_upload_form':file_upload_form, 'header': 'Upload metadata', 'formset': {}}
 
         return render(request, 'submission/upload_metadata.html', context)
 
