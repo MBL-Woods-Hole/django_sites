@@ -91,3 +91,8 @@ class Has_ns(models.Model):
 #     myDomainChoiceField = models.CharField(blank=True, default='') #max_length=5,
 #     class Meta:
 #         app_label='domain'
+
+class FormsModel(models.Model):
+    myfield = models.CharField(max_length=5, blank=True, default='')
+    class Meta:
+        app_label='test'

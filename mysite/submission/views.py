@@ -107,22 +107,22 @@ def upload_metadata(request):
         from django import forms
 
         from django.db import models
-        from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns
+        from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, FormsModel
 
-        class MyModel(models.Model):
-            myfield = models.CharField(max_length=5, blank=True, default='')
-            class Meta:
-                app_label='test'
+        # class FormsModel(models.Model):
+        #     myfield = models.CharField(max_length=5, blank=True, default='')
+        #     class Meta:
+        #         app_label='test'
 
         class MyForm(forms.ModelForm):
             choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)
             myfield = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
             class Meta:
-                model = MyModel
+                model = FormsModel
                 fields = ['myfield']
 
 
-        a = MyModel(myfield='Archaea')
+        a = FormsModel(myfield='Archaea')
 
         f = MyForm(instance=a)
 
