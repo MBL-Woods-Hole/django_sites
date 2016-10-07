@@ -141,9 +141,10 @@
           </tr>
 
           {% for row in out_metadata_table.rows %}
+          {{ row }}
             <tr>
-              {% for field in metadata_out_csv_form %}
               <!-- <tr class="{% cycle row1,row2 %}"> -->
+              {% for field in metadata_out_csv_form %}
                 <td class="text_inp">{{ field }}</td>
               {% endfor %}
             </tr>

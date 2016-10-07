@@ -37,7 +37,8 @@ class CsvMetadata():
         self.lanes_domains = []
         # self.out_metadata = defaultdict( lambda: defaultdict(int) )
         self.out_metadata = defaultdict( defaultdict )
-        self.out_metadata_table = defaultdict( list )
+        # self.out_metadata_table = defaultdict( list )
+        self.out_metadata_table = defaultdict( defaultdict )
         self.vamps_submissions = {}
         self.user_info_arr = {}
         
@@ -443,19 +444,37 @@ class CsvMetadata():
     def make_metadata_table(self):
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
         
+        
+        # for i in xrange(len(self.out_metadata.keys())):
+        #     self.out_metadata_table['rows'].append([])
         for i in xrange(len(self.out_metadata.keys())):
-            self.out_metadata_table['rows'].append([])
+            self.out_metadata_table['rows'][int(i)] = {}
         
         for r_num, v in self.out_metadata.items():
             for header in self.HEADERS_TO_EDIT_METADATA:
                 try:
-                    self.out_metadata_table['rows'][int(r_num)].append(self.out_metadata[r_num][header])
+                    self.out_metadata_table['rows'][int(r_num)][header] = (self.out_metadata[r_num][header])
                 except KeyError, e:
                     print "KeyError, e = %s" % e
-                    self.out_metadata_table['rows'][int(r_num)].append("")
+                    self.out_metadata_table['rows'][int(r_num)][header] = ""
                 except:
                     raise
-        # print "self.out_metadata_table = %s" % self.out_metadata_table
+        
+        
+        
+        # for i in xrange(len(self.out_metadata.keys())):
+        #     self.out_metadata_table['rows'].append([])
+        #
+        # for r_num, v in self.out_metadata.items():
+        #     for header in self.HEADERS_TO_EDIT_METADATA:
+        #         try:
+        #             self.out_metadata_table['rows'][int(r_num)].append(self.out_metadata[r_num][header])
+        #         except KeyError, e:
+        #             print "KeyError, e = %s" % e
+        #             self.out_metadata_table['rows'][int(r_num)].append("")
+        #         except:
+        #             raise
+        print "self.out_metadata_table BBB = %s" % self.out_metadata_table
 
 class Validation(CsvMetadata):
     def __init__(self):
