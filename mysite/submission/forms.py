@@ -1,5 +1,5 @@
 from django import forms
-from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project
+from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project, EnvSampleSource
 from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, FormsModel
 
 
@@ -47,13 +47,13 @@ class MetadataOutCsvForm(forms.ModelForm):
     adaptor                 = forms.ModelChoiceField(queryset = adaptor_query, empty_label = None)
     project_query = Project.objects.all().order_by('project')
     project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None)
-    # dataset
-    # dataset_description
-    # env_source_name
-    # tubelabel
-    # barcode
-    # amp_operator
-    #
+    dataset                 = forms.CharField()
+    dataset_description     = forms.CharField()
+    env_source_name_query = EnvSampleSource.objects.all().order_by('env_sample_source_id')
+    env_source_name         = forms.ModelChoiceField(queryset = env_source_name_query, empty_label = None)
+    tubelabel               = forms.CharField()
+    barcode                 = forms.CharField()
+    amp_operator            = forms.CharField()
     
     
     
