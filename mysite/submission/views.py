@@ -8,7 +8,7 @@ def my_view(request):
     return render(request, 'my_template.html', context)
 from .models_l_env454 import Run
 
-from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, MyForm
+from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm
 from .utils import Run, Utils
 
 from .metadata_tools import CsvMetadata, Validation
@@ -126,17 +126,22 @@ def upload_metadata(request):
 
         f = MetadataOutCsvForm(instance=a)
 
-        print f
+        # print f
 
 # ====
-
+# https://groups.google.com/forum/#!topic/django-users/rbUZNjBCBxE
+# https://docs.djangoproject.com/en/1.9/topics/forms/formsets/
+# http://whoisnicoleharris.com/2015/01/06/implementing-django-formsets.html
+# https://docs.djangoproject.com/en/1.9/topics/forms/formsets/
+# https://docs.djangoproject.com/en/1.9/topics/forms/modelforms/#model-formsets
+# ====
 
 
         
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))
         formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
-        # for form in formset:
-        #     print(form.as_table())
+        for form in formset:
+            print(form.as_table())
 
         context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
         

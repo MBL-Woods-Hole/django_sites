@@ -38,9 +38,9 @@ class MetadataOutCsvForm(forms.ModelForm):
     
     lane    = forms.CharField(label = '', max_length = 1)
     
-class MyForm(forms.ModelForm):
-    # choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)
-    domain = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
-    class Meta:
-        model = FormsModel
-        fields = ['domain']
+# class MyForm(forms.ModelForm):
+#     # choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)
+#     domain = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
+#     class Meta:
+#         model = FormsModel
+#         fields = ['domain']
