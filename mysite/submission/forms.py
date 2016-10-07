@@ -1,5 +1,5 @@
 from django import forms
-from .models_l_env454 import Run
+from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project
 from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, FormsModel
 
 
@@ -31,12 +31,31 @@ class CsvRunInfoUploadForm(forms.Form):
 class MetadataOutCsvForm(forms.ModelForm):
     # todo: add css class size_number to input
     # domain         = forms.ChoiceField(Domain.DOMAIN_CHOICES, label = '')
-    domain = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
+    domain                  = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
     class Meta:
         model = FormsModel
         fields = ['domain']
     
-    lane    = forms.CharField(label = '', max_length = 1)
+    lane                    = forms.CharField(label = '', max_length = 1)
+    contact_name_query = Contact.objects.all().order_by('last_name')
+    contact_name            = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None)
+
+    #TODO: add N's if needed
+    run_key                 = forms.CharField(label = 'Run Key', max_length = 9)
+    barcode_index           = forms.CharField(label = 'Barcode Index', max_length = 9)
+    adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
+    adaptor                 = forms.ModelChoiceField(queryset = adaptor_query, empty_label = None)
+    project_query = Project.objects.all().order_by('project')
+    project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None)
+    # dataset
+    # dataset_description
+    # env_source_name
+    # tubelabel
+    # barcode
+    # amp_operator
+    #
+    
+    
     
 # class MyForm(forms.ModelForm):
 #     # choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)

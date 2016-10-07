@@ -134,6 +134,9 @@ def upload_metadata(request):
 # http://whoisnicoleharris.com/2015/01/06/implementing-django-formsets.html
 # https://docs.djangoproject.com/en/1.9/topics/forms/formsets/
 # https://docs.djangoproject.com/en/1.9/topics/forms/modelforms/#model-formsets
+# http://stackoverflow.com/questions/11666035/passing-instance-to-django-formset
+# http://stackoverflow.com/questions/1992152/django-initializing-a-formset-of-custom-forms-with-instances
+# https://www.djangosnippets.org/snippets/1442/
 # ====
 
 

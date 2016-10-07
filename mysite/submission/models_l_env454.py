@@ -73,7 +73,9 @@ class IlluminaAdaptor(models.Model):
     class Meta:
         managed = False
         db_table = 'illumina_adaptor'
-
+        
+    def __unicode__(self):
+        return u'{0}'.format(self.illumina_adaptor)        
 
 class IlluminaAdaptorRef(models.Model):
     illumina_adaptor = models.ForeignKey(IlluminaAdaptor, models.DO_NOTHING)
@@ -145,6 +147,9 @@ class Project(models.Model):
     class Meta:
         managed = False
         db_table = 'project'
+
+    def __unicode__(self):
+        return u'{0}'.format(self.project)        
 
 
 class RefPrimerSuitePrimer(models.Model):
