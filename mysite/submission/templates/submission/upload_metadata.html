@@ -120,14 +120,14 @@
 
   {% if metadata_out_csv_form %}
     {% block upload_metadata_out_csv_form %}
-    {{ metadata_out_csv_form }}
-    {{ out_metadata_table }}
-    <hr/>
+    <!-- {{ metadata_out_csv_form }}
+    {{ out_metadata_table }} -->
+    <!-- <hr/>
     <hr/>
 
     {{ formset }}
     <hr/>
-    <hr/>
+    <hr/> -->
     <!-- http://www.djangosnippets.org/snippets/1442/
     http://stackoverflow.com/questions/2233929/horizontal-per-row-forms-in-a-django-formset
       TODO: send out_metadata_table ad dict to metadata_out_csv_form! then print here
@@ -145,50 +145,15 @@
           {% endfor %}
           </tr>
           
-<tr><th></th><td><select id="id_form-0-domain" name="form-0-domain">
-<option value="Bacteria">Bacteria</option>
-<option value="Archaea">Archaea</option>
-<option value="Eukarya">Eukarya</option>
-<option value="ITS1">ITS1</option>
-</select></td></tr>
-<tr><th></th><td><input id="id_form-0-lane" maxlength="1" name="form-0-lane" type="text" value="1" /></td></tr>
-<tr><th></th><td><select id="id_form-1-domain" name="form-1-domain">
-<option value="Bacteria">Bacteria</option>
-<option value="Archaea">Archaea</option>
-<option value="Eukarya">Eukarya</option>
-<option value="ITS1">ITS1</option>
-</select></td></tr>
-<tr><th></th><td><input id="id_form-1-lane" maxlength="1" name="form-1-lane" type="text" value="2" /></td></tr>
-<tr><th></th><td><select id="id_form-2-domain" name="form-2-domain">
-<option value="Bacteria">Bacteria</option>
-<option value="Archaea">Archaea</option>
-<option value="Eukarya">Eukarya</option>
-<option value="ITS1">ITS1</option>
-</select></td></tr>
-<tr><th></th><td><input id="id_form-2-lane" maxlength="1" name="form-2-lane" type="text" value="1" /></td></tr>
-<tr><th></th><td><select id="id_form-3-domain" name="form-3-domain">
-<option value="Bacteria">Bacteria</option>
-<option value="Archaea">Archaea</option>
-<option value="Eukarya">Eukarya</option>
-<option value="ITS1">ITS1</option>
-</select></td></tr>
-<tr><th></th><td><input id="id_form-3-lane" maxlength="1" name="form-3-lane" type="text" /></td></tr>
-<tr><th></th><td><select id="id_form-4-domain" name="form-4-domain">
-<option value="Bacteria">Bacteria</option>
-<option value="Archaea">Archaea</option>
-<option value="Eukarya">Eukarya</option>
-<option value="ITS1">ITS1</option>
-</select></td></tr>
-<tr><th></th><td><input id="id_form-4-lane" maxlength="1" name="form-4-lane" type="text" /></td></tr>
-<tr><th></th><td><select id="id_form-5-domain" name="form-5-domain">
-<option value="Bacteria">Bacteria</option>
-<option value="Archaea">Archaea</option>
-<option value="Eukarya">Eukarya</option>
-<option value="ITS1">ITS1</option>
-</select></td></tr>
-<tr><th></th><td><input id="id_form-5-lane" maxlength="1" name="form-5-lane" type="text" /></td></tr>
 
-
+        {% for form in formset %}
+            <tr>
+            <!-- {{ form.as_table }} -->
+              {% for field in form %}
+                <td>{{ field }}</td>
+              {% endfor %}
+            </tr>
+        {% endfor %}
 
           <!-- {% for row in out_metadata_table.rows %}
             <tr>
