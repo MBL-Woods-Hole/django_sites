@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext, loader, Context
 from django.utils.html import escape
+from django.forms import formset_factory
 
 def my_view(request):
     context = {'foo': 'bar'}
@@ -98,48 +99,6 @@ def upload_metadata(request):
                 
         print "VVV csv_handler.out_metadata_table['rows'] = %s, type(csv_handler.out_metadata_table['rows']) = %s" % (csv_handler.out_metadata_table['rows'], len(csv_handler.out_metadata_table['rows']))
 
-        from django.forms import formset_factory
-
-        # a = Forms_model(myDomainChoiceField='archaea')
-        # f = MetadataOutCsvForm(instance=a)
-        # print f
-# ====
-        # from django import forms
-        #
-        # from django.db import models
-        # from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, FormsModel
-
-        # class FormsModel(models.Model):
-        #     domain = models.CharField(max_length=5, blank=True, default='')
-        #     class Meta:
-        #         app_label='test'
-
-        # class MyForm(forms.ModelForm):
-        #     # choices = (('', 'Select'), ('1', 'Option 1'), ('2', 'Option 2'),)
-        #     domain = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
-        #     class Meta:
-        #         model = FormsModel
-        #         fields = ['domain']
-
-
-        # a = FormsModel(domain='Archaea')
-        #
-        # f = MetadataOutCsvForm(instance=a)
-
-        # print f
-
-# ====
-# https://groups.google.com/forum/#!topic/django-users/rbUZNjBCBxE
-# https://docs.djangoproject.com/en/1.9/topics/forms/formsets/
-# http://whoisnicoleharris.com/2015/01/06/implementing-django-formsets.html
-# https://docs.djangoproject.com/en/1.9/topics/forms/formsets/
-# https://docs.djangoproject.com/en/1.9/topics/forms/modelforms/#model-formsets
-# http://stackoverflow.com/questions/11666035/passing-instance-to-django-formset
-# http://stackoverflow.com/questions/1992152/django-initializing-a-formset-of-custom-forms-with-instances
-# https://www.djangosnippets.org/snippets/1442/
-# ====
-
-
         
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))
         formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
@@ -150,10 +109,22 @@ def upload_metadata(request):
         
         return render(request, 'submission/upload_metadata.html', context)
 
-    # elif 'create_submission_metadata_file' in request.POST:
-    #     print "EEE: request.POST = %s" % request.POST
-    #     return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form})
+    elif 'create_submission_metadata_file' in request.POST:
+        print "EEE: request.POST = %s" % request.POST
+        # return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form})
+        metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
+        
+        metadata_out_csv_form = MetadataOutCsvForm(request.POST)
+        # , max_num = len(csv_handler.out_metadata_table['rows']))
+        # formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
+        # for form in formset:
+        #     print(form.as_table())
 
+        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': metadata_out_csv_form},
+         # 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
+        
+        return render(request, 'submission/upload_metadata.html', context)
+        
     else:
         file_upload_form = FileUploadForm()
         context = {'file_upload_form':file_upload_form, 'header': 'Upload metadata', 'formset': {}}
