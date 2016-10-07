@@ -8,7 +8,7 @@ def my_view(request):
     return render(request, 'my_template.html', context)
 from .models_l_env454 import Run
 
-from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm
+from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, MyForm
 from .utils import Run, Utils
 
 from .metadata_tools import CsvMetadata, Validation
