@@ -31,5 +31,10 @@ class CsvRunInfoUploadForm(forms.Form):
 class MetadataOutCsvForm(forms.Form):
     # todo: add css class size_number to input
     domain         = forms.ChoiceField(Domain.DOMAIN_CHOICES, label = '')
-    lane           = forms.CharField(label = '', max_length = 1)
+    # myDomainChoiceField  = forms.myDomainChoiceField(Domain.DOMAIN_CHOICES, label = 'domain')
+    # class Meta:
+    #     model = Forms_model
+    #     fields = ['myDomainChoiceField']
+    
+    lane    = forms.CharField(label = '', max_length = 1)
     

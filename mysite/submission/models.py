@@ -85,3 +85,9 @@ class Has_ns(models.Model):
         ('yes', 'Has NNNN in run_key'),
         ('no', 'Does not have NNNN in run_key (NextSeq)'),
     )
+
+
+# class Forms_model(models.Model):
+#     myDomainChoiceField = models.CharField(blank=True, default='') #max_length=5,
+#     class Meta:
+#         app_label='domain'
