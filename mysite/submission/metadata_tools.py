@@ -37,8 +37,8 @@ class CsvMetadata():
         self.lanes_domains = []
         # self.out_metadata = defaultdict( lambda: defaultdict(int) )
         self.out_metadata = defaultdict( defaultdict )
-        # self.out_metadata_table = defaultdict( list )
-        self.out_metadata_table = defaultdict( defaultdict )
+        self.out_metadata_table = defaultdict( list )
+        # self.out_metadata_table = defaultdict( defaultdict )
         self.vamps_submissions = {}
         self.user_info_arr = {}
         
@@ -447,8 +447,12 @@ class CsvMetadata():
         
         # for i in xrange(len(self.out_metadata.keys())):
         #     self.out_metadata_table['rows'].append([])
+        # for i in xrange(len(self.out_metadata.keys())):
+        #     self.out_metadata_table['rows'][int(i)] = {}
         for i in xrange(len(self.out_metadata.keys())):
-            self.out_metadata_table['rows'][int(i)] = {}
+            self.out_metadata_table['rows'].append({})
+        
+        print "OOO self.out_metadata_table = %s" % self.out_metadata_table
         
         for r_num, v in self.out_metadata.items():
             for header in self.HEADERS_TO_EDIT_METADATA:
@@ -475,6 +479,7 @@ class CsvMetadata():
         #         except:
         #             raise
         print "self.out_metadata_table BBB = %s" % self.out_metadata_table
+        print "self.out_metadata_table['rows'][0] WWW = %s" % self.out_metadata_table['rows'][0]
 
 class Validation(CsvMetadata):
     def __init__(self):

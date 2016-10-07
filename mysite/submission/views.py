@@ -96,7 +96,10 @@ def upload_metadata(request):
         
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
         
-        metadata_out_csv_form  = MetadataOutCsvForm(initial=csv_handler.out_metadata_table)
+        # initial = [ list of { dictionaries }, one per form ]
+        
+        print "VVV csv_handler.out_metadata_table['rows'] = %s, type(csv_handler.out_metadata_table['rows']) = %s" % (csv_handler.out_metadata_table['rows'], type(csv_handler.out_metadata_table['rows']))
+        metadata_out_csv_form  = MetadataOutCsvForm(initial = csv_handler.out_metadata_table)
         
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': metadata_out_csv_form, 'out_metadata_table': csv_handler.out_metadata_table})
 
