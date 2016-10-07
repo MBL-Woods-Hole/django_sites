@@ -148,6 +148,9 @@ class Project(models.Model):
         managed = False
         db_table = 'project'
 
+    def label_from_instance(self, obj):
+        return "%s" % obj.project
+
     def __unicode__(self):
         return u'{0}'.format(self.project)        
 

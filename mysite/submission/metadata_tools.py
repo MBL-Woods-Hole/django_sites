@@ -373,9 +373,10 @@ class CsvMetadata():
             self.out_metadata[i]['amp_operator']		 = self.csv_by_header['op_amp'][i]
             self.out_metadata[i]['barcode']				 = self.csv_by_header['barcode'][i]
             self.out_metadata[i]['barcode_index']		 = self.csv_by_header['barcode_index'][i]
-            self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['last_name'] + ', ' + self.user_info_arr[curr_submit_code]['first_name']
+            # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['last_name'] + ', ' + self.user_info_arr[curr_submit_code]['first_name']
             # <option value="36">Nicole Webster</option>
-            self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['contact_id']
+            # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['contact_id']
+            self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.user_info_arr[curr_submit_code]['last_name']
             
             
             self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]

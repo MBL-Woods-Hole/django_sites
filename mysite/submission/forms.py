@@ -34,15 +34,15 @@ class MetadataOutCsvForm(forms.Form):
     # domain                  = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
     lane                    = forms.CharField(label = '', max_length = 1)
     contact_name_query = Contact.objects.all().order_by('last_name')
-    contact_name            = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None)
+    contact_name            = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
 
     #TODO: add N's if needed
     run_key                 = forms.CharField(label = 'Run Key', max_length = 9)
     barcode_index           = forms.CharField(label = 'Barcode Index', max_length = 9)
     adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
     adaptor                 = forms.ModelChoiceField(queryset = adaptor_query, empty_label = None)
-    project_query = Project.objects.all().order_by('project')
-    project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None)
+    project_query = Project.objects.all().order_by('project')    
+    project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
     dataset                 = forms.CharField()
     dataset_description     = forms.CharField()
     env_source_name_query = EnvSampleSource.objects.all().order_by('env_sample_source_id')
