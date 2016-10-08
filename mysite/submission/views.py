@@ -52,6 +52,7 @@ def upload_metadata(request):
         
         # # TODO: move to one method in metadata_tools, call from here as create info and create csv
         # request.session['lanes_domains'] = csv_handler.get_lanes_domains()
+        # del request.session['lanes_domains']
         
         # csv_handler.create_path_to_csv()
         # csv_handler.create_ini_names()
@@ -59,7 +60,8 @@ def upload_metadata(request):
         csv_handler.get_vamps_submission_info()
         csv_handler.make_new_out_metadata()
         
-        # request.session['out_metadata'] = csv_handler.out_metadata
+        request.session['out_metadata'] = csv_handler.out_metadata
+        
         # print "request.session.keys() = %s" % request.session.keys()
         # print "request.session.values() = %s" % request.session.values()
         # csv_handler.make_metadata_table()
