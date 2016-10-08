@@ -127,10 +127,17 @@ def upload_metadata(request):
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm)
 
         my_post_dict = request.POST.copy()
-        # my_post_dict['form-TOTAL_FORMS'] = value
-        # my_post_dict['form-INITIAL_FORMS'] = value
-        # my_post_dict['form-MAX_NUM_FORMS'] = value
+        my_post_dict['form-TOTAL_FORMS'] = len(request.session['out_metadata'].keys())
+        my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
+        my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
+        
+        print "my_post_dict = %s" % my_post_dict
+        
         formset = MetadataOutCsvFormSet(my_post_dict)
+
+        # print "len(request.session['out_metadata'].keys()) = %s" % len(request.session['out_metadata'].keys())
+        #
+        # print "len(request.session['out_metadata_table'].keys()) = %s" % len(request.session['out_metadata_table'].keys())
 
 
         # formset = MetadataOutCsvFormSet(request.POST, {'form-TOTAL_FORMS': 3, 'form-INITIAL_FORMS': 0, 'form-MAX_NUM_FORMS': ''})
