@@ -59,7 +59,7 @@ def upload_metadata(request):
         csv_handler.get_vamps_submission_info()
         csv_handler.make_new_out_metadata()
         
-        request.session['out_metadata'] = csv_handler.out_metadata
+        # request.session['out_metadata'] = csv_handler.out_metadata
         # print "request.session.keys() = %s" % request.session.keys()
         # print "request.session.values() = %s" % request.session.values()
         # csv_handler.make_metadata_table()
@@ -107,6 +107,8 @@ def upload_metadata(request):
         # for form in formset:
         #     print(form.as_table())
 
+        request.session['out_metadata_table'] = csv_handler.out_metadata_table
+        
         context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
         
         return render(request, 'submission/upload_metadata.html', context)
@@ -143,10 +145,9 @@ def upload_metadata(request):
         # for form in formset:
         #     print(form.as_table())
 
-        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
         
         '''
-        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset}
+        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table']}
         
         return render(request, 'submission/upload_metadata.html', context)
         
