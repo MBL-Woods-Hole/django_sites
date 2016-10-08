@@ -60,8 +60,8 @@ def upload_metadata(request):
         csv_handler.make_new_out_metadata()
         
         request.session['out_metadata'] = csv_handler.out_metadata
-        print "request.session.keys() = %s" % request.session.keys()
-        print "request.session.values() = %s" % request.session.values()
+        # print "request.session.keys() = %s" % request.session.keys()
+        # print "request.session.values() = %s" % request.session.values()
         # csv_handler.make_metadata_table()
         
         # TODO: create form
@@ -96,7 +96,9 @@ def upload_metadata(request):
         csv_handler.write_ini()
         
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
-                
+        request.session['run_info_form_post'] = request.POST
+        
+
         print "VVV csv_handler.out_metadata_table['rows'] = %s, type(csv_handler.out_metadata_table['rows']) = %s" % (csv_handler.out_metadata_table['rows'], len(csv_handler.out_metadata_table['rows']))
 
         
@@ -112,7 +114,7 @@ def upload_metadata(request):
     elif 'create_submission_metadata_file' in request.POST:
         print "EEE: request.POST = %s" % request.POST
         # return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form})
-        metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
+        metadata_run_info_form = CsvRunInfoUploadForm(request.session['run_info_form_post'])        
         
         #works
         # metadata_out_csv_form = MetadataOutCsvForm(request.POST)
