@@ -78,17 +78,20 @@ class IlluminaAdaptor(models.Model):
         return u'{0}'.format(self.illumina_adaptor)        
 
 class IlluminaAdaptorRef(models.Model):
-    illumina_adaptor = models.ForeignKey(IlluminaAdaptor, models.DO_NOTHING)
-    illumina_index = models.ForeignKey('IlluminaIndex', models.DO_NOTHING)
-    illumina_run_key = models.ForeignKey('IlluminaRunKey', models.DO_NOTHING)
-    dna_region = models.ForeignKey(DnaRegion, models.DO_NOTHING)
-    domain = models.CharField(max_length=9, blank=True, null=True)
+    illumina_adaptor    = models.ForeignKey('IlluminaAdaptor', models.DO_NOTHING, primary_key=True)
+    illumina_index      = models.ForeignKey('IlluminaIndex', models.DO_NOTHING)
+    illumina_run_key    = models.ForeignKey('IlluminaRunKey', models.DO_NOTHING)
+    dna_region          = models.ForeignKey('DnaRegion', models.DO_NOTHING)
+    domain              = models.CharField(max_length=9, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'illumina_adaptor_ref'
-        unique_together = (('illumina_adaptor', 'dna_region', 'domain'),)
-
+        unique_together = (('illumina_adaptor_id', 'dna_region_id', 'domain'),)
+        
+    def __str__(self):
+        return "%s, %s, %s, %s, %s" % (self.illumina_adaptor, self.illumina_index, self.illumina_run_key, self.dna_region, self.domain)
+        
 
 class IlluminaIndex(models.Model):
     illumina_index_id = models.AutoField(primary_key=True)
@@ -98,6 +101,8 @@ class IlluminaIndex(models.Model):
         managed = False
         db_table = 'illumina_index'
 
+    def __str__(self):
+        return self.illumina_index
 
 class IlluminaRunKey(models.Model):
     illumina_run_key_id = models.AutoField(primary_key=True)
@@ -107,6 +112,8 @@ class IlluminaRunKey(models.Model):
         managed = False
         db_table = 'illumina_run_key'
 
+    def __str__(self):
+        return self.illumina_run_key
 
 class Primer(models.Model):
     primer_id = models.SmallIntegerField(primary_key=True)

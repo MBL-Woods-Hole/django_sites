@@ -1,5 +1,6 @@
 import models
 from .utils import Utils, Dirs
+import models_l_env454
 
 from datetime import datetime
 
@@ -251,35 +252,54 @@ class CsvMetadata():
             
     def get_adaptors_full(self, db_name = "test_env454"):
         print "get_adaptors_full"
-        try:
-            query_adaptors = """select
-            illumina_adaptor, illumina_index, illumina_run_key, dna_region, domain, illumina_adaptor_id, illumina_index_id, illumina_run_key_id, dna_region_id
-            FROM %s.illumina_adaptor_ref
-            JOIN %s.illumina_adaptor USING(illumina_adaptor_id)
-            JOIN %s.illumina_index USING(illumina_index_id)
-            JOIN %s.illumina_run_key USING(illumina_run_key_id)
-            JOIN %s.dna_region USING(dna_region_id)
-            """ % (db_name, db_name, db_name, db_name, db_name)
-            # self.adaptors_full = self.run_query_to_dict(query_adaptors)
-            
-            res_dict = {}
-            cursor = connection.cursor()
-            cursor.execute(query_adaptors)
+        
+        # illumina_adaptor_id   illumina_index_id   illumina_run_key_id dna_region_id   domain
+        # 1 16  1   15  archaea        
 
-            column_names = [d[0] for d in cursor.description]
-            adaptors_full = []
-            for row in cursor:
-                print "WWW row = " 
-                print row
-                res_dict =  dict(zip(column_names, row))
-                print "res_dict"
-                print res_dict
-                adaptors_full.append(res_dict)
-            
-            print "adaptors_full = "
-            print adaptors_full
-        except:
-            raise
+        ia = models_l_env454.IlluminaAdaptorRef.objects.all()
+        e = models_l_env454.IlluminaAdaptorRef.objects.get(illumina_adaptor_id=1, dna_region_id =15, domain = "archaea")
+        print "=" * 9
+        # print "illumina_adaptor = %s" % e.illumina_adaptor
+        # print "illumina_index = %s" % e.illumina_index
+        # print "illumina_run_key = %s" % e.illumina_run_key
+        # print "dna_region = %s" % e.dna_region
+        # print "domain = %s" % e.domain
+        # print "illumina_adaptor_id = %s" % e.illumina_adaptor_id
+        # print "illumina_index_id = %s" % e.illumina_index_id
+        # print "illumina_run_key_id = %s" % e.illumina_run_key_id
+        # print "dna_region_id = %s" % e.dna_region_id 
+        print ia
+        print "=" * 9
+        
+        # try:
+        #     query_adaptors = """select
+        #     illumina_adaptor, illumina_index, illumina_run_key, dna_region, domain, illumina_adaptor_id, illumina_index_id, illumina_run_key_id, dna_region_id
+        #     FROM %s.illumina_adaptor_ref
+        #     JOIN %s.illumina_adaptor USING(illumina_adaptor_id)
+        #     JOIN %s.illumina_index USING(illumina_index_id)
+        #     JOIN %s.illumina_run_key USING(illumina_run_key_id)
+        #     JOIN %s.dna_region USING(dna_region_id)
+        #     """ % (db_name, db_name, db_name, db_name, db_name)
+        #     # self.adaptors_full = self.run_query_to_dict(query_adaptors)
+        #     
+        #     res_dict = {}
+        #     cursor = connection.cursor()
+        #     cursor.execute(query_adaptors)
+        # 
+        #     column_names = [d[0] for d in cursor.description]
+        #     adaptors_full = []
+        #     for row in cursor:
+        #         print "WWW row = " 
+        #         print row
+        #         res_dict =  dict(zip(column_names, row))
+        #         print "res_dict"
+        #         print res_dict
+        #         adaptors_full.append(res_dict)
+        #     
+        #     print "adaptors_full = "
+        #     print adaptors_full
+        # except:
+        #     raise
 
     def get_user_info(self, db_name = "test_env454"):
         # todo: get db_name depending on local/not
