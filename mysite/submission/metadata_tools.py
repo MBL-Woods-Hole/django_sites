@@ -41,6 +41,7 @@ class CsvMetadata():
         # self.out_metadata_table = defaultdict( defaultdict )
         self.vamps_submissions = {}
         self.user_info_arr = {}
+        self.adaptors_full = {}
         
         # error = True
 
@@ -247,10 +248,41 @@ class CsvMetadata():
             self.errors.append(self.no_data_message())
         except:
             raise
+            
+    def get_adaptors_full(self, db_name = "test_env454"):
+        print "get_adaptors_full"
+        try:
+            query_adaptors = """select
+            illumina_adaptor, illumina_index, illumina_run_key, dna_region, domain, illumina_adaptor_id, illumina_index_id, illumina_run_key_id, dna_region_id
+            FROM %s.illumina_adaptor_ref
+            JOIN %s.illumina_adaptor USING(illumina_adaptor_id)
+            JOIN %s.illumina_index USING(illumina_index_id)
+            JOIN %s.illumina_run_key USING(illumina_run_key_id)
+            JOIN %s.dna_region USING(dna_region_id)
+            """ % (db_name, db_name, db_name, db_name, db_name)
+            # self.adaptors_full = self.run_query_to_dict(query_adaptors)
+            
+            res_dict = {}
+            cursor = connection.cursor()
+            cursor.execute(query_adaptors)
+
+            column_names = [d[0] for d in cursor.description]
+            adaptors_full = []
+            for row in cursor:
+                print "WWW row = " 
+                print row
+                res_dict =  dict(zip(column_names, row))
+                print "res_dict"
+                print res_dict
+                adaptors_full.append(res_dict)
+            
+            print "adaptors_full = "
+            print adaptors_full
+        except:
+            raise
 
     def get_user_info(self, db_name = "test_env454"):
         # todo: get db_name depending on local/not
-        db_name = "test_env454"
         try:
             for submit_code in self.csv_by_header_uniqued['submit_code']:
                 # print "submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user'])
@@ -482,7 +514,7 @@ class Validation(CsvMetadata):
         for y_index, row in enumerate(self.reader):
             print "YYY y_index"
             print y_index
-            print "WWW row"
+            # print "WWW row"
             print row
             # ignore blank rows
             # if not ''.join(str(x) for x in row):

@@ -133,6 +133,11 @@ def upload_metadata(request):
         
         print "my_post_dict = %s" % my_post_dict
         
+        csv_handler.get_adaptors_full()
+        print "csv_handler.adaptors_full = "
+        print csv_handler.adaptors_full
+        
+        
         formset = MetadataOutCsvFormSet(my_post_dict)
 
         # print "len(request.session['out_metadata'].keys()) = %s" % len(request.session['out_metadata'].keys())
