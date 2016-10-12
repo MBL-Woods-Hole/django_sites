@@ -252,25 +252,34 @@ class CsvMetadata():
         except:
             raise
             
-    def get_adaptors_full(self, db_name = "test_env454"):
+    def get_adaptors_full(self, adaptor, dna_region, domain, db_name = "test_env454"):
+        
         print "get_adaptors_full"
 
         print "=" * 9
 
-        links = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+        links = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region').filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
         # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
         
         print "+" * 9
         # print links
-        print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
-        # print links.filter(illumina_adaptor_id__illumina_adaptor = "A01")
+        # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
+        print links
         # :.extra(where=["illumina_adaptor = 'A04' OR illumina_adaptor = 'A08'"])
         
         # print links.extra(where=["illumina_adaptor = 'A04' OR illumina_adaptor = 'A08'"])
         print "-" * 9
         
+        # get_adaptors_full(self.csv_by_header['adaptor'][i], self.csv_by_header['dna_region'][i], self.csv_by_header['domain'][i])
         for row in links:
-            print model_to_dict(row)
+        #     key = "_".join(illumina_adaptor_id, dna_region_id, domain)
+        #     self.adaptors_full[key] = (row.illumina_adaptor, row.illumina_index, row.illumina_run_key, row.dna_region)
+            # print row.illumina_adaptor
+            print row.illumina_index
+            print row.illumina_run_key
+            # print row.dna_region
+            
+        print self.adaptors_full
                         
         #     column_names = [d[0] for d in cursor.description]
         #     adaptors_full = []
@@ -447,6 +456,11 @@ class CsvMetadata():
         self.get_user_info()
         for i in xrange(len(self.csv_content)-1):
             curr_submit_code = self.csv_by_header['submit_code'][i]
+            # for row in links:
+            #     key = "_".join(illumina_adaptor_id, dna_region_id, domain)
+            #     self.adaptors_full[key] = (row.illumina_adaptor, row.illumina_index, row.illumina_run_key, row.dna_region)
+            
+            self.get_adaptors_full(self.csv_by_header['adaptor'][i], self.csv_by_header['dna_region'][i], self.csv_by_header['domain'][i])
             
             # print i
             self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
