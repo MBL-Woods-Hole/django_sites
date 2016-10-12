@@ -6,12 +6,13 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
+from django.utils.encoding import python_2_unicode_compatible
 
 from django.db import models
 
 models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('env454_db',)
 
-
+@python_2_unicode_compatible  # only if you need to support Python 2
 class Contact(models.Model):
     contact_id  = models.SmallIntegerField(primary_key=True)
     contact	    = models.CharField(max_length=32)
@@ -26,9 +27,13 @@ class Contact(models.Model):
         db_table = 'contact'
         unique_together = (('contact', 'email', 'institution'),)
 
+    # def __unicode__(self):
+    #     return u'{0}'.format(self.illumina_adaptor)        
+
+
     def __str__(self):
-        # return self.contact
-        return "%s, %s, %s, %s, %s, %s, %s" % (self.contact_id, self.contact, self.email, self.institution, self.vamps_name, self.first_name, self.last_name)
+        return self.contact
+        # return "%s, %s, %s, %s, %s, %s, %s" % (self.contact_id, self.contact, self.email, self.institution, self.vamps_name, self.first_name, self.last_name)
 
 
 class Dataset(models.Model):

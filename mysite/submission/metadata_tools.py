@@ -269,6 +269,21 @@ class CsvMetadata():
         # print links.extra(where=["illumina_adaptor = 'A04' OR illumina_adaptor = 'A08'"])
         print "-" * 9
         
+        for row in links:
+            print model_to_dict(row)
+                        
+        #     column_names = [d[0] for d in cursor.description]
+        #     adaptors_full = []
+        #     for row in cursor:
+        #         print "WWW row = " 
+        #         print row
+        #         res_dict =  dict(zip(column_names, row))
+        #         print "res_dict"
+        #         print res_dict
+        #         adaptors_full.append(res_dict)
+
+        
+        
         # for row in links.iterator():
         #     print type(row)
             # dict(zip(column_names, row)
