@@ -3,6 +3,7 @@ from .utils import Utils, Dirs
 import models_l_env454
 from django.db.models import Q
 from django.forms.models import model_to_dict
+import time
 
 from datetime import datetime
 
@@ -252,107 +253,79 @@ class CsvMetadata():
         except:
             raise
 
+    def benchmark_w_return_1(self):
+      print  "\n"
+      print "-" * 10
+      return time.time()
+
+    def benchmark_w_return_2(self, t0):
+      t1 = time.time()
+      total = float(t1-t0) / 60
+      print 'time: %.2f m' % total
+
     def get_adaptors_full(self, db_name = "test_env454"):
 
         print "get_adaptors_full"
 
         print "=" * 9
 
+        t0 = self.benchmark_w_return_1()
         links = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
 
 
-        print "LLL len(self.csv_content)-1 ="
-        print len(self.csv_content)-1
+        # print "LLL len(self.csv_content)-1 ="
+        # print len(self.csv_content)-1
+        
         for i in xrange(len(self.csv_content)-1):
             print "+" * 9
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
             domain     = self.csv_by_header['domain'][i]
             
-            mm = links.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
             key = "_".join([adaptor, dna_region, domain])
+                        
+            mm = links.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
             for row in mm:
                 self.adaptors_full[key] = (row.illumina_index, row.illumina_run_key)
+
+        self.benchmark_w_return_2(t0)
+        
+        t0 = self.benchmark_w_return_1()
+        
+        try:
+            adaptors_full = []
+            
+            query_adaptors = """select
+            illumina_adaptor, illumina_index, illumina_run_key, dna_region, domain, illumina_adaptor_id, illumina_index_id, illumina_run_key_id, dna_region_id
+            FROM %s.illumina_adaptor_ref
+            JOIN %s.illumina_adaptor USING(illumina_adaptor_id)
+            JOIN %s.illumina_index USING(illumina_index_id)
+            JOIN %s.illumina_run_key USING(illumina_run_key_id)
+            JOIN %s.dna_region USING(dna_region_id)
+            """ % (db_name, db_name, db_name, db_name, db_name)
+            # self.adaptors_full = self.run_query_to_dict(query_adaptors)
+        
+            res_dict = {}
+            cursor = connection.cursor()
+            cursor.execute(query_adaptors)
+        
+            column_names = [d[0] for d in cursor.description]
+            for row in cursor:
+                # print "WWW row = "
                 # print row
-                # print row.illumina_index
-                # print row.illumina_run_key
-
-        # self.get_adaptors_full(self.csv_by_header['adaptor'][i], self.csv_by_header['dna_region'][i], self.csv_by_header['domain'][i])
-
-
-        # print links
-        # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
-        # print links
-        # :.extra(where=["illumina_adaptor = 'A04' OR illumina_adaptor = 'A08'"])
-
-        # print links.extra(where=["illumina_adaptor = 'A04' OR illumina_adaptor = 'A08'"])
-        print "-" * 9
-
-        # get_adaptors_full(self.csv_by_header['adaptor'][i], self.csv_by_header['dna_region'][i], self.csv_by_header['domain'][i])
-        # for row in links:
-        #     key = "_".join(illumina_adaptor_id, dna_region_id, domain)
-        #     self.adaptors_full[key] = (row.illumina_adaptor, row.illumina_index, row.illumina_run_key, row.dna_region)
-            # print row.illumina_adaptor
-            # print row.illumina_index
-            # print row.illumina_run_key
-            # print row.dna_region
-
-        print self.adaptors_full
-
-        #     column_names = [d[0] for d in cursor.description]
-        #     adaptors_full = []
-        #     for row in cursor:
-        #         print "WWW row = "
-        #         print row
-        #         res_dict =  dict(zip(column_names, row))
-        #         print "res_dict"
-        #         print res_dict
-        #         adaptors_full.append(res_dict)
-
-
-
-        # for row in links.iterator():
-        #     print type(row)
-            # dict(zip(column_names, row)
-
-        # one call!
-        #         <QuerySet [<IlluminaAdaptorRef: A01, ATCACG, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A01, TATCGC, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A01, ATCACG, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A01, GCGGTA, TGATA, v6, archaea>, <IlluminaAdaptorRef: A01, GTAGTG, TCAGC, ITS1, eukarya>, <IlluminaAdaptorRef: A02, CGATGT, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A02, TGCTCG, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A02, CGATGT, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A02, CGCACA, TGATA, v6, archaea>, <IlluminaAdaptorRef: A02, ACTGCA, TCAGC, ITS1, eukarya>, <IlluminaAdaptorRef: A03, TTAGGC, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A03, ACGACT, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A03, TTAGGC, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A03, ATAATC, TGATA, v6, archaea>, <IlluminaAdaptorRef: A03, TATGGT, TCAGC, ITS1, eukarya>, <IlluminaAdaptorRef: A04, TGACCA, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A04, AGATAC, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A04, TGACCA, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A04, CTAGGC, TGATA, v6, archaea>, <IlluminaAdaptorRef: A04, TGTCGA, TCAGC, ITS1, eukarya>, '...(remaining elements truncated)...']>
-        #
-        print "9" * 9
-
-
-
-
-        # try:
-        #     query_adaptors = """select
-        #     illumina_adaptor, illumina_index, illumina_run_key, dna_region, domain, illumina_adaptor_id, illumina_index_id, illumina_run_key_id, dna_region_id
-        #     FROM %s.illumina_adaptor_ref
-        #     JOIN %s.illumina_adaptor USING(illumina_adaptor_id)
-        #     JOIN %s.illumina_index USING(illumina_index_id)
-        #     JOIN %s.illumina_run_key USING(illumina_run_key_id)
-        #     JOIN %s.dna_region USING(dna_region_id)
-        #     """ % (db_name, db_name, db_name, db_name, db_name)
-        #     # self.adaptors_full = self.run_query_to_dict(query_adaptors)
-        #
-        #     res_dict = {}
-        #     cursor = connection.cursor()
-        #     cursor.execute(query_adaptors)
-        #
-        #     column_names = [d[0] for d in cursor.description]
-        #     adaptors_full = []
-        #     for row in cursor:
-        #         print "WWW row = "
-        #         print row
-        #         res_dict =  dict(zip(column_names, row))
-        #         print "res_dict"
-        #         print res_dict
-        #         adaptors_full.append(res_dict)
-        #
-        #     print "adaptors_full = "
-        #     print adaptors_full
-        # except:
-        #     raise
+                res_dict =  dict(zip(column_names, row))
+                # print "res_dict"
+                # print res_dict
+                adaptors_full.append(res_dict)
+        
+        except:
+            raise
+            
+        self.benchmark_w_return_2(t0)
+            
+        print "adaptors_full = "
+        print adaptors_full
 
     def get_user_info(self, db_name = "test_env454"):
         # todo: get db_name depending on local/not
