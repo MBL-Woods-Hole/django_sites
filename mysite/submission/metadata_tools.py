@@ -463,13 +463,23 @@ class CsvMetadata():
         #     self.get_adaptors_full(adaptor, dna_region, domain)
         
         for x in range(0, len(self.out_metadata_table['rows'])):
-            print x
-            print "TTTTT request.POST['form-'+str(x)+'-adaptor']"
-            print request.POST['form-'+str(x)+'-adaptor']            
+            # print x
+            # print "TTTTT request.POST['form-'+str(x)+'-adaptor']"
+            # print request.POST['form-'+str(x)+'-adaptor']            
             # for x in range(0, int(request.POST['form-TOTAL_FORMS'])):
             # self.out_metadata_table['rows'][x][header] = (self.out_metadata[r_num][header])
             
-            self.get_adaptors_full(request.POST['form-'+str(x)+'-adaptor'], request.session['run_info_form_post']['csv_dna_region'], request.POST['form-'+str(x)+'-domain'])
+            adaptor    = request.POST['form-'+str(x)+'-adaptor']
+            dna_region = request.session['run_info_form_post']['csv_dna_region']
+            domain     = request.POST['form-'+str(x)+'-domain']
+            
+            key = "_".join([adaptor, dna_region, domain])
+            
+            self.get_adaptors_full(adaptor, dna_region, domain)
+            
+            self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
+            self.out_metadata_table['rows'][x]['run_key'] = self.adaptors_full[key][1].illumina_run_key
+            # self.out_metadata[i]['barcode_index'] = self.adaptors_full[key][0].illumina_index
             
             
             # print "self.out_metadata_table['rows'][x]['adaptor'] = %s" % self.out_metadata_table['rows'][x]['adaptor']
@@ -479,17 +489,18 @@ class CsvMetadata():
             # print "request.POST['form-'+str(x)+'-run_key'] = %s" % request.POST['form-'+str(x)+'-run_key']
             # print "self.out_metadata_table['rows'][x]['barcode_index'] = %s" % self.out_metadata_table['rows'][x]['barcode_index']
             # print "request.POST['form-'+str(x)+'-barcode_index'] = %s" % request.POST['form-'+str(x)+'-barcode_index']
-        print "7" *9
-        # print "request.POST = "
-        # print request.POST
-        
-        print "RRR request.session['run_info_form_post']['csv_dna_region'] = "
-        print request.session['run_info_form_post']['csv_dna_region']
-        
-        print "4" *9
-        print "self.adaptors_full"
-        print self.adaptors_full
-        print "8" *9
+        # print "7" *9
+        # # print "request.POST = "
+        # # print request.POST
+        # 
+        # # print "RRR request.session['run_info_form_post']['csv_dna_region'] = "
+        # # print request.session['run_info_form_post']['csv_dna_region']
+        # # 
+        # 
+        # print "4" *9
+        # print "self.adaptors_full"
+        # print self.adaptors_full
+        # print "8" *9
             
             # '''
             # run_info_form_post'

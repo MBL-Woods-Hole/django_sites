@@ -142,6 +142,13 @@ def upload_metadata(request):
         my_post_dict['form-TOTAL_FORMS']   = len(request.session['out_metadata'].keys())
         my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
         my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
+
+        my_post_dict['form-0-barcode_index'] = csv_handler.out_metadata_table['rows'][0]['barcode_index']
+
+        
+        # print "OOO csv_handler.out_metadata_table = "
+        # print csv_handler.out_metadata_table
+                
         
         print "my_post_dict = %s" % my_post_dict
         
