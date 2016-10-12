@@ -58,6 +58,13 @@ def upload_metadata(request):
         # csv_handler.create_ini_names()
         # csv_handler.write_ini()
         csv_handler.get_vamps_submission_info()
+        
+        csv_handler.get_csv_by_header()
+        
+        csv_handler.get_adaptors_full()
+        print "csv_handler.adaptors_full = "
+        print csv_handler.adaptors_full
+        
         csv_handler.make_new_out_metadata()
         
         request.session['out_metadata'] = csv_handler.out_metadata

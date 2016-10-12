@@ -45,7 +45,7 @@ class CsvMetadata():
         self.vamps_submissions = {}
         self.user_info_arr = {}
         self.adaptors_full = {}
-        
+
         # error = True
 
         self.HEADERS_FROM_CSV = {
@@ -86,7 +86,7 @@ class CsvMetadata():
             'trim_distal': {'field': 'trim_distal', 'required': False},
             'env_sample_source_id': {'field': 'env_sample_source_id', 'required': True},
         }
-            
+
         self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
         self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
@@ -138,7 +138,7 @@ class CsvMetadata():
               print dialect.delimiter
               # print dir(dialect)
               # ['__doc__', '__init__', '__module__', '_name', '_valid', '_validate', 'delimiter', 'doublequote', 'escapechar', 'lineterminator', 'quotechar', 'quoting', 'skipinitialspace']
-              
+
               # print "----"
               return dialect
             else:
@@ -153,7 +153,7 @@ class CsvMetadata():
         except:
             raise
 
-    def get_csv_by_header(self): # not using it
+    def get_csv_by_header(self):
         for row in zip(*self.csv_content):
             self.csv_by_header[row[0]] = row[1:]
 
@@ -223,12 +223,12 @@ class CsvMetadata():
         res_dict = {}
         cursor = connection.cursor()
         cursor.execute(query)
-        
+
         column_names = [d[0] for d in cursor.description]
 
         for row in cursor:
           res_dict =  dict(zip(column_names, row))
-         
+
         return res_dict
       # dump it to a json string
       # self.vamps_submissions = json.dumps(info)
@@ -251,59 +251,78 @@ class CsvMetadata():
             self.errors.append(self.no_data_message())
         except:
             raise
-            
-    def get_adaptors_full(self, adaptor, dna_region, domain, db_name = "test_env454"):
-        
+
+    def get_adaptors_full(self, db_name = "test_env454"):
+
         print "get_adaptors_full"
 
         print "=" * 9
 
-        links = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region').filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
+        links = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
-        
-        print "+" * 9
+
+
+        print "LLL len(self.csv_content)-1 ="
+        print len(self.csv_content)-1
+        for i in xrange(len(self.csv_content)-1):
+            print "+" * 9
+            adaptor    = self.csv_by_header['adaptor'][i]
+            dna_region = self.csv_by_header['dna_region'][i]
+            domain     = self.csv_by_header['domain'][i]
+            
+            mm = links.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
+            key = "_".join([adaptor, dna_region, domain])
+            for row in mm:
+                self.adaptors_full[key] = (row.illumina_index, row.illumina_run_key)
+                # print row
+                # print row.illumina_index
+                # print row.illumina_run_key
+
+        # self.get_adaptors_full(self.csv_by_header['adaptor'][i], self.csv_by_header['dna_region'][i], self.csv_by_header['domain'][i])
+
+
         # print links
         # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
-        print links
+        # print links
         # :.extra(where=["illumina_adaptor = 'A04' OR illumina_adaptor = 'A08'"])
-        
+
         # print links.extra(where=["illumina_adaptor = 'A04' OR illumina_adaptor = 'A08'"])
         print "-" * 9
-        
+
         # get_adaptors_full(self.csv_by_header['adaptor'][i], self.csv_by_header['dna_region'][i], self.csv_by_header['domain'][i])
-        for row in links:
+        # for row in links:
         #     key = "_".join(illumina_adaptor_id, dna_region_id, domain)
         #     self.adaptors_full[key] = (row.illumina_adaptor, row.illumina_index, row.illumina_run_key, row.dna_region)
             # print row.illumina_adaptor
-            print row.illumina_index
-            print row.illumina_run_key
+            # print row.illumina_index
+            # print row.illumina_run_key
             # print row.dna_region
-            
+
         print self.adaptors_full
-                        
+
         #     column_names = [d[0] for d in cursor.description]
         #     adaptors_full = []
         #     for row in cursor:
-        #         print "WWW row = " 
+        #         print "WWW row = "
         #         print row
         #         res_dict =  dict(zip(column_names, row))
         #         print "res_dict"
         #         print res_dict
         #         adaptors_full.append(res_dict)
 
-        
-        
+
+
         # for row in links.iterator():
         #     print type(row)
             # dict(zip(column_names, row)
-        
+
         # one call!
         #         <QuerySet [<IlluminaAdaptorRef: A01, ATCACG, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A01, TATCGC, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A01, ATCACG, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A01, GCGGTA, TGATA, v6, archaea>, <IlluminaAdaptorRef: A01, GTAGTG, TCAGC, ITS1, eukarya>, <IlluminaAdaptorRef: A02, CGATGT, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A02, TGCTCG, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A02, CGATGT, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A02, CGCACA, TGATA, v6, archaea>, <IlluminaAdaptorRef: A02, ACTGCA, TCAGC, ITS1, eukarya>, <IlluminaAdaptorRef: A03, TTAGGC, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A03, ACGACT, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A03, TTAGGC, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A03, ATAATC, TGATA, v6, archaea>, <IlluminaAdaptorRef: A03, TATGGT, TCAGC, ITS1, eukarya>, <IlluminaAdaptorRef: A04, TGACCA, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A04, AGATAC, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A04, TGACCA, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A04, CTAGGC, TGATA, v6, archaea>, <IlluminaAdaptorRef: A04, TGTCGA, TCAGC, ITS1, eukarya>, '...(remaining elements truncated)...']>
         #
         print "9" * 9
-        
-        
-        
+
+
+
 
         # try:
         #     query_adaptors = """select
@@ -315,21 +334,21 @@ class CsvMetadata():
         #     JOIN %s.dna_region USING(dna_region_id)
         #     """ % (db_name, db_name, db_name, db_name, db_name)
         #     # self.adaptors_full = self.run_query_to_dict(query_adaptors)
-        #     
+        #
         #     res_dict = {}
         #     cursor = connection.cursor()
         #     cursor.execute(query_adaptors)
-        # 
+        #
         #     column_names = [d[0] for d in cursor.description]
         #     adaptors_full = []
         #     for row in cursor:
-        #         print "WWW row = " 
+        #         print "WWW row = "
         #         print row
         #         res_dict =  dict(zip(column_names, row))
         #         print "res_dict"
         #         print res_dict
         #         adaptors_full.append(res_dict)
-        #     
+        #
         #     print "adaptors_full = "
         #     print adaptors_full
         # except:
@@ -342,11 +361,11 @@ class CsvMetadata():
             for submit_code in self.csv_by_header_uniqued['submit_code']:
                 # print "submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user'])
                 vamps_user_id = self.vamps_submissions[submit_code]['user']
-                
+
                 contacts = models_l_env454.Contact.objects.filter(vamps_name = vamps_user_id)
                 for row in contacts:
                     self.user_info_arr[submit_code] = (model_to_dict(row))
-                                
+
                 # .filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
 
             print "self.user_info_arr = %s" % self.user_info_arr
@@ -359,7 +378,7 @@ class CsvMetadata():
     def get_selected_variables(self, request_post):
         # change from form if needed
         machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
-        
+
         if 'submit_run_info' in request_post:
             self.selected_machine		= request_post.get('csv_platform', False)
             print "self.selected_machine				in request_post= %s" % (self.selected_machine)
@@ -390,7 +409,7 @@ class CsvMetadata():
 
     def get_lanes_domains(self):
         domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
-        
+
         for idx, val in self.out_metadata.items():
             domain_letter = domain_choices[val['domain']]
             self.lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
@@ -409,7 +428,7 @@ class CsvMetadata():
     def write_ini(self):
         path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s" % (self.selected_rundate, self.selected_machine_short)
         overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
-        
+
         for lane_domain, ini_name in self.ini_names.items():
             ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
                         ''' % (self.selected_rundate, lane_domain, self.selected_dna_region, path_to_raw_data, overlap_choices[self.selected_overlap], self.selected_machine)
@@ -420,11 +439,11 @@ class CsvMetadata():
     def edit_out_metadata(self, request):
         # print "FROM edit_out_metadata: request.session['out_metadata']"
         # print request.session['out_metadata']
-        
+
         self.out_metadata = request.session['out_metadata']
-                
+
         for i, v in self.out_metadata.items():
-            # print "i = %s" % i 
+            # print "i = %s" % i
             self.out_metadata[i]['dna_region']		    = request.POST.get('csv_dna_region', False)
             self.out_metadata[i]['has_ns']			    = request.POST.get('csv_has_ns', False)
             self.out_metadata[i]['insert_size']		    = request.POST.get('csv_insert_size', False)
@@ -435,33 +454,27 @@ class CsvMetadata():
             self.out_metadata[i]['run']				    = request.POST.get('csv_rundate', False)
             self.out_metadata[i]['seq_operator']		= request.POST.get('csv_seq_operator', False)
 
-            # TODO: 
+            # TODO:
             # ? 'overlap': 'hs_complete' now!
 
         # print "self.out_metadata = %s" % self.out_metadata
-      
+
     def make_new_out_metadata(self):
-        self.get_csv_by_header()
         idx = 0
         print "self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content))
         print "self.csv_content[0] =  head = %s" % (self.csv_content[0])
-        
+
         print " &&&&&&& list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))"
         a = list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))
         print a
         # ['barcode_index', 'lane', 'dna_region', 'read_length', 'env_sample_source_id', 'barcode', 'overlap', 'dataset_description', 'adaptor', 'primer_suite', 'insert_size']
-        
+
         print "self.csv_by_header = %s" % self.csv_by_header
-        
+
         self.get_user_info()
         for i in xrange(len(self.csv_content)-1):
             curr_submit_code = self.csv_by_header['submit_code'][i]
-            # for row in links:
-            #     key = "_".join(illumina_adaptor_id, dna_region_id, domain)
-            #     self.adaptors_full[key] = (row.illumina_adaptor, row.illumina_index, row.illumina_run_key, row.dna_region)
-            
-            self.get_adaptors_full(self.csv_by_header['adaptor'][i], self.csv_by_header['dna_region'][i], self.csv_by_header['domain'][i])
-            
+
             # print i
             self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
             self.out_metadata[i]['amp_operator']		 = self.csv_by_header['op_amp'][i]
@@ -471,8 +484,8 @@ class CsvMetadata():
             # <option value="36">Nicole Webster</option>
             # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['contact_id']
             self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.user_info_arr[curr_submit_code]['last_name']
-            
-            
+
+
             self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
             self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
             # TODO:
@@ -493,10 +506,10 @@ class CsvMetadata():
             self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
             self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
             self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
-            
+
             # print "self.csv_by_header['submit_code'][i] = %s" % self.csv_by_header['submit_code'][i]
             # print "self.vamps_submissions[curr_submit_code]['institution'] = %s" % self.vamps_submissions[curr_submit_code]['institution']
-            
+
             self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
             self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
             self.out_metadata[i]['lane']				 = self.csv_by_header['lane'][i]
@@ -511,7 +524,7 @@ class CsvMetadata():
             self.out_metadata[i]['primer_suite']		 = self.csv_by_header['primer_suite'][i]
             # TODO:
             # $combined_metadata[$num]["primer_suite_id"]    = get_primer_suite_id($combined_metadata[$num]["dna_region"], $combined_metadata[$num]["domain"], $db_name, $connection);
-            
+
             self.out_metadata[i]['project']				 = self.csv_by_header['project_name'][i]
             self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
             try:
@@ -523,9 +536,9 @@ class CsvMetadata():
                     self.out_metadata[i]['project_title']       = ""
             except:
                 raise
-                
+
             self.out_metadata[i]['read_length']			 = self.csv_by_header['read_length'][i]
-            
+
             # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
             # try:
             #     self.out_metadata[i]['run_key']                = self.csv_by_header['run_key'][i]
@@ -533,21 +546,21 @@ class CsvMetadata():
             #     self.out_metadata[i]['run_key']                = ""
             # except:
             #     raise
-                
+
             # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
             # self.out_metadata[i]['seq_operator']       = self.csv_by_header['seq_operator'][i]
             self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tube_label'][i]
-     
+
         print "self.out_metadata = %s" % self.out_metadata
 
     def make_metadata_table(self):
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
-        
+
         for i in xrange(len(self.out_metadata.keys())):
             self.out_metadata_table['rows'].append({})
-        
+
         # print "OOO self.out_metadata_table = %s" % self.out_metadata_table
-        
+
         for r_num, v in self.out_metadata.items():
             for header in self.HEADERS_TO_EDIT_METADATA:
                 try:
