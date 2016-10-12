@@ -61,9 +61,9 @@ def upload_metadata(request):
         
         csv_handler.get_csv_by_header()
         
-        csv_handler.get_adaptors_full()
-        # print "csv_handler.adaptors_full = "
-        # print csv_handler.adaptors_full
+        csv_handler.get_adaptor_from_csv_content()
+        print "csv_handler.adaptors_full = "
+        print csv_handler.adaptors_full
         
         csv_handler.make_new_out_metadata()
         

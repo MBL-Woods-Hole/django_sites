@@ -263,7 +263,18 @@ class CsvMetadata():
       total = float(t1-t0) / 60
       print 'time: %.2f m' % total
 
-    def get_adaptors_full(self, db_name = "test_env454"):
+    def get_adaptor_from_csv_content(self):
+        for i in xrange(len(self.csv_content)-1):
+            print "+" * 9
+            adaptor    = self.csv_by_header['adaptor'][i]
+            dna_region = self.csv_by_header['dna_region'][i]
+            domain     = self.csv_by_header['domain'][i]
+            
+            
+            self.get_adaptors_full(adaptor, dna_region, domain)
+        
+
+    def get_adaptors_full(self, adaptor, dna_region, domain, db_name = "test_env454"):
 
         print "get_adaptors_full"
 
@@ -273,21 +284,22 @@ class CsvMetadata():
         links = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
 
+        key = "_".join([adaptor, dna_region, domain])
 
         # print "LLL len(self.csv_content)-1 ="
         # print len(self.csv_content)-1
         
-        for i in xrange(len(self.csv_content)-1):
-            print "+" * 9
-            adaptor    = self.csv_by_header['adaptor'][i]
-            dna_region = self.csv_by_header['dna_region'][i]
-            domain     = self.csv_by_header['domain'][i]
-            
-            key = "_".join([adaptor, dna_region, domain])
+        # for i in xrange(len(self.csv_content)-1):
+        #     print "+" * 9
+        #     adaptor    = self.csv_by_header['adaptor'][i]
+        #     dna_region = self.csv_by_header['dna_region'][i]
+        #     domain     = self.csv_by_header['domain'][i]
+        #     
+        #     key = "_".join([adaptor, dna_region, domain])
                         
-            mm = links.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
-            for row in mm:
-                self.adaptors_full[key] = (row.illumina_index, row.illumina_run_key)
+        mm = links.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
+        for row in mm:
+            self.adaptors_full[key] = (row.illumina_index, row.illumina_run_key)
 
         # self.benchmark_w_return_2(t0)
         
