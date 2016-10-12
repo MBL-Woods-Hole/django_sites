@@ -269,7 +269,7 @@ class CsvMetadata():
 
         print "=" * 9
 
-        t0 = self.benchmark_w_return_1()
+        # t0 = self.benchmark_w_return_1()
         links = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
 
@@ -289,43 +289,43 @@ class CsvMetadata():
             for row in mm:
                 self.adaptors_full[key] = (row.illumina_index, row.illumina_run_key)
 
-        self.benchmark_w_return_2(t0)
+        # self.benchmark_w_return_2(t0)
         
-        t0 = self.benchmark_w_return_1()
-        
-        try:
-            adaptors_full = []
-            
-            query_adaptors = """select
-            illumina_adaptor, illumina_index, illumina_run_key, dna_region, domain, illumina_adaptor_id, illumina_index_id, illumina_run_key_id, dna_region_id
-            FROM %s.illumina_adaptor_ref
-            JOIN %s.illumina_adaptor USING(illumina_adaptor_id)
-            JOIN %s.illumina_index USING(illumina_index_id)
-            JOIN %s.illumina_run_key USING(illumina_run_key_id)
-            JOIN %s.dna_region USING(dna_region_id)
-            """ % (db_name, db_name, db_name, db_name, db_name)
-            # self.adaptors_full = self.run_query_to_dict(query_adaptors)
-        
-            res_dict = {}
-            cursor = connection.cursor()
-            cursor.execute(query_adaptors)
-        
-            column_names = [d[0] for d in cursor.description]
-            for row in cursor:
-                # print "WWW row = "
-                # print row
-                res_dict =  dict(zip(column_names, row))
-                # print "res_dict"
-                # print res_dict
-                adaptors_full.append(res_dict)
-        
-        except:
-            raise
-            
-        self.benchmark_w_return_2(t0)
-            
-        print "adaptors_full = "
-        print adaptors_full
+        # t0 = self.benchmark_w_return_1()
+        #  
+        #  try:
+        #      adaptors_full = []
+        #      
+        #      query_adaptors = """select
+        #      illumina_adaptor, illumina_index, illumina_run_key, dna_region, domain, illumina_adaptor_id, illumina_index_id, illumina_run_key_id, dna_region_id
+        #      FROM %s.illumina_adaptor_ref
+        #      JOIN %s.illumina_adaptor USING(illumina_adaptor_id)
+        #      JOIN %s.illumina_index USING(illumina_index_id)
+        #      JOIN %s.illumina_run_key USING(illumina_run_key_id)
+        #      JOIN %s.dna_region USING(dna_region_id)
+        #      """ % (db_name, db_name, db_name, db_name, db_name)
+        #      # self.adaptors_full = self.run_query_to_dict(query_adaptors)
+        #  
+        #      res_dict = {}
+        #      cursor = connection.cursor()
+        #      cursor.execute(query_adaptors)
+        #  
+        #      column_names = [d[0] for d in cursor.description]
+        #      for row in cursor:
+        #          # print "WWW row = "
+        #          # print row
+        #          res_dict =  dict(zip(column_names, row))
+        #          # print "res_dict"
+        #          # print res_dict
+        #          adaptors_full.append(res_dict)
+        #  
+        #  except:
+        #      raise
+        #      
+        #  self.benchmark_w_return_2(t0)
+        #      
+        #  print "adaptors_full = "
+        #  print adaptors_full
 
     def get_user_info(self, db_name = "test_env454"):
         # todo: get db_name depending on local/not
@@ -444,15 +444,35 @@ class CsvMetadata():
 
         print "self.csv_by_header = %s" % self.csv_by_header
 
+        print "UUU self.adaptors_full = %s" % self.adaptors_full
+        # {'A08_v4v5_bacteria': (<IlluminaIndex: ACTTGA>, <IlluminaRunKey: TACGC>)}
+        # print self.adaptors_full['A08_v4v5_bacteria'][0].illumina_index
+
         self.get_user_info()
         for i in xrange(len(self.csv_content)-1):
+            
             curr_submit_code = self.csv_by_header['submit_code'][i]
+            
+            adaptor    = self.csv_by_header['adaptor'][i]
+            dna_region = self.csv_by_header['dna_region'][i]
+            domain     = self.csv_by_header['domain'][i]
+            
+            key = "_".join([adaptor, dna_region, domain])
+            
 
             # print i
             self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
             self.out_metadata[i]['amp_operator']		 = self.csv_by_header['op_amp'][i]
             self.out_metadata[i]['barcode']				 = self.csv_by_header['barcode'][i]
             self.out_metadata[i]['barcode_index']		 = self.csv_by_header['barcode_index'][i]
+            try:
+                if (self.out_metadata[i]['barcode_index'] == ""):
+                    self.out_metadata[i]['barcode_index'] = self.adaptors_full[key][0].illumina_index
+            except KeyError:
+                self.out_metadata[i]['barcode_index'] = ""
+            except:
+                raise
+            
             # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['last_name'] + ', ' + self.user_info_arr[curr_submit_code]['first_name']
             # <option value="36">Nicole Webster</option>
             # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['contact_id']
@@ -512,13 +532,17 @@ class CsvMetadata():
 
             self.out_metadata[i]['read_length']			 = self.csv_by_header['read_length'][i]
 
+
             # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-            # try:
-            #     self.out_metadata[i]['run_key']                = self.csv_by_header['run_key'][i]
-            # except KeyError:
-            #     self.out_metadata[i]['run_key']                = ""
-            # except:
-            #     raise
+            try:
+                self.out_metadata[i]['run_key'] = self.adaptors_full[key][1].illumina_run_key
+            except KeyError:
+                self.out_metadata[i]['run_key']                = ""
+            except:
+                raise
+
+            # if (self.csv_by_header['run_key'][i] == ""):
+            #     self.out_metadata[i]['run_key'] = self.adaptors_full[key][1].illumina_run_key
 
             # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
             # self.out_metadata[i]['seq_operator']       = self.csv_by_header['seq_operator'][i]
