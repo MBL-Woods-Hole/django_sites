@@ -291,6 +291,7 @@ class CsvMetadata():
         for row in mm:
             self.adaptors_full[key] = (row.illumina_index, row.illumina_run_key)
 
+        print self.adaptors_full
         # self.benchmark_w_return_2(t0)
         
         # t0 = self.benchmark_w_return_1()
@@ -442,33 +443,8 @@ class CsvMetadata():
     def edit_out_metadata_table(self, request):
         
         self.out_metadata_table = request.session['out_metadata_table']
-        print "0" *9
-        print request.POST
-        # print "1" *9
-        # for i, v in self.out_metadata_table.items():
-        #     print "i = "
-        #     print i
-        #     print "0" *9
-        #     print "v = "
-        #     print v
-        print "0" *9
-        # my_post_dict = request.POST.copy()
-        # for i in xrange(len(self.csv_content)-1):
-        #     print "+" * 9
-        #     adaptor    = self.csv_by_header['adaptor'][i]
-        #     dna_region = self.csv_by_header['dna_region'][i]
-        #     domain     = self.csv_by_header['domain'][i]
-        #     
-        #     
-        #     self.get_adaptors_full(adaptor, dna_region, domain)
         
         for x in range(0, len(self.out_metadata_table['rows'])):
-            # print x
-            # print "TTTTT request.POST['form-'+str(x)+'-adaptor']"
-            # print request.POST['form-'+str(x)+'-adaptor']            
-            # for x in range(0, int(request.POST['form-TOTAL_FORMS'])):
-            # self.out_metadata_table['rows'][x][header] = (self.out_metadata[r_num][header])
-            
             adaptor    = request.POST['form-'+str(x)+'-adaptor']
             dna_region = request.session['run_info_form_post']['csv_dna_region']
             domain     = request.POST['form-'+str(x)+'-domain']
@@ -479,38 +455,22 @@ class CsvMetadata():
             
             self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
             self.out_metadata_table['rows'][x]['run_key'] = self.adaptors_full[key][1].illumina_run_key
-            # self.out_metadata[i]['barcode_index'] = self.adaptors_full[key][0].illumina_index
-            
-            
-            # print "self.out_metadata_table['rows'][x]['adaptor'] = %s" % self.out_metadata_table['rows'][x]['adaptor']
-            # print "request.POST['form-'+str(x)+'-adaptor'] = %s" % request.POST['form-'+str(x)+'-adaptor']
-            # 
-            # print "self.out_metadata_table['rows'][x]['run_key'] = %s" % self.out_metadata_table['rows'][x]['run_key']
-            # print "request.POST['form-'+str(x)+'-run_key'] = %s" % request.POST['form-'+str(x)+'-run_key']
-            # print "self.out_metadata_table['rows'][x]['barcode_index'] = %s" % self.out_metadata_table['rows'][x]['barcode_index']
-            # print "request.POST['form-'+str(x)+'-barcode_index'] = %s" % request.POST['form-'+str(x)+'-barcode_index']
-        # print "7" *9
-        # # print "request.POST = "
-        # # print request.POST
-        # 
-        # # print "RRR request.session['run_info_form_post']['csv_dna_region'] = "
-        # # print request.session['run_info_form_post']['csv_dna_region']
-        # # 
-        # 
-        # print "4" *9
-        # print "self.adaptors_full"
-        # print self.adaptors_full
-        # print "8" *9
-            
-            # '''
-            # run_info_form_post'
-            #  u'csv_dna_region': u'v6',
-            # '''
-            
-            # csv_handler.out_metadata_table['rows']
-            # self.out_metadata_table['run_key']       = request.POST['form-'+str(x)+'-run_key']
-            # self.out_metadata_table['barcode_index'] = request.POST['form-'+str(x)+'-barcode_index']
         
+    def edit_post_metadata_table(self, request):
+
+        my_post_dict = request.POST.copy()
+        my_post_dict['form-TOTAL_FORMS']   = len(request.session['out_metadata'].keys())
+        my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
+        my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
+
+
+        for x in range(0, len(request.session['out_metadata_table']['rows'])):
+            my_post_dict['form-'+str(x)+'-barcode_index'] = self.out_metadata_table['rows'][x]['barcode_index']
+            my_post_dict['form-'+str(x)+'-run_key']       = self.out_metadata_table['rows'][x]['run_key']
+        
+        
+        
+        return my_post_dict
         
 
     def make_new_out_metadata(self):

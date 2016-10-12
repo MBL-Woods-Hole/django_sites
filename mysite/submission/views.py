@@ -135,15 +135,17 @@ def upload_metadata(request):
         
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm)
 
-        print "MMM request.session['out_metadata_table'] = "
-        print request.session['out_metadata_table']
+        # print "MMM request.session['out_metadata_table'] = "
+        # print request.session['out_metadata_table']
 
-        my_post_dict = request.POST.copy()
-        my_post_dict['form-TOTAL_FORMS']   = len(request.session['out_metadata'].keys())
-        my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
-        my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
+        my_post_dict = csv_handler.edit_post_metadata_table(request)
 
-        my_post_dict['form-0-barcode_index'] = csv_handler.out_metadata_table['rows'][0]['barcode_index']
+        # my_post_dict = request.POST.copy()
+        # my_post_dict['form-TOTAL_FORMS']   = len(request.session['out_metadata'].keys())
+        # my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
+        # my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
+
+        # my_post_dict['form-0-barcode_index'] = csv_handler.out_metadata_table['rows'][0]['barcode_index']
 
         
         # print "OOO csv_handler.out_metadata_table = "
