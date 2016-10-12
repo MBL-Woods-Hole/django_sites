@@ -435,11 +435,6 @@ class CsvMetadata():
 
         # print "self.out_metadata = %s" % self.out_metadata
 
-    '''
-    <QueryDict: {u'form-0-tubelabel': [u'Tube_Label_1_temp'], u'form-0-domain': [u'archaea'], u'form-1-barcode_index': [u''], u'form-0-dataset_description': [u'Sample Dataset Description temp'], u'form-2-tubelabel': [u'KDF'], u'form-2-barcode': [u''], u'form-0-dataset': [u'dat_test1'], u'form-1-project': [u''], u'form-2-project': [u'HGM_FFHS_Bv4v5'], u'form-0-project': [u'AS_AS_Av6'], u'form-1-adaptor': [u'B55'], u'form-0-contact_name': [u'Anna Shipunova'], u'form-1-run_key': [u''], u'form-1-barcode': [u''], u'form-2-dataset_description': [u'FRF_Near_1'], u'form-1-contact_name': [u'Anna Shipunova'], u'form-1-dataset': [u'dat_test1'], u'csrfmiddlewaretoken': [u'faJq6n5qRCChvSuCYtGXNbhhGCTEgA5FcpGJYlUf3BDnpcdNZYuZa5NNrGBqBblM'], u'form-0-env_source_name': [u'120'], u'form-1-dataset_description': [u'Sample Dataset Description temp 2'], u'form-2-barcode_index': [u'ACTTGA'], u'create_submission_metadata_file': [u'Create submission metadata file'], u'form-0-barcode_index': [u''], u'form-2-adaptor': [u'A08'], u'form-0-adaptor': [u'A20'], u'form-0-barcode': [u''], u'form-1-lane': [u'2'], u'form-2-env_source_name': [u'130'], u'form-2-amp_operator': [u'HGM'], u'form-0-amp_operator': [u'JV'], u'form-2-lane': [u'1'], u'form-1-env_source_name': [u'120'], u'form-1-domain': [u'bacteria'], u'form-0-run_key': [u''], u'form-1-amp_operator': [u'JV'], u'form-2-contact_name': [u'Hilary Morrison'], u'form-1-tubelabel': [u'Tube_Label_2_temp'], u'form-2-domain': [u'bacteria'], u'form-2-dataset': [u'FRF_Near_1'], u'form-0-lane': [u'1'], u'form-2-run_key': [u'TACGC']}>
-
-'''
-
     def edit_out_metadata_table(self, request):
         
         self.out_metadata_table = request.session['out_metadata_table']
@@ -454,7 +449,7 @@ class CsvMetadata():
             self.get_adaptors_full(adaptor, dna_region, domain)
             
             self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
-            self.out_metadata_table['rows'][x]['run_key'] = self.adaptors_full[key][1].illumina_run_key
+            self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
         
     def edit_post_metadata_table(self, request):
 
@@ -467,8 +462,6 @@ class CsvMetadata():
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
             my_post_dict['form-'+str(x)+'-barcode_index'] = self.out_metadata_table['rows'][x]['barcode_index']
             my_post_dict['form-'+str(x)+'-run_key']       = self.out_metadata_table['rows'][x]['run_key']
-        
-        
         
         return my_post_dict
         
