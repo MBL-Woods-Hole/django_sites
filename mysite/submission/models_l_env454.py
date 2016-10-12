@@ -13,13 +13,13 @@ models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('env454_db',)
 
 
 class Contact(models.Model):
-    contact_id = models.SmallIntegerField(primary_key=True)
-    contact = models.CharField(max_length=32)
-    email = models.CharField(max_length=64)
+    contact_id  = models.SmallIntegerField(primary_key=True)
+    contact	    = models.CharField(max_length=32)
+    email	    = models.CharField(max_length=64)
     institution = models.CharField(max_length=128)
-    vamps_name = models.CharField(max_length=20)
-    first_name = models.CharField(max_length=20, blank=True, null=True)
-    last_name = models.CharField(max_length=20, blank=True, null=True)
+    vamps_name  = models.CharField(max_length=20)
+    first_name  = models.CharField(max_length=20, blank=True, null=True)
+    last_name   = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -27,7 +27,8 @@ class Contact(models.Model):
         unique_together = (('contact', 'email', 'institution'),)
 
     def __str__(self):
-        return self.contact
+        # return self.contact
+        return "%s, %s, %s, %s, %s, %s, %s" % (self.contact_id, self.contact, self.email, self.institution, self.vamps_name, self.first_name, self.last_name)
 
 
 class Dataset(models.Model):
@@ -87,10 +88,10 @@ class IlluminaAdaptorRef(models.Model):
     class Meta:
         managed = False
         db_table = 'illumina_adaptor_ref'
-        unique_together = (('illumina_adaptor_id', 'dna_region_id', 'domain'),)
+        unique_together = (('illumina_adaptor', 'dna_region', 'domain'),)
         
     def __str__(self):
-        return "%s: %s, %s, %s, %s" % (self.illumina_adaptor, self.illumina_index, self.illumina_run_key, self.dna_region, self.domain)
+        return "%s, %s, %s, %s, %s" % (self.illumina_adaptor, self.illumina_index, self.illumina_run_key, self.dna_region, self.domain)
         
 
 class IlluminaIndex(models.Model):

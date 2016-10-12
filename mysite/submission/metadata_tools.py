@@ -1,6 +1,7 @@
 import models
 from .utils import Utils, Dirs
 import models_l_env454
+from django.db.models import Q
 from django.forms.models import model_to_dict
 
 from datetime import datetime
@@ -253,44 +254,33 @@ class CsvMetadata():
             
     def get_adaptors_full(self, db_name = "test_env454"):
         print "get_adaptors_full"
-        
-        # get all using ('illumina_adaptor_id', 'dna_region_id', 'domain')
-        
-        # illumina_adaptor_id   illumina_index_id   illumina_run_key_id dna_region_id   domain
-        # 1 16  1   15  archaea        
 
-        ia = models_l_env454.IlluminaAdaptorRef.objects.all()
-        e = models_l_env454.IlluminaAdaptorRef.objects.get(illumina_adaptor_id=1, dna_region_id =15, domain = "archaea")
-        
-        # model_to_dict(instance, fields=[], exclude=[])
-        print "-" * 9
-        print ia.values()
-        # print model_to_dict(e)
-        # {'illumina_index': 16, 'domain': u'archaea', 'dna_region': 15, 'illumina_adaptor': 1, 'illumina_run_key': 1}
-        # print model_to_dict(ia)
-        from django.core import serializers
-        # data = serializers.serialize('python', models_l_env454.IlluminaAdaptorRef.objects.all())
-        
-        # entry_list = list(ia)
-        # print entry_list
         print "=" * 9
-        # print "illumina_adaptor = %s" % e.illumina_adaptor
-        # print "illumina_index = %s" % e.illumina_index
-        # print "illumina_run_key = %s" % e.illumina_run_key
-        # print "dna_region = %s" % e.dna_region
-        # print "domain = %s" % e.domain
-        # print "illumina_adaptor_id = %s" % e.illumina_adaptor_id
-        # print "illumina_index_id = %s" % e.illumina_index_id
-        # print "illumina_run_key_id = %s" % e.illumina_run_key_id
-        # print "dna_region_id = %s" % e.dna_region_id 
-        print ia
-        # <QuerySet [<IlluminaAdaptorRef: A01, TATCGC, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: B01, TATCGC, TAGTG, v4v5, archaea>, <IlluminaAdaptorRef: C01, TATCGC, ATACG, v4v5, archaea>, <IlluminaAdaptorRef: D01, TATCGC, ACTCG, v4v5, archaea>, <IlluminaAdaptorRef: E01, TATCGC, AGTGT, v4v5, archaea>, <IlluminaAdaptorRef: F01, TATCGC, ATAGT, v4v5, archaea>, <IlluminaAdaptorRef: G01, TATCGC, CGAGT, v4v5, archaea>, <IlluminaAdaptorRef: H01, TATCGC, CGCGA, v4v5, archaea>, <IlluminaAdaptorRef: A02, TGCTCG, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: B02, TGCTCG, TAGTG, v4v5, archaea>, <IlluminaAdaptorRef: C02, TGCTCG, ATACG, v4v5, archaea>, <IlluminaAdaptorRef: D02, TGCTCG, ACTCG, v4v5, archaea>, <IlluminaAdaptorRef: E02, TGCTCG, AGTGT, v4v5, archaea>, <IlluminaAdaptorRef: F02, TGCTCG, ATAGT, v4v5, archaea>, <IlluminaAdaptorRef: G02, TGCTCG, CGAGT, v4v5, archaea>, <IlluminaAdaptorRef: H02, TGCTCG, CGCGA, v4v5, archaea>, <IlluminaAdaptorRef: A03, ACGACT, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: B03, ACGACT, TAGTG, v4v5, archaea>, <IlluminaAdaptorRef: C03, ACGACT, ATACG, v4v5, archaea>, <IlluminaAdaptorRef: D03, ACGACT, ACTCG, v4v5, archaea>, '...(remaining elements truncated)...']>
-        #         
+
+        links = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+        # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
         
         print "+" * 9
-        print ia[0]
-        print "=" * 9
+        # print links
+        print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
+        # print links.filter(illumina_adaptor_id__illumina_adaptor = "A01")
+        # :.extra(where=["illumina_adaptor = 'A04' OR illumina_adaptor = 'A08'"])
         
+        # print links.extra(where=["illumina_adaptor = 'A04' OR illumina_adaptor = 'A08'"])
+        print "-" * 9
+        
+        # for row in links.iterator():
+        #     print type(row)
+            # dict(zip(column_names, row)
+        
+        # one call!
+        #         <QuerySet [<IlluminaAdaptorRef: A01, ATCACG, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A01, TATCGC, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A01, ATCACG, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A01, GCGGTA, TGATA, v6, archaea>, <IlluminaAdaptorRef: A01, GTAGTG, TCAGC, ITS1, eukarya>, <IlluminaAdaptorRef: A02, CGATGT, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A02, TGCTCG, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A02, CGATGT, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A02, CGCACA, TGATA, v6, archaea>, <IlluminaAdaptorRef: A02, ACTGCA, TCAGC, ITS1, eukarya>, <IlluminaAdaptorRef: A03, TTAGGC, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A03, ACGACT, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A03, TTAGGC, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A03, ATAATC, TGATA, v6, archaea>, <IlluminaAdaptorRef: A03, TATGGT, TCAGC, ITS1, eukarya>, <IlluminaAdaptorRef: A04, TGACCA, TACGC, v4v5, bacteria>, <IlluminaAdaptorRef: A04, AGATAC, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: A04, TGACCA, TCAGC, v6, bacteria>, <IlluminaAdaptorRef: A04, CTAGGC, TGATA, v6, archaea>, <IlluminaAdaptorRef: A04, TGTCGA, TCAGC, ITS1, eukarya>, '...(remaining elements truncated)...']>
+        #
+        print "9" * 9
+        
+        
+        
+
         # try:
         #     query_adaptors = """select
         #     illumina_adaptor, illumina_index, illumina_run_key, dna_region, domain, illumina_adaptor_id, illumina_index_id, illumina_run_key_id, dna_region_id
@@ -328,11 +318,25 @@ class CsvMetadata():
                 # print "submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user'])
                 vamps_user_id = self.vamps_submissions[submit_code]['user']
                 
-                query_user = """SELECT contact_id, contact, email, institution, vamps_name, first_name, last_name
-                    FROM %s.contact
-                    WHERE vamps_name = \"%s\"""" % (db_name, vamps_user_id)
-                self.user_info_arr[submit_code] = self.run_query_to_dict(query_user)
-            # print "self.user_info_arr = %s" % self.user_info_arr
+                print "c" * 9
+                contacts = models_l_env454.Contact.objects.filter(vamps_name = vamps_user_id)
+                my_contacts = []
+                for row in contacts:
+                    self.user_info_arr[submit_code] = (model_to_dict(row))
+                
+                
+                # print my_contacts
+                # print "b" * 9
+                
+                # .filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
+
+                
+                
+                # query_user = """SELECT contact_id, contact, email, institution, vamps_name, first_name, last_name
+                #     FROM %s.contact
+                #     WHERE vamps_name = \"%s\"""" % (db_name, vamps_user_id)
+                # self.user_info_arr[submit_code] = self.run_query_to_dict(query_user)
+            print "self.user_info_arr = %s" % self.user_info_arr
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
