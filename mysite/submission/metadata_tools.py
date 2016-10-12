@@ -314,28 +314,17 @@ class CsvMetadata():
     def get_user_info(self, db_name = "test_env454"):
         # todo: get db_name depending on local/not
         try:
+            # TODO: collect submit_code and vamps_user_id into a dict, run one query with "OR"
             for submit_code in self.csv_by_header_uniqued['submit_code']:
                 # print "submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user'])
                 vamps_user_id = self.vamps_submissions[submit_code]['user']
                 
-                print "c" * 9
                 contacts = models_l_env454.Contact.objects.filter(vamps_name = vamps_user_id)
-                my_contacts = []
                 for row in contacts:
                     self.user_info_arr[submit_code] = (model_to_dict(row))
-                
-                
-                # print my_contacts
-                # print "b" * 9
-                
+                                
                 # .filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
 
-                
-                
-                # query_user = """SELECT contact_id, contact, email, institution, vamps_name, first_name, last_name
-                #     FROM %s.contact
-                #     WHERE vamps_name = \"%s\"""" % (db_name, vamps_user_id)
-                # self.user_info_arr[submit_code] = self.run_query_to_dict(query_user)
             print "self.user_info_arr = %s" % self.user_info_arr
         except KeyError as e:
             self.cause = e.args[0]
