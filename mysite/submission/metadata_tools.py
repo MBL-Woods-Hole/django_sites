@@ -1,6 +1,7 @@
 import models
 from .utils import Utils, Dirs
 import models_l_env454
+from django.forms.models import model_to_dict
 
 from datetime import datetime
 
@@ -253,11 +254,25 @@ class CsvMetadata():
     def get_adaptors_full(self, db_name = "test_env454"):
         print "get_adaptors_full"
         
+        # get all using ('illumina_adaptor_id', 'dna_region_id', 'domain')
+        
         # illumina_adaptor_id   illumina_index_id   illumina_run_key_id dna_region_id   domain
         # 1 16  1   15  archaea        
 
         ia = models_l_env454.IlluminaAdaptorRef.objects.all()
         e = models_l_env454.IlluminaAdaptorRef.objects.get(illumina_adaptor_id=1, dna_region_id =15, domain = "archaea")
+        
+        # model_to_dict(instance, fields=[], exclude=[])
+        print "-" * 9
+        print ia.values()
+        # print model_to_dict(e)
+        # {'illumina_index': 16, 'domain': u'archaea', 'dna_region': 15, 'illumina_adaptor': 1, 'illumina_run_key': 1}
+        # print model_to_dict(ia)
+        from django.core import serializers
+        # data = serializers.serialize('python', models_l_env454.IlluminaAdaptorRef.objects.all())
+        
+        # entry_list = list(ia)
+        # print entry_list
         print "=" * 9
         # print "illumina_adaptor = %s" % e.illumina_adaptor
         # print "illumina_index = %s" % e.illumina_index
@@ -269,6 +284,11 @@ class CsvMetadata():
         # print "illumina_run_key_id = %s" % e.illumina_run_key_id
         # print "dna_region_id = %s" % e.dna_region_id 
         print ia
+        # <QuerySet [<IlluminaAdaptorRef: A01, TATCGC, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: B01, TATCGC, TAGTG, v4v5, archaea>, <IlluminaAdaptorRef: C01, TATCGC, ATACG, v4v5, archaea>, <IlluminaAdaptorRef: D01, TATCGC, ACTCG, v4v5, archaea>, <IlluminaAdaptorRef: E01, TATCGC, AGTGT, v4v5, archaea>, <IlluminaAdaptorRef: F01, TATCGC, ATAGT, v4v5, archaea>, <IlluminaAdaptorRef: G01, TATCGC, CGAGT, v4v5, archaea>, <IlluminaAdaptorRef: H01, TATCGC, CGCGA, v4v5, archaea>, <IlluminaAdaptorRef: A02, TGCTCG, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: B02, TGCTCG, TAGTG, v4v5, archaea>, <IlluminaAdaptorRef: C02, TGCTCG, ATACG, v4v5, archaea>, <IlluminaAdaptorRef: D02, TGCTCG, ACTCG, v4v5, archaea>, <IlluminaAdaptorRef: E02, TGCTCG, AGTGT, v4v5, archaea>, <IlluminaAdaptorRef: F02, TGCTCG, ATAGT, v4v5, archaea>, <IlluminaAdaptorRef: G02, TGCTCG, CGAGT, v4v5, archaea>, <IlluminaAdaptorRef: H02, TGCTCG, CGCGA, v4v5, archaea>, <IlluminaAdaptorRef: A03, ACGACT, TCGAG, v4v5, archaea>, <IlluminaAdaptorRef: B03, ACGACT, TAGTG, v4v5, archaea>, <IlluminaAdaptorRef: C03, ACGACT, ATACG, v4v5, archaea>, <IlluminaAdaptorRef: D03, ACGACT, ACTCG, v4v5, archaea>, '...(remaining elements truncated)...']>
+        #         
+        
+        print "+" * 9
+        print ia[0]
         print "=" * 9
         
         # try:
