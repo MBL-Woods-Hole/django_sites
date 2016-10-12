@@ -62,8 +62,8 @@ def upload_metadata(request):
         csv_handler.get_csv_by_header()
         
         csv_handler.get_adaptors_full()
-        print "csv_handler.adaptors_full = "
-        print csv_handler.adaptors_full
+        # print "csv_handler.adaptors_full = "
+        # print csv_handler.adaptors_full
         
         csv_handler.make_new_out_metadata()
         
@@ -124,6 +124,8 @@ def upload_metadata(request):
 
     elif 'create_submission_metadata_file' in request.POST:
         print "EEE: request.POST = %s" % request.POST
+        
+        csv_handler.edit_out_metadata_table(request)
         # return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form})
         metadata_run_info_form = CsvRunInfoUploadForm(request.session['run_info_form_post'])        
         
@@ -133,8 +135,11 @@ def upload_metadata(request):
         
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm)
 
+        print "MMM request.session['out_metadata_table'] = "
+        print request.session['out_metadata_table']
+
         my_post_dict = request.POST.copy()
-        my_post_dict['form-TOTAL_FORMS'] = len(request.session['out_metadata'].keys())
+        my_post_dict['form-TOTAL_FORMS']   = len(request.session['out_metadata'].keys())
         my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
         my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
         
@@ -146,6 +151,13 @@ def upload_metadata(request):
         
         
         formset = MetadataOutCsvFormSet(my_post_dict)
+        
+        if formset.is_valid():
+            for form in formset:
+                print "!!!form.cleaned_data"
+                print form.cleaned_data # Here I am!
+
+        # print form.cleaned_data
 
         # print "len(request.session['out_metadata'].keys()) = %s" % len(request.session['out_metadata'].keys())
         #
@@ -157,8 +169,8 @@ def upload_metadata(request):
         # print formset
         # print formset.management_form
         
-        for form in formset:
-            print(form.as_table())
+        # for form in formset:
+        #     print(form.as_table())
         
         '''
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))

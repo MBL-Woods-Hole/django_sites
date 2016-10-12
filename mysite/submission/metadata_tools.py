@@ -432,6 +432,44 @@ class CsvMetadata():
 
         # print "self.out_metadata = %s" % self.out_metadata
 
+    '''
+    <QueryDict: {u'form-0-tubelabel': [u'Tube_Label_1_temp'], u'form-0-domain': [u'archaea'], u'form-1-barcode_index': [u''], u'form-0-dataset_description': [u'Sample Dataset Description temp'], u'form-2-tubelabel': [u'KDF'], u'form-2-barcode': [u''], u'form-0-dataset': [u'dat_test1'], u'form-1-project': [u''], u'form-2-project': [u'HGM_FFHS_Bv4v5'], u'form-0-project': [u'AS_AS_Av6'], u'form-1-adaptor': [u'B55'], u'form-0-contact_name': [u'Anna Shipunova'], u'form-1-run_key': [u''], u'form-1-barcode': [u''], u'form-2-dataset_description': [u'FRF_Near_1'], u'form-1-contact_name': [u'Anna Shipunova'], u'form-1-dataset': [u'dat_test1'], u'csrfmiddlewaretoken': [u'faJq6n5qRCChvSuCYtGXNbhhGCTEgA5FcpGJYlUf3BDnpcdNZYuZa5NNrGBqBblM'], u'form-0-env_source_name': [u'120'], u'form-1-dataset_description': [u'Sample Dataset Description temp 2'], u'form-2-barcode_index': [u'ACTTGA'], u'create_submission_metadata_file': [u'Create submission metadata file'], u'form-0-barcode_index': [u''], u'form-2-adaptor': [u'A08'], u'form-0-adaptor': [u'A20'], u'form-0-barcode': [u''], u'form-1-lane': [u'2'], u'form-2-env_source_name': [u'130'], u'form-2-amp_operator': [u'HGM'], u'form-0-amp_operator': [u'JV'], u'form-2-lane': [u'1'], u'form-1-env_source_name': [u'120'], u'form-1-domain': [u'bacteria'], u'form-0-run_key': [u''], u'form-1-amp_operator': [u'JV'], u'form-2-contact_name': [u'Hilary Morrison'], u'form-1-tubelabel': [u'Tube_Label_2_temp'], u'form-2-domain': [u'bacteria'], u'form-2-dataset': [u'FRF_Near_1'], u'form-0-lane': [u'1'], u'form-2-run_key': [u'TACGC']}>
+
+'''
+
+    def edit_out_metadata_table(self, request):
+        
+        self.out_metadata_table = request.session['out_metadata_table']
+        print "0" *9
+        print request.POST
+        print "1" *9
+        for i, v in self.out_metadata_table.items():
+            print "i = "
+            print i
+            print "0" *9
+            print "v = "
+            print v
+        print "0" *9
+        # my_post_dict = request.POST.copy()
+        for x in range(0, len(self.out_metadata_table['rows'])):
+            # for x in range(0, int(request.POST['form-TOTAL_FORMS'])):
+            # self.out_metadata_table['rows'][x][header] = (self.out_metadata[r_num][header])
+            
+            print "self.out_metadata_table['rows'][x]['adaptor'] = %s" % self.out_metadata_table['rows'][x]['adaptor']
+            print "request.POST['form-'+str(x)+'-adaptor'] = %s" % request.POST['form-'+str(x)+'-adaptor']
+
+            print "self.out_metadata_table['rows'][x]['run_key'] = %s" % self.out_metadata_table['rows'][x]['run_key']
+            print "request.POST['form-'+str(x)+'-run_key'] = %s" % request.POST['form-'+str(x)+'-run_key']
+            print "self.out_metadata_table['rows'][x]['barcode_index'] = %s" % self.out_metadata_table['rows'][x]['barcode_index']
+            print "request.POST['form-'+str(x)+'-barcode_index'] = %s" % request.POST['form-'+str(x)+'-barcode_index']
+        print "7" *9
+            
+            # csv_handler.out_metadata_table['rows']
+            # self.out_metadata_table['run_key']       = request.POST['form-'+str(x)+'-run_key']
+            # self.out_metadata_table['barcode_index'] = request.POST['form-'+str(x)+'-barcode_index']
+        
+        
+
     def make_new_out_metadata(self):
         idx = 0
         print "self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content))
