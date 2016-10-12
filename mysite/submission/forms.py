@@ -37,14 +37,14 @@ class MetadataOutCsvForm(forms.Form):
     contact_name_query = Contact.objects.all().order_by('last_name')
     contact_name            = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
     # to_field_name = "%s, %s" % (last_name, first_name))
-    
+
 
     #TODO: add N's if needed
     run_key                 = forms.CharField(label = 'Run Key', max_length = 9)
     barcode_index           = forms.CharField(label = 'Barcode Index', max_length=12)
     adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
     adaptor                 = forms.ModelChoiceField(queryset = adaptor_query, empty_label = None, to_field_name = 'illumina_adaptor')
-    project_query = Project.objects.all().order_by('project')    
+    project_query = Project.objects.all().order_by('project')
     project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
     dataset                 = forms.CharField(max_length=64,
                             required=True,
