@@ -30,14 +30,6 @@ class CsvRunInfoUploadForm(forms.Form):
     csv_read_length      = forms.CharField(label = 'Read Length', max_length = 3)
 
 class MetadataOutCsvForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(MetadataOutCsvForm, self).__init__(*args, **kwargs)
-        self.fields['project'].queryset = Project.objects.all().order_by('project')
-        self.fields['adaptor'].queryset = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
-        
-    # project_query = Project.objects.all().order_by('project')
-    
-    
     # todo: add css class size_number to input
     domain                  = forms.ChoiceField(Domain.DOMAIN_CHOICES, label = '')
     # domain                  = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
@@ -50,16 +42,10 @@ class MetadataOutCsvForm(forms.Form):
     #TODO: add N's if needed
     run_key                 = forms.CharField(label = 'Run Key', max_length = 9)
     barcode_index           = forms.CharField(label = 'Barcode Index', max_length=12)
-    # adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
-    adaptor                 = forms.ModelChoiceField(queryset = None, to_field_name = 'illumina_adaptor')
-    
-    
-    # adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
-    # adaptor                 = forms.ModelChoiceField(queryset = adaptor_query, empty_label = None, to_field_name = 'illumina_adaptor')
-    # project_query = Project.objects.all().order_by('project')
- 
-    project                 = forms.ModelChoiceField(queryset = None, empty_label = None, to_field_name = 'project')
-    # project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
+    adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
+    adaptor                 = forms.ModelChoiceField(queryset = adaptor_query, to_field_name = 'illumina_adaptor')
+    project_query = Project.objects.all().order_by('project')
+    project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
     dataset                 = forms.CharField(max_length=64,
                             required=True,
                             validators=[
