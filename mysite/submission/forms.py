@@ -32,7 +32,7 @@ class CsvRunInfoUploadForm(forms.Form):
 class MetadataOutCsvForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(MetadataOutCsvForm, self).__init__(*args, **kwargs)
-        # self.fields['project'].queryset = Project.objects.all().order_by('project')
+        self.fields['project'].queryset = Project.objects.all().order_by('project')
         self.fields['adaptor'].queryset = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
         
     # project_query = Project.objects.all().order_by('project')
