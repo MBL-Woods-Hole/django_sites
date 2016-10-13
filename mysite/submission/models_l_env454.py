@@ -10,6 +10,17 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from django.db import models
 
+class AllMethodCachingQueryset(models.query.QuerySet):
+    def all(self, get_from_cache=True):
+        if get_from_cache:
+            return self
+        else:
+            return self._clone()
+
+class AllMethodCachingManager(models.Manager):
+    def get_query_set(self):
+        return AllMethodCachingQueryset(self.model, using=self._db)
+
 models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('env454_db',)
 
 @python_2_unicode_compatible  # only if you need to support Python 2
@@ -148,6 +159,8 @@ class PrimerSuite(models.Model):
         return self.primer_suite
 
 class Project(models.Model):
+    cache_all_method = AllMethodCachingManager()
+    
     project_id = models.SmallIntegerField(primary_key=True)
     project = models.CharField(unique=True, max_length=32)
     title = models.CharField(max_length=64)
@@ -174,6 +187,8 @@ class RefPrimerSuitePrimer(models.Model):
         db_table = 'ref_primer_suite_primer'
 
 class Run(models.Model):
+    cache_all_method = AllMethodCachingManager()
+    
     run_id = models.SmallIntegerField(primary_key=True)
     run = models.CharField(max_length=16)
     run_prefix = models.CharField(max_length=7)

@@ -5,8 +5,11 @@ from django.core.validators import RegexValidator
 
 
 class RunForm(forms.Form):
-    query = Run.objects.filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
+    # query = Run.objects.filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
+    # find_rundate = forms.ModelChoiceField(queryset = query, label = 'Run date', empty_label = None)
+    query = Run.cache_all_method.all().filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
     find_rundate = forms.ModelChoiceField(queryset = query, label = 'Run date', empty_label = None)
+    
     find_machine = forms.ChoiceField(Machine.MACHINE_CHOICES, label = 'Machine name')
     find_domain  = forms.ChoiceField(Domain.DOMAIN_SHORTCUTS_CHOICES, label = 'Domain')
     find_lane    = forms.CharField(label = 'Lane number', max_length = 3)
@@ -44,7 +47,9 @@ class MetadataOutCsvForm(forms.Form):
     barcode_index           = forms.CharField(label = 'Barcode Index', max_length=12)
     adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
     adaptor                 = forms.ModelChoiceField(queryset = adaptor_query, to_field_name = 'illumina_adaptor')
-    project_query = Project.objects.order_by('project')
+    
+    project_query = Project.cache_all_method.all().order_by('project')
+    # project_query = Project.objects.order_by('project')
     project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
     dataset                 = forms.CharField(max_length=64,
                             required=True,
