@@ -173,7 +173,6 @@ class RefPrimerSuitePrimer(models.Model):
         managed = False
         db_table = 'ref_primer_suite_primer'
 
-
 class Run(models.Model):
     run_id = models.SmallIntegerField(primary_key=True)
     run = models.CharField(max_length=16)

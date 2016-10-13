@@ -44,7 +44,7 @@ class MetadataOutCsvForm(forms.Form):
     barcode_index           = forms.CharField(label = 'Barcode Index', max_length=12)
     adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
     adaptor                 = forms.ModelChoiceField(queryset = adaptor_query, to_field_name = 'illumina_adaptor')
-    project_query = Project.objects.all().order_by('project')
+    project_query = Project.objects.order_by('project')
     project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
     dataset                 = forms.CharField(max_length=64,
                             required=True,

@@ -75,9 +75,27 @@ class Dirs:
 class Run():
     def __init__(self):
         self.utils = Utils()
+        self.all_suites = RunInfoIll.objects.select_related('run', 'run_key', 'dna_region', 'project', 'dataset', 'primer_suite')
+                #
+        # def __init__(self, *args, **kwargs):
+        #         # choices = kwargs.pop('your_foreign_choices')
+        #         super(RunForm, self).__init__(*args, **kwargs)
+        #         self.fields['find_rundate'] = forms.ChoiceField(choices=choices)
+        #
+        #         all_runs = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+        # # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
+        #
+        #
+        # key = "_".join([adaptor, dna_region, domain])
+        #
+        # mm = links.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
+        
+        
+        
     
     def get_primer_suites(self, run, lane, suite_domain):
-        all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
+        # all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
+        all_suites = self.all_suites.filter(run__run = run, lane = lane)
         primer_suites = set([entry.primer_suite for entry in all_suites if entry.primer_suite.primer_suite.startswith(suite_domain)])
         try:
           return (True, next(iter(primer_suites)).primer_suite)
@@ -91,6 +109,7 @@ class Run():
         print "Running get_run from utils"
         error_message = ""
         run_data = {}
+        
         if request.method == 'POST':
             form = RunForm(request.POST)
             print "request.POST = "
