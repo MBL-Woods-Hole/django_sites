@@ -448,8 +448,14 @@ class CsvMetadata():
             
             self.get_adaptors_full(adaptor, dna_region, domain)
             
-            self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
-            self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
+            try:
+                self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
+                self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
+            except KeyError:
+                self.out_metadata_table['rows'][x]['barcode_index'] = ""
+                self.out_metadata_table['rows'][x]['run_key']       = ""
+            except:
+                raise
         
     def edit_post_metadata_table(self, request):
 
