@@ -209,8 +209,42 @@ class CsvMetadata():
           return False
       return True
 
+    def make_out_metadata_csv_file_name(self):
+        # metadata_20160803_1_B.csv
+        pass
+        
+    def write_out_metadata_to_csv(self, out_file_name):
+        # TODO: dynamic!
+        out_file_name = "temp"
+        writer = csv.DictWriter(out_file_name,
+                                self.HEADERS_TO_CSV)
 
-    # write_out_metadata_to_csv
+
+        # listWriter = csv.DictWriter(
+        #    open(out_file_name, 'wb'),
+        #    fieldnames=self.HEADERS_TO_CSV,
+        #    delimiter=',',
+        #    quotechar='|'
+           # ,
+#            quoting=csv.QUOTE_MINIMAL
+        )
+        # for a in itemDict:
+        #     print a
+        #     listWriter.writerow(a)
+
+
+        # self.out_metadata_table
+        #
+        print "TTT"
+        for row in self.out_metadata_table:
+            print row
+            writer.writerow(row)
+        #     print writer
+        
+        # CHECK!!!
+        
+        print "TTT"
+    
     def create_csv(self, query, out_file_name):
         cursor = connection.cursor()
         cursor.execute(query)
