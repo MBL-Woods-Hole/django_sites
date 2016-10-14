@@ -209,6 +209,8 @@ class CsvMetadata():
           return False
       return True
 
+
+    # write_out_metadata_to_csv
     def create_csv(self, query, out_file_name):
         cursor = connection.cursor()
         cursor.execute(query)
@@ -457,34 +459,12 @@ class CsvMetadata():
                 raise
 
     def add_out_metadata_table_to_out_metadata(self, request):
-        # print "QQQ request.POST from add_out_metadata_table_to_out_metadata"
-#             'adaptor','amp_operator','barcode','barcode_index','contact_name','dataset','dataset_description','domain','env_source_name','lane','project','run_key','tubelabel',
-#
+        # TODO: benchmark
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
-            # print "self.out_metadata_table 00000000"
-            # print self.out_metadata_table
             for header in self.HEADERS_TO_EDIT_METADATA:
-                # if (request.session['out_metadata_table']['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
-
-                # if (request.session['out_metadata_table']['rows'][x][header] != self.out_metadata_table['rows'][x][header]):
-                #     print "QQQ1"
-                #     print "self.out_metadata_table['rows'][x][header] = "
-                #     print self.out_metadata_table['rows'][x][header]
-                #
-                #     print "request.session['out_metadata_table']['rows'][x][header] = "
-                #     print request.session['out_metadata_table']['rows'][x][header]
-                #     print "QQQ1"
-
                 if (self.out_metadata_table['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
-                    print "QQQ2"
-                    print "self.out_metadata_table['rows'][x][header] = "
-                    print self.out_metadata_table['rows'][x][header]
+                    self.out_metadata_table['rows'][x][header] = request.POST['form-'+str(x)+'-' + header]
 
-                    print "request.session['out_metadata_table']['rows'][x][header] = "
-                    print request.session['out_metadata_table']['rows'][x][header]
-                    print "request.POST['form-'+str(x)+'-' + header] = "
-                    print request.POST['form-'+str(x)+'-' + header]
-                    print "QQQ2"
 
     def edit_post_metadata_table(self, request):
 
