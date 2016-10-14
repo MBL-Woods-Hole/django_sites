@@ -42,7 +42,6 @@ class CsvMetadata():
         # self.out_metadata = defaultdict( lambda: defaultdict(int) )
         self.out_metadata = defaultdict( defaultdict )
         self.out_metadata_table = defaultdict( list )
-        # self.out_metadata_table = defaultdict( defaultdict )
         self.vamps_submissions = {}
         self.user_info_arr = {}
         self.adaptors_full = {}
@@ -269,10 +268,10 @@ class CsvMetadata():
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
             domain     = self.csv_by_header['domain'][i]
-            
-            
+
+
             self.get_adaptors_full(adaptor, dna_region, domain)
-        
+
 
     def get_adaptors_full(self, adaptor, dna_region, domain, db_name = "test_env454"):
 
@@ -293,12 +292,12 @@ class CsvMetadata():
 
         print self.adaptors_full
         # self.benchmark_w_return_2(t0)
-        
+
         # t0 = self.benchmark_w_return_1()
-        #  
+        #
         #  try:
         #      adaptors_full = []
-        #      
+        #
         #      query_adaptors = """select
         #      illumina_adaptor, illumina_index, illumina_run_key, dna_region, domain, illumina_adaptor_id, illumina_index_id, illumina_run_key_id, dna_region_id
         #      FROM %s.illumina_adaptor_ref
@@ -308,11 +307,11 @@ class CsvMetadata():
         #      JOIN %s.dna_region USING(dna_region_id)
         #      """ % (db_name, db_name, db_name, db_name, db_name)
         #      # self.adaptors_full = self.run_query_to_dict(query_adaptors)
-        #  
+        #
         #      res_dict = {}
         #      cursor = connection.cursor()
         #      cursor.execute(query_adaptors)
-        #  
+        #
         #      column_names = [d[0] for d in cursor.description]
         #      for row in cursor:
         #          # print "WWW row = "
@@ -321,12 +320,12 @@ class CsvMetadata():
         #          # print "res_dict"
         #          # print res_dict
         #          adaptors_full.append(res_dict)
-        #  
+        #
         #  except:
         #      raise
-        #      
+        #
         #  self.benchmark_w_return_2(t0)
-        #      
+        #
         #  print "adaptors_full = "
         #  print adaptors_full
 
@@ -436,18 +435,18 @@ class CsvMetadata():
         # print "self.out_metadata = %s" % self.out_metadata
 
     def edit_out_metadata_table(self, request):
-        
+
         self.out_metadata_table = request.session['out_metadata_table']
-        
+
         for x in range(0, len(self.out_metadata_table['rows'])):
             adaptor    = request.POST['form-'+str(x)+'-adaptor']
             dna_region = request.session['run_info_form_post']['csv_dna_region']
             domain     = request.POST['form-'+str(x)+'-domain']
-            
+
             key = "_".join([adaptor, dna_region, domain])
-            
+
             self.get_adaptors_full(adaptor, dna_region, domain)
-            
+
             try:
                 self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
                 self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
@@ -456,7 +455,37 @@ class CsvMetadata():
                 self.out_metadata_table['rows'][x]['run_key']       = ""
             except:
                 raise
-        
+
+    def add_out_metadata_table_to_out_metadata(self, request):
+        # print "QQQ request.POST from add_out_metadata_table_to_out_metadata"
+#             'adaptor','amp_operator','barcode','barcode_index','contact_name','dataset','dataset_description','domain','env_source_name','lane','project','run_key','tubelabel',
+#
+        for x in range(0, len(request.session['out_metadata_table']['rows'])):
+            # print "self.out_metadata_table 00000000"
+            # print self.out_metadata_table
+            for header in self.HEADERS_TO_EDIT_METADATA:
+                # if (request.session['out_metadata_table']['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
+
+                # if (request.session['out_metadata_table']['rows'][x][header] != self.out_metadata_table['rows'][x][header]):
+                #     print "QQQ1"
+                #     print "self.out_metadata_table['rows'][x][header] = "
+                #     print self.out_metadata_table['rows'][x][header]
+                #
+                #     print "request.session['out_metadata_table']['rows'][x][header] = "
+                #     print request.session['out_metadata_table']['rows'][x][header]
+                #     print "QQQ1"
+
+                if (self.out_metadata_table['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
+                    print "QQQ2"
+                    print "self.out_metadata_table['rows'][x][header] = "
+                    print self.out_metadata_table['rows'][x][header]
+
+                    print "request.session['out_metadata_table']['rows'][x][header] = "
+                    print request.session['out_metadata_table']['rows'][x][header]
+                    print "request.POST['form-'+str(x)+'-' + header] = "
+                    print request.POST['form-'+str(x)+'-' + header]
+                    print "QQQ2"
+
     def edit_post_metadata_table(self, request):
 
         my_post_dict = request.POST.copy()
@@ -468,9 +497,9 @@ class CsvMetadata():
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
             my_post_dict['form-'+str(x)+'-barcode_index'] = self.out_metadata_table['rows'][x]['barcode_index']
             my_post_dict['form-'+str(x)+'-run_key']       = self.out_metadata_table['rows'][x]['run_key']
-        
+
         return my_post_dict
-        
+
 
     def make_new_out_metadata(self):
         idx = 0
@@ -490,15 +519,15 @@ class CsvMetadata():
 
         self.get_user_info()
         for i in xrange(len(self.csv_content)-1):
-            
+
             curr_submit_code = self.csv_by_header['submit_code'][i]
-            
+
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
             domain     = self.csv_by_header['domain'][i]
-            
+
             key = "_".join([adaptor, dna_region, domain])
-            
+
 
             # print i
             self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
@@ -512,7 +541,7 @@ class CsvMetadata():
                 self.out_metadata[i]['barcode_index'] = ""
             except:
                 raise
-            
+
             # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['last_name'] + ', ' + self.user_info_arr[curr_submit_code]['first_name']
             # <option value="36">Nicole Webster</option>
             # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['contact_id']

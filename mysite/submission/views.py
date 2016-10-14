@@ -139,7 +139,7 @@ def upload_metadata(request):
         # print request.session['out_metadata_table']
 
         my_post_dict = csv_handler.edit_post_metadata_table(request)
-
+        csv_handler.add_out_metadata_table_to_out_metadata(request)
         print "my_post_dict = %s" % my_post_dict
         
         
