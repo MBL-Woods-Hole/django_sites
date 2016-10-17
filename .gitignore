@@ -5,3 +5,4 @@ RCS
 *.pyc
 flake_res
 settings_local.py
+temp.csv
