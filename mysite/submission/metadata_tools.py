@@ -213,13 +213,22 @@ class CsvMetadata():
         # metadata_20160803_1_B.csv
         pass
         
-    def write_out_metadata_to_csv(self, out_file_name):
+    # def write_out_metadata_to_csv(self, out_file_name = os.path.join(self.path_to_csv + "temp.csv")):
         # TODO: dynamic!
-        out_file_name = "temp"
-        writer = csv.DictWriter(out_file_name,
+    def write_out_metadata_to_csv(self, request):
+        out_file_name = os.path.join(self.path_to_csv + "temp.csv")
+        writer = csv.DictWriter(open(out_file_name, 'wb'),
                                 self.HEADERS_TO_CSV)
 
 
+
+        print "AAA all_self.HEADERS_TO_CSV"
+        print self.HEADERS_TO_CSV
+        print "KKKKKK keys in request.session['out_metadata']['1'].keys()"
+        print request.session['out_metadata']['1'].keys()
+        # for k in request.session['out_metadata'].keys():
+            # print k
+        print "LLLLL"        
         # listWriter = csv.DictWriter(
         #    open(out_file_name, 'wb'),
         #    fieldnames=self.HEADERS_TO_CSV,
@@ -227,7 +236,7 @@ class CsvMetadata():
         #    quotechar='|'
            # ,
 #            quoting=csv.QUOTE_MINIMAL
-        )
+        # )
         # for a in itemDict:
         #     print a
         #     listWriter.writerow(a)
@@ -236,9 +245,11 @@ class CsvMetadata():
         # self.out_metadata_table
         #
         print "TTT"
-        for row in self.out_metadata_table:
-            print row
-            writer.writerow(row)
+        for k, v in request.session['out_metadata'].items():
+            
+            print v
+            # if k in self.HEADERS_TO_CSV
+            writer.writerow(v)
         #     print writer
         
         # CHECK!!!
@@ -560,7 +571,7 @@ class CsvMetadata():
             # <option value="36">Nicole Webster</option>
             # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['contact_id']
             self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.user_info_arr[curr_submit_code]['last_name']
-
+            self.out_metadata[i]['data_owner']           = self.out_metadata[i]['contact_name']
 
             self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
             self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
@@ -578,7 +589,7 @@ class CsvMetadata():
             # TODO: make dropdown menu, camelize, choose
             self.out_metadata[i]['domain']			     = self.csv_by_header['domain'][i]
             self.out_metadata[i]['email']                = self.user_info_arr[curr_submit_code]['email']
-            # $combined_metadata[$num]["env_sample_source_id"] = $csv_metadata_row["env_sample_source_id"];
+            self.out_metadata[i]["env_sample_source_id"] = self.csv_by_header['env_sample_source_id'][i];
             self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
             self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
             self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']

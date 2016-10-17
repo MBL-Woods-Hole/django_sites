@@ -96,6 +96,7 @@ def upload_metadata(request):
         #2) metadata table to show and edit
         #3) metadata csv files
         csv_handler.edit_out_metadata(request)    
+        request.session['out_metadata'] = csv_handler.out_metadata
 
         csv_handler.make_metadata_table()
         
@@ -133,8 +134,18 @@ def upload_metadata(request):
         my_post_dict = csv_handler.edit_post_metadata_table(request)
         csv_handler.add_out_metadata_table_to_out_metadata(request)
         # print "my_post_dict = %s" % my_post_dict
+        # request.session['out_metadata'] = csv_handler.out_metadata
         
-        csv_handler.write_out_metadata_to_csv()
+        print "out_metadata before write_out_metadata_to_csv:"
+        print  csv_handler.out_metadata
+        print "-8" * 8
+
+        print "out_metadata before write_out_metadata_to_csv from request:"
+        print  request.session['out_metadata']
+        print "-9" * 9
+        
+        
+        csv_handler.write_out_metadata_to_csv(request)
         formset = MetadataOutCsvFormSet(my_post_dict)
         
         context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table']}
@@ -142,6 +153,9 @@ def upload_metadata(request):
         return render(request, 'submission/upload_metadata.html', context)
         
     else:
+        for key in request.session.keys():
+            del request.session[key]
+        
         file_upload_form = FileUploadForm()
         context = {'file_upload_form':file_upload_form, 'header': 'Upload metadata', 'formset': {}}
 
