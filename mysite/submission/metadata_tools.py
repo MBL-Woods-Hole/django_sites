@@ -245,11 +245,13 @@ class CsvMetadata():
         # self.out_metadata_table
         #
         print "TTT"
-        for k, v in request.session['out_metadata'].items():
-            
+        
+        for k, v in request.session['out_metadata'].items():            
             print v
+            sub_dict = {k1: v[k1] for k1 in set(self.HEADERS_TO_CSV)}
+            print sub_dict
             # if k in self.HEADERS_TO_CSV
-            writer.writerow(v)
+            writer.writerow(sub_dict)
         #     print writer
         
         # CHECK!!!
