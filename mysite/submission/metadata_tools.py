@@ -221,40 +221,20 @@ class CsvMetadata():
                                 self.HEADERS_TO_CSV)
 
 
-
+        writer.writeheader() 
         print "AAA all_self.HEADERS_TO_CSV"
         print self.HEADERS_TO_CSV
         print "KKKKKK keys in request.session['out_metadata']['1'].keys()"
         print request.session['out_metadata']['1'].keys()
-        # for k in request.session['out_metadata'].keys():
-            # print k
         print "LLLLL"        
-        # listWriter = csv.DictWriter(
-        #    open(out_file_name, 'wb'),
-        #    fieldnames=self.HEADERS_TO_CSV,
-        #    delimiter=',',
-        #    quotechar='|'
-           # ,
-#            quoting=csv.QUOTE_MINIMAL
-        # )
-        # for a in itemDict:
-        #     print a
-        #     listWriter.writerow(a)
 
-
-        # self.out_metadata_table
-        #
         print "TTT"
         
         for k, v in request.session['out_metadata'].items():            
             print v
             sub_dict = {k1: v[k1] for k1 in set(self.HEADERS_TO_CSV)}
             print sub_dict
-            # if k in self.HEADERS_TO_CSV
             writer.writerow(sub_dict)
-        #     print writer
-        
-        # CHECK!!!
         
         print "TTT"
     
