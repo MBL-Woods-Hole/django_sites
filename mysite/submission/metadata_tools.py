@@ -210,15 +210,18 @@ class CsvMetadata():
           return False
       return True
 
-    def make_out_metadata_csv_file_name(self, request):
+    def make_out_metadata_csv_file_name(self, sub_dict):
+        print "DDD sub_dict"
+        print sub_dict
+        metadata_csv_file_name = "metadata.csv"
+        {'last_name': u'Morrison', 'dna_region': u'v6', 'dataset': u'FRF_Near_1', 'dataset_description': u'FRF_Near_1', 'insert_size': u'100', 'first_name': u'Hilary', 'funding': u'0', 'read_length': u'301100', 'env_sample_source_id': u'130', 'seq_operator': u'JVJ', 'overlap': u'hs_complete', 'email': u'morrison@mbl.edu', 'barcode_index': u'ACTTGA', 'project_description': u'Outer Banks Phytoplankton microbiome project led by Katie Neller at First Flight HS', 'run': u'20151111', 'adaptor': u'A08', 'barcode': u'', 'run_key': u'TCAGC', 'data_owner': u'Hilary Morrison', 'institution': u'Marine Biological Laboratory', 'lane': u'1', 'project_title': u'Outer Banks Phytoplankton microbiome project', 'primer_suite': u'Bacterial V4-V5 Suite', 'project': u'HGM_FFHS_Bv4v5', 'tubelabel': u'KDF', 'amp_operator': u'HGM'}
+        metadata_csv_file_name = "metadata_%s_%s_%s_%s.csv" % (sub_dict['run'], sub_dict['lane'], request.session['run_info_form_post']['csv_platform'], sub_dict['domain'])
+        #todo: sub_dict['domain']
         # metadata_20160803_1_B.csv
-        # metadata_csv_file_name_info = []
-        # for k, v in request.session['out_metadata'].items():
-            # metadata_csv_file_name_info.append("metadata_%s_%s_%s_%s.csv" % (v['run'], v['lane'], v['platform'], v['domain']))
-            
-        metadata_csv_file_name_info = ["metadata_%s_%s_%s_%s.csv" % (v['run'], v['lane'], v['platform'], v['domain']) for k, v in request.session['out_metadata'].items()]
-        print 'AAA1 metadata_csv_file_name_info = '
-        print metadata_csv_file_name_info
+        # metadata_csv_file_names = ["metadata_%s_%s_%s_%s.csv" % (v['run'], v['lane'], v['platform'], v['domain']) for k, v in request.session['out_metadata'].items()]
+        # print 'AAA1 metadata_csv_file_name_info = '
+        # print metadata_csv_file_name_info
+        return metadata_csv_file_name
 
     def update_out_metadata(self, my_post_dict, request, x):
         
@@ -235,13 +238,13 @@ class CsvMetadata():
         return sub_dict
         
     def write_out_metadata_to_csv(self, my_post_dict, request):
-        self.make_out_metadata_csv_file_name(request)
+        # metadata_csv_file_names = self.make_out_metadata_csv_file_name(request)
 
-        out_file_name = os.path.join(self.path_to_csv + "temp.csv")
-        writer = csv.DictWriter(open(out_file_name, 'wb'),
-                                self.HEADERS_TO_CSV)
-
-        writer.writeheader() 
+        # out_file_name = os.path.join(self.path_to_csv + "temp.csv")
+        # writer = csv.DictWriter(open(out_file_name, 'wb'),
+        #                         self.HEADERS_TO_CSV)
+        #
+        # writer.writeheader()
         # print "AAA all_self.HEADERS_TO_CSV"
         # print self.HEADERS_TO_CSV
 
@@ -249,8 +252,19 @@ class CsvMetadata():
         # update out_metadata
         # out_metadata_1 = request.session['out_metadata']
         sub_dict = {}
+        
+        
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
+
+            
             sub_dict = self.update_out_metadata(my_post_dict, request, x)
+            
+            
+            out_file_name = os.path.join(self.path_to_csv + self.make_out_metadata_csv_file_name(sub_dict))
+            writer = csv.DictWriter(open(out_file_name, 'wb'),
+                                    self.HEADERS_TO_CSV)
+
+            writer.writeheader()
             writer.writerow(sub_dict)
 
         # print "TTT"
