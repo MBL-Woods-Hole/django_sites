@@ -214,8 +214,6 @@ class CsvMetadata():
         # metadata_20160803_1_B.csv
         # pass
         
-    # def write_out_metadata_to_csv(self, out_file_name = os.path.join(self.path_to_csv + "temp.csv")):
-        # TODO: dynamic!
     def write_out_metadata_to_csv(self, my_post_dict, request):
         print "QQQ my_post_dict = "
         print my_post_dict
@@ -223,14 +221,10 @@ class CsvMetadata():
         writer = csv.DictWriter(open(out_file_name, 'wb'),
                                 self.HEADERS_TO_CSV)
 
-
         writer.writeheader() 
         print "AAA all_self.HEADERS_TO_CSV"
         print self.HEADERS_TO_CSV
-        # print "KKKKKK keys in request.session['out_metadata']['1'].keys()"
-        # print request.session['out_metadata']['1'].keys()
-        # print "LLLLL"
-        # self.adaptors_full
+
         
         # update out_metadata
         out_metadata_1 = request.session['out_metadata']
@@ -244,12 +238,7 @@ class CsvMetadata():
                     print "VVV"
                     print "v[header]"
                     print v[header]
-                #     print "v = "
-                #     print v
-                #     sub_dict = {k1: v[k1] for k1 in set(self.HEADERS_TO_CSV)}
-                #     print "sub_dict = "
-                #     print sub_dict
-                #     writer.writerow(sub_dict)
+
                     
                     try:
                         print "MMM my_post_dict['form-'+str(x)+'-' + header] = "
@@ -261,43 +250,8 @@ class CsvMetadata():
                         raise    
             writer.writerow(sub_dict)
 
-                       
-                # if (self.out_metadata_table['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
-                #     self.out_metadata_table['rows'][x][header] = request.POST['form-'+str(x)+'-' + header]
-                #
-        # for x in range(0, len(request.session['out_metadata_table']['rows'])):
-        #     for t in set(self.HEADERS_TO_CSV):
-
-
-        # print "TTT"
-        # out_metadata_1 = request.session['out_metadata']
-        # for k, v in out_metadata_1:
-        #     print k
-        #     print v
-        # print "t1t1t1"
-        
-        # for k, v in request.session['out_metadata'].items():
-        #
-        #     print "v"
-        #     print v
-        #     sub_dict = {k1: v[k1] for k1 in set(self.HEADERS_TO_CSV)}
-        #     print "sub_dict"
-        #     print sub_dict
-            # writer.writerow(sub_dict)
-        
         print "TTT"
         print "IIIIN HERE, out_file_name = %s, self.path_to_csv = '%s'" % (out_file_name, self.path_to_csv)
-        
-    
-    # def create_csv(self, query, out_file_name):
-    #     cursor = connection.cursor()
-    #     cursor.execute(query)
-    #     csv_writer = csv.writer(open(out_file_name, "wb"), delimiter=',')
-    #     csv_writer.writerow([i[0] for i in cursor.description]) # write headers
-    #     csv_writer.writerows(cursor)
-    #     print "IIIIN HERE, out_file_name = %s, self.path_to_csv = %s" % (out_file_name, self.path_to_csv)
-    #
-    #     del csv_writer # this will close the CSV file
 
     def run_query_to_dict(self, query):
         res_dict = {}
