@@ -210,10 +210,24 @@ class CsvMetadata():
           return False
       return True
 
-    # def make_out_metadata_csv_file_name(self):
+    def make_out_metadata_csv_file_name(self, request):
         # metadata_20160803_1_B.csv
-        # pass
-        
+        print "RRR request.session['out_metadata']"
+        print request.session['out_metadata']
+        m = []
+        # metadata_csv_file_name_info = defaultdict( defaultdict )
+        for k, v in request.session['out_metadata'].items():
+            metadata_csv_file_name_info = {}
+            m.append(metadata_csv_file_name_info)
+            metadata_csv_file_name_info['run'] = v['run']
+            metadata_csv_file_name_info['lane'] = v['lane']
+            metadata_csv_file_name_info['platform'] = v['platform']
+            metadata_csv_file_name_info['domain'] = v['domain']
+        print 'AAA m = '
+        print m
+        for i in m:
+            print "metadata_%s_%s_%s_%s.csv" % (i['run'], i['lane'], i['platform'], i['domain'])
+
     def update_out_metadata(self, my_post_dict, request, x):
         
         sub_dict = {}
@@ -223,14 +237,14 @@ class CsvMetadata():
                     sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
                 except MultiValueDictKeyError, e:
                     sub_dict[header] = v[header]
-                    print "header: %s, sub_dict[header] %s." % (header, sub_dict[header])
+                    # print "header: %s, sub_dict[header] %s." % (header, sub_dict[header])
                 except:
                     raise
         return sub_dict
         
     def write_out_metadata_to_csv(self, my_post_dict, request):
-        # print "QQQ my_post_dict = "
-        # print my_post_dict
+        self.make_out_metadata_csv_file_name(request)
+
         out_file_name = os.path.join(self.path_to_csv + "temp.csv")
         writer = csv.DictWriter(open(out_file_name, 'wb'),
                                 self.HEADERS_TO_CSV)
