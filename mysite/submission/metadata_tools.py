@@ -214,19 +214,21 @@ class CsvMetadata():
         # metadata_20160803_1_B.csv
         print "RRR request.session['out_metadata']"
         print request.session['out_metadata']
-        m = []
+        metadata_csv_file_name_info = []
         # metadata_csv_file_name_info = defaultdict( defaultdict )
         for k, v in request.session['out_metadata'].items():
-            metadata_csv_file_name_info = {}
-            m.append(metadata_csv_file_name_info)
-            metadata_csv_file_name_info['run'] = v['run']
-            metadata_csv_file_name_info['lane'] = v['lane']
-            metadata_csv_file_name_info['platform'] = v['platform']
-            metadata_csv_file_name_info['domain'] = v['domain']
-        print 'AAA m = '
-        print m
-        for i in m:
-            print "metadata_%s_%s_%s_%s.csv" % (i['run'], i['lane'], i['platform'], i['domain'])
+            metadata_csv_file_name_info.append("metadata_%s_%s_%s_%s.csv" % (v['run'], v['lane'], v['platform'], v['domain']))
+            
+        #     metadata_csv_file_name_info_dict = {}
+        #     metadata_csv_file_name_info.append(metadata_csv_file_name_info_dict)
+        #     metadata_csv_file_name_info_dict['run'] = v['run']
+        #     metadata_csv_file_name_info_dict['lane'] = v['lane']
+        #     metadata_csv_file_name_info_dict['platform'] = v['platform']
+        #     metadata_csv_file_name_info_dict['domain'] = v['domain']
+        print 'AAA metadata_csv_file_name_info = '
+        print metadata_csv_file_name_info
+        # for d in metadata_csv_file_name_info:
+        #     print "metadata_%s_%s_%s_%s.csv" % (d['run'], d['lane'], d['platform'], d['domain'])
 
     def update_out_metadata(self, my_post_dict, request, x):
         
