@@ -223,22 +223,21 @@ class CsvMetadata():
                     sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
                 except MultiValueDictKeyError, e:
                     sub_dict[header] = v[header]
-                    
-                    print "header: %s, sub_dict[header] %s. Err: %s" % (header, sub_dict[header], e)
+                    print "header: %s, sub_dict[header] %s." % (header, sub_dict[header])
                 except:
                     raise
         return sub_dict
         
     def write_out_metadata_to_csv(self, my_post_dict, request):
-        print "QQQ my_post_dict = "
-        print my_post_dict
+        # print "QQQ my_post_dict = "
+        # print my_post_dict
         out_file_name = os.path.join(self.path_to_csv + "temp.csv")
         writer = csv.DictWriter(open(out_file_name, 'wb'),
                                 self.HEADERS_TO_CSV)
 
         writer.writeheader() 
-        print "AAA all_self.HEADERS_TO_CSV"
-        print self.HEADERS_TO_CSV
+        # print "AAA all_self.HEADERS_TO_CSV"
+        # print self.HEADERS_TO_CSV
 
         
         # update out_metadata
@@ -248,8 +247,8 @@ class CsvMetadata():
             sub_dict = self.update_out_metadata(my_post_dict, request, x)
             writer.writerow(sub_dict)
 
-        print "TTT"
-        print "IIIIN HERE, out_file_name = %s, self.path_to_csv = '%s'" % (out_file_name, self.path_to_csv)
+        # print "TTT"
+        # print "IIIIN HERE, out_file_name = %s, self.path_to_csv = '%s'" % (out_file_name, self.path_to_csv)
 
     def run_query_to_dict(self, query):
         res_dict = {}
