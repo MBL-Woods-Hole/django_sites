@@ -214,6 +214,19 @@ class CsvMetadata():
         # metadata_20160803_1_B.csv
         # pass
         
+    def update_out_metadata(self, my_post_dict, request, x):
+        
+        sub_dict = {}
+        for header in self.HEADERS_TO_CSV:                
+            for k, v in request.session['out_metadata'].items():
+                try:
+                    sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
+                except MultiValueDictKeyError, e:
+                    print "No header in my_post_dict: %s" % e
+                except:
+                    raise
+        return sub_dict
+        
     def write_out_metadata_to_csv(self, my_post_dict, request):
         print "QQQ my_post_dict = "
         print my_post_dict
@@ -227,27 +240,18 @@ class CsvMetadata():
 
         
         # update out_metadata
-        out_metadata_1 = request.session['out_metadata']
+        # out_metadata_1 = request.session['out_metadata']
         sub_dict = {}
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
-            print "-" * 8
-            for header in self.HEADERS_TO_CSV:
-                print "header = %s" % (header)
-                
-                for k, v in out_metadata_1.items():
-                    print "VVV"
-                    print "v[header]"
-                    print v[header]
-
-                    
-                    try:
-                        print "MMM my_post_dict['form-'+str(x)+'-' + header] = "
-                        print my_post_dict['form-'+str(x)+'-' + header]
-                        sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
-                    except MultiValueDictKeyError, e:
-                        print "No header in my_post_dict: %s" % e
-                    except:
-                        raise    
+        #     for header in self.HEADERS_TO_CSV:
+        #         for k, v in out_metadata_1.items():
+        #             try:
+        #                 sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
+        #             except MultiValueDictKeyError, e:
+        #                 print "No header in my_post_dict: %s" % e
+        #             except:
+        #                 raise 
+            sub_dict = self.update_out_metadata(my_post_dict, request, x)
             writer.writerow(sub_dict)
 
         print "TTT"
