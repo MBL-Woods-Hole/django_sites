@@ -124,7 +124,7 @@ def upload_metadata(request):
         return render(request, 'submission/upload_metadata.html', context)
 
     elif 'create_submission_metadata_file' in request.POST:
-        # print "EEE: request.POST = %s" % request.POST
+        print "EEE: request.POST = %s" % request.POST
         
         csv_handler.edit_out_metadata_table(request)
         metadata_run_info_form = CsvRunInfoUploadForm(request.session['run_info_form_post'])        
@@ -133,7 +133,7 @@ def upload_metadata(request):
 
         my_post_dict = csv_handler.edit_post_metadata_table(request)
         csv_handler.add_out_metadata_table_to_out_metadata(request)
-        # print "my_post_dict = %s" % my_post_dict
+        print "my_post_dict = %s" % my_post_dict
         # request.session['out_metadata'] = csv_handler.out_metadata
         
         print "out_metadata before write_out_metadata_to_csv:"
@@ -145,7 +145,7 @@ def upload_metadata(request):
         print "-9" * 9
         
         
-        csv_handler.write_out_metadata_to_csv(request)
+        csv_handler.write_out_metadata_to_csv(my_post_dict, request)
         formset = MetadataOutCsvFormSet(my_post_dict)
         
         context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table']}
