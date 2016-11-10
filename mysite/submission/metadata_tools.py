@@ -217,16 +217,16 @@ class CsvMetadata():
     def update_out_metadata(self, my_post_dict, request, x):
         
         sub_dict = {}
-        # for header in self.HEADERS_TO_CSV:          
-        for k, v in request.session['out_metadata'].items():
-            try:
-                sub_dict = {header: my_post_dict['form-'+str(x)+'-' + header] for header in set(self.HEADERS_TO_CSV)}
-                
-                # sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
-            except MultiValueDictKeyError, e:
-                print "No header in my_post_dict: %s" % e
-            except:
-                raise
+        for header in self.HEADERS_TO_CSV:                
+            for k, v in request.session['out_metadata'].items():
+                try:
+                    sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
+                except MultiValueDictKeyError, e:
+                    sub_dict[header] = v[header]
+                    
+                    print "header: %s, sub_dict[header] %s. Err: %s" % (header, sub_dict[header], e)
+                except:
+                    raise
         return sub_dict
         
     def write_out_metadata_to_csv(self, my_post_dict, request):
