@@ -47,6 +47,7 @@ class CsvMetadata():
         self.user_info_arr = {}
         self.adaptors_full = {}
         self.domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
+        self.machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
 
         # error = True
 
@@ -213,10 +214,13 @@ class CsvMetadata():
 
     def make_out_metadata_csv_file_name(self, my_post_dict, request):
         # metadata_20160803_1_B.csv
+        # metadata_20151111_hiseq_1_A.csv
         metadata_csv_file_names = []
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
-            domain = my_post_dict['form-'+str(x)+'-' + 'domain']
-            metadata_csv_file_names.append("metadata_%s_%s_%s_%s.csv" % (request.session['run_info_form_post']['csv_rundate'], request.session['run_info_form_post']['csv_platform'], my_post_dict['form-'+str(x)+'-' + 'lane'], self.domain_choices[domain]))
+            domain   = my_post_dict['form-'+str(x)+'-' + 'domain']
+            platform = request.session['run_info_form_post']['csv_platform']
+            
+            metadata_csv_file_names.append("metadata_%s_%s_%s_%s.csv" % (request.session['run_info_form_post']['csv_rundate'], self.machine_shortcuts_choices[platform], my_post_dict['form-'+str(x)+'-' + 'lane'], self.domain_choices[domain]))
 
         return metadata_csv_file_names
 
@@ -388,12 +392,12 @@ class CsvMetadata():
 
     def get_selected_variables(self, request_post):
         # change from form if needed
-        machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
+        # machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
 
         if 'submit_run_info' in request_post:
             self.selected_machine		= request_post.get('csv_platform', False)
             print "self.selected_machine				in request_post= %s" % (self.selected_machine)
-            self.selected_machine_short	= machine_shortcuts_choices[self.selected_machine]
+            self.selected_machine_short	= self.machine_shortcuts_choices[self.selected_machine]
             self.selected_rundate		= request_post.get('csv_rundate', False)
             self.selected_dna_region	= request_post.get('csv_dna_region', False)
             self.selected_overlap       = request_post.get('csv_overlap', False)
@@ -402,9 +406,9 @@ class CsvMetadata():
             # print self.csv_by_header_uniqued['platform']
             self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
             print "self.selected_machine 2 = %s" % self.selected_machine
-            # print "MMM machine_shortcuts_choices"
-            # print machine_shortcuts_choices
-            self.selected_machine_short = machine_shortcuts_choices[self.selected_machine]
+            # print "MMM self.machine_shortcuts_choices"
+            # print self.machine_shortcuts_choices
+            self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
             # print "self.selected_machine_short 2 = %s" % self.selected_machine_short
 
             self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
