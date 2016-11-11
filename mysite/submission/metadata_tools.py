@@ -89,7 +89,7 @@ class CsvMetadata():
             'env_sample_source_id': {'field': 'env_sample_source_id', 'required': True},
         }
 
-        self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
+        self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
         self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
 
@@ -236,28 +236,18 @@ class CsvMetadata():
         
     def write_out_metadata_to_csv(self, my_post_dict, request):
         metadata_csv_file_names = self.make_out_metadata_csv_file_name(my_post_dict, request)
-
-        # out_file_name = os.path.join(self.path_to_csv + "temp.csv")
-        # writer = csv.DictWriter(open(out_file_name, 'wb'),
-        #                         self.HEADERS_TO_CSV)
-        #
-        # writer.writeheader()
-        # print "AAA all_self.HEADERS_TO_CSV"
-        # print self.HEADERS_TO_CSV
-
-        
-        # update out_metadata
-        # out_metadata_1 = request.session['out_metadata']
-        sub_dict = {}
-        
+        print "MMM metadata_csv_file_names = "
+        print metadata_csv_file_names
         
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
+            
             out_file_name = os.path.join(self.path_to_csv + metadata_csv_file_names[x])
             writer = csv.DictWriter(open(out_file_name, 'wb'),
                                     self.HEADERS_TO_CSV)
 
             writer.writeheader()
             
+            sub_dict = {}
             sub_dict = self.update_out_metadata(my_post_dict, request, x)
             writer.writerow(sub_dict)
 
