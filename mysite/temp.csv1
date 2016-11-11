@@ -1,4 +1,0 @@
-adaptor,amp_operator,barcode,barcode_index,data_owner,dataset,dataset_description,dna_region,email,env_sample_source_id,first_name,funding,insert_size,institution,lane,last_name,overlap,primer_suite,project,project_description,project_title,read_length,run,run_key,seq_operator,tubelabel
-A08,JV,,GCTCGC,,dat_test1,Sample Dataset Description temp,,,,,,,,1,,,,,,,,,TGATA,,Tube_Label_1_temp
-A14,JV,,CTGGCC,,dat_test1,Sample Dataset Description temp 2,,,,,,,,2,,,,,,,,,TCAGC,,Tube_Label_2_temp
-A08,HGM,,ACTTGA,,FRF_Near_1,FRF_Near_1,,,,,,,,1,,,,HGM_FFHS_Bv4v5,,,,,TCAGC,,KDF
