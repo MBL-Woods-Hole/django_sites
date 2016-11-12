@@ -214,7 +214,7 @@ class CsvMetadata():
 
     def make_out_metadata_csv_file_name(self, my_post_dict, request):
         # metadata_20160803_1_B.csv
-        # metadata_20151111_hiseq_1_A.csv
+        # metadata_20151111_hs_1_A.csv
         metadata_csv_file_names = []
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
             domain   = my_post_dict['form-'+str(x)+'-' + 'domain']
@@ -239,6 +239,10 @@ class CsvMetadata():
         return sub_dict
         
     def write_out_metadata_to_csv(self, my_post_dict, request):
+        
+        # print "OOO self.lanes_domains = %s" % self.lanes_domains
+        # print "self.selected_rundate = %s, self.selected_machine_short = %s" % (self.selected_rundate, self.selected_machine_short)
+        
         metadata_csv_file_names = self.make_out_metadata_csv_file_name(my_post_dict, request)
         print "MMM metadata_csv_file_names = "
         print metadata_csv_file_names
@@ -417,6 +421,7 @@ class CsvMetadata():
     def create_path_to_csv(self):
         #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
         print "self.selected_machine from create_path_to_csv = %s" % (self.selected_machine)
+
         self.path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.selected_machine + "_info", self.selected_rundate)
         print "self.path_to_csv"
         print self.path_to_csv

@@ -90,6 +90,10 @@ def upload_metadata(request):
     elif 'submit_run_info' in request.POST:
         # print "EEE: request.POST = %s" % request.POST
         csv_handler.get_selected_variables(request.POST)
+        request.session['run_info'] = {}
+        request.session['run_info']['selected_rundate'] = csv_handler.selected_rundate
+        request.session['run_info']['selected_machine_short'] = csv_handler.selected_machine_short
+        request.session['run_info']['selected_machine'] = csv_handler.selected_machine
         
         #0) ini and csv machine_info/run dir
         #1) ini files
@@ -100,17 +104,15 @@ def upload_metadata(request):
 
         csv_handler.make_metadata_table()
         
-        csv_handler.get_lanes_domains()
-        csv_handler.create_path_to_csv()
-        csv_handler.create_ini_names()
-        csv_handler.write_ini()
-        
+        # csv_handler.get_lanes_domains()
+        # csv_handler.create_path_to_csv()
+        # csv_handler.create_ini_names()
+        # csv_handler.write_ini()
+        #
+        # request.session['run_info']['lanes_domains'] = csv_handler.lanes_domains
+        #
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
         request.session['run_info_form_post'] = request.POST
-        
-
-        print "VVV csv_handler.out_metadata_table['rows'] = %s, type(csv_handler.out_metadata_table['rows']) = %s" % (csv_handler.out_metadata_table['rows'], len(csv_handler.out_metadata_table['rows']))
-
         
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))
         formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
@@ -136,14 +138,29 @@ def upload_metadata(request):
         print "my_post_dict = %s" % my_post_dict
         # request.session['out_metadata'] = csv_handler.out_metadata
         
-        print "out_metadata before write_out_metadata_to_csv:"
-        print  csv_handler.out_metadata
-        print "-8" * 8
+        # print "out_metadata before write_out_metadata_to_csv:"
+        # print  csv_handler.out_metadata
+        # print "-8" * 8
+        #
+        # print "out_metadata before write_out_metadata_to_csv from request:"
+        # print  request.session['out_metadata']
+        # print "-9" * 9
 
-        print "out_metadata before write_out_metadata_to_csv from request:"
-        print  request.session['out_metadata']
-        print "-9" * 9
+        csv_handler.selected_rundate       = request.session['run_info']['selected_rundate']
+        csv_handler.selected_machine_short = request.session['run_info']['selected_machine_short']
+        csv_handler.selected_machine       = request.session['run_info']['selected_machine']
         
+
+        csv_handler.get_lanes_domains()
+        csv_handler.create_path_to_csv()
+        csv_handler.create_ini_names()
+        csv_handler.write_ini()
+
+        # request.session['run_info'] = {}
+        # request.session['run_info']['lanes_domains'] = csv_handler.lanes_domains
+        # request.session['run_info']['selected_rundate'] = csv_handler.selected_rundate
+        # request.session['run_info']['selected_machine_short'] = csv_handler.selected_machine_short
+        #
         
         csv_handler.write_out_metadata_to_csv(my_post_dict, request)
         formset = MetadataOutCsvFormSet(my_post_dict)
