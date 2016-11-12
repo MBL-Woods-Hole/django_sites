@@ -21,6 +21,57 @@ from collections import defaultdict
 
 # Assuming that in each csv one rundate and one platform!
 class CsvMetadata():
+    """
+    IN
+    Unique per upload (run_info):
+        Run date:	
+        Path to raw data:	
+        Platform:	
+        DNA Region:	
+        Overlap:	
+        Has Ns:	
+        Seq Operator:	
+        Insert Size:	
+        Read Length:
+
+    Can be changed in the table:
+        HEADERS_TO_EDIT_METADATA
+
+    Taken from csv: HEADERS_FROM_CSV
+    Taken from vamps_submission tables on vamps:
+        'vamps_auth_id'
+        'first_name'
+        'project_description'
+        'funding'
+        'institution'
+        'title'
+        'num_of_tubes'
+        'date_initial'
+        'submit_code'
+        'email'
+        'date_updated'
+        'last_name'
+        'temp_project'
+        'user'
+        'passwd'
+        'security_level'
+        'active'
+        'locked'
+        'date_added'
+        'id'
+    Taken from user table on env454:
+        see models
+
+    OUT:
+    ini:
+        "rundate"
+        "lane_domain"
+        "dna_region"
+        "path_to_raw_data"
+        "overlap"
+        "machine"
+    csv: HEADERS_TO_CSV
+    """
 
     def __init__(self):
 
