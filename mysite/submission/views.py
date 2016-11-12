@@ -46,6 +46,7 @@ def upload_metadata(request):
         # csv_validation.required_cell_values_validation()
 
         csv_handler.get_selected_variables(request.POST)
+        
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
         print "FFF csv_handler.run_info_from_csv = %s" % csv_handler.run_info_from_csv
@@ -91,14 +92,13 @@ def upload_metadata(request):
         # print "EEE: request.POST = %s" % request.POST
         csv_handler.get_selected_variables(request.POST)
         request.session['run_info'] = {}
-        request.session['run_info']['selected_rundate'] = csv_handler.selected_rundate
-        request.session['run_info']['selected_machine_short'] = csv_handler.selected_machine_short
-        request.session['run_info']['selected_machine'] = csv_handler.selected_machine
+        request.session['run_info']['selected_rundate']         = csv_handler.selected_rundate
+        request.session['run_info']['selected_machine_short']   = csv_handler.selected_machine_short
+        request.session['run_info']['selected_machine']         = csv_handler.selected_machine
+        request.session['run_info']['selected_dna_region']      = csv_handler.selected_dna_region       
+        request.session['run_info']['selected_overlap']         = csv_handler.selected_overlap       
         
-        #0) ini and csv machine_info/run dir
-        #1) ini files
-        #2) metadata table to show and edit
-        #3) metadata csv files
+        #*) metadata table to show and edit
         csv_handler.edit_out_metadata(request)    
         request.session['out_metadata'] = csv_handler.out_metadata
 
@@ -128,12 +128,23 @@ def upload_metadata(request):
     elif 'create_submission_metadata_file' in request.POST:
         print "EEE: request.POST = %s" % request.POST
         
+        """
+        *) metadata table to show and edit
+        *) metadata out edit        
+        *) ini and csv machine_info/run dir
+        *) ini files
+        *) metadata csv files
+        """
+        
+        #*) metadata table to show and edit
+        
         csv_handler.edit_out_metadata_table(request)
         metadata_run_info_form = CsvRunInfoUploadForm(request.session['run_info_form_post'])        
         
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm)
 
         my_post_dict = csv_handler.edit_post_metadata_table(request)
+        
         csv_handler.add_out_metadata_table_to_out_metadata(request)
         print "my_post_dict = %s" % my_post_dict
         # request.session['out_metadata'] = csv_handler.out_metadata
@@ -146,22 +157,24 @@ def upload_metadata(request):
         # print  request.session['out_metadata']
         # print "-9" * 9
 
+        #*) metadata out edit        
+        csv_handler.out_metadata = request.session['out_metadata']
+
         csv_handler.selected_rundate       = request.session['run_info']['selected_rundate']
         csv_handler.selected_machine_short = request.session['run_info']['selected_machine_short']
         csv_handler.selected_machine       = request.session['run_info']['selected_machine']
+        csv_handler.selected_dna_region    = request.session['run_info']['selected_dna_region']
+        csv_handler.selected_overlap       = request.session['run_info']['selected_overlap']
         
-
+        #*) ini and csv machine_info/run dir
         csv_handler.get_lanes_domains()
         csv_handler.create_path_to_csv()
+        
+        #*) ini files
         csv_handler.create_ini_names()
         csv_handler.write_ini()
 
-        # request.session['run_info'] = {}
-        # request.session['run_info']['lanes_domains'] = csv_handler.lanes_domains
-        # request.session['run_info']['selected_rundate'] = csv_handler.selected_rundate
-        # request.session['run_info']['selected_machine_short'] = csv_handler.selected_machine_short
-        #
-        
+        #*) metadata csv files
         csv_handler.write_out_metadata_to_csv(my_post_dict, request)
         formset = MetadataOutCsvFormSet(my_post_dict)
         

@@ -276,7 +276,8 @@ class CsvMetadata():
         return metadata_csv_file_names
 
     def update_out_metadata(self, my_post_dict, request, x):
-        
+        print "UUU out_metadata: "
+        print self.out_metadata
         sub_dict = {}
         for header in self.HEADERS_TO_CSV:                
             for k, v in request.session['out_metadata'].items():
