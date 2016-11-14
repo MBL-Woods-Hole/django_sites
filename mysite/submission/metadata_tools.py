@@ -495,7 +495,11 @@ class CsvMetadata():
         print self.lanes_domains
         for lane_domain in self.lanes_domains:
             out_file_name = os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain])
-
+            writer = csv.DictWriter(open(out_file_name, 'wb'),
+                                    self.HEADERS_TO_CSV)
+            
+            writer.writeheader()
+            
         # for x in range(0, len(request.session['out_metadata_table']['rows'])):
         #     out_file_name = os.path.join(self.path_to_csv, metadata_csv_file_names[x])
             # writer = csv.DictWriter(open(out_file_name, 'wb'),
