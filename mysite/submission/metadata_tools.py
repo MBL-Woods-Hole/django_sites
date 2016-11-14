@@ -466,20 +466,42 @@ class CsvMetadata():
         #     self.metadata_csv_file_names[lane_domain] = "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain)
 
 
-    def update_out_metadata(self, my_post_dict, request, x):
+    def update_out_metadata(self, my_post_dict, request):
         print "OOO out_metadata: "
         print self.out_metadata
-        sub_dict = {}
+        
+        '''
+        {u'1': {u'env_source_name': u'120', u'domain': u'bacteria', u'last_name': u'Shipunova', u'dna_region': u'v6', u'dataset': u'dat_test1', u'dataset_description': u'Sample Dataset Description temp 2', u'contact_name': u'Anna Shipunova', u'insert_size': u'100', u'first_name': u'Anna', u'funding': u'0', u'read_length': u'301100', u'env_sample_source_id': u'120', u'path_to_raw_data': u'/xraid2-2/sequencing/Illumina/20151111hs', u'seq_operator': u'JVJ', u'overlap': u'hs_complete', u'platform': u'hiseq', u'email': u'ashipunova@mbl.edu', u'barcode_index': u'', u'project_description': u'temp project description', u'run': u'20151111', u'adaptor': u'', u'barcode': u'', u'run_key': u'', u'has_ns': u'no', u'data_owner': u'Anna Shipunova', u'institution': u'Marine Biological Laboratory', u'lane': u'2', u'project_title': u'temp project title', u'primer_suite': u'Bacterial V6 Suite', u'project': u'AS_AS_Bv6', u'tubelabel': u'Tube_Label_2_temp', u'amp_operator': u'JV'}
+        '''        
+
         for header in self.HEADERS_TO_CSV:
-            for k, v in request.session['out_metadata'].items():
+            print "header = %s" % header
+            for i in self.out_metadata.keys():
+                print i
+                print "self.out_metadata[i][header] = %s" % self.out_metadata[i][header]
                 try:
-                    sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
+                    print "my_post_dict['form-'+str(i)+'-' + header] = %s" % (my_post_dict['form-'+str(i)+'-' + header])
+                    self.out_metadata[i][header] = my_post_dict['form-' + str(i) + '-' + header]
                 except MultiValueDictKeyError, e:
-                    sub_dict[header] = v[header]
-                    # print "header: %s, sub_dict[header] %s." % (header, sub_dict[header])
+                    pass
                 except:
                     raise
-        return sub_dict
+                print "self.out_metadata[i][header] = %s" % self.out_metadata[i][header]
+                    
+                    
+                # print my_post_dict['form-'+str(i)+'-' + header]
+        
+        # sub_dict = {}
+        # for header in self.HEADERS_TO_CSV:
+        #     for k, v in request.session['out_metadata'].items():
+        #         try:
+        #             sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
+        #         except MultiValueDictKeyError, e:
+        #             sub_dict[header] = v[header]
+        #             # print "header: %s, sub_dict[header] %s." % (header, sub_dict[header])
+        #         except:
+        #             raise
+        # return sub_dict
 
     def write_out_metadata_to_csv(self, my_post_dict, request):
 

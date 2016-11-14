@@ -158,7 +158,9 @@ def upload_metadata(request):
 
         #*) metadata out edit        
         csv_handler.out_metadata = request.session['out_metadata']
-
+        csv_handler.update_out_metadata(my_post_dict, request)
+        
+        # ----
         csv_handler.selected_rundate       = request.session['run_info']['selected_rundate']
         csv_handler.selected_machine_short = request.session['run_info']['selected_machine_short']
         csv_handler.selected_machine       = request.session['run_info']['selected_machine']
@@ -176,6 +178,8 @@ def upload_metadata(request):
         #*) metadata csv files
         csv_handler.make_out_metadata_csv_file_names()
         csv_handler.write_out_metadata_to_csv(my_post_dict, request)
+
+        # ----
         formset = MetadataOutCsvFormSet(my_post_dict)
         
         context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table']}
