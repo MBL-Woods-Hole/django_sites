@@ -458,23 +458,13 @@ class CsvMetadata():
     def make_out_metadata_csv_file_name(self, my_post_dict, request):
         # OLD: metadata_20160803_1_B.csv
         # NEW: metadata_20151111_hs_1_A.csv
-        
-        for lane_domain in self.lanes_domains:
-            # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
-            self.metadata_csv_file_names[lane_domain] = "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain)
 
-        print "self.metadata_csv_file_names"
-        print self.metadata_csv_file_names
+        self.metadata_csv_file_names = {lane_domain: "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
         
-        
-        # metadata_csv_file_names = []
-        # for x in range(0, len(request.session['out_metadata_table']['rows'])):
-        #     domain   = my_post_dict['form-'+str(x)+'-' + 'domain']
-        #     platform = request.session['run_info_form_post']['csv_platform']
-        # 
-        #     metadata_csv_file_names.append("metadata_%s_%s_%s_%s.csv" % (request.session['run_info_form_post']['csv_rundate'], self.machine_shortcuts_choices[platform], my_post_dict['form-'+str(x)+'-' + 'lane'], self.domain_choices[domain]))
+        # for lane_domain in self.lanes_domains:
+        #     # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
+        #     self.metadata_csv_file_names[lane_domain] = "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain)
 
-        # return metadata_csv_file_names
 
     def update_out_metadata(self, my_post_dict, request, x):
         print "OOO out_metadata: "
