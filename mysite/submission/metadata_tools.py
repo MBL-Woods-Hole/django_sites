@@ -24,14 +24,14 @@ class CsvMetadata():
     """
     IN
     Unique per upload (run_info):
-        Run date:	
-        Path to raw data:	
-        Platform:	
-        DNA Region:	
-        Overlap:	
-        Has Ns:	
-        Seq Operator:	
-        Insert Size:	
+        Run date:
+        Path to raw data:
+        Platform:
+        DNA Region:
+        Overlap:
+        Has Ns:
+        Seq Operator:
+        Insert Size:
         Read Length:
 
     Can be changed in the table:
@@ -89,6 +89,7 @@ class CsvMetadata():
         self.domain_letter = ""
         self.selected_machine_short = ""
         self.ini_names = {}
+        self.metadata_csv_file_names = {}
         self.dirs = Dirs()
         self.lanes_domains = []
         # self.out_metadata = defaultdict( lambda: defaultdict(int) )
@@ -263,57 +264,6 @@ class CsvMetadata():
           return False
       return True
 
-    def make_out_metadata_csv_file_name(self, my_post_dict, request):
-        # metadata_20160803_1_B.csv
-        # metadata_20151111_hs_1_A.csv
-        metadata_csv_file_names = []
-        for x in range(0, len(request.session['out_metadata_table']['rows'])):
-            domain   = my_post_dict['form-'+str(x)+'-' + 'domain']
-            platform = request.session['run_info_form_post']['csv_platform']
-            
-            metadata_csv_file_names.append("metadata_%s_%s_%s_%s.csv" % (request.session['run_info_form_post']['csv_rundate'], self.machine_shortcuts_choices[platform], my_post_dict['form-'+str(x)+'-' + 'lane'], self.domain_choices[domain]))
-
-        return metadata_csv_file_names
-
-    def update_out_metadata(self, my_post_dict, request, x):
-        print "UUU out_metadata: "
-        print self.out_metadata
-        sub_dict = {}
-        for header in self.HEADERS_TO_CSV:                
-            for k, v in request.session['out_metadata'].items():
-                try:
-                    sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
-                except MultiValueDictKeyError, e:
-                    sub_dict[header] = v[header]
-                    # print "header: %s, sub_dict[header] %s." % (header, sub_dict[header])
-                except:
-                    raise
-        return sub_dict
-        
-    def write_out_metadata_to_csv(self, my_post_dict, request):
-        
-        # print "OOO self.lanes_domains = %s" % self.lanes_domains
-        # print "self.selected_rundate = %s, self.selected_machine_short = %s" % (self.selected_rundate, self.selected_machine_short)
-        
-        metadata_csv_file_names = self.make_out_metadata_csv_file_name(my_post_dict, request)
-        print "MMM metadata_csv_file_names = "
-        print metadata_csv_file_names
-        
-        for x in range(0, len(request.session['out_metadata_table']['rows'])):
-            
-            out_file_name = os.path.join(self.path_to_csv + metadata_csv_file_names[x])
-            writer = csv.DictWriter(open(out_file_name, 'wb'),
-                                    self.HEADERS_TO_CSV)
-
-            writer.writeheader()
-            
-            sub_dict = {}
-            sub_dict = self.update_out_metadata(my_post_dict, request, x)
-            writer.writerow(sub_dict)
-
-        # print "TTT"
-        # print "IIIIN HERE, out_file_name = %s, self.path_to_csv = '%s'" % (out_file_name, self.path_to_csv)
-
     def run_query_to_dict(self, query):
         res_dict = {}
         cursor = connection.cursor()
@@ -469,7 +419,6 @@ class CsvMetadata():
 
             self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
 
-
     def create_path_to_csv(self):
         #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
         print "self.selected_machine from create_path_to_csv = %s" % (self.selected_machine)
@@ -505,6 +454,74 @@ class CsvMetadata():
             ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
             ini_file.write(ini_text)
             ini_file.close()
+
+    def make_out_metadata_csv_file_name(self, my_post_dict, request):
+        # self.ini_names
+        # {u'2_B': u'20151111_hs_2_B_run_info.ini', u'1_B': u'20151111_hs_1_B_run_info.ini', u'1_A': u'20151111_hs_1_A_run_info.ini'}
+        # MMM metadata_csv_file_names = 
+        # [u'metadata_20151111_hs_1_A.csv', u'metadata_20151111_hs_2_B.csv', u'metadata_20151111_hs_1_B.csv']
+        # 
+        # metadata_20160803_1_B.csv
+        # metadata_20151111_hs_1_A.csv
+        
+        for lane_domain in self.lanes_domains:
+            # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
+            self.metadata_csv_file_names[lane_domain] = "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain)
+
+        print "self.metadata_csv_file_names"
+        print self.metadata_csv_file_names
+        
+        
+        # metadata_csv_file_names = []
+        # for x in range(0, len(request.session['out_metadata_table']['rows'])):
+        #     domain   = my_post_dict['form-'+str(x)+'-' + 'domain']
+        #     platform = request.session['run_info_form_post']['csv_platform']
+        # 
+        #     metadata_csv_file_names.append("metadata_%s_%s_%s_%s.csv" % (request.session['run_info_form_post']['csv_rundate'], self.machine_shortcuts_choices[platform], my_post_dict['form-'+str(x)+'-' + 'lane'], self.domain_choices[domain]))
+
+        # return metadata_csv_file_names
+
+    def update_out_metadata(self, my_post_dict, request, x):
+        print "OOO out_metadata: "
+        print self.out_metadata
+        sub_dict = {}
+        for header in self.HEADERS_TO_CSV:
+            for k, v in request.session['out_metadata'].items():
+                try:
+                    sub_dict[header] = my_post_dict['form-'+str(x)+'-' + header]
+                except MultiValueDictKeyError, e:
+                    sub_dict[header] = v[header]
+                    # print "header: %s, sub_dict[header] %s." % (header, sub_dict[header])
+                except:
+                    raise
+        return sub_dict
+
+    def write_out_metadata_to_csv(self, my_post_dict, request):
+
+        # print "OOO self.lanes_domains = %s" % self.lanes_domains
+        # print "self.selected_rundate = %s, self.selected_machine_short = %s" % (self.selected_rundate, self.selected_machine_short)
+
+        # metadata_csv_file_names = 
+        self.make_out_metadata_csv_file_name(my_post_dict, request)
+        print "MMM metadata_csv_file_names = "
+        print metadata_csv_file_names
+
+        for x in range(0, len(request.session['out_metadata_table']['rows'])):
+            pass
+            # 
+            # out_file_name = os.path.join(self.path_to_csv + metadata_csv_file_names[x])
+            # writer = csv.DictWriter(open(out_file_name, 'wb'),
+            #                         self.HEADERS_TO_CSV)
+            # 
+            # writer.writeheader()
+            # 
+            # sub_dict = {}
+            # sub_dict = self.update_out_metadata(my_post_dict, request, x)
+            # writer.writerow(sub_dict)
+
+        # print "TTT"
+        # print "IIIIN HERE, out_file_name = %s, self.path_to_csv = '%s'" % (out_file_name, self.path_to_csv)
+
 
     def edit_out_metadata(self, request):
         # print "FROM edit_out_metadata: request.session['out_metadata']"
@@ -586,7 +603,7 @@ class CsvMetadata():
 
         print "self.csv_by_header = %s" % self.csv_by_header
 
-        print "UUU self.adaptors_full = %s" % self.adaptors_full
+        # print "UUU self.adaptors_full = %s" % self.adaptors_full
         # {'A08_v4v5_bacteria': (<IlluminaIndex: ACTTGA>, <IlluminaRunKey: TACGC>)}
         # print self.adaptors_full['A08_v4v5_bacteria'][0].illumina_index
 
