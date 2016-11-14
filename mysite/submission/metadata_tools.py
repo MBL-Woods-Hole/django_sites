@@ -477,22 +477,27 @@ class CsvMetadata():
                     raise
 
     def write_out_metadata_to_csv(self, my_post_dict, request):
-        for lane_domain in self.lanes_domains:
+        # out_file_names = {lane_domain: os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]) for lane_domain in self.lanes_domains}
+        # for lane_domain in self.lanes_domains:
+        #     out_file_name = os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain])
+        for idx, val in self.out_metadata.items():
+            domain_letter = self.domain_choices[val['domain']]
+            lane_domain = "%s_%s" % (val['lane'], domain_letter)
+
             out_file_name = os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain])
+
             writer = csv.DictWriter(open(out_file_name, 'wb'),
                                     self.HEADERS_TO_CSV)
             
             writer.writeheader()
             
             
-            for k, v in self.out_metadata.items():
-                print "VVV v"
-                print v
-                print "-" * 9
-                to_write = {h: v[h] for h in self.HEADERS_TO_CSV}
-                print to_write
-                
-                writer.writerow(to_write)
+            
+            print "-" * 9
+            to_write = {h: val[h] for h in self.HEADERS_TO_CSV}
+            print to_write
+            
+            writer.writerow(to_write)
         # todo:
         # ValueError: dict contains fields not in fieldnames: u'env_source_name', u'domain', u'contact_name', u'path_to_raw_data', u'has_ns'
         
