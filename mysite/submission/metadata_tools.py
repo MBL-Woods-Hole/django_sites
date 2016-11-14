@@ -80,8 +80,8 @@ class CsvMetadata():
         self.csv_content = []
         self.run_info_from_csv = {}
         self.errors = []
-        self.csv_by_header_uniqued = defaultdict( list )
-        self.csv_by_header = defaultdict( list )
+        self.csv_by_header_uniqued = defaultdict(list)
+        self.csv_by_header = defaultdict(list)
         self.csvfile = ""
         self.cause = ""
         self.path_to_csv = ""
@@ -92,9 +92,9 @@ class CsvMetadata():
         self.metadata_csv_file_names = {}
         self.dirs = Dirs()
         self.lanes_domains = []
-        # self.out_metadata = defaultdict( lambda: defaultdict(int) )
-        self.out_metadata = defaultdict( defaultdict )
-        self.out_metadata_table = defaultdict( list )
+        # self.out_metadata = defaultdict(lambda: defaultdict(int))
+        self.out_metadata = defaultdict(defaultdict)
+        self.out_metadata_table = defaultdict(list)
         self.vamps_submissions = {}
         self.user_info_arr = {}
         self.adaptors_full = {}
@@ -170,7 +170,6 @@ class CsvMetadata():
         self.check_headers_presence()
 
         self.get_csv_by_header_uniqued()
-
 
         # writer = csv.DictWriter(doc,
         #                         ["dna_region", "rundate"])
@@ -272,7 +271,7 @@ class CsvMetadata():
         column_names = [d[0] for d in cursor.description]
 
         for row in cursor:
-          res_dict =  dict(zip(column_names, row))
+          res_dict = dict(zip(column_names, row))
 
         return res_dict
       # dump it to a json string
@@ -314,17 +313,9 @@ class CsvMetadata():
             dna_region = self.csv_by_header['dna_region'][i]
             domain     = self.csv_by_header['domain'][i]
 
-
             self.get_adaptors_full(adaptor, dna_region, domain)
 
-
     def get_adaptors_full(self, adaptor, dna_region, domain, db_name = "test_env454"):
-
-        print "get_adaptors_full"
-
-        print "=" * 9
-
-        print "adaptor = %s, dna_region = %s, domain = %s" % (adaptor, dna_region, domain)
         # t0 = self.benchmark_w_return_1()
         links = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
@@ -401,11 +392,11 @@ class CsvMetadata():
         # machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
 
         if 'submit_run_info' in request_post:
-            self.selected_machine		= request_post.get('csv_platform', False)
-            print "self.selected_machine				in request_post= %s" % (self.selected_machine)
-            self.selected_machine_short	= self.machine_shortcuts_choices[self.selected_machine]
-            self.selected_rundate		= request_post.get('csv_rundate', False)
-            self.selected_dna_region	= request_post.get('csv_dna_region', False)
+            self.selected_machine       = request_post.get('csv_platform', False)
+            print "self.selected_machine in request_post= %s" % (self.selected_machine)
+            self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
+            self.selected_rundate       = request_post.get('csv_rundate', False)
+            self.selected_dna_region    = request_post.get('csv_dna_region', False)
             self.selected_overlap       = request_post.get('csv_overlap', False)
         else:
             # print "self.csv_by_header_uniqued['platform']"
@@ -420,7 +411,7 @@ class CsvMetadata():
             self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
 
     def create_path_to_csv(self):
-        #/xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
+        # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
         print "self.selected_machine from create_path_to_csv = %s" % (self.selected_machine)
 
         self.path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.selected_machine + "_info", self.selected_rundate)
@@ -460,7 +451,7 @@ class CsvMetadata():
         # NEW: metadata_20151111_hs_1_A.csv
 
         self.metadata_csv_file_names = {lane_domain: "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
-        
+
         # for lane_domain in self.lanes_domains:
         #     # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
         #     self.metadata_csv_file_names[lane_domain] = "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain)
@@ -484,13 +475,12 @@ class CsvMetadata():
 
             writer = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'wb'),
                                     self.HEADERS_TO_CSV)
-            
+
             writer.writeheader()
 
             to_write = {h: val[h] for h in self.HEADERS_TO_CSV}
-            
-            writer.writerow(to_write)
 
+            writer.writerow(to_write)
 
     def edit_out_metadata(self, request):
         # print "FROM edit_out_metadata: request.session['out_metadata']"
@@ -544,7 +534,6 @@ class CsvMetadata():
                 if (self.out_metadata_table['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
                     self.out_metadata_table['rows'][x][header] = request.POST['form-'+str(x)+'-' + header]
 
-
     def edit_post_metadata_table(self, request):
 
         my_post_dict = request.POST.copy()
@@ -558,7 +547,6 @@ class CsvMetadata():
             my_post_dict['form-'+str(x)+'-run_key']       = self.out_metadata_table['rows'][x]['run_key']
 
         return my_post_dict
-
 
     def make_new_out_metadata(self):
         idx = 0
@@ -660,7 +648,6 @@ class CsvMetadata():
 
             self.out_metadata[i]['read_length']			 = self.csv_by_header['read_length'][i]
 
-
             # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
             try:
                 self.out_metadata[i]['run_key'] = self.adaptors_full[key][1].illumina_run_key
@@ -698,6 +685,7 @@ class CsvMetadata():
 
         print "self.out_metadata_table BBB = %s" % self.out_metadata_table
 
+
 class Validation(CsvMetadata):
     def __init__(self):
         CsvMetadata.__init__(self)
@@ -733,6 +721,5 @@ class Validation(CsvMetadata):
                         # print "self.errors 4"
                         # print self.errors
 
-
                         # raise ValidationError(u'Missing required value %s for row %s' %
-                                                # (self.csv_headers[x_index], y_index + 1))
+                        # (self.csv_headers[x_index], y_index + 1))
