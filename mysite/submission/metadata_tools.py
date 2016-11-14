@@ -456,13 +456,8 @@ class CsvMetadata():
             ini_file.close()
 
     def make_out_metadata_csv_file_name(self, my_post_dict, request):
-        # self.ini_names
-        # {u'2_B': u'20151111_hs_2_B_run_info.ini', u'1_B': u'20151111_hs_1_B_run_info.ini', u'1_A': u'20151111_hs_1_A_run_info.ini'}
-        # MMM metadata_csv_file_names = 
-        # [u'metadata_20151111_hs_1_A.csv', u'metadata_20151111_hs_2_B.csv', u'metadata_20151111_hs_1_B.csv']
-        # 
-        # metadata_20160803_1_B.csv
-        # metadata_20151111_hs_1_A.csv
+        # OLD: metadata_20160803_1_B.csv
+        # NEW: metadata_20151111_hs_1_A.csv
         
         for lane_domain in self.lanes_domains:
             # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
