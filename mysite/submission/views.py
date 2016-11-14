@@ -137,7 +137,6 @@ def upload_metadata(request):
         """
         
         #*) metadata table to show and edit
-        
         csv_handler.edit_out_metadata_table(request)
         metadata_run_info_form = CsvRunInfoUploadForm(request.session['run_info_form_post'])        
         
@@ -175,6 +174,7 @@ def upload_metadata(request):
         csv_handler.write_ini()
 
         #*) metadata csv files
+        csv_handler.make_out_metadata_csv_file_names()
         csv_handler.write_out_metadata_to_csv(my_post_dict, request)
         formset = MetadataOutCsvFormSet(my_post_dict)
         

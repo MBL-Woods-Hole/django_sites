@@ -455,7 +455,7 @@ class CsvMetadata():
             ini_file.write(ini_text)
             ini_file.close()
 
-    def make_out_metadata_csv_file_name(self, my_post_dict, request):
+    def make_out_metadata_csv_file_names(self):
         # OLD: metadata_20160803_1_B.csv
         # NEW: metadata_20151111_hs_1_A.csv
 
@@ -487,7 +487,7 @@ class CsvMetadata():
         # print "self.selected_rundate = %s, self.selected_machine_short = %s" % (self.selected_rundate, self.selected_machine_short)
 
         # metadata_csv_file_names = 
-        self.make_out_metadata_csv_file_name(my_post_dict, request)
+        # self.make_out_metadata_csv_file_name(my_post_dict, request)
         print "MMM metadata_csv_file_names = "
         print self.metadata_csv_file_names
 
