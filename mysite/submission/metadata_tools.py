@@ -477,41 +477,19 @@ class CsvMetadata():
                     raise
 
     def write_out_metadata_to_csv(self, my_post_dict, request):
-        # out_file_names = {lane_domain: os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]) for lane_domain in self.lanes_domains}
-        # for lane_domain in self.lanes_domains:
-        #     out_file_name = os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain])
         for idx, val in self.out_metadata.items():
+            # todo: DRY
             domain_letter = self.domain_choices[val['domain']]
             lane_domain = "%s_%s" % (val['lane'], domain_letter)
 
-            out_file_name = os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain])
-
-            writer = csv.DictWriter(open(out_file_name, 'wb'),
+            writer = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'wb'),
                                     self.HEADERS_TO_CSV)
             
             writer.writeheader()
-            
-            
-            
-            print "-" * 9
+
             to_write = {h: val[h] for h in self.HEADERS_TO_CSV}
-            print to_write
             
             writer.writerow(to_write)
-        # todo:
-        # ValueError: dict contains fields not in fieldnames: u'env_source_name', u'domain', u'contact_name', u'path_to_raw_data', u'has_ns'
-        
-            
-        # for x in range(0, len(request.session['out_metadata_table']['rows'])):
-        #     out_file_name = os.path.join(self.path_to_csv, metadata_csv_file_names[x])
-            # writer = csv.DictWriter(open(out_file_name, 'wb'),
-            #                         self.HEADERS_TO_CSV)
-            # 
-            # writer.writeheader()
-            # 
-            # sub_dict = {}
-            # sub_dict = self.update_out_metadata(my_post_dict, request, x)
-            # writer.writerow(sub_dict)
 
 
     def edit_out_metadata(self, request):
