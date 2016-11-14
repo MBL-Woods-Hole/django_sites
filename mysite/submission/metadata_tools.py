@@ -504,12 +504,15 @@ class CsvMetadata():
         # metadata_csv_file_names = 
         self.make_out_metadata_csv_file_name(my_post_dict, request)
         print "MMM metadata_csv_file_names = "
-        print metadata_csv_file_names
+        print self.metadata_csv_file_names
 
-        for x in range(0, len(request.session['out_metadata_table']['rows'])):
-            pass
-            # 
-            # out_file_name = os.path.join(self.path_to_csv + metadata_csv_file_names[x])
+        print "self.lanes_domains = "
+        print self.lanes_domains
+        for lane_domain in self.lanes_domains:
+            out_file_name = os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain])
+
+        # for x in range(0, len(request.session['out_metadata_table']['rows'])):
+        #     out_file_name = os.path.join(self.path_to_csv, metadata_csv_file_names[x])
             # writer = csv.DictWriter(open(out_file_name, 'wb'),
             #                         self.HEADERS_TO_CSV)
             # 
