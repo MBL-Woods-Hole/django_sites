@@ -109,44 +109,11 @@ def upload_metadata(request):
         
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))
         formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
-        # for form in formset:
-        #     print(form.as_table())
 
         request.session['out_metadata_table'] = csv_handler.out_metadata_table
-        
-        
-        print "777 csv_handler.errors"
-        print  csv_handler.errors
-        print "-" * 8
-        # ----
-        print "formset.errors = "
-        print formset.errors
-        print "formset.total_error_count() = "
-        print formset.total_error_count()
-        """
-        0
-        """
-        
-        print "-" * 8
-        print "metadata_run_info_form err"
-        print metadata_run_info_form.errors.as_data()
-        """      
-        {'csv_rundate':     [ValidationError([u'Ensure this value has at most 8 characters (it has 16).'])],
-        'csv_seq_operator': [ValidationError([u'Ensure this value has at most 3 characters (it has 5).'])],
-        'csv_insert_size':  [ValidationError([u'Ensure this value has at most 3 characters (it has 6).'])],
-        'csv_read_length':  [ValidationError([u'Ensure this value has at most 3 characters (it has 6).'])]}
-         
-        """
-        print "len(metadata_run_info_form.errors) = "
-        print len(metadata_run_info_form.errors)
-        # 4
-        # metadata_run_info_form.total_error_count() - no, for formset only
 
-        print "-" * 8
         errors_size = len(metadata_run_info_form.errors)
         if errors_size > 0:
-            # csv_handler.errors.append("")
-            # .append("Please fix errors in the form.")
             return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size })
         else:
             context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
@@ -198,13 +165,19 @@ def upload_metadata(request):
         formset = MetadataOutCsvFormSet(my_post_dict)
         print "formset.errors = "
         print formset.errors
+        print "formset.total_error_count()"
+        print formset.total_error_count()
         """
-        [{'barcode': [u'This field is required.'], 
-          'dataset': [u'Dataset must be Alphanumeric']}, 
-         {'barcode': [u'This field is required.'], 
-          'dataset': [u'Dataset must be Alphanumeric']}, 
-         {'barcode': [u'This field is required.'], 
-          'dataset': [u'Dataset must be Alphanumeric']}]
+        [{'run_key': [u'This field is required.'],
+        'barcode_index': [u'This field is required.'],
+        'project': [u'This field is required.'],
+        'adaptor': [u'This field is required.']},
+        {'run_key': [u'This field is required.'],
+        'barcode_index': [u'This field is required.'],
+        'project': [u'This field is required.'],
+        'adaptor': [u'This field is required.']},
+]
+        
         """
         
         print "-" * 8
@@ -225,7 +198,7 @@ def upload_metadata(request):
         csv_handler.write_out_metadata_to_csv(my_post_dict, request)
 
         
-        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table']}
+        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors}
         
         return render(request, 'submission/upload_metadata.html', context)
         

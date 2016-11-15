@@ -55,8 +55,8 @@ class MetadataOutCsvForm(forms.Form):
                             required=True,
                             validators=[
                                 RegexValidator(
-                                    regex='^[a-zA-Z0-9]*$',
-                                    message='Dataset must be Alphanumeric',
+                                    regex='^[a-zA-Z0-9_]*$',
+                                    message='Dataset must have only alphanumeric characters and underscores',
                                     code='invalid_dataset'
                                 ),
                             ]
@@ -65,5 +65,5 @@ class MetadataOutCsvForm(forms.Form):
     env_source_name_query = EnvSampleSource.objects.all().order_by('env_sample_source_id')
     env_source_name         = forms.ModelChoiceField(queryset = env_source_name_query, empty_label = None)
     tubelabel               = forms.CharField(max_length=32)
-    barcode                 = forms.CharField(max_length=12)
+    barcode                 = forms.CharField(max_length=12, required=False)
     amp_operator            = forms.CharField(max_length=5)

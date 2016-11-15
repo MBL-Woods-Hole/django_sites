@@ -44,7 +44,7 @@
  {% if errors or errors_size > 0 %}
   {% block errors %}
     <div class="red_message">
-     Please correct the error{{ errors|pluralize }} below 1.
+     Please correct the error{{ errors|pluralize }} below.
      {% for err in errors %}
       <p class="notes">
        {{ err|safe }}
@@ -126,9 +126,16 @@
     http://stackoverflow.com/questions/2233929/horizontal-per-row-forms-in-a-django-formset
       TODO: send out_metadata_table ad dict to metadata_out_csv_form! then print here
        -->
+       
       <div class="grid_5 form">
        <fieldset id="submission_metadata_form_submission_metadata">
        <legend id="submission_metadata_form_submission_metadata-legend">Submission metadata</legend>
+
+       {% for dict in errors %}
+           {% for key, error in dict.items %}
+               {{ key }}: {{ error }}
+           {% endfor %}
+       {% endfor %}
 
         <!-- {{ csv_by_header_uniqued }} -->
         <form action="" method="post">
@@ -139,8 +146,19 @@
           {% endfor %}
           </tr>
 
-        {% for form in metadata_out_csv_form %}
+        {% for form in metadata_out_csv_form %}        
+        
           <tr>
+            {{ form.non_field_errors }}
+            {{ form.errors }}
+            
+            {% for dict in form.errors %}
+                {% for key, error in dict.items %}
+                    {{ key }}: {{ error }}
+                {% endfor %}
+            {% endfor %}
+            
+            
             {% for field in form %}
               <td>{{ field }}</td>
             {% endfor %}

@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8000/" />
-<title>metadata_upload_good_csv</title>
+<title>metadata_out_metadata_err</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">metadata_upload_good_csv</td></tr>
+<tr><td rowspan="1" colspan="3">metadata_out_metadata_err</td></tr>
 </thead><tbody>
 <!-- <tr>
 	<td>open</td>
@@ -329,6 +329,16 @@
 	<td>verifyText</td>
 	<td>id=submission_metadata_form_submission_metadata-legend</td>
 	<td>Submission metadata</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=create_submission_metadata_file</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.red_message</td>
+	<td>Please correct the errors below. <br />run_keyThis field is required.barcode_indexThis field is required.projectThis field is required.adaptorThis field is required. <br /> <br />run_keyThis field is required.barcode_indexThis field is required.projectThis field is required.adaptorThis field is required.</td>
 </tr>
 </tbody></table>
 </body>
