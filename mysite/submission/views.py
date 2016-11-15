@@ -104,13 +104,6 @@ def upload_metadata(request):
 
         csv_handler.make_metadata_table()
         
-        # csv_handler.get_lanes_domains()
-        # csv_handler.create_path_to_csv()
-        # csv_handler.create_ini_names()
-        # csv_handler.write_ini()
-        #
-        # request.session['run_info']['lanes_domains'] = csv_handler.lanes_domains
-        #
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)        
         request.session['run_info_form_post'] = request.POST
         
@@ -121,9 +114,44 @@ def upload_metadata(request):
 
         request.session['out_metadata_table'] = csv_handler.out_metadata_table
         
-        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
         
-        return render(request, 'submission/upload_metadata.html', context)
+        print "777 csv_handler.errors"
+        print  csv_handler.errors
+        print "-" * 8
+        # ----
+        print "formset.errors = "
+        print formset.errors
+        print "formset.total_error_count() = "
+        print formset.total_error_count()
+        """
+        0
+        """
+        
+        print "-" * 8
+        print "metadata_run_info_form err"
+        print metadata_run_info_form.errors.as_data()
+        """      
+        {'csv_rundate':     [ValidationError([u'Ensure this value has at most 8 characters (it has 16).'])],
+        'csv_seq_operator': [ValidationError([u'Ensure this value has at most 3 characters (it has 5).'])],
+        'csv_insert_size':  [ValidationError([u'Ensure this value has at most 3 characters (it has 6).'])],
+        'csv_read_length':  [ValidationError([u'Ensure this value has at most 3 characters (it has 6).'])]}
+         
+        """
+        print "len(metadata_run_info_form.errors) = "
+        print len(metadata_run_info_form.errors)
+        # 4
+        # metadata_run_info_form.total_error_count() - no, for formset only
+
+        print "-" * 8
+        errors_size = len(metadata_run_info_form.errors)
+        if errors_size > 0:
+            # csv_handler.errors.append("")
+            # .append("Please fix errors in the form.")
+            return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size })
+        else:
+            context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
+        
+            return render(request, 'submission/upload_metadata.html', context)
 
     elif 'create_submission_metadata_file' in request.POST:
         print "EEE: request.POST = %s" % request.POST

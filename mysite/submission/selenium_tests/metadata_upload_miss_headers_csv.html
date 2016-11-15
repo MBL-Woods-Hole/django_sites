@@ -4,27 +4,58 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8000/" />
-<title>metadata_upload_miss_headers_csv</title>
+<title>metadata_upload_good_csv</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">metadata_upload_miss_headers_csv</td></tr>
+<tr><td rowspan="1" colspan="3">metadata_upload_good_csv</td></tr>
 </thead><tbody>
+<!-- <tr>
+	<td>open</td>
+	<td>/submission/upload_metadata/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>document.csv_run_info.upload_this_file</td>
+	<td>/Users/ashipunova/BPC/python_web/django_sites/mysite/submission/selenium_tests/metadata_upload_good_csv.html</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=#csv_run_info &gt; input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=Submit</td>
+	<td></td>
+</tr>
+-->
+<tr>
+	<td>open</td>
+	<td>/submission/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=p</td>
+	<td>Upload metadata</td>
+</tr>
 <tr>
 	<td>open</td>
 	<td>/submission/upload_metadata/</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>link=Metadata</td>
-	<td></td>
+	<td>verifyText</td>
+	<td>css=p</td>
+	<td>Upload metadata</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>name=csv_file</td>
-	<td>/Users/ashipunova/work/django_sites/mysite/submission/selenium_tests/overlap_only.html</td>
+	<td>/Users/ashipunova/BPC/python_web/django_sites/mysite/submission/selenium_tests/ashipunova354276_VAMPS_submission_good.csv</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -33,18 +64,130 @@
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>css=p.notes</td>
-	<td>Missing headers: domain, rundate, dna_region, submit_code, date_updated, date_initial, dataset_description, tube_number, op_amp, concentration, id, insert_size, on_vamps, trim_distal, read_length, env_sample_source_id, enzyme, overlap, platform, duplicate, tube_label, op_seq, barcode_index, direction, project_name, sample_received, adaptor, barcode, lane, op_empcr, quant_method, user, pool, runkey, primer_suite, dataset_name</td>
+	<td>css=p</td>
+	<td>Upload metadata</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_csv_platform</td>
+	<td>label=HiSeq</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[@id='content']/div[5]/div[2]/p[2]</td>
-	<td>There is no data for rundate in the file overlap_only.html</td>
+	<td>id=id_csv_platform</td>
+	<td>MiSeq HiSeq NextSeq</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[@id='run_info_form_run_info']/form/table/tbody/tr[3]/th/label</td>
+	<td>exact:Platform:</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_csv_overlap</td>
+	<td>label=complete</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_csv_dna_region</td>
+	<td>label=v6</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_csv_has_ns</td>
+	<td>label=Does not have NNNN in run_key (NextSeq)</td>
+</tr>
+<!--<tr>
+	<td>clickAndWait</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+-->
+<tr>
+	<td>verifyValue</td>
+	<td>id=id_csv_rundate</td>
+	<td>20151111</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=id_csv_path_to_raw_data</td>
+	<td>/xraid2-2/sequencing/Illumina/20151111hs</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=id_csv_seq_operator</td>
+	<td>JV</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=id_csv_insert_size</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=id_csv_read_length</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>name=csv_file</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td>Upload</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h3</td>
+	<td>How to download a user filled submission form from VAMPS</td>
+</tr>
+<!-- <tr>
+	<td>open</td>
+	<td>/submission/upload_metadata/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>document.csv_run_info.upload_this_file</td>
+	<td>/Users/ashipunova/BPC/python_web/django_sites/mysite/submission/selenium_tests/metadata_upload_good_csv.html</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=#csv_run_info &gt; input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=Submit</td>
+	<td></td>
+</tr>
+-->
+<tr>
+	<td>open</td>
+	<td>/submission/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=p</td>
+	<td>Upload metadata</td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/submission/upload_metadata/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=p</td>
+	<td>Upload metadata</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>name=csv_file</td>
-	<td>/Users/ashipunova/work/django_sites/mysite/submission/selenium_tests/ashipunova354276_VAMPS_submission_wrong_missing_headers.csv</td>
+	<td>/Users/ashipunova/BPC/python_web/django_sites/mysite/submission/selenium_tests/ashipunova354276_VAMPS_submission_good.csv</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -53,17 +196,98 @@
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>css=p.notes</td>
-	<td>Missing headers: id</td>
+	<td>css=p</td>
+	<td>Upload metadata</td>
 </tr>
 <tr>
-	<td>type</td>
+	<td>select</td>
+	<td>id=id_csv_platform</td>
+	<td>label=HiSeq</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=id_csv_platform</td>
+	<td>MiSeq HiSeq NextSeq</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[@id='run_info_form_run_info']/form/table/tbody/tr[3]/th/label</td>
+	<td>exact:Platform:</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_csv_overlap</td>
+	<td>label=complete</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_csv_dna_region</td>
+	<td>label=v6</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_csv_has_ns</td>
+	<td>label=Does not have NNNN in run_key (NextSeq)</td>
+</tr>
+<!--<tr>
+	<td>clickAndWait</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+-->
+<tr>
+	<td>verifyValue</td>
+	<td>id=id_csv_rundate</td>
+	<td>20151111</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=id_csv_path_to_raw_data</td>
+	<td>/xraid2-2/sequencing/Illumina/20151111hs</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=id_csv_seq_operator</td>
+	<td>JV</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=id_csv_insert_size</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=id_csv_read_length</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
 	<td>name=csv_file</td>
-	<td>/Users/ashipunova/work/django_sites/mysite/submission/selenium_tests/ashipunova354276_VAMPS_submission_wrong_empty.csv</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td>Upload</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h3</td>
+	<td>How to download a user filled submission form from VAMPS</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='content']/div[5]/div/ol/li[5]</td>
+	<td>Then you can upload the csv below on this page to use it for Illumina processing.</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='content']/div[5]/div/ol/li[5]</td>
+	<td>Then you can upload the csv below on this page to use it for Illumina processing.</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>css=input[type=&quot;submit&quot;]</td>
+	<td>name=submit_run_info</td>
 	<td></td>
 </tr>
 </tbody></table>
