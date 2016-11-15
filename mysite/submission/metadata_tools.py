@@ -428,23 +428,7 @@ class CsvMetadata():
 
     def create_ini_names(self):
         for lane_domain in self.lanes_domains:
-            # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
-            print "FROM create_ini_names: self.selected_rundate = %s, self.selected_machine_short = %s, lane_domain = %s" % (self.selected_rundate, self.selected_machine_short, lane_domain)
             self.ini_names[lane_domain] = "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain)
-
-        print "self.ini_names"
-        print self.ini_names
-
-    def write_ini(self):
-        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s" % (self.selected_rundate, self.selected_machine_short)
-        overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
-
-        for lane_domain, ini_name in self.ini_names.items():
-            ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
-                        ''' % (self.selected_rundate, lane_domain, self.selected_dna_region, path_to_raw_data, overlap_choices[self.selected_overlap], self.selected_machine)
-            ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
-            ini_file.write(ini_text)
-            ini_file.close()
 
     def make_out_metadata_csv_file_names(self):
         # OLD: metadata_20160803_1_B.csv
@@ -456,6 +440,17 @@ class CsvMetadata():
         #     # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
         #     self.metadata_csv_file_names[lane_domain] = "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain)
 
+
+    def write_ini(self):
+        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s" % (self.selected_rundate, self.selected_machine_short)
+        overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
+
+        for lane_domain, ini_name in self.ini_names.items():
+            ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
+                        ''' % (self.selected_rundate, lane_domain, self.selected_dna_region, path_to_raw_data, overlap_choices[self.selected_overlap], self.selected_machine)
+            ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
+            ini_file.write(ini_text)
+            ini_file.close()
 
     def update_out_metadata(self, my_post_dict, request):
         for header in self.HEADERS_TO_CSV:

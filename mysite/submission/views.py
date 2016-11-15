@@ -146,15 +146,6 @@ def upload_metadata(request):
         
         csv_handler.add_out_metadata_table_to_out_metadata(request)
         print "my_post_dict = %s" % my_post_dict
-        # request.session['out_metadata'] = csv_handler.out_metadata
-        
-        # print "out_metadata before write_out_metadata_to_csv:"
-        # print  csv_handler.out_metadata
-        # print "-8" * 8
-        #
-        # print "out_metadata before write_out_metadata_to_csv from request:"
-        # print  request.session['out_metadata']
-        # print "-9" * 9
 
         #*) metadata out edit        
         csv_handler.out_metadata = request.session['out_metadata']
@@ -171,6 +162,32 @@ def upload_metadata(request):
         csv_handler.get_lanes_domains()
         csv_handler.create_path_to_csv()
         
+        # *) validation
+        print "888 csv_handler.errors"
+        print  csv_handler.errors
+        print "-" * 8
+        # ----
+        formset = MetadataOutCsvFormSet(my_post_dict)
+        print "formset.errors = "
+        print formset.errors
+        """
+        [{'barcode': [u'This field is required.'], 
+          'dataset': [u'Dataset must be Alphanumeric']}, 
+         {'barcode': [u'This field is required.'], 
+          'dataset': [u'Dataset must be Alphanumeric']}, 
+         {'barcode': [u'This field is required.'], 
+          'dataset': [u'Dataset must be Alphanumeric']}]
+        """
+        
+        print "-" * 8
+        print "metadata_run_info_form err"
+        print metadata_run_info_form.errors.as_data()
+        """
+        {'csv_read_length': [ValidationError([u'Ensure this value has at most 3 characters (it has 6).'])]}
+        
+        """
+        print "-" * 8
+        
         #*) ini files
         csv_handler.create_ini_names()
         csv_handler.write_ini()
@@ -179,8 +196,6 @@ def upload_metadata(request):
         csv_handler.make_out_metadata_csv_file_names()
         csv_handler.write_out_metadata_to_csv(my_post_dict, request)
 
-        # ----
-        formset = MetadataOutCsvFormSet(my_post_dict)
         
         context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table']}
         
