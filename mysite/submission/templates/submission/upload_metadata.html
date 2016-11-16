@@ -136,7 +136,6 @@
           </tr>
 
         {% for form in metadata_out_csv_form %}        
-        
           <tr>
             {% for field in form %}
               <td>{% if field.errors %}{{ field.errors }}{% endif %}{{ field }}</td>
