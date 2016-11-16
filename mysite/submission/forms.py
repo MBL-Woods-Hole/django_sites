@@ -21,12 +21,6 @@ class FileUploadForm(forms.Form):
     print csv_file
 
 class CsvRunInfoUploadForm(forms.Form):
-    def numbers_only(msg):
-        return RegexValidator(
-            regex='^[0-9]*$',
-            message=msg,
-            code='invalid_csv_rundate'
-        )
 
     csv_rundate = forms.DateField(label = 'Run date', input_formats = ['%Y%m%d'])
     csv_path_to_raw_data = forms.CharField(label = 'Path to raw data', max_length = 128) # <span class="emph">/xraid2-2/sequencing/Illumina/</span>
@@ -56,8 +50,7 @@ class MetadataOutCsvForm(forms.Form):
     project_query = Project.cache_all_method.all().order_by('project')
     # project_query = Project.objects.order_by('project')
     project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
-    dataset                 = forms.CharField(max_length=64,
-                            required=True,
+    dataset                 = forms.CharField(min_length=3, max_length=64,
                             validators=[validate_slug]
     )
     dataset_description     = forms.CharField(max_length=100)
