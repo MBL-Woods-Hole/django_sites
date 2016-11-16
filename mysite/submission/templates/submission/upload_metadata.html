@@ -45,11 +45,6 @@
   {% block errors %}
     <div class="red_message">
      Please correct the error{{ errors|pluralize }} below.
-     {% for err in errors %}
-      <p class="notes">
-       {{ err|safe }}
-      </p>
-     {% endfor %}
     </div>
    {% endblock %}
  {% endif %}
@@ -131,12 +126,6 @@
        <fieldset id="submission_metadata_form_submission_metadata">
        <legend id="submission_metadata_form_submission_metadata-legend">Submission metadata</legend>
 
-       {% for dict in errors %}
-           {% for key, error in dict.items %}
-               {{ key }}: {{ error }}
-           {% endfor %}
-       {% endfor %}
-
         <!-- {{ csv_by_header_uniqued }} -->
         <form action="" method="post">
          <table class="normal_table_w_borders">
@@ -149,18 +138,8 @@
         {% for form in metadata_out_csv_form %}        
         
           <tr>
-            {{ form.non_field_errors }}
-            {{ form.errors }}
-            
-            {% for dict in form.errors %}
-                {% for key, error in dict.items %}
-                    {{ key }}: {{ error }}
-                {% endfor %}
-            {% endfor %}
-            
-            
             {% for field in form %}
-              <td>{{ field }}</td>
+              <td>{% if field.errors %} {{ field.errors }}{% endif %}{{ field }}</td>
             {% endfor %}
           </tr>
         {% endfor %}
