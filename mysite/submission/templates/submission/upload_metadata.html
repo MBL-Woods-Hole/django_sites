@@ -67,7 +67,7 @@
  {% if metadata_run_info_form %}
    {% block upload_metadata_run_info_form %}
 
-    <div class="grid_5 form">
+    <div class="grid_7 form">
      <fieldset id="run_info_form_run_info">
      <legend id="run_info_form_run_info-legend">Run info</legend>
 
@@ -80,7 +80,7 @@
       </form>
      </fieldset>
      </div>
-     <div class="grid_7"></div>
+     <div class="grid_5"></div>
      <div class="clear"></div>
 
      <!--
@@ -122,7 +122,7 @@
       TODO: send out_metadata_table ad dict to metadata_out_csv_form! then print here
        -->
        
-      <div class="grid_5 form">
+      <div class="grid_12 form">
        <fieldset id="submission_metadata_form_submission_metadata">
        <legend id="submission_metadata_form_submission_metadata-legend">Submission metadata</legend>
 
@@ -150,8 +150,18 @@
         </form>
        </fieldset>
        </div>
-       <div class="grid_7"></div>
        <div class="clear"></div>
+       
+       <div class="grid_12">
+        {% if file_created %}
+          {% for file_path in file_created %}
+            <p class=green_message>{{ file_path }} was created</p>
+          {% endfor %}
+            
+        {% endif %}
+       </div>
+       <div class="clear"></div>
+       
 
    {% endblock %}
   {% endif %}

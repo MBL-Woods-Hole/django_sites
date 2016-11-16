@@ -155,8 +155,11 @@ def upload_metadata(request):
             #*) metadata csv files
             csv_handler.make_out_metadata_csv_file_names()
             csv_handler.write_out_metadata_to_csv(my_post_dict, request)
-
-        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': formset.total_error_count()}
+            
+            # *) check if csv was created
+            csv_handler.check_out_csv_files()
+            
+        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': formset.total_error_count(), 'file_created': csv_handler.files_created}
         return render(request, 'submission/upload_metadata.html', context)
 
     else:

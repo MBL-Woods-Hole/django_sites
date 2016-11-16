@@ -101,6 +101,7 @@ class CsvMetadata():
         self.domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
         self.machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
         self.utils = Utils()
+        self.files_created = []
 
         # error = True
 
@@ -431,6 +432,13 @@ class CsvMetadata():
             to_write = {h: val[h] for h in self.HEADERS_TO_CSV}
 
             writer.writerow(to_write)
+
+    def check_out_csv_files(self):
+        for lane_domain, file_name in self.metadata_csv_file_names.items():
+            print "MMM"
+            print os.path.join(self.path_to_csv, file_name)
+            if os.path.isfile(os.path.join(self.path_to_csv, file_name)):
+                self.files_created.append(os.path.join(self.path_to_csv, file_name))
 
     def edit_out_metadata(self, request):
         # print "FROM edit_out_metadata: request.session['out_metadata']"

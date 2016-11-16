@@ -271,7 +271,7 @@ td .text_inp {
 }
 
 #id_csv_path_to_raw_data {
-    width: 25em;
+    width: 30em;
 }
 
 #id_csv_insert_size, #id_csv_read_length, #id_csv_seq_operator {
