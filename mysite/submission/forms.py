@@ -2,7 +2,7 @@ from django import forms
 from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project, EnvSampleSource
 from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns
 from django.core.validators import RegexValidator, validate_slug
-
+import datetime
 
 class RunForm(forms.Form):
     # query = Run.objects.filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
@@ -27,9 +27,13 @@ class CsvRunInfoUploadForm(forms.Form):
             message=msg,
             code='invalid_csv_rundate'
         )
+
+    csv_rundate = forms.DateField(label = 'Run date', input_formats = ['%Y%m%d'])
+
+    # csv_rundate = forms.IntegerField(label = 'Run date', max_value = 30000000)
     
-    csv_rundate = forms.CharField(label = 'Run date', max_length = 8, validators=[numbers_only('Enter a valid rundate value: YYYMMDD.')]
-    )
+    # csv_rundate = forms.IntegerField(label = 'Run date', max_length = 8)
+    # forms.CharField(label = 'Run date', max_length = 8, validators=[numbers_only('Enter a valid rundate value: YYYMMDD.')])
     csv_path_to_raw_data = forms.CharField(label = 'Path to raw data', max_length = 128) # <span class="emph">/xraid2-2/sequencing/Illumina/</span>
     csv_platform         = forms.ChoiceField(Machine.PLATFORM_CHOICES, label = 'Platform')
     csv_dna_region       = forms.ChoiceField(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region')
