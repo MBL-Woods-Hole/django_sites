@@ -386,8 +386,9 @@ class CsvMetadata():
         return self.lanes_domains
 
     def create_ini_names(self):
-        for lane_domain in self.lanes_domains:
-            self.ini_names[lane_domain] = "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain)
+        # for lane_domain in self.lanes_domains:
+        #     self.ini_names[lane_domain] = "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain)
+        self.ini_names              = {lane_domain: "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
 
     def make_out_metadata_csv_file_names(self):
         # OLD: metadata_20160803_1_B.csv
