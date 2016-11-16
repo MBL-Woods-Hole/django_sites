@@ -384,15 +384,21 @@ class CsvMetadata():
             self.lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
         # print "self.lanes_domains = %s" % self.lanes_domains
         return self.lanes_domains
+        
+    def create_out_file_names(self, pattern):
+        return {lane_domain: pattern % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
+        
 
     def create_ini_names(self):
         # for lane_domain in self.lanes_domains:
         #     self.ini_names[lane_domain] = "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain)
-        self.ini_names              = {lane_domain: "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
+        self.ini_names = self.create_out_file_names("%s_%s_%s_run_info.ini")
+                     # = {lane_domain: "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
 
     def make_out_metadata_csv_file_names(self):
         # OLD: metadata_20160803_1_B.csv
         # NEW: metadata_20151111_hs_1_A.csv
+        # self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv")
 
         self.metadata_csv_file_names = {lane_domain: "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
 
