@@ -104,31 +104,6 @@
 </tr>
 -->
 <tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_rundate</td>
-	<td>20151111</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_path_to_raw_data</td>
-	<td>/xraid2-2/sequencing/Illumina/20151111hs</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_seq_operator</td>
-	<td>JV</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_insert_size</td>
-	<td>100</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_read_length</td>
-	<td>100</td>
-</tr>
-<tr>
 	<td>verifyElementPresent</td>
 	<td>name=csv_file</td>
 	<td></td>
@@ -236,31 +211,6 @@
 </tr>
 -->
 <tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_rundate</td>
-	<td>20151111</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_path_to_raw_data</td>
-	<td>/xraid2-2/sequencing/Illumina/20151111hs</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_seq_operator</td>
-	<td>JV</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_insert_size</td>
-	<td>100</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_read_length</td>
-	<td>100</td>
-</tr>
-<tr>
 	<td>verifyElementPresent</td>
 	<td>name=csv_file</td>
 	<td></td>
@@ -338,7 +288,32 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=div.red_message</td>
-	<td>Please correct the errors below. <br />run_keyThis field is required.barcode_indexThis field is required.projectThis field is required.adaptorThis field is required. <br /> <br />run_keyThis field is required.barcode_indexThis field is required.projectThis field is required.adaptorThis field is required.</td>
+	<td>Please correct the errors below.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=ul.errorlist &gt; li</td>
+	<td>This field is required.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[@id='submission_metadata_form_submission_metadata']/form/table/tbody/tr[2]/td[5]/ul/li</td>
+	<td>This field is required.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[@id='submission_metadata_form_submission_metadata']/form/table/tbody/tr[2]/td[6]/ul/li</td>
+	<td>This field is required.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[@id='submission_metadata_form_submission_metadata']/form/table/tbody/tr[2]/td[7]/ul/li</td>
+	<td>This field is required.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[@id='submission_metadata_form_submission_metadata']/form/table/tbody/tr[3]/td[4]/ul/li</td>
+	<td>This field is required.</td>
 </tr>
 </tbody></table>
 </body>
