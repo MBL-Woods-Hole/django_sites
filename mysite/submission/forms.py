@@ -21,16 +21,23 @@ class FileUploadForm(forms.Form):
     print csv_file
 
 class CsvRunInfoUploadForm(forms.Form):
-
-    csv_rundate          = forms.CharField(label = 'Run date', max_length = 8, validators=[validate_slug])
+    def numbers_only(msg):
+        return RegexValidator(
+            regex='^[0-9]*$',
+            message=msg,
+            code='invalid_csv_rundate'
+        )
+    
+    csv_rundate = forms.CharField(label = 'Run date', max_length = 8, validators=[numbers_only('Enter a valid rundate value: YYYMMDD.')]
+    )
     csv_path_to_raw_data = forms.CharField(label = 'Path to raw data', max_length = 128) # <span class="emph">/xraid2-2/sequencing/Illumina/</span>
     csv_platform         = forms.ChoiceField(Machine.PLATFORM_CHOICES, label = 'Platform')
     csv_dna_region       = forms.ChoiceField(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region')
     csv_overlap          = forms.ChoiceField(Overlap.OVERLAP_CHOICES, label = 'Overlap')
     csv_has_ns           = forms.ChoiceField(Has_ns.HAVING_NS_CHOICES, label = 'Has Ns')
     csv_seq_operator     = forms.CharField(label = 'Seq Operator', max_length = 3)
-    csv_insert_size      = forms.CharField(label = 'Insert Size', max_length = 3)
-    csv_read_length      = forms.CharField(label = 'Read Length', max_length = 3)
+    csv_insert_size      = forms.CharField(label = 'Insert Size', max_length = 3, validators=[numbers_only('Enter a valid insert_size value (numbers only).')])
+    csv_read_length      = forms.CharField(label = 'Read Length', max_length = 3, validators=[numbers_only('Enter a valid read_length value (numbers only).')])
 
 class MetadataOutCsvForm(forms.Form):
     # todo: add css class size_number to input
