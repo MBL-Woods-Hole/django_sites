@@ -1,7 +1,7 @@
 from django import forms
 from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project, EnvSampleSource
 from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, validate_slug
 
 
 class RunForm(forms.Form):
@@ -22,7 +22,7 @@ class FileUploadForm(forms.Form):
 
 class CsvRunInfoUploadForm(forms.Form):
 
-    csv_rundate          = forms.CharField(label = 'Run date', max_length = 8,)
+    csv_rundate          = forms.CharField(label = 'Run date', max_length = 8, validators=[validate_slug])
     csv_path_to_raw_data = forms.CharField(label = 'Path to raw data', max_length = 128) # <span class="emph">/xraid2-2/sequencing/Illumina/</span>
     csv_platform         = forms.ChoiceField(Machine.PLATFORM_CHOICES, label = 'Platform')
     csv_dna_region       = forms.ChoiceField(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region')
@@ -53,13 +53,7 @@ class MetadataOutCsvForm(forms.Form):
     project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
     dataset                 = forms.CharField(max_length=64,
                             required=True,
-                            validators=[
-                                RegexValidator(
-                                    regex='^[a-zA-Z0-9_]*$',
-                                    message='Dataset must have only alphanumeric characters and underscores',
-                                    code='invalid_dataset'
-                                ),
-                            ]
+                            validators=[validate_slug]
     )
     dataset_description     = forms.CharField(max_length=100)
     env_source_name_query = EnvSampleSource.objects.all().order_by('env_sample_source_id')
