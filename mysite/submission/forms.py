@@ -36,17 +36,13 @@ class CsvRunInfoUploadForm(forms.Form):
     csv_has_ns           = forms.ChoiceField(Has_ns.HAVING_NS_CHOICES, label = 'Has Ns')
     csv_seq_operator     = forms.CharField(label = 'Seq Operator', max_length = 3)
     csv_insert_size      = forms.IntegerField(label = 'Insert Size', max_value = 999)
-    
-    # forms.CharField(label = 'Insert Size', max_length = 3, validators=[numbers_only('Enter a valid insert_size value (numbers only).')])
     csv_read_length      = forms.IntegerField(label = 'Read Length', max_value = 999)
-    # forms.CharField(label = 'Read Length', max_length = 3, validators=[numbers_only('Enter a valid read_length value (numbers only).')])
 
 class MetadataOutCsvForm(forms.Form):
     # todo: add css class size_number to input
     domain                  = forms.ChoiceField(Domain.DOMAIN_CHOICES, label = '')
-    # domain                  = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES)
-    lane                    = forms.IntegerField()
-    contact_name_query = Contact.objects.all().order_by('last_name')
+    lane                    = forms.IntegerField(max_value = 9)
+    contact_name_query      = Contact.objects.all().order_by('last_name')
     contact_name            = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
     # to_field_name = "%s, %s" % (last_name, first_name))
 
