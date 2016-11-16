@@ -337,10 +337,7 @@ class CsvMetadata():
                 vamps_user_id = self.vamps_submissions[submit_code]['user']
 
                 contacts = models_l_env454.Contact.objects.filter(vamps_name = vamps_user_id)
-                for row in contacts:
-                    self.user_info_arr[submit_code] = (model_to_dict(row))
-
-                # .filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
+                self.user_info_arr = {submit_code: (model_to_dict(row)) for row in contacts}
 
             print "self.user_info_arr = %s" % self.user_info_arr
         except KeyError as e:
