@@ -388,24 +388,13 @@ class CsvMetadata():
     def create_out_file_names(self, pattern):
         return {lane_domain: pattern % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
         
-
     def create_ini_names(self):
-        # for lane_domain in self.lanes_domains:
-        #     self.ini_names[lane_domain] = "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain)
         self.ini_names = self.create_out_file_names("%s_%s_%s_run_info.ini")
-                     # = {lane_domain: "%s_%s_%s_run_info.ini" % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
 
     def make_out_metadata_csv_file_names(self):
         # OLD: metadata_20160803_1_B.csv
         # NEW: metadata_20151111_hs_1_A.csv
         self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv")
-
-        # self.metadata_csv_file_names = {lane_domain: "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
-
-        # for lane_domain in self.lanes_domains:
-        #     # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
-        #     self.metadata_csv_file_names[lane_domain] = "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain)
-
 
     def write_ini(self):
         path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s" % (self.selected_rundate, self.selected_machine_short)
