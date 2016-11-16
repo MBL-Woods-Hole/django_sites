@@ -398,9 +398,9 @@ class CsvMetadata():
     def make_out_metadata_csv_file_names(self):
         # OLD: metadata_20160803_1_B.csv
         # NEW: metadata_20151111_hs_1_A.csv
-        # self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv")
+        self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv")
 
-        self.metadata_csv_file_names = {lane_domain: "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
+        # self.metadata_csv_file_names = {lane_domain: "metadata_%s_%s_%s.csv" % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
 
         # for lane_domain in self.lanes_domains:
         #     # print "for lane_domain in self.lanes_domains lane_domain = %s" % lane_domain
