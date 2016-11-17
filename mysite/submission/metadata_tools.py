@@ -173,13 +173,6 @@ class CsvMetadata():
 
         self.get_csv_by_header_uniqued()
 
-        # writer = csv.DictWriter(doc,
-        #                         ["dna_region", "rundate"])
-        #
-        # for row in self.csv_content:
-        #     writer.writerow({'dna_region': row.dna_region, 'rundate': row.rundate})
-        #     print writer
-
     def get_dialect(self):
         try:
             dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024), delimiters=',')
@@ -416,23 +409,15 @@ class CsvMetadata():
             ini_file.write(ini_text)
             ini_file.close()
 
-    def update_out_metadata(self, my_post_dict, request):
-        for header in self.HEADERS_TO_CSV:
-            for i in self.out_metadata.keys():
-                try:
-                    self.out_metadata[i][header] = my_post_dict['form-' + str(i) + '-' + header]
-                except MultiValueDictKeyError, e:
-                    pass
-                except:
-                    raise
-
     def write_out_metadata_to_csv(self, my_post_dict, request):
+        # for lane_domain, file_name in self.metadata_csv_file_names:
+        
         for idx, val in self.out_metadata.items():
             # todo: DRY
             domain_letter = self.domain_choices[val['domain']]
             lane_domain = "%s_%s" % (val['lane'], domain_letter)
 
-            writer = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'wb'),
+            writer = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'),
                                     self.HEADERS_TO_CSV)
 
             writer.writeheader()
@@ -448,6 +433,16 @@ class CsvMetadata():
             if os.path.isfile(os.path.join(self.path_to_csv, file_name)):
                 self.files_created.append(os.path.join(self.path_to_csv, file_name))
 
+    def update_out_metadata(self, my_post_dict, request):
+        for header in self.HEADERS_TO_CSV:
+            for i in self.out_metadata.keys():
+                try:
+                    self.out_metadata[i][header] = my_post_dict['form-' + str(i) + '-' + header]
+                except MultiValueDictKeyError, e:
+                    pass
+                except:
+                    raise
+                    
     def edit_out_metadata(self, request):
         # print "FROM edit_out_metadata: request.session['out_metadata']"
         # print request.session['out_metadata']
