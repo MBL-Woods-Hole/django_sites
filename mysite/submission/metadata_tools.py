@@ -410,21 +410,19 @@ class CsvMetadata():
             ini_file.close()
 
     def write_out_metadata_to_csv(self, my_post_dict, request):
-        # for lane_domain, file_name in self.metadata_csv_file_names:
-        
+        writers = {}
+        for lane_domain in self.metadata_csv_file_names.keys():
+            writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'), self.HEADERS_TO_CSV)
+            writers[lane_domain].writeheader()
+            
         for idx, val in self.out_metadata.items():
             # todo: DRY
             domain_letter = self.domain_choices[val['domain']]
             lane_domain = "%s_%s" % (val['lane'], domain_letter)
 
-            writer = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'),
-                                    self.HEADERS_TO_CSV)
-
-            writer.writeheader()
-
             to_write = {h: val[h] for h in self.HEADERS_TO_CSV}
 
-            writer.writerow(to_write)
+            writers[lane_domain].writerow(to_write)
 
     def check_out_csv_files(self):
         for lane_domain, file_name in self.metadata_csv_file_names.items():
