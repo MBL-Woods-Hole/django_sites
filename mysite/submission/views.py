@@ -46,45 +46,16 @@ def upload_metadata(request):
 
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
-            csv_handler.errors.append("The file is empty or not exists.")
-            print "FFF1 csv_handler.no_data_message() = "
-            print csv_handler.no_data_message()
-            
+            csv_handler.errors.append("The file is empty or does not exist.")
             return render(request, 'submission/upload_metadata.html', {'errors': csv_handler.errors, 'errors_size': len(csv_handler.errors) })
         else:
-            print "FFF1 request.FILES = "
-            print request.FILES
-        
-            print "BASE_DIR"
-            print settings.BASE_DIR
-        
-            tmp_path = 'tmp/%s' % csv_file
-            default_storage.save(tmp_path, ContentFile(csv_file.file.read()))
-            full_tmp_path = os.path.join(settings.BASE_DIR, tmp_path)
-        
-        
-            # - See more at: http://blog.hayleyanderson.us/2015/07/18/validating-file-types-in-django/#sthash.Ux4hWNaD.dpuf
-            # if os.path.isfile(destination + request.FILES['csv_file']):
-            print "FFF full_tmp_path = "
-            print full_tmp_path
-        
-            print "GGG os.path.isfile(full_tmp_path)"
-            print os.path.isfile(full_tmp_path)
-
-
-            print "RRR csv_file.size"
-            print csv_file.size
-
-            # if len(request.FILES) != 0:
-            #
-            #     data = request.FILES['some_file']
-            #     ...do some work...
-            # else:
-            #     return redirect('/nofile/' {'foo': bar})
-        
-            # csv_handler = CsvMetadata()
-
             csv_handler.import_from_file(csv_file)
+            # TODO:
+            # validate size and type of the file
+            # tmp_path = 'tmp/%s' % csv_file
+            # default_storage.save(tmp_path, ContentFile(csv_file.file.read()))
+            # full_tmp_path = os.path.join(settings.BASE_DIR, tmp_path)
+            # - See more at: http://blog.hayleyanderson.us/2015/07/18/validating-file-types-in-django/#sthash.Ux4hWNaD.dpuf
             # csv_validation = Validation()
             # csv_validation.required_cell_values_validation()
 
