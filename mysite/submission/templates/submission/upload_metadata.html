@@ -45,6 +45,11 @@
   {% block errors %}
     <div class="red_message">
      Please correct the error{{ errors|pluralize }} below.
+     {% for err in errors %}
+      <p class="notes">
+       {{ err|safe }}
+      </p>
+     {% endfor %}
     </div>
    {% endblock %}
  {% endif %}
