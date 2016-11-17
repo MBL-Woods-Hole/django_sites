@@ -10,6 +10,26 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from django.db import models
 
+class ModelChoiceIterator(object):
+    def __iter__(self):
+        if self.field.empty_label is not None:
+            yield ("", self.field.empty_label)
+        if self.field.cache_choices:
+            if self.field.choice_cache is None:
+                self.field.choice_cache = [
+                    self.choice(obj) for obj in self.queryset.all()
+                ]
+            for choice in self.field.choice_cache:
+                yield choice
+        else:
+            try:
+                for obj in self.queryset:
+                    yield self.choice(obj)
+            except TypeError:
+                for obj in self.queryset.all():
+                    yield self.choice(obj)
+
+
 class AllMethodCachingQueryset(models.query.QuerySet):
     def all(self, get_from_cache=True):
         if get_from_cache:
@@ -160,6 +180,9 @@ class PrimerSuite(models.Model):
 
 class Project(models.Model):
     cache_all_method = AllMethodCachingManager()
+    
+    # form_class.base_fields['foo'].queryset = YourModel.cache_all_method.all()
+    
     
     project_id = models.SmallIntegerField(primary_key=True)
     project = models.CharField(unique=True, max_length=32)
