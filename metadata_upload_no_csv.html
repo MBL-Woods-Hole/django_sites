@@ -4,22 +4,22 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8000/" />
-<title>last_run</title>
+<title>metadata_upload_no_csv</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">last_run</td></tr>
+<tr><td rowspan="1" colspan="3">metadata_upload_no_csv</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/submission/</td>
+	<td>/submission/upload_metadata/</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>name=csv_file</td>
-	<td>/Users/ashipunova/BPC/python_web/django_sites/mysite/submission/selenium_tests/ewhite_115869_VAMPS_submission.csv</td>
+	<td>/Users/ashipunova/BPC/python_web/django_sites/mysite/submission/selenium_tests/ashipunova354276_VAMPS_submission_empty.csv</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -27,20 +27,16 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>name=submit_run_info</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>name=create_submission_metadata_file</td>
-	<td></td>
+	<td>verifyText</td>
+	<td>css=div.red_message</td>
+	<td>Please correct the error below. The file is empty or does not exist.</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>css=p.green_message</td>
-	<td>/Users/ashipunova/BPC/local_illumina_res/nextseq_info/20161014/metadata_20161014_ns_1_B.csv was created</td>
+	<td>css=p.notes</td>
+	<td>The file is empty or does not exist.</td>
 </tr>
+
 </tbody></table>
 </body>
 </html>
