@@ -336,9 +336,17 @@ class CsvMetadata():
             for submit_code in self.csv_by_header_uniqued['submit_code']:
                 # print "submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user'])
                 vamps_user_id = self.vamps_submissions[submit_code]['user']
+                print "CCC1 vamps_user_id = %s" % vamps_user_id
 
-                contacts = models_l_env454.Contact.objects.filter(vamps_name = vamps_user_id)
-                self.user_info_arr = {submit_code: (model_to_dict(row)) for row in contacts}
+                contacts = models_l_env454.Contact.objects.get(vamps_name = vamps_user_id)
+                # .filter(vamps_name = vamps_user_id)
+
+                print "CCC contacts = %s" % contacts
+
+                # for row in contacts:
+                self.user_info_arr[submit_code] = model_to_dict(contacts)
+                
+                # self.user_info_arr.append({submit_code: (model_to_dict(row)) for row in contacts})
 
             print "self.user_info_arr = %s" % self.user_info_arr
         except KeyError as e:

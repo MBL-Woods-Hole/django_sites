@@ -11,144 +11,6 @@
 <thead>
 <tr><td rowspan="1" colspan="3">metadata_upload_good_csv</td></tr>
 </thead><tbody>
-<!-- <tr>
-	<td>open</td>
-	<td>/submission/upload_metadata/</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>document.csv_run_info.upload_this_file</td>
-	<td>/Users/ashipunova/BPC/python_web/django_sites/mysite/submission/selenium_tests/metadata_upload_good_csv.html</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>css=#csv_run_info &gt; input[type=&quot;submit&quot;]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>name=Submit</td>
-	<td></td>
-</tr>
--->
-<tr>
-	<td>open</td>
-	<td>/submission/</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>css=p</td>
-	<td>Upload metadata</td>
-</tr>
-<tr>
-	<td>open</td>
-	<td>/submission/upload_metadata/</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>css=p</td>
-	<td>Upload metadata</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=csv_file</td>
-	<td>/Users/ashipunova/BPC/python_web/django_sites/mysite/submission/selenium_tests/ashipunova354276_VAMPS_submission_good.csv</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>css=input[type=&quot;submit&quot;]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>css=p</td>
-	<td>Upload metadata</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>id=id_csv_platform</td>
-	<td>label=HiSeq</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>id=id_csv_platform</td>
-	<td>MiSeq HiSeq NextSeq</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>//fieldset[@id='run_info_form_run_info']/form/table/tbody/tr[3]/th/label</td>
-	<td>exact:Platform:</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>id=id_csv_overlap</td>
-	<td>label=complete</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>id=id_csv_dna_region</td>
-	<td>label=v6</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>id=id_csv_has_ns</td>
-	<td>label=Does not have NNNN in run_key (NextSeq)</td>
-</tr>
-<!--<tr>
-	<td>clickAndWait</td>
-	<td>css=input[type=&quot;submit&quot;]</td>
-	<td></td>
-</tr>
--->
-<tr>
-	<td>verifyElementPresent</td>
-	<td>name=csv_file</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>css=input[type=&quot;submit&quot;]</td>
-	<td>Upload</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>css=h3</td>
-	<td>How to download a user filled submission form from VAMPS</td>
-</tr>
-<!-- <tr>
-	<td>open</td>
-	<td>/submission/upload_metadata/</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>document.csv_run_info.upload_this_file</td>
-	<td>/Users/ashipunova/BPC/python_web/django_sites/mysite/submission/selenium_tests/metadata_upload_good_csv.html</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>css=#csv_run_info &gt; input[type=&quot;submit&quot;]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>name=Submit</td>
-	<td></td>
-</tr>
--->
-<tr>
-	<td>open</td>
-	<td>/submission/</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>css=p</td>
-	<td>Upload metadata</td>
-</tr>
 <tr>
 	<td>open</td>
 	<td>/submission/upload_metadata/</td>
@@ -236,7 +98,22 @@
 	<td>Then you can upload the csv below on this page to use it for Illumina processing.</td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
+	<td>type</td>
+	<td>id=id_csv_insert_size</td>
+	<td>301</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_csv_read_length</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_csv_path_to_raw_data</td>
+	<td>/xraid2-2/sequencing/Illumina/20151111hs</td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>name=submit_run_info</td>
 	<td></td>
 </tr>
@@ -244,11 +121,6 @@
 	<td>type</td>
 	<td>id=id_csv_rundate</td>
 	<td>20151111</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>id=id_csv_path_to_raw_data</td>
-	<td>/xraid2-2/sequencing/Illumina/20151111hs</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -259,16 +131,6 @@
 	<td>type</td>
 	<td>id=id_csv_seq_operator</td>
 	<td>JV</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>id=id_csv_insert_size</td>
-	<td>100</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>id=id_csv_read_length</td>
-	<td>301</td>
 </tr>
 <tr>
 	<td>verifyText</td>
@@ -281,49 +143,19 @@
 	<td>Ensure this value has at most 3 characters (it has 5).</td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>//fieldset[@id='run_info_form_run_info']/form/table/tbody/tr[8]/td/ul/li</td>
-	<td>Ensure this value has at most 3 characters (it has 6).</td>
-</tr>
-<tr>
-	<td>assertTable</td>
-	<td>css=table.normal_table.8.1</td>
-	<td>Ensure this value has at most 3 characters (it has 6).</td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
 	<td>name=submit_run_info</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>id=submission_metadata_form_submission_metadata-legend</td>
-	<td>Submission metadata</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_rundate</td>
-	<td>20151111</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_path_to_raw_data</td>
-	<td>/xraid2-2/sequencing/Illumina/20151111hs</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_seq_operator</td>
-	<td>JV</td>
-</tr>
-<tr>
-	<td>verifyValue</td>
-	<td>id=id_csv_insert_size</td>
-	<td>100</td>
+	<td>css=ul.errorlist &gt; li</td>
+	<td>Enter a valid date.</td>
 </tr>
 <tr>
 	<td>verifyValue</td>
 	<td>id=id_csv_read_length</td>
-	<td>301</td>
+	<td>100</td>
 </tr>
 </tbody></table>
 </body>
