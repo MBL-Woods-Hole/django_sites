@@ -164,8 +164,12 @@ class CsvMetadata():
         print dialect
 
         self.get_reader(dialect)
-        print "LLL self.reader"
-        print self.reader
+        # print "LLL self.reader"
+        # print self.reader
+
+        self.csv_headers, self.csv_content = self.parce_csv()
+        self.csvfile.seek(0)
+        next(self.reader)
 
         self.check_headers_presence()
         self.check_req_info_presence()
@@ -196,9 +200,6 @@ class CsvMetadata():
         try:
             self.csvfile.open()
             self.reader = csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
-            self.csv_headers, self.csv_content = self.parce_csv()
-            self.csvfile.seek(0)
-            next(self.reader)
         except csv.Error as e:
             self.errors.append('%s is not a valid CSV file: %s' % (self.csvfile, e))
         except:
