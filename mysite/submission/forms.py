@@ -68,8 +68,41 @@ class MetadataOutCsvForm(forms.Form):
     barcode                 = forms.CharField(max_length=12, required=False)
     amp_operator            = forms.CharField(max_length=5, widget=forms.TextInput(attrs={'class': 'size_short_input'}))
 
-class AddProjectForm(forms.Form):
-    # project
+class NewProjectWidget(forms.MultiWidget):
+    def __init__(self, *args, **kwargs):
+        super(NewProjectWidget, self).__init__(*args, **kwargs)
+        
+        self.widgets = [
+            forms.TextInput(), #(attrs={'class': 'size_short_input'})
+            forms.TextInput()
+        ]
+        
+    def decompress(self, value):
+        if value:
+            return value.split(' ')
+        return [None, None]
+        
+class NewProjectField(forms.MultiValueField):
+    widget = NewProjectWidget
+
+    def __init__(self, *args, **kwargs):
+        super(NewProjectField, self).__init__(*args, **kwargs)
+        fields = (
+            forms.CharField(),
+            forms.CharField()
+        )
+        """
+        The first part of a project name could have only letters and no more then 4 of them. The second part of a project name could have only letters and numbers and no more then 6 of them
+        domain
+        dna_region
+        """
+        
+    def compress(self, data_list):
+        return ' '.join(data_list)
+
+
+class AddProjectForm(forms.ModelForm):
+    project             = NewProjectField()
     project_title       = forms.CharField(min_length=3, max_length=64,
                             validators=[validate_slug])
     project_description = forms.CharField(max_length=100)
@@ -81,3 +114,8 @@ class AddProjectForm(forms.Form):
     
     # contact_name_query  = Contact.objects.all().order_by('last_name')
     # contact             = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
+    
+    def __init__(self, *args, **kwargs):
+        super(AddProjectForm, self).__init__(self, *args, **kwargs)
+        self.initial['project'] = ['']
+    
