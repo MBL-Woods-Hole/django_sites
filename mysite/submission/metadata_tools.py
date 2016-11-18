@@ -156,18 +156,16 @@ class CsvMetadata():
         return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
 
     def import_from_file(self, csvfile):
-        print "csvfile"
-        print csvfile
+        # print "csvfile"
+        # print csvfile
         self.csvfile = csvfile
         dialect = self.get_dialect()
-        print "dialect = "
-        print dialect
+        # print "dialect = "
+        # print dialect
 
         self.get_reader(dialect)
-        # print "LLL self.reader"
-        # print self.reader
-
         self.csv_headers, self.csv_content = self.parce_csv()
+        
         self.csvfile.seek(0)
         next(self.reader)
 
@@ -262,8 +260,21 @@ class CsvMetadata():
       return True
       
     def check_req_info_presence(self):
-        print "QQQ self.reader = "
-        print self.reader
+        # listA = ["a","b"]
+        # listB = ["b", "c"]
+        # listC = [item for item in listB if item not in listA]
+        # print listC
+        # ['c']
+        
+        listA = self.required_headers 
+        listB = self.csv_headers
+        required_from_csv = [item for item in listB if item not in listA]
+        
+        
+        print "QQQ required_from_csv = "
+        print required_from_csv
+        # ['tube_label', 'dataset_description', 'duplicate', 'barcode', 'pool', 'direction', 'op_empcr', 'enzyme', 'on_vamps', 'sample_received', 'barcode_index', 'trim_distal']
+        
         for row in self.reader:
             print "RRR row"
             print row
@@ -272,8 +283,21 @@ class CsvMetadata():
             #     # raise error
             # Edit: Even better:
             #
-            if any(val in (None, "") for val in row):
-                print "NOOOO"
+            # if not row[0]
+            
+            
+            # ["foo", "bar", "baz"].index("bar")
+            for header in self.csv_headers:
+                if header in self.required_headers:
+                    ind = self.csv_headers.index(header)
+                    # for val in row:
+                    print "header = %s; row[ind] = %s" % (header, row[ind])
+                    # print "row[ind]"
+                    # print row[ind]
+                    if not row[ind]:
+                        print "NOOOO"
+            # if any(val in (None, "") for val in row):
+                # print "NOOOO"
                 # raise error      
 
     def run_query_to_dict(self, query):
