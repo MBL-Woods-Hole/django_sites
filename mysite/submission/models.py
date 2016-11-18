@@ -68,6 +68,13 @@ class Domain(models.Model):
         ('eukarya' , 'E'),
         ('its1'    , 'F'),
     )
+    
+    DOMAIN_WITH_LETTER_CHOICES = (
+        ('B', 'Bacteria (B)'),
+        ('A', 'Archaea (A)' ),
+        ('E', 'Eukarya (E)' ),
+        ('F', 'ITS1 (ITS1)' ),
+    )
 
 
 class Ill_dna_region(models.Model):
