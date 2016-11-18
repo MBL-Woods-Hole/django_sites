@@ -6,7 +6,6 @@ from django.core.validators import RegexValidator, validate_slug
 import datetime
 from django.db import models
 
-
 class RunForm(forms.Form):
     # query = Run.objects.filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
     # find_rundate = forms.ModelChoiceField(queryset = query, label = 'Run date', empty_label = None)
@@ -72,9 +71,82 @@ class MetadataOutCsvForm(forms.Form):
     amp_operator            = forms.CharField(max_length=5, widget=forms.TextInput(attrs={'class': 'size_short_input'}))
     
 
+    # lane                    = forms.IntegerField(max_value = 9, widget=forms.TextInput(attrs={'class': 'size_number'}))
+
+
+class PhoneField(forms.MultiValueField):
+    def __init__(self, *args, **kwargs):
+        # Define one message for all fields.
+        error_messages = {
+            'incomplete': 'Enter a country calling code and a phone number.',
+        }
+        # Or define a different message for each field.
+        fields = (
+            forms.CharField(
+                error_messages={'incomplete': 'Enter a country calling code.'},
+                validators=[
+                    RegexValidator(r'^[0-9]+$', 'Enter a valid country calling code.'),
+                ],
+            ),
+            forms.CharField(
+                error_messages={'incomplete': 'Enter a phone number.'},
+                validators=[RegexValidator(r'^[0-9]+$', 'Enter a valid phone number.')],
+            ),
+            forms.CharField(
+                validators=[RegexValidator(r'^[0-9]+$', 'Enter a valid extension.')],
+                required=False,
+            ),
+        )
+        super(PhoneField, self).__init__(
+            error_messages=error_messages, fields=fields,
+            require_all_fields=False, *args, **kwargs
+        )
+        
+class ComplexMultiWidget(forms.MultiWidget):
+    def __init__(self, attrs=None):
+        widgets = (
+            forms.TextInput(),
+            forms.SelectMultiple(choices=(('J', 'John'),
+                                          ('P', 'Paul'),
+                                          ('G', 'George'),
+                                          ('R', 'Ringo'))),
+            forms.SplitDateTimeWidget(),
+        )
+        super(ComplexMultiWidget, self).__init__(widgets, attrs)
+
+    def decompress(self, value):
+        if value:
+            data = value.split(',')
+            return [data[0], data[1],
+                   datetime.datetime(*time.strptime(data[2],
+                   "%Y-%m-%d %H:%M:%S")[0:6])]
+        return [None, None, None]
+    def format_output(self, rendered_widgets):
+        return u'\n'.join(rendered_widgets)
+
+
+class ComplexField(forms.MultiValueField):
+    def __init__(self, required=True, widget=None, label=None, initial=None):
+        fields = (
+            forms.CharField(),
+            forms.MultipleChoiceField(choices=(('J', 'John'),
+                                               ('P', 'Paul'),
+                                               ('G', 'George'),
+                                               ('R', 'Ringo'))),
+            forms.SplitDateTimeField()
+        )
+        super(ComplexField, self).__init__(fields, required,
+                                           widget, label, initial)
+
+    def compress(self, data_list):
+        if data_list:
+            return '%s,%s,%s' % (data_list[0],''.join(data_list[1]),
+                                 data_list[2])
+        return None
 
 class AddProjectForm(forms.Form):
-    project             = MonthYearField()
+    Phone               = ComplexField(widget=ComplexMultiWidget())
+    project             = forms.CharField(max_length=100)
     project_title       = forms.CharField(min_length=3, max_length=64,
                             validators=[validate_slug])
     project_description = forms.CharField(max_length=100)
