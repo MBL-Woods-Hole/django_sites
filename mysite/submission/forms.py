@@ -111,8 +111,8 @@ class ComplexMultiWidget(forms.MultiWidget):
         #           ('R', 'Ringo'))
                     
         widgets = (
-            forms.TextInput(),
-            forms.TextInput(),
+            forms.TextInput(attrs={'class': 'size_short_input'}),
+            forms.TextInput(attrs={'class': 'size_short_input'}),
             forms.widgets.Select(choices=Ill_dna_region.DNA_REGION_CHOICES)
             
             # forms.Choices(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region'),
