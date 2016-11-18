@@ -167,9 +167,8 @@ class CsvMetadata():
         print "LLL self.reader"
         print self.reader
 
-        self.csv_headers, self.csv_content = self.parce_csv()
-
         self.check_headers_presence()
+        self.check_req_info_presence()
 
         self.get_csv_by_header_uniqued()
 
@@ -197,6 +196,9 @@ class CsvMetadata():
         try:
             self.csvfile.open()
             self.reader = csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
+            self.csv_headers, self.csv_content = self.parce_csv()
+            self.csvfile.seek(0)
+            next(self.reader)
         except csv.Error as e:
             self.errors.append('%s is not a valid CSV file: %s' % (self.csvfile, e))
         except:
@@ -228,8 +230,8 @@ class CsvMetadata():
                 'csv_read_length':	    "".join(self.csv_by_header_uniqued['read_length'])
             }
 
-            print "RRR self.run_info_from_csv"
-            print self.run_info_from_csv
+            # print "RRR self.run_info_from_csv"
+            # print self.run_info_from_csv
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
@@ -257,6 +259,21 @@ class CsvMetadata():
           # raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
           return False
       return True
+      
+    def check_req_info_presence(self):
+        print "QQQ self.reader = "
+        print self.reader
+        for row in self.reader:
+            print "RRR row"
+            print row
+        
+            # if any(row[key] in (None, "") for key in row):
+            #     # raise error
+            # Edit: Even better:
+            #
+            if any(val in (None, "") for val in row):
+                print "NOOOO"
+                # raise error      
 
     def run_query_to_dict(self, query):
         res_dict = {}
