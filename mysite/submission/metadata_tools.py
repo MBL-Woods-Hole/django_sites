@@ -526,15 +526,15 @@ class CsvMetadata():
 
     def make_new_out_metadata(self):
         idx = 0
-        print "self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content))
-        print "self.csv_content[0] =  head = %s" % (self.csv_content[0])
+        # print "self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content))
+        # print "self.csv_content[0] =  head = %s" % (self.csv_content[0])
 
-        print " &&&&&&& list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))"
-        a = list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))
-        print a
+        # print " &&&&&&& list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))"
+        # a = list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))
+        # print a
         # ['barcode_index', 'lane', 'dna_region', 'read_length', 'env_sample_source_id', 'barcode', 'overlap', 'dataset_description', 'adaptor', 'primer_suite', 'insert_size']
 
-        print "self.csv_by_header = %s" % self.csv_by_header
+        # print "self.csv_by_header = %s" % self.csv_by_header
 
         # print "UUU self.adaptors_full = %s" % self.adaptors_full
         # {'A08_v4v5_bacteria': (<IlluminaIndex: ACTTGA>, <IlluminaRunKey: TACGC>)}
@@ -639,7 +639,7 @@ class CsvMetadata():
             # self.out_metadata[i]['seq_operator']       = self.csv_by_header['seq_operator'][i]
             self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tube_label'][i]
 
-        print "self.out_metadata = %s" % self.out_metadata
+        # print "self.out_metadata = %s" % self.out_metadata
 
     def make_metadata_table(self):
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
@@ -667,8 +667,8 @@ class Validation(CsvMetadata):
         CsvMetadata.__init__(self)
         # print "AAA"
         # print self.HEADERS_FROM_CSV
-        print "CCC1 required_cell_values_validation"
-        print self.reader
+        # print "CCC1 required_cell_values_validation"
+        # print self.reader
 
     def required_cell_values_validation(self):
         print "CCC required_cell_values_validation"

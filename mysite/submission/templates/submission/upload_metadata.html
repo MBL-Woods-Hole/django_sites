@@ -88,7 +88,23 @@
      <div class="grid_5"></div>
      <div class="clear"></div>
 
+    <div class="grid_7 form">
+     <fieldset id="new_project_form_new_project">
+     <legend id="new_project_form_new_project-legend">Run info</legend>
+
+      <form action="" method="post">
+       <table class="normal_table">
+        {{ metadata_new_project_form.as_table }}
+       </table>
+        {% csrf_token %}
+        <input type="submit" name="submit_new_project" value="Submit New Project">
+      </form>
+     </fieldset>
+     </div>
+     <div class="grid_5"></div>
+     <div class="clear"></div>
      <!--
+       AddProjectForm
      <br />
      <div class="grid_12">
       <form method="post" name="csv_run_info" id="csv_run_info" action="">
