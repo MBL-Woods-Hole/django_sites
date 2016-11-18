@@ -45,7 +45,7 @@ models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('env454_db',)
 
 @python_2_unicode_compatible  # only if you need to support Python 2
 class Contact(models.Model):
-    cache_all_method = AllMethodCachingManager()
+    # cache_all_method = AllMethodCachingManager()
     
     contact_id  = models.SmallIntegerField(primary_key=True)
     contact	    = models.CharField(max_length=32)
