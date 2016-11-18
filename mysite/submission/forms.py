@@ -104,13 +104,22 @@ class PhoneField(forms.MultiValueField):
         
 class ComplexMultiWidget(forms.MultiWidget):
     def __init__(self, attrs=None):
+        
+        myChoices=(('J', 'John'),
+                  ('P', 'Paul'),
+                  ('G', 'George'),
+                  ('R', 'Ringo'))
+                    
         widgets = (
             forms.TextInput(),
-            forms.SelectMultiple(choices=(('J', 'John'),
-                                          ('P', 'Paul'),
-                                          ('G', 'George'),
-                                          ('R', 'Ringo'))),
-            forms.SplitDateTimeWidget(),
+            forms.TextInput(),
+            forms.widgets.Select(choices=myChoices)
+            
+            # forms.Choices(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region'),
+            # forms.SelectMultiple(choices=(('J', 'John'),
+            #                               ('P', 'Paul'),
+            #                               ('G', 'George'),
+            #                               ('R', 'Ringo'))),
         )
         super(ComplexMultiWidget, self).__init__(widgets, attrs)
 
@@ -145,8 +154,7 @@ class ComplexField(forms.MultiValueField):
         return None
 
 class AddProjectForm(forms.Form):
-    Phone               = ComplexField(widget=ComplexMultiWidget())
-    project             = forms.CharField(max_length=100)
+    project             = ComplexField(widget=ComplexMultiWidget())
     project_title       = forms.CharField(min_length=3, max_length=64,
                             validators=[validate_slug])
     project_description = forms.CharField(max_length=100)
