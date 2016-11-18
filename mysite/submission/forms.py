@@ -29,8 +29,16 @@ class CsvRunInfoUploadForm(forms.Form):
     csv_overlap          = forms.ChoiceField(Overlap.OVERLAP_CHOICES, label = 'Overlap')
     csv_has_ns           = forms.ChoiceField(Has_ns.HAVING_NS_CHOICES, label = 'Has Ns')
     csv_seq_operator     = forms.CharField(label = 'Seq Operator', max_length = 3)
-    csv_insert_size      = forms.IntegerField(label = 'Insert Size', min_value = 100, max_value = 600)
-    csv_read_length      = forms.IntegerField(label = 'Read Length', min_value = 100, max_value = 600)
+    csv_insert_size      = forms.IntegerField(label = 'Insert Size', min_value = 1, max_value = 800)
+    csv_read_length      = forms.IntegerField(label = 'Read Length', min_value = 1, max_value = 300)
+    """
+    TODO: add validation
+    Min size--must be a positive number
+    Max size--for v6, 200; for v4v5, v4, ITS1, 800?  I'm guessing.
+
+    Max read length is 150 on the nextseq and 300 on the Miseq.
+
+    """
 
 class MetadataOutCsvForm(forms.Form):
     # todo: add css class size_number to input
