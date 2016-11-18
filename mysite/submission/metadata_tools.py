@@ -269,12 +269,10 @@ class CsvMetadata():
             for header in self.csv_headers:
                 if header in self.required_headers:
                     ind = self.csv_headers.index(header)
-                    print "header = %s; row[ind] = %s" % (header, row[ind])
+                    # print "header = %s; row[ind] = %s" % (header, row[ind])
                     if not row[ind]:
                         empty_cells_interim.append(header)
-                        print "NOOOO"
-        print "empty_cells_interim = "
-        print empty_cells_interim
+                        # print "NOOOO"
         self.empty_cells = list(set(empty_cells_interim))
 
     def run_query_to_dict(self, query):

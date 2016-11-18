@@ -48,52 +48,51 @@ def upload_metadata(request):
         if csv_file.size == 0:
             csv_handler.errors.append("The file is empty or does not exist.")
             return render(request, 'submission/upload_metadata.html', {'errors': csv_handler.errors, 'errors_size': len(csv_handler.errors) })
-        else:
-            has_empty_cells = csv_handler.import_from_file(csv_file)
-            print "csv_handler.empty_cells = %s, has_empty_cells = %s" % (len(csv_handler.empty_cells), has_empty_cells)
-            
-            if has_empty_cells:                
-                csv_handler.errors.append("The following csv fields should not be empty: %s" % ", ".join(csv_handler.empty_cells))
-                return render(request, 'submission/upload_metadata.html', {'errors': csv_handler.errors, 'errors_size': len(csv_handler.errors) })
-            
-            # TODO:
-            # validate size and type of the file
-            # tmp_path = 'tmp/%s' % csv_file
-            # default_storage.save(tmp_path, ContentFile(csv_file.file.read()))
-            # full_tmp_path = os.path.join(settings.BASE_DIR, tmp_path)
-            # - See more at: http://blog.hayleyanderson.us/2015/07/18/validating-file-types-in-django/#sthash.Ux4hWNaD.dpuf
-            # csv_validation = Validation()
-            # csv_validation.required_cell_values_validation()
 
-            csv_handler.get_selected_variables(request.POST)
+        has_empty_cells = csv_handler.import_from_file(csv_file)
+        
+        if has_empty_cells:                
+            csv_handler.errors.append("The following csv fields should not be empty: %s" % ", ".join(csv_handler.empty_cells))
+            return render(request, 'submission/upload_metadata.html', {'errors': csv_handler.errors, 'errors_size': len(csv_handler.errors) })
+        
+        # TODO:
+        # validate size and type of the file
+        # tmp_path = 'tmp/%s' % csv_file
+        # default_storage.save(tmp_path, ContentFile(csv_file.file.read()))
+        # full_tmp_path = os.path.join(settings.BASE_DIR, tmp_path)
+        # - See more at: http://blog.hayleyanderson.us/2015/07/18/validating-file-types-in-django/#sthash.Ux4hWNaD.dpuf
+        # csv_validation = Validation()
+        # csv_validation.required_cell_values_validation()
 
-            csv_handler.get_initial_run_info_data_dict()
-            metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
+        csv_handler.get_selected_variables(request.POST)
 
-            # # TODO: move to one method in metadata_tools, call from here as create info and create csv
-            # request.session['lanes_domains'] = csv_handler.get_lanes_domains()
-            # del request.session['lanes_domains']
+        csv_handler.get_initial_run_info_data_dict()
+        metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
 
-            csv_handler.get_vamps_submission_info()
+        # # TODO: move to one method in metadata_tools, call from here as create info and create csv
+        # request.session['lanes_domains'] = csv_handler.get_lanes_domains()
+        # del request.session['lanes_domains']
 
-            csv_handler.get_csv_by_header()
+        csv_handler.get_vamps_submission_info()
 
-            csv_handler.get_adaptor_from_csv_content()
+        csv_handler.get_csv_by_header()
 
-            csv_handler.make_new_out_metadata()
+        csv_handler.get_adaptor_from_csv_content()
 
-            request.session['out_metadata'] = csv_handler.out_metadata
+        csv_handler.make_new_out_metadata()
 
-            # TODO: use to get db_names
-            print "utils.is_local(request) = %s" % utils.is_local(request)
-            # utils.is_local(request) = True
+        request.session['out_metadata'] = csv_handler.out_metadata
 
-            # utils.is_local(request)
-            # HOSTNAME = request.get_host()
-            # if HOSTNAME.startswith("localhost"):
-            #     print "local"
+        # TODO: use to get db_names
+        print "utils.is_local(request) = %s" % utils.is_local(request)
+        # utils.is_local(request) = True
 
-            return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors })
+        # utils.is_local(request)
+        # HOSTNAME = request.get_host()
+        # if HOSTNAME.startswith("localhost"):
+        #     print "local"
+
+        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors })
 
     elif 'submit_run_info' in request.POST:
         # print "EEE: request.POST = %s" % request.POST

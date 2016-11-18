@@ -29,8 +29,8 @@ class CsvRunInfoUploadForm(forms.Form):
     csv_overlap          = forms.ChoiceField(Overlap.OVERLAP_CHOICES, label = 'Overlap')
     csv_has_ns           = forms.ChoiceField(Has_ns.HAVING_NS_CHOICES, label = 'Has Ns')
     csv_seq_operator     = forms.CharField(label = 'Seq Operator', max_length = 3)
-    csv_insert_size      = forms.IntegerField(label = 'Insert Size', max_value = 999)
-    csv_read_length      = forms.IntegerField(label = 'Read Length', max_value = 999)
+    csv_insert_size      = forms.IntegerField(label = 'Insert Size', min_value = 100, max_value = 600)
+    csv_read_length      = forms.IntegerField(label = 'Read Length', min_value = 100, max_value = 600)
 
 class MetadataOutCsvForm(forms.Form):
     # todo: add css class size_number to input
