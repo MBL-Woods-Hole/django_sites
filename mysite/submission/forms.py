@@ -105,15 +105,15 @@ class PhoneField(forms.MultiValueField):
 class ComplexMultiWidget(forms.MultiWidget):
     def __init__(self, attrs=None):
         
-        myChoices=(('J', 'John'),
-                  ('P', 'Paul'),
-                  ('G', 'George'),
-                  ('R', 'Ringo'))
+        # myChoices=(('J', 'John'),
+        #           ('P', 'Paul'),
+        #           ('G', 'George'),
+        #           ('R', 'Ringo'))
                     
         widgets = (
             forms.TextInput(),
             forms.TextInput(),
-            forms.widgets.Select(choices=myChoices)
+            forms.widgets.Select(choices=Ill_dna_region.DNA_REGION_CHOICES)
             
             # forms.Choices(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region'),
             # forms.SelectMultiple(choices=(('J', 'John'),
