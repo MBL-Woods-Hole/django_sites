@@ -76,6 +76,7 @@ class Ill_dna_region(models.Model):
         ('v6', 'v6'),
         ('v4v5', 'v4v5'),
         ('v4', 'v4'),
+        ('v4_hap', 'v4_hap'),
         ('ITS1', 'ITS1'),
     )
 
