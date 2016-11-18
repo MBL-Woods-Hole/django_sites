@@ -49,7 +49,13 @@ def upload_metadata(request):
             csv_handler.errors.append("The file is empty or does not exist.")
             return render(request, 'submission/upload_metadata.html', {'errors': csv_handler.errors, 'errors_size': len(csv_handler.errors) })
         else:
-            csv_handler.import_from_file(csv_file)
+            has_empty_cells = csv_handler.import_from_file(csv_file)
+            print "csv_handler.empty_cells = %s, has_empty_cells = %s" % (len(csv_handler.empty_cells), has_empty_cells)
+            
+            if has_empty_cells:                
+                csv_handler.errors.append("The following csv fields should not be empty: %s" % ", ".join(csv_handler.empty_cells))
+                return render(request, 'submission/upload_metadata.html', {'errors': csv_handler.errors, 'errors_size': len(csv_handler.errors) })
+            
             # TODO:
             # validate size and type of the file
             # tmp_path = 'tmp/%s' % csv_file

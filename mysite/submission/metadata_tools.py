@@ -102,6 +102,7 @@ class CsvMetadata():
         self.machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
         self.utils = Utils()
         self.files_created = []
+        self.empty_cells = []
 
         # error = True
 
@@ -118,7 +119,7 @@ class CsvMetadata():
             'dna_region': {'field': 'dna_region', 'required': True},
             'project_name': {'field': 'project_name', 'required': True},
             'dataset_name': {'field': 'dataset_name', 'required': True},
-            'runkey': {'field': 'runkey', 'required': True},
+            'runkey': {'field': 'runkey', 'required': False},
             'barcode': {'field': 'barcode', 'required': False},
             'pool': {'field': 'pool', 'required': False},
             'lane': {'field': 'lane', 'required': True},
@@ -171,8 +172,11 @@ class CsvMetadata():
 
         self.check_headers_presence()
         self.check_req_info_presence()
-
-        self.get_csv_by_header_uniqued()
+        if len(self.empty_cells) > 0:
+            return len(self.empty_cells)
+        else:
+            self.get_csv_by_header_uniqued()
+            return 0
 
     def get_dialect(self):
         try:
@@ -260,45 +264,18 @@ class CsvMetadata():
       return True
       
     def check_req_info_presence(self):
-        # listA = ["a","b"]
-        # listB = ["b", "c"]
-        # listC = [item for item in listB if item not in listA]
-        # print listC
-        # ['c']
-        
-        listA = self.required_headers 
-        listB = self.csv_headers
-        required_from_csv = [item for item in listB if item not in listA]
-        
-        
-        print "QQQ required_from_csv = "
-        print required_from_csv
-        # ['tube_label', 'dataset_description', 'duplicate', 'barcode', 'pool', 'direction', 'op_empcr', 'enzyme', 'on_vamps', 'sample_received', 'barcode_index', 'trim_distal']
-        
+        empty_cells_interim = []
         for row in self.reader:
-            print "RRR row"
-            print row
-        
-            # if any(row[key] in (None, "") for key in row):
-            #     # raise error
-            # Edit: Even better:
-            #
-            # if not row[0]
-            
-            
-            # ["foo", "bar", "baz"].index("bar")
             for header in self.csv_headers:
                 if header in self.required_headers:
                     ind = self.csv_headers.index(header)
-                    # for val in row:
                     print "header = %s; row[ind] = %s" % (header, row[ind])
-                    # print "row[ind]"
-                    # print row[ind]
                     if not row[ind]:
+                        empty_cells_interim.append(header)
                         print "NOOOO"
-            # if any(val in (None, "") for val in row):
-                # print "NOOOO"
-                # raise error      
+        print "empty_cells_interim = "
+        print empty_cells_interim
+        self.empty_cells = list(set(empty_cells_interim))
 
     def run_query_to_dict(self, query):
         res_dict = {}
