@@ -177,6 +177,7 @@ class AddProjectForm(forms.Form):
     # def __init__(self, *args, **kwargs):
     #      super(AddProjectForm, self).__init__(self, *args, **kwargs)
     #      self.initial['project'] = ['']
+    # django.core.exceptions.ImproperlyConfigured: Creating a ModelForm without either the 'fields' attribute or the 'exclude' attribute is prohibited; form AddProjectForm needs updating.
 
     # class Meta:
     #     model = Project
