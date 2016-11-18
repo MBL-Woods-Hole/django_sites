@@ -4,6 +4,8 @@ from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project, EnvSampleSo
 from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns
 from django.core.validators import RegexValidator, validate_slug
 import datetime
+from django.db import models
+
 
 class RunForm(forms.Form):
     # query = Run.objects.filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
@@ -68,6 +70,7 @@ class MetadataOutCsvForm(forms.Form):
     tubelabel               = forms.CharField(max_length=32)
     barcode                 = forms.CharField(max_length=12, required=False)
     amp_operator            = forms.CharField(max_length=5, widget=forms.TextInput(attrs={'class': 'size_short_input'}))
+    
 class MonthYearWidget(forms.MultiWidget):
     """
    A widget that splits a date into Month/Year with selects.
@@ -157,7 +160,7 @@ class MonthYearField(forms.MultiValueField):
 #         return ' '.join(data_list)
 
 
-class AddProjectForm(forms.ModelForm):
+class AddProjectForm(forms.Form):
     project             = MonthYearField()
     project_title       = forms.CharField(min_length=3, max_length=64,
                             validators=[validate_slug])
@@ -171,7 +174,9 @@ class AddProjectForm(forms.ModelForm):
     contact_name_query  = Contact.objects.all().order_by('last_name')
     contact             = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
     
-    def __init__(self, *args, **kwargs):
-        super(AddProjectForm, self).__init__(self, *args, **kwargs)
-        self.initial['project'] = ['']
-    
+    # def __init__(self, *args, **kwargs):
+    #      super(AddProjectForm, self).__init__(self, *args, **kwargs)
+    #      self.initial['project'] = ['']
+
+    # class Meta:
+    #     model = Project

@@ -16,7 +16,7 @@ def my_view(request):
     return render(request, 'my_template.html', context)
 from .models_l_env454 import Run
 
-from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm
+from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
 from .utils import Run, Utils
 
 from .metadata_tools import CsvMetadata, Validation
@@ -69,6 +69,8 @@ def upload_metadata(request):
         csv_handler.get_initial_run_info_data_dict()
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
 
+        metadata_new_project_form = AddProjectForm()
+
         # # TODO: move to one method in metadata_tools, call from here as create info and create csv
         # request.session['lanes_domains'] = csv_handler.get_lanes_domains()
         # del request.session['lanes_domains']
@@ -92,7 +94,7 @@ def upload_metadata(request):
         # if HOSTNAME.startswith("localhost"):
         #     print "local"
 
-        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors })
+        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form })
 
     elif 'submit_run_info' in request.POST:
         # print "EEE: request.POST = %s" % request.POST
