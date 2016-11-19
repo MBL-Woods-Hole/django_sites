@@ -109,6 +109,7 @@ class ComplexMultiWidget(forms.MultiWidget):
             forms.TextInput(attrs={'class': 'size_short_input'}),
             forms.TextInput(attrs={'class': 'size_short_input'}),
             forms.widgets.Select(choices=Domain.DOMAIN_WITH_LETTER_CHOICES),
+            forms.widgets.Select(choices=Ill_dna_region.DNA_REGION_CHOICES),
         )
         super(ComplexMultiWidget, self).__init__(widgets, attrs)
 
@@ -127,11 +128,9 @@ class ComplexField(forms.MultiValueField):
     def __init__(self, required=True, widget=None, label=None, initial=None):
         fields = (
             forms.CharField(),
-            forms.MultipleChoiceField(choices=(('J', 'John'),
-                                               ('P', 'Paul'),
-                                               ('G', 'George'),
-                                               ('R', 'Ringo'))),
-            forms.SplitDateTimeField()
+            forms.CharField(),
+            forms.ChoiceField(),
+            forms.ChoiceField(),
         )
         super(ComplexField, self).__init__(fields, required,
                                            widget, label, initial)
