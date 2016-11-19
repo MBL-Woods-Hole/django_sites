@@ -102,9 +102,14 @@ def upload_metadata(request):
         metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
 
         metadata_new_project_form = AddProjectForm(request.POST)
-        print "!!!metadata_new_project_form.cleaned_data"
-        print metadata_new_project_form
-        
+        if metadata_new_project_form.is_valid():        
+            print "!!!metadata_new_project_form.cleaned_data"
+            print metadata_new_project_form.cleaned_data
+            """
+            !!!metadata_new_project_form.cleaned_data
+            {'env_source_name': <EnvSampleSource: 0: >, 'project_description': u'www', 'funding': u'rrr', 'project_title': u'sss', 'project': u'dfsdfs_dsfsdfs_B_v6', 'contact': <Contact: Eric Boyd>}
+            
+            """
     
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form })
     

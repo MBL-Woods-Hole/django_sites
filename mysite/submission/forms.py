@@ -115,7 +115,7 @@ class ComplexMultiWidget(forms.MultiWidget):
 
     def decompress(self, value):
         if value:
-            data = value.split(',')
+            data = value.split('_')
             return [data[0], data[1], data[2], data[3]]
         return [None, None, None, None]
         
@@ -128,15 +128,15 @@ class ComplexField(forms.MultiValueField):
         fields = (
             forms.CharField(),
             forms.CharField(),
-            forms.ChoiceField(),
-            forms.ChoiceField(),
+            forms.ChoiceField(choices=Domain.DOMAIN_WITH_LETTER_CHOICES),
+            forms.ChoiceField(choices=Ill_dna_region.DNA_REGION_CHOICES),
         )
         super(ComplexField, self).__init__(fields, required,
                                            widget, label, initial)
 
     def compress(self, data_list):
         if data_list:
-            return '%s' % ('_'.join(data_list[0], data_list[1], data_list[2], data_list[3]))
+            return '%s' % ('_'.join(data_list))
         return None
 
 class AddProjectForm(forms.Form):
