@@ -116,14 +116,13 @@ class ComplexMultiWidget(forms.MultiWidget):
     def decompress(self, value):
         if value:
             data = value.split(',')
-            return [data[0], data[1],
-                   datetime.datetime(*time.strptime(data[2],
-                   "%Y-%m-%d %H:%M:%S")[0:6])]
-        return [None, None, None]
+            return [data[0], data[1], data[2], data[3]]
+        return [None, None, None, None]
+        
     def format_output(self, rendered_widgets):
         return u'\n'.join(rendered_widgets)
 
-
+# http://stackoverflow.com/questions/2386541/creating-a-custom-django-form-field-that-uses-two-inputs
 class ComplexField(forms.MultiValueField):
     def __init__(self, required=True, widget=None, label=None, initial=None):
         fields = (
@@ -137,8 +136,7 @@ class ComplexField(forms.MultiValueField):
 
     def compress(self, data_list):
         if data_list:
-            return '%s,%s,%s' % (data_list[0],''.join(data_list[1]),
-                                 data_list[2])
+            return '%s' % ('_'.join(data_list[0], data_list[1], data_list[2], data_list[3]))
         return None
 
 class AddProjectForm(forms.Form):

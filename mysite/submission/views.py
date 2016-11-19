@@ -95,6 +95,19 @@ def upload_metadata(request):
         #     print "local"
 
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form })
+        
+    elif 'submit_new_project' in request.POST:
+        print "EEE: request.POST = %s" % request.POST
+        
+        metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
+
+        metadata_new_project_form = AddProjectForm(request.POST)
+        print "!!!metadata_new_project_form.cleaned_data"
+        print metadata_new_project_form
+        
+    
+        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form })
+    
 
     elif 'submit_run_info' in request.POST:
         # print "EEE: request.POST = %s" % request.POST
