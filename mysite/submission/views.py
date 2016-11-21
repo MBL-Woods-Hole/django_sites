@@ -67,7 +67,10 @@ def upload_metadata(request):
         csv_handler.get_selected_variables(request.POST)
 
         csv_handler.get_initial_run_info_data_dict()
-        metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
+        request.session['run_info_from_csv'] = csv_handler.run_info_from_csv
+        print "request.session['run_info_from_csv'] 111 = " 
+        print request.session['run_info_from_csv']
+        metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
         metadata_new_project_form = AddProjectForm()
 
@@ -99,7 +102,11 @@ def upload_metadata(request):
     elif 'submit_new_project' in request.POST:
         print "EEE: request.POST = %s" % request.POST
         
-        metadata_run_info_form = CsvRunInfoUploadForm(initial=csv_handler.run_info_from_csv)
+        # request.session['run_info_from_csv'] = csv_handler.run_info_from_csv
+        # print "request.session['run_info_from_csv'] 111 = "
+        # print request.session['run_info_from_csv']
+        
+        metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
         metadata_new_project_form = AddProjectForm(request.POST)
         if metadata_new_project_form.is_valid():        
@@ -110,6 +117,7 @@ def upload_metadata(request):
             {'env_source_name': <EnvSampleSource: 0: >, 'project_description': u'www', 'funding': u'rrr', 'project_title': u'sss', 'project': u'dfsdfs_dsfsdfs_B_v6', 'contact': <Contact: Eric Boyd>}
             
             """
+            csv_handler.add_new_project(request.POST)
     
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form })
     
@@ -130,7 +138,10 @@ def upload_metadata(request):
 
         csv_handler.make_metadata_table()
 
+        # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
+        print "request.POST 222 = "
+        print request.POST
         request.session['run_info_form_post'] = request.POST
 
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))

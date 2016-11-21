@@ -93,6 +93,18 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dj_test',
+#         'OPTIONS': {
+#             # 'read_default_file': '~/.my.cnf_dj',
+#             'read_default_file': '~/.my.cnf',
+#             'read_default_group': 'clientdj',
+#         },
+#     }
+# }
+# if 'test' not in sys.argv:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -102,45 +114,33 @@ DATABASES = {
             'read_default_file': '~/.my.cnf',
             'read_default_group': 'clientdj',
         },
-    }
+    },
+    'local_env454': {
+        'NAME': 'test_env454',
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': '~/.my.cnf',
+            'read_default_group': 'clientdj',
+        },
+    },
+    'local_vamps': {
+        'NAME': 'test_vamps',
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': '~/.my.cnf',
+            'read_default_group': 'clientdj',
+        },
+    },
 }
-if 'test' not in sys.argv:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'dj_test',
-            'OPTIONS': {
-                # 'read_default_file': '~/.my.cnf_dj',
-                'read_default_file': '~/.my.cnf',
-                'read_default_group': 'clientdj',
-            },
-        },
-        # 'vampsdev': {
-        #     'NAME': 'test',
-        #     'ENGINE': 'django.db.backends.mysql',
-        #     'OPTIONS': {
-        #         'read_default_file': '~/.my.cnf',
-        #         'read_default_group': 'clientvampsdev',
-        #     },
-        # },
-        'local_env454': {
-            'NAME': 'test_env454',
-            'ENGINE': 'django.db.backends.mysql',
-            'OPTIONS': {
-                'read_default_file': '~/.my.cnf',
-                'read_default_group': 'clienthome',
-            },
-        },
-        'local_vamps': {
-            'NAME': 'test_vamps',
-            'ENGINE': 'django.db.backends.mysql',
-            'OPTIONS': {
-                'read_default_file': '~/.my.cnf',
-                'read_default_group': 'clienthome',
-            },
-        },
-    }
 
+# 'vampsdev': {
+#     'NAME': 'test',
+#     'ENGINE': 'django.db.backends.mysql',
+#     'OPTIONS': {
+#         'read_default_file': '~/.my.cnf',
+#         'read_default_group': 'clientvampsdev',
+#     },
+# },
 # class submissionRouter(object):
 #     def db_for_read(self, model, **hints):
 #         "Point all operations on submission models to 'test_env454'"

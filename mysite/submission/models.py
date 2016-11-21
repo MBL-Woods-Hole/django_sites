@@ -83,7 +83,8 @@ class Ill_dna_region(models.Model):
         ('v6', 'v6'),
         ('v4v5', 'v4v5'),
         ('v4', 'v4'),
-        ('v4_hap', 'v4_hap'),
+        ('HSSU', 'v4_hap (HSSU)'),
+        ('HLSU', 'v4_hap (HLSU)'),
         ('ITS1', 'ITS1'),
     )
 

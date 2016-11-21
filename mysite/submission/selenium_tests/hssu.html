@@ -27,9 +27,79 @@
 	<td></td>
 </tr>
 <tr>
+	<td>type</td>
+	<td>id=id_project_title</td>
+	<td>LAZ_NSL_HSSU</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_project_0</td>
+	<td>LAZ</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_project_1</td>
+	<td>NSL</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_project_2</td>
+	<td>label=Eukarya (E)</td>
+</tr>
+<tr>
 	<td>verifyText</td>
-	<td>css=div.red_message</td>
-	<td>Please correct the errors below. Warning for hssu.csv: Could not determine delimiter <br /> The following csv fields should not be empty: lane, op_amp, read_length, platform, rundate, op_seq</td>
+	<td>css=#id_project_3 &gt; option[value=&quot;HSSU&quot;]</td>
+	<td>v4_hap (HSSU)</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_project_3</td>
+	<td>label=v4_hap (HSSU)</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_project_description</td>
+	<td>LAZ_NSL_HSSU</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_env_source_name</td>
+	<td>label=120: water-freshwater</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_contact</td>
+	<td>label=Linda Amaral Zettler</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit_new_project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=ul.errorlist &gt; li</td>
+	<td>This field is required.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_funding</td>
+	<td>000</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit_new_project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_csv_dna_region</td>
+	<td>label=v4_hap (HSSU)</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit_new_project</td>
+	<td></td>
 </tr>
 
 </tbody></table>

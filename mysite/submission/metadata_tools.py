@@ -214,8 +214,8 @@ class CsvMetadata():
     def get_csv_by_header_uniqued(self):
         self.csv_by_header_uniqued = ""
         self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
-        print "self.csv_by_header_uniqued: "
-        print self.csv_by_header_uniqued
+        # print "self.csv_by_header_uniqued: "
+        # print self.csv_by_header_uniqued
 
     def get_initial_run_info_data_dict(self):
         try:
@@ -243,8 +243,8 @@ class CsvMetadata():
 
     def parce_csv(self):
       for y_index, row in enumerate(self.reader):
-          print "parce_csv row"
-          print row
+          # print "parce_csv row"
+          # print row
 
           self.csv_content.append(row)
           if y_index == 0:
@@ -294,14 +294,14 @@ class CsvMetadata():
         out_file_name = "temp_subm_info"
         try:
             for submit_code in self.csv_by_header_uniqued['submit_code']:
-                print "submit_code = %s" % submit_code
+                # print "submit_code = %s" % submit_code
                 query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
                     FROM %s.vamps_submissions AS subm
                     JOIN %s.vamps_auth AS auth
                       ON (auth.id = subm.vamps_auth_id)
                     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
                 self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
-            print "self.vamps_submissions = %s" % self.vamps_submissions
+            # print "self.vamps_submissions = %s" % self.vamps_submissions
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
@@ -346,7 +346,7 @@ class CsvMetadata():
             for submit_code in self.csv_by_header_uniqued['submit_code']:
                 # print "submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user'])
                 vamps_user_id = self.vamps_submissions[submit_code]['user']
-                print "CCC1 vamps_user_id = %s" % vamps_user_id
+                # print "CCC1 vamps_user_id = %s" % vamps_user_id
 
                 contacts = models_l_env454.Contact.objects.get(vamps_name = vamps_user_id)
                 # .filter(vamps_name = vamps_user_id)
@@ -358,7 +358,7 @@ class CsvMetadata():
                 
                 # self.user_info_arr.append({submit_code: (model_to_dict(row)) for row in contacts})
 
-            print "self.user_info_arr = %s" % self.user_info_arr
+            # print "self.user_info_arr = %s" % self.user_info_arr
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
@@ -660,6 +660,49 @@ class CsvMetadata():
                     raise
 
         print "self.out_metadata_table BBB = %s" % self.out_metadata_table
+        
+        
+    def add_new_project(self, request_post):
+        print "request_post from add_new_project"
+        print request_post
+        """
+        <QueryDict: {u'env_source_name': [u'120'],
+u'project_description': [u'LAZ_NSL_HSSU'],
+u'funding': [u'000'],
+u'project_title': [u'LAZ_NSL_HSSU'],
+u'submit_new_project': [u'Submit New Project'],
+u'contact': [u'Linda Amaral Zettler'],
+u'project_3': [u'HSSU'],
+u'project_2': [u'E'],
+u'project_1': [u'NSL'],
+u'project_0': [u'LAZ'],
+u'csrfmiddlewaretoken': [u'vGjYAehQ7VElC6nKQeuHJOTC0WIZbFxl']}>
+        
+        """
+
+        # print "PPP request_post.keys()"
+        # print request_post.keys()
+# request.POST['caption']
+        print "PPP request_post['project_0']"
+        print request_post['project_0']
+        
+        
+        project_name = request_post['project_0'] + "_" + request_post['project_1'] + "_" + request_post['project_2'] + "_" + request_post['project_3']
+
+        owner = models_l_env454.Contact.objects.get(contact = request_post['contact'])
+        
+        print "NNN project_name = %s, project_title = %s, funding = %s, env_sample_source_id = %s, contact_id = %d" % (project_name, request_post['project_title'], request_post['funding'], request_post['env_source_name'], owner.contact_id)
+        
+        
+        new_project = models_l_env454.Project(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name="REVERSE(%s)" % project_name, funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
+        new_project.save()
+        # if (!(contact_id > 0))
+        # {
+        #     print_red_message("There is no such contact information in our database. Only PIs can be project owners.");
+        # }
+        # project_query = "INSERT IGNORE INTO " . db_name . """.project (project, title, project_description, rev_project_name, funding, env_sample_source_id, contact_id)
+        #   VALUES (project_name, title, project_description, REVERSE(project_name), funding,
+        #   env_sample_source_id, contact_id)"""
 
 
 class Validation(CsvMetadata):
@@ -671,8 +714,8 @@ class Validation(CsvMetadata):
         # print self.reader
 
     def required_cell_values_validation(self):
-        print "CCC required_cell_values_validation"
-        print self.reader
+        # print "CCC required_cell_values_validation"
+        # print self.reader
 
         # sanity check required cell values
         for y_index, row in enumerate(self.reader):

@@ -123,16 +123,23 @@ class ComplexMultiWidget(forms.MultiWidget):
         return u'\n'.join(rendered_widgets)
 
 # http://stackoverflow.com/questions/2386541/creating-a-custom-django-form-field-that-uses-two-inputs
+# Please choose a valid env_source_name
 class ComplexField(forms.MultiValueField):
     def __init__(self, required=True, widget=None, label=None, initial=None):
         fields = (
-            forms.CharField(),
-            forms.CharField(),
+            # forms.CharField(validators=[RegexValidator('^[A-Za-z]+$'), message = "The first part of a project name could have only letters"], max_length = 4, error_messages={'max_length': 'The first part of a project name could have no more then 4 of characters.'}),
+            forms.CharField(validators=[RegexValidator('^[A-Za-z]+$', message="The first part of a project name could have letters only")], max_length = 4, error_messages={'max_length': 'The first part of a project name could have no more then 4 characters'}),
+        
+            forms.CharField(validators=[RegexValidator('^[A-Za-z0-9]+$', message="The second part of a project name could have only letters and numbers")], max_length = 6, error_messages={'max_length': 'The second part of a project name could have no more then 6 characters'}),
+        
             forms.ChoiceField(choices=Domain.DOMAIN_WITH_LETTER_CHOICES),
             forms.ChoiceField(choices=Ill_dna_region.DNA_REGION_CHOICES),
         )
         super(ComplexField, self).__init__(fields, required,
                                            widget, label, initial)
+                                           
+        # name.validators[-1].message = 'Your question is too long.'
+
 
     def compress(self, data_list):
         if data_list:
@@ -146,7 +153,11 @@ class AddProjectForm(forms.Form):
     project_description = forms.CharField(max_length=100)
     funding             = forms.CharField(max_length=32)
     env_source_name_query = EnvSampleSource.objects.all().order_by('env_sample_source_id')
-    env_source_name     = forms.ModelChoiceField(queryset = env_source_name_query, empty_label = None)
+    env_source_name     = forms.ModelChoiceField(queryset = env_source_name_query, empty_label = None, )
+    # http://stackoverflow.com/questions/22886411/validation-errors-on-modelchoicefield
+    # https://snakeycode.wordpress.com/2015/02/11/django-dynamic-modelchoicefields/comment-page-1/
+    #validators=[RegexValidator('^[A-Za-z0-9]+$', message="The second part of a project name could have only letters and numbers")]
+    # Please choose a valid env_source_name
     # contact_query       = Contact.cache_all_method.all().order_by('contact')
     # contact             = forms.ModelChoiceField(queryset = contact_query, empty_label = None, to_field_name = 'contact')
     
