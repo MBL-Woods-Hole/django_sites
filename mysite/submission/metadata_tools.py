@@ -663,7 +663,7 @@ class CsvMetadata():
         
         
     def add_new_project(self, request_post):
-        project_name = request_post['project_0'] + "_" + request_post['project_1'] + "_" + request_post['project_2'] + "_" + request_post['project_3']
+        project_name = request_post['project_0'] + "_" + request_post['project_1'] + "_" + request_post['project_2'] + request_post['project_3']
 
         owner = models_l_env454.Contact.objects.get(contact = request_post['contact'])
         
