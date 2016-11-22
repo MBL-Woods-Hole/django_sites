@@ -158,9 +158,9 @@ class AddProjectForm(forms.Form):
     # https://snakeycode.wordpress.com/2015/02/11/django-dynamic-modelchoicefields/comment-page-1/
     #validators=[RegexValidator('^[A-Za-z0-9]+$', message="The second part of a project name could have only letters and numbers")]
     # Please choose a valid env_source_name
-    # contact_query       = Contact.cache_all_method.all().order_by('contact')
-    # contact             = forms.ModelChoiceField(queryset = contact_query, empty_label = None, to_field_name = 'contact')
+    contact_query       = Contact.cache_all_method.all().order_by('last_name')
+    contact             = forms.ModelChoiceField(queryset = contact_query, empty_label = None, to_field_name = 'contact')
     
-    contact_name_query  = Contact.objects.all().order_by('last_name')
-    contact             = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
+    # contact_name_query  = Contact.objects.all().order_by('last_name')
+    # contact             = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
     
