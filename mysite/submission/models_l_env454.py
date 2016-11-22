@@ -181,6 +181,7 @@ class PrimerSuite(models.Model):
         return self.primer_suite
 
 class Project(models.Model):
+    objects = models.Manager()
     cache_all_method = AllMethodCachingManager()
     
     # form_class.base_fields['foo'].queryset = YourModel.cache_all_method.all()
@@ -231,14 +232,14 @@ class Run(models.Model):
 class RunInfoIll(models.Model):
     run_info_ill_id = models.AutoField(primary_key=True)
     run_key = models.ForeignKey('RunKey', models.DO_NOTHING)
-    run = models.ForeignKey(Run, models.DO_NOTHING)
+    run = models.ForeignKey('Run', models.DO_NOTHING)
     lane = models.IntegerField()
-    dataset = models.ForeignKey(Dataset, models.DO_NOTHING)
-    project = models.ForeignKey(Project, models.DO_NOTHING)
+    dataset = models.ForeignKey('Dataset', models.DO_NOTHING)
+    project = models.ForeignKey('Project', models.DO_NOTHING)
     tubelabel = models.CharField(max_length=32)
     barcode = models.CharField(max_length=4)
     adaptor = models.CharField(max_length=3)
-    dna_region = models.ForeignKey(DnaRegion, models.DO_NOTHING)
+    dna_region = models.ForeignKey('DnaRegion', models.DO_NOTHING)
     amp_operator = models.CharField(max_length=5)
     seq_operator = models.CharField(max_length=5)
     barcode_index = models.CharField(max_length=12)
@@ -246,7 +247,7 @@ class RunInfoIll(models.Model):
     insert_size = models.SmallIntegerField()
     file_prefix = models.CharField(max_length=45)
     read_length = models.SmallIntegerField()
-    primer_suite = models.ForeignKey(PrimerSuite, models.DO_NOTHING)
+    primer_suite = models.ForeignKey('PrimerSuite', models.DO_NOTHING)
     updated = models.DateTimeField()
     platform = models.CharField(max_length=7, blank=True, null=True)
 

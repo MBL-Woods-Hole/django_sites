@@ -693,9 +693,31 @@ u'csrfmiddlewaretoken': [u'vGjYAehQ7VElC6nKQeuHJOTC0WIZbFxl']}>
         
         print "NNN project_name = %s, project_title = %s, funding = %s, env_sample_source_id = %s, contact_id = %d" % (project_name, request_post['project_title'], request_post['funding'], request_post['env_source_name'], owner.contact_id)
         
+        # role, created = UserToUserRole.objects.get_or_create(
+            # from_user=current_user, to_user=user, role='follow')
+            
+        # Thing.objects_with_scores.all()
         
-        new_project = models_l_env454.Project(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name="REVERSE(%s)" % project_name, funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
-        new_project.save()
+        print "models_l_env454.Project = "
+        print models_l_env454.Project
+        
+        print "type(models_l_env454.Project)"
+        print type(models_l_env454.Project)
+        
+        print "Project.objects.all()"
+        print models_l_env454.Project.objects.all()
+        
+        pp = models_l_env454.Project.objects.get(project = "LAZ_NSL_Ev4")
+        print "pp"
+        print pp
+        
+        
+        new_project, created = models_l_env454.Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name="REVERSE(%s)" % project_name, funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
+        
+        print "new_project, created"
+        print new_project
+        print created
+        # new_project.save()
         # if (!(contact_id > 0))
         # {
         #     print_red_message("There is no such contact information in our database. Only PIs can be project owners.");
