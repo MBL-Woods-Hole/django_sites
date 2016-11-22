@@ -781,3 +781,58 @@ class CsvMetadata():
         request.session['out_metadata_table'] = self.out_metadata_table
         
         return (request, metadata_run_info_form, formset)
+        
+    def create_submission_metadata_file(self, request):
+        print "EEE: request.POST = %s" % request.POST
+
+        """
+        *) metadata table to show and edit
+        *) metadata out edit
+        *) ini and csv machine_info/run dir
+        *) ini files
+        *) metadata csv files
+        """
+
+        #*) metadata table to show and edit
+        self.edit_out_metadata_table(request)
+        metadata_run_info_form = CsvRunInfoUploadForm(request.session['run_info_form_post'])
+
+        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm)
+
+        my_post_dict = self.edit_post_metadata_table(request)
+
+        self.add_out_metadata_table_to_out_metadata(request)
+        print "my_post_dict = %s" % my_post_dict
+
+        #*) metadata out edit
+        self.out_metadata = request.session['out_metadata']
+        self.update_out_metadata(my_post_dict, request)
+
+        # ----
+        self.selected_rundate       = request.session['run_info']['selected_rundate']
+        self.selected_machine_short = request.session['run_info']['selected_machine_short']
+        self.selected_machine       = request.session['run_info']['selected_machine']
+        self.selected_dna_region    = request.session['run_info']['selected_dna_region']
+        self.selected_overlap       = request.session['run_info']['selected_overlap']
+
+        #*) ini and csv machine_info/run dir
+        self.get_lanes_domains()
+        self.create_path_to_csv()
+
+        # *) validation
+        formset = MetadataOutCsvFormSet(my_post_dict)
+
+        if len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0:
+
+            #*) ini files
+            self.create_ini_names()
+            self.write_ini()
+
+            #*) metadata csv files
+            self.make_out_metadata_csv_file_names()
+            self.write_out_metadata_to_csv(my_post_dict, request)
+
+            # *) check if csv was created
+            self.check_out_csv_files()
+            
+        return (request, metadata_run_info_form, formset)
