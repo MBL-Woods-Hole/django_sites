@@ -669,7 +669,7 @@ class CsvMetadata():
         
         # print "NNN project_name = %s, project_title = %s, funding = %s, env_sample_source_id = %s, contact_id = %d" % (project_name, request_post['project_title'], request_post['funding'], request_post['env_source_name'], owner.contact_id)
         
-        return models_l_env454.Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name="REVERSE(%s)" % project_name, funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
+        return models_l_env454.Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name=project_name[::-1], funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
         
         # return created
 
