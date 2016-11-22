@@ -658,7 +658,7 @@ class CsvMetadata():
                 except:
                     raise
 
-        print "self.out_metadata_table BBB = %s" % self.out_metadata_table
+        # print "self.out_metadata_table BBB = %s" % self.out_metadata_table
         
         
     def add_new_project(self, request_post):
@@ -730,7 +730,7 @@ class CsvMetadata():
         return (metadata_run_info_form, metadata_new_project_form)
         
     def submit_new_project(self, request):
-        print "EEE: request.POST = %s" % request.POST
+        # print "EEE: request.POST = %s" % request.POST
         
         # request.session['run_info_from_csv'] = self.run_info_from_csv
         # print "request.session['run_info_from_csv'] 111 = "
@@ -749,7 +749,7 @@ class CsvMetadata():
             
             """
             
-            self.add_new_project(request.POST)
+            self.new_project, self.new_project_created = self.add_new_project(request.POST)
 
         return (metadata_run_info_form, metadata_new_project_form)
         

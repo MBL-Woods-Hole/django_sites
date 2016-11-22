@@ -29,7 +29,7 @@
 <tr>
 	<td>type</td>
 	<td>id=id_project_title</td>
-	<td>LAZ_NSL_HSSU</td>
+	<td>Alaska Lakes HSSU Study</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -59,7 +59,7 @@
 <tr>
 	<td>type</td>
 	<td>id=id_project_description</td>
-	<td>LAZ_NSL_HSSU</td>
+	<td>Alaska Lakes HSSU Study</td>
 </tr>
 <tr>
 	<td>select</td>
@@ -84,23 +84,28 @@
 <tr>
 	<td>type</td>
 	<td>id=id_funding</td>
-	<td>000</td>
+	<td>104766</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>name=submit_new_project</td>
 	<td></td>
 </tr>
-<!--<tr>
-	<td>select</td>
-	<td>id=id_csv_dna_region</td>
-	<td>label=v4_hap (HSSU)</td>
+<tr>
+	<td>verifyText</td>
+	<td>css=p.green_message</td>
+	<td>Project LAZ_NSL_EHSSU was created</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>name=submit_new_project</td>
 	<td></td>
-</tr>-->
+</tr>
+<tr>
+	<td>verifyNotText</td>
+	<td>css=p.green_message</td>
+	<td>Project LAZ_NSL_EHSSU was created</td>
+</tr>
 </tbody></table>
 </body>
 </html>
