@@ -36,6 +36,10 @@ class Utils():
     def get_domain_name(self, domain_name):
         domain_choices = dict(models.Domain.SUITE_DOMAIN_CHOICES)
         return domain_choices[domain_name]
+        
+    def clear_session(self, request):
+        for key in request.session.keys():
+            del request.session[key]
             
 
 class Dirs:
@@ -123,3 +127,4 @@ class Run():
         else:
             form = RunForm()
         return (form, error_message)
+

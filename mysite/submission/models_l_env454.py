@@ -241,6 +241,9 @@ class Run(models.Model):
         return self.run
 
 class RunInfoIll(models.Model):
+    objects = models.Manager()
+    cache_all_method = AllMethodCachingManager()
+    
     run_info_ill_id = models.AutoField(primary_key=True)
     run_key = models.ForeignKey('RunKey', models.DO_NOTHING)
     run = models.ForeignKey('Run', models.DO_NOTHING)

@@ -41,7 +41,10 @@ def upload_metadata(request):
     """
     utils = Utils()
     csv_handler = CsvMetadata()
+    
     if request.method == 'POST' and request.FILES:
+        utils.clear_session(request)
+        
         metadata_run_info_form, metadata_new_project_form = csv_handler.csv_file_upload(request)
 
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form })
