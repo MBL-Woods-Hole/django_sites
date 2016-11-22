@@ -54,7 +54,9 @@ class MetadataOutCsvForm(forms.Form):
     #TODO: add N's if needed
     run_key                 = forms.CharField(label = 'Run Key', max_length = 9, widget=forms.TextInput(attrs={'class': 'size_short_input'}))
     barcode_index           = forms.CharField(label = 'Barcode Index', max_length=12, widget=forms.TextInput(attrs={'class': 'size_short_input'}))
-    adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
+    
+    adaptor_query = IlluminaAdaptor.cache_all_method.all().order_by('illumina_adaptor')
+    # adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
     adaptor                 = forms.ModelChoiceField(queryset = adaptor_query, to_field_name = 'illumina_adaptor')
     
     project_query = Project.cache_all_method.all().order_by('project')
@@ -63,7 +65,8 @@ class MetadataOutCsvForm(forms.Form):
     dataset                 = forms.CharField(min_length=3, max_length=64,
                             validators=[validate_slug])
     dataset_description     = forms.CharField(max_length=100)
-    env_source_name_query = EnvSampleSource.objects.all().order_by('env_sample_source_id')
+    # env_source_name_query = EnvSampleSource.objects.all().order_by('env_sample_source_id')
+    env_source_name_query = EnvSampleSource.cache_all_method.all().order_by('env_sample_source_id')
     env_source_name         = forms.ModelChoiceField(queryset = env_source_name_query, empty_label = None)
     tubelabel               = forms.CharField(max_length=32)
     barcode                 = forms.CharField(max_length=12, required=False)
@@ -152,7 +155,7 @@ class AddProjectForm(forms.Form):
                             # validators=[validate_slug])
     project_description = forms.CharField(max_length=100)
     funding             = forms.CharField(max_length=32)
-    env_source_name_query = EnvSampleSource.objects.all().order_by('env_sample_source_id')
+    env_source_name_query = EnvSampleSource.cache_all_method.all().order_by('env_sample_source_id')
     env_source_name     = forms.ModelChoiceField(queryset = env_source_name_query, empty_label = None, )
     # http://stackoverflow.com/questions/22886411/validation-errors-on-modelchoicefield
     # https://snakeycode.wordpress.com/2015/02/11/django-dynamic-modelchoicefields/comment-page-1/

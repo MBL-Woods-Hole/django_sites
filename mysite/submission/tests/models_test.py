@@ -8,7 +8,7 @@ import time
 
 def test_choices_not_fetched_when_not_rendering(self):
         initial_queries = len(connection.queries)
-        project_query = Project.objects.all().order_by('project')
+        project_query = Project.cache_all_method.all().order_by('project')
         project = ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
         field = ModelChoiceField(Group.objects.order_by('-name'))
         self.assertEqual('a', field.clean(self.groups[0].pk).name)

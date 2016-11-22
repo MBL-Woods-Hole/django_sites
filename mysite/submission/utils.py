@@ -75,7 +75,7 @@ class Dirs:
 class Run():
     def __init__(self):
         self.utils = Utils()
-        self.all_suites = RunInfoIll.objects.select_related('run', 'primer_suite')
+        self.all_suites = RunInfoIll.cache_all_method.select_related('run', 'primer_suite')
         
     def get_primer_suites(self, run, lane, suite_domain):
         # all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)

@@ -95,6 +95,9 @@ class DnaRegion(models.Model):
         return self.dna_region
 
 class EnvSampleSource(models.Model):
+    objects = models.Manager()
+    cache_all_method = AllMethodCachingManager()
+    
     env_sample_source_id = models.IntegerField(primary_key=True)
     env_source_name = models.CharField(unique=True, max_length=50)
 
@@ -107,6 +110,9 @@ class EnvSampleSource(models.Model):
 
 
 class IlluminaAdaptor(models.Model):
+    objects = models.Manager()
+    cache_all_method = AllMethodCachingManager()
+    
     illumina_adaptor_id = models.SmallIntegerField(primary_key=True, editable=False)
     illumina_adaptor = models.CharField(unique=True, max_length=3, editable=False)
 
@@ -118,6 +124,9 @@ class IlluminaAdaptor(models.Model):
         return u'{0}'.format(self.illumina_adaptor)        
 
 class IlluminaAdaptorRef(models.Model):
+    objects = models.Manager()
+    cache_all_method = AllMethodCachingManager()
+    
     illumina_adaptor    = models.ForeignKey('IlluminaAdaptor', models.DO_NOTHING, primary_key=True, editable=False)
     illumina_index      = models.ForeignKey('IlluminaIndex', models.DO_NOTHING, editable=False)
     illumina_run_key    = models.ForeignKey('IlluminaRunKey', models.DO_NOTHING, editable=False)

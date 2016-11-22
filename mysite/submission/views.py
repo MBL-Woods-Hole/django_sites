@@ -22,7 +22,7 @@ from .utils import Run, Utils
 from .metadata_tools import CsvMetadata, Validation
 
 def index(request):
-    latest_run_list = Run.objects.order_by('-run')[:10]
+    latest_run_list = Run.cache_all_method.order_by('-run')[:10]
     context = {'latest_run_list': latest_run_list}
     current_url = request.META["HTTP_REFERER"]
 

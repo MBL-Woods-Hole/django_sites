@@ -17,18 +17,13 @@ class submissionRouter(object):
             else:
                 db = 'local_env454'
 
-        print "db = %s" % db
+        print "db_for_read = %s" % db
         return db
 
     def db_for_write(self, model, **hints):
         "Point all operations on submission models to 'local_env454'"
         db = 'default'
         
-        print "model._meta.app_label = "
-        print model._meta.app_label
-        
-        print "model._meta = "
-        print model._meta
         if model._meta.app_label == 'submission':
         #     return None
         # return 'default'

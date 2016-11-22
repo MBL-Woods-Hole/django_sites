@@ -328,7 +328,7 @@ class CsvMetadata():
             self.get_adaptors_full(adaptor, dna_region, domain)
 
     def get_adaptors_full(self, adaptor, dna_region, domain, db_name = "test_env454"):
-        links = models_l_env454.IlluminaAdaptorRef.objects.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+        links = models_l_env454.IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
 
         key = "_".join([adaptor, dna_region, domain])
@@ -348,7 +348,7 @@ class CsvMetadata():
                 vamps_user_id = self.vamps_submissions[submit_code]['user']
                 # print "CCC1 vamps_user_id = %s" % vamps_user_id
 
-                contacts = models_l_env454.Contact.objects.get(vamps_name = vamps_user_id)
+                contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
                 # .filter(vamps_name = vamps_user_id)
 
                 print "CCC contacts = %s" % contacts
@@ -665,7 +665,7 @@ class CsvMetadata():
     def add_new_project(self, request_post):
         project_name = request_post['project_0'] + "_" + request_post['project_1'] + "_" + request_post['project_2'] + request_post['project_3']
 
-        owner = models_l_env454.Contact.objects.get(contact = request_post['contact'])
+        owner = models_l_env454.Contact.cache_all_method.get(contact = request_post['contact'])
         
         # print "NNN project_name = %s, project_title = %s, funding = %s, env_sample_source_id = %s, contact_id = %d" % (project_name, request_post['project_title'], request_post['funding'], request_post['env_source_name'], owner.contact_id)
         
