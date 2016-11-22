@@ -109,6 +109,9 @@ def upload_metadata(request):
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
         metadata_new_project_form = AddProjectForm(request.POST)
+        new_project = ""
+        new_project_created = False
+        
         if metadata_new_project_form.is_valid():        
             print "!!!metadata_new_project_form.cleaned_data"
             print metadata_new_project_form.cleaned_data
@@ -117,9 +120,14 @@ def upload_metadata(request):
             {'env_source_name': <EnvSampleSource: 0: >, 'project_description': u'www', 'funding': u'rrr', 'project_title': u'sss', 'project': u'dfsdfs_dsfsdfs_B_v6', 'contact': <Contact: Eric Boyd>}
             
             """
-            csv_handler.add_new_project(request.POST)
+            
+            new_project, new_project_created = csv_handler.add_new_project(request.POST)
+            print "new_project = "
+            print new_project
+            print "new_project_created = "
+            print new_project_created
     
-        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form })
+        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': new_project, 'new_project_created': new_project_created })
     
 
     elif 'submit_run_info' in request.POST:
@@ -210,7 +218,7 @@ def upload_metadata(request):
             # *) check if csv was created
             csv_handler.check_out_csv_files()
             
-        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': formset.total_error_count(), 'file_created': csv_handler.files_created}
+        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': formset.total_error_count(), 'files_created': csv_handler.files_created}
         return render(request, 'submission/upload_metadata.html', context)
 
     else:

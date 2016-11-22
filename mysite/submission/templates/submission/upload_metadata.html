@@ -103,6 +103,13 @@
      </div>
      <div class="grid_5"></div>
      <div class="clear"></div>
+     
+     <div class="grid_12">
+      {% if new_project_created %}
+          <p class=green_message>Project {{ new_project_name }} was created</p>          
+      {% endif %}
+     </div>
+     <div class="clear"></div>
      <!--
        AddProjectForm
      <br />
@@ -175,7 +182,7 @@
        
        <div class="grid_12">
         {% if file_created %}
-          {% for file_path in file_created %}
+          {% for file_path in files_created %}
             <p class=green_message>{{ file_path }} was created</p>
           {% endfor %}
             
