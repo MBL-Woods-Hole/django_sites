@@ -41,6 +41,8 @@ def upload_metadata(request):
     csv_handler = CsvMetadata()
     
     if request.method == 'POST' and request.FILES:
+        print "HHH"
+        print "111 request.method == 'POST' and request.FILES:"
         utils.clear_session(request)
         
         metadata_run_info_form, metadata_new_project_form = csv_handler.csv_file_upload(request)
@@ -48,12 +50,16 @@ def upload_metadata(request):
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form }
         
     elif 'submit_new_project' in request.POST:
+        print "HHH"
+        print "222 submit_new_project in request.POST"
 
         metadata_run_info_form, metadata_new_project_form = csv_handler.submit_new_project(request)
 
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': csv_handler.new_project, 'new_project_created': csv_handler.new_project_created }    
 
     elif 'submit_run_info' in request.POST:
+        print "HHH"
+        print "333 submit_run_info in request.POST"
 
         request, metadata_run_info_form, formset = csv_handler.submit_run_info(request)
         
@@ -66,12 +72,17 @@ def upload_metadata(request):
 
 
     elif 'create_submission_metadata_file' in request.POST:
+        print "HHH"
+        print "444 create_submission_metadata_file in request.POST"
         
         request, metadata_run_info_form, formset = csv_handler.create_submission_metadata_file(request)
         
         context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': formset.total_error_count(), 'files_created': csv_handler.files_created}
         
     else:
+        print "HHH"
+        print "555 file_upload_form"
+        
         file_upload_form = FileUploadForm()
         
         context = {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
