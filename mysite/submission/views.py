@@ -55,41 +55,17 @@ def upload_metadata(request):
     
 
     elif 'submit_run_info' in request.POST:
-        # # print "EEE: request.POST = %s" % request.POST
-        # csv_handler.get_selected_variables(request.POST)
-        # request.session['run_info'] = {}
-        # request.session['run_info']['selected_rundate']         = csv_handler.selected_rundate
-        # request.session['run_info']['selected_machine_short']   = csv_handler.selected_machine_short
-        # request.session['run_info']['selected_machine']         = csv_handler.selected_machine
-        # request.session['run_info']['selected_dna_region']      = csv_handler.selected_dna_region
-        # request.session['run_info']['selected_overlap']         = csv_handler.selected_overlap
-        #
-        # #*) metadata table to show and edit
-        # csv_handler.edit_out_metadata(request)
-        # request.session['out_metadata'] = csv_handler.out_metadata
-        #
-        # csv_handler.make_metadata_table()
-        #
-        # # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-        # metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-        # print "request.POST 222 = "
-        # print request.POST
-        # request.session['run_info_form_post'] = request.POST
-        #
-        # MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))
-        # formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
-        #
-        # request.session['out_metadata_table'] = csv_handler.out_metadata_table
-        
+
         request, metadata_run_info_form, formset = csv_handler.submit_run_info(request)
         
         errors_size = len(metadata_run_info_form.errors)
+        
         if errors_size > 0:
-            return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size })
+            context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
         else:
             context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
 
-            return render(request, 'submission/upload_metadata.html', context)
+        return render(request, 'submission/upload_metadata.html', context)
 
     elif 'create_submission_metadata_file' in request.POST:
         print "EEE: request.POST = %s" % request.POST
