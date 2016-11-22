@@ -44,15 +44,14 @@ def upload_metadata(request):
         utils.clear_session(request)
         
         metadata_run_info_form, metadata_new_project_form = csv_handler.csv_file_upload(request)
-
-        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form })
+        
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form }
         
     elif 'submit_new_project' in request.POST:
 
         metadata_run_info_form, metadata_new_project_form = csv_handler.submit_new_project(request)
-    
-        return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': csv_handler.new_project, 'new_project_created': csv_handler.new_project_created })
-    
+
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': csv_handler.new_project, 'new_project_created': csv_handler.new_project_created }    
 
     elif 'submit_run_info' in request.POST:
 
@@ -65,7 +64,6 @@ def upload_metadata(request):
         else:
             context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
 
-        return render(request, 'submission/upload_metadata.html', context)
 
     elif 'create_submission_metadata_file' in request.POST:
         
