@@ -1,15 +1,13 @@
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from django.forms import formset_factory
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext, loader, Context
 from django.utils.html import escape
-from django.forms import formset_factory
-
 import os 
-# import magic
-from django.conf import settings
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
-from django.core.exceptions import ValidationError
 
 def my_view(request):
     context = {'foo': 'bar'}
@@ -50,65 +48,41 @@ def upload_metadata(request):
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form })
         
     elif 'submit_new_project' in request.POST:
-        # print "EEE: request.POST = %s" % request.POST
-        #
-        # # request.session['run_info_from_csv'] = csv_handler.run_info_from_csv
-        # # print "request.session['run_info_from_csv'] 111 = "
-        # # print request.session['run_info_from_csv']
-        #
-        # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-        #
-        # metadata_new_project_form = AddProjectForm(request.POST)
-        # new_project = ""
-        # new_project_created = False
-        #
-        # if metadata_new_project_form.is_valid():
-        #     print "!!!metadata_new_project_form.cleaned_data"
-        #     print metadata_new_project_form.cleaned_data
-        #     """
-        #     !!!metadata_new_project_form.cleaned_data
-        #     {'env_source_name': <EnvSampleSource: 0: >, 'project_description': u'www', 'funding': u'rrr', 'project_title': u'sss', 'project': u'dfsdfs_dsfsdfs_B_v6', 'contact': <Contact: Eric Boyd>}
-        #
-        #     """
-        #
-        #     new_project, new_project_created = csv_handler.add_new_project(request.POST)
-        #     print "new_project = "
-        #     print new_project
-        #     print "new_project_created = "
-        #     print new_project_created
-        
+
         metadata_run_info_form, metadata_new_project_form = csv_handler.submit_new_project(request)
     
         return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': csv_handler.new_project, 'new_project_created': csv_handler.new_project_created })
     
 
     elif 'submit_run_info' in request.POST:
-        # print "EEE: request.POST = %s" % request.POST
-        csv_handler.get_selected_variables(request.POST)
-        request.session['run_info'] = {}
-        request.session['run_info']['selected_rundate']         = csv_handler.selected_rundate
-        request.session['run_info']['selected_machine_short']   = csv_handler.selected_machine_short
-        request.session['run_info']['selected_machine']         = csv_handler.selected_machine
-        request.session['run_info']['selected_dna_region']      = csv_handler.selected_dna_region
-        request.session['run_info']['selected_overlap']         = csv_handler.selected_overlap
-
-        #*) metadata table to show and edit
-        csv_handler.edit_out_metadata(request)
-        request.session['out_metadata'] = csv_handler.out_metadata
-
-        csv_handler.make_metadata_table()
-
-        # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-        metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-        print "request.POST 222 = "
-        print request.POST
-        request.session['run_info_form_post'] = request.POST
-
-        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))
-        formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
-
-        request.session['out_metadata_table'] = csv_handler.out_metadata_table
-
+        # # print "EEE: request.POST = %s" % request.POST
+        # csv_handler.get_selected_variables(request.POST)
+        # request.session['run_info'] = {}
+        # request.session['run_info']['selected_rundate']         = csv_handler.selected_rundate
+        # request.session['run_info']['selected_machine_short']   = csv_handler.selected_machine_short
+        # request.session['run_info']['selected_machine']         = csv_handler.selected_machine
+        # request.session['run_info']['selected_dna_region']      = csv_handler.selected_dna_region
+        # request.session['run_info']['selected_overlap']         = csv_handler.selected_overlap
+        #
+        # #*) metadata table to show and edit
+        # csv_handler.edit_out_metadata(request)
+        # request.session['out_metadata'] = csv_handler.out_metadata
+        #
+        # csv_handler.make_metadata_table()
+        #
+        # # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+        # metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
+        # print "request.POST 222 = "
+        # print request.POST
+        # request.session['run_info_form_post'] = request.POST
+        #
+        # MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(csv_handler.out_metadata_table['rows']))
+        # formset = MetadataOutCsvFormSet(initial=csv_handler.out_metadata_table['rows'])
+        #
+        # request.session['out_metadata_table'] = csv_handler.out_metadata_table
+        
+        request, metadata_run_info_form, formset = csv_handler.submit_run_info(request)
+        
         errors_size = len(metadata_run_info_form.errors)
         if errors_size > 0:
             return render(request, 'submission/upload_metadata.html', {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size })

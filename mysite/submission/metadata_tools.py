@@ -1,24 +1,20 @@
-import models
+from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
 from .utils import Utils, Dirs
-import models_l_env454
-from django.db.models import Q
-from django.forms.models import model_to_dict
-import time
-from django.utils.datastructures import MultiValueDictKeyError
-
+from collections import defaultdict
 from datetime import datetime
-
-import csv
-import codecs
-import time
-import os
-
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import connection, transaction
-
-from collections import defaultdict
-from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
+from django.db.models import Q
+from django.forms import formset_factory
+from django.forms.models import model_to_dict
+from django.utils.datastructures import MultiValueDictKeyError
+import codecs
+import csv
+import models
+import models_l_env454
+import os
+import time
 
 # Assuming that in each csv one rundate and one platform!
 class CsvMetadata():
@@ -756,3 +752,32 @@ class CsvMetadata():
             self.add_new_project(request.POST)
 
         return (metadata_run_info_form, metadata_new_project_form)
+        
+    def submit_run_info(self, request):
+        # print "EEE: request.POST = %s" % request.POST
+        self.get_selected_variables(request.POST)
+        request.session['run_info'] = {}
+        request.session['run_info']['selected_rundate']         = self.selected_rundate
+        request.session['run_info']['selected_machine_short']   = self.selected_machine_short
+        request.session['run_info']['selected_machine']         = self.selected_machine
+        request.session['run_info']['selected_dna_region']      = self.selected_dna_region
+        request.session['run_info']['selected_overlap']         = self.selected_overlap
+
+        #*) metadata table to show and edit
+        self.edit_out_metadata(request)
+        request.session['out_metadata'] = self.out_metadata
+
+        self.make_metadata_table()
+
+        # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+        metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
+        print "request.POST 222 = "
+        print request.POST
+        request.session['run_info_form_post'] = request.POST
+
+        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
+        formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
+
+        request.session['out_metadata_table'] = self.out_metadata_table
+        
+        return (request, metadata_run_info_form, formset)
