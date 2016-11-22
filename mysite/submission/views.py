@@ -68,68 +68,17 @@ def upload_metadata(request):
         return render(request, 'submission/upload_metadata.html', context)
 
     elif 'create_submission_metadata_file' in request.POST:
-        # print "EEE: request.POST = %s" % request.POST
-        #
-        # """
-        # *) metadata table to show and edit
-        # *) metadata out edit
-        # *) ini and csv machine_info/run dir
-        # *) ini files
-        # *) metadata csv files
-        # """
-        #
-        # #*) metadata table to show and edit
-        # csv_handler.edit_out_metadata_table(request)
-        # metadata_run_info_form = CsvRunInfoUploadForm(request.session['run_info_form_post'])
-        #
-        # MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm)
-        #
-        # my_post_dict = csv_handler.edit_post_metadata_table(request)
-        #
-        # csv_handler.add_out_metadata_table_to_out_metadata(request)
-        # print "my_post_dict = %s" % my_post_dict
-        #
-        # #*) metadata out edit
-        # csv_handler.out_metadata = request.session['out_metadata']
-        # csv_handler.update_out_metadata(my_post_dict, request)
-        #
-        # # ----
-        # csv_handler.selected_rundate       = request.session['run_info']['selected_rundate']
-        # csv_handler.selected_machine_short = request.session['run_info']['selected_machine_short']
-        # csv_handler.selected_machine       = request.session['run_info']['selected_machine']
-        # csv_handler.selected_dna_region    = request.session['run_info']['selected_dna_region']
-        # csv_handler.selected_overlap       = request.session['run_info']['selected_overlap']
-        #
-        # #*) ini and csv machine_info/run dir
-        # csv_handler.get_lanes_domains()
-        # csv_handler.create_path_to_csv()
-        #
-        # # *) validation
-        # formset = MetadataOutCsvFormSet(my_post_dict)
-        #
-        # if len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0:
-        #
-        #     #*) ini files
-        #     csv_handler.create_ini_names()
-        #     csv_handler.write_ini()
-        #
-        #     #*) metadata csv files
-        #     csv_handler.make_out_metadata_csv_file_names()
-        #     csv_handler.write_out_metadata_to_csv(my_post_dict, request)
-        #
-        #     # *) check if csv was created
-        #     csv_handler.check_out_csv_files()
         
         request, metadata_run_info_form, formset = csv_handler.create_submission_metadata_file(request)
         
         context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': formset.total_error_count(), 'files_created': csv_handler.files_created}
-        return render(request, 'submission/upload_metadata.html', context)
-
+        
     else:
         file_upload_form = FileUploadForm()
+        
         context = {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
 
-        return render(request, 'submission/upload_metadata.html', context)
+    return render(request, 'submission/upload_metadata.html', context)
 
 # def my_view(request):
 #     context = {'foo': 'bar'}
