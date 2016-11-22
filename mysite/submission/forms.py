@@ -46,11 +46,10 @@ class MetadataOutCsvForm(forms.Form):
     # todo: add css class size_number to input
     domain                  = forms.ChoiceField(Domain.DOMAIN_CHOICES, label = '')
     lane                    = forms.IntegerField(max_value = 9, widget=forms.TextInput(attrs={'class': 'size_number'}))
-    contact_name_query      = Contact.objects.all().order_by('last_name')
+    # contact_name_query      = Contact.objects.all().order_by('last_name')
+    contact_name_query      = Contact.cache_all_method.all().order_by('contact')
     contact_name            = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
     # to_field_name = "%s, %s" % (last_name, first_name))
-    # contact_query           = Contact.cache_all_method.all().order_by('contact')
-    # contact_name            = forms.ModelChoiceField(queryset = contact_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
 
     #TODO: add N's if needed
     run_key                 = forms.CharField(label = 'Run Key', max_length = 9, widget=forms.TextInput(attrs={'class': 'size_short_input'}))
@@ -149,7 +148,8 @@ class ComplexField(forms.MultiValueField):
 class AddProjectForm(forms.Form):
     project             = ComplexField(widget=ComplexMultiWidget())
     project_title       = forms.CharField(min_length=3, max_length=64,
-                            validators=[validate_slug])
+                          validators = [RegexValidator('^[A-Za-z0-9_ -]+$', message="Enter a project title consisting of letters, numbers, underscores, hyphens or spaces")])
+                            # validators=[validate_slug])
     project_description = forms.CharField(max_length=100)
     funding             = forms.CharField(max_length=32)
     env_source_name_query = EnvSampleSource.objects.all().order_by('env_sample_source_id')
