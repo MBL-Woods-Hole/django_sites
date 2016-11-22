@@ -104,6 +104,8 @@ class CsvMetadata():
         self.utils = Utils()
         self.files_created = []
         self.empty_cells = []
+        self.new_project = ""
+        self.new_project_created = False
 
         # error = True
 
@@ -729,4 +731,28 @@ class CsvMetadata():
         # if HOSTNAME.startswith("localhost"):
         #     print "local"
         
+        return (metadata_run_info_form, metadata_new_project_form)
+        
+    def submit_new_project(self, request):
+        print "EEE: request.POST = %s" % request.POST
+        
+        # request.session['run_info_from_csv'] = self.run_info_from_csv
+        # print "request.session['run_info_from_csv'] 111 = "
+        # print request.session['run_info_from_csv']
+        
+        metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+
+        metadata_new_project_form = AddProjectForm(request.POST)
+        
+        if metadata_new_project_form.is_valid():        
+            print "!!!metadata_new_project_form.cleaned_data"
+            print metadata_new_project_form.cleaned_data
+            """
+            !!!metadata_new_project_form.cleaned_data
+            {'env_source_name': <EnvSampleSource: 0: >, 'project_description': u'www', 'funding': u'rrr', 'project_title': u'sss', 'project': u'dfsdfs_dsfsdfs_B_v6', 'contact': <Contact: Eric Boyd>}
+            
+            """
+            
+            self.add_new_project(request.POST)
+
         return (metadata_run_info_form, metadata_new_project_form)
