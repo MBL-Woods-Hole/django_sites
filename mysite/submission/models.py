@@ -83,11 +83,10 @@ class Ill_dna_region(models.Model):
         ('v6', 'v6'),
         ('v4v5', 'v4v5'),
         ('v4', 'v4'),
-        ('HSSU', 'v4_hap (HSSU)'),
-        ('HLSU', 'v4_hap (HLSU)'),
+        ('HSSU', 'HSSU'),
+        ('HLSU', 'HLSU'),
         ('ITS1', 'ITS1'),
     )
-
 
 class Has_ns(models.Model):
     HAVING_NS_CHOICES = (
