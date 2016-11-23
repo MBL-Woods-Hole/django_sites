@@ -102,6 +102,7 @@ class CsvMetadata():
         self.empty_cells = []
         self.new_project = ""
         self.new_project_created = False
+        self.adaptor_ref = self.get_all_adaptors()
 
         # error = True
 
@@ -319,19 +320,23 @@ class CsvMetadata():
 
     def get_adaptor_from_csv_content(self):
         for i in xrange(len(self.csv_content)-1):
-            print "+" * 9
+            # print "+" * 9
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
             domain     = self.csv_by_header['domain'][i]
 
             self.get_adaptors_full(adaptor, dna_region, domain)
 
+    def get_all_adaptors(self, db_name = "test_env454"):
+        return models_l_env454.IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+
     def get_adaptors_full(self, adaptor, dna_region, domain, db_name = "test_env454"):
-        links = models_l_env454.IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+        # self.adaptor_ref
+        # links = models_l_env454.IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # print links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08"))
 
         key = "_".join([adaptor, dna_region, domain])
-        mm = links.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
+        mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
         
         # print "self.adaptors_full timing 2"
         # t0 = self.utils.benchmark_w_return_1()
@@ -370,7 +375,7 @@ class CsvMetadata():
 
         if 'submit_run_info' in request_post:
             self.selected_machine       = request_post.get('csv_platform', False)
-            print "self.selected_machine in request_post= %s" % (self.selected_machine)
+            # print "self.selected_machine in request_post= %s" % (self.selected_machine)
             self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
             self.selected_rundate       = request_post.get('csv_rundate', False)
             self.selected_dna_region    = request_post.get('csv_dna_region', False)
@@ -379,7 +384,7 @@ class CsvMetadata():
             # print "self.csv_by_header_uniqued['platform']"
             # print self.csv_by_header_uniqued['platform']
             self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
-            print "self.selected_machine 2 = %s" % self.selected_machine
+            # print "self.selected_machine 2 = %s" % self.selected_machine
             # print "MMM self.machine_shortcuts_choices"
             # print self.machine_shortcuts_choices
             self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
@@ -389,7 +394,7 @@ class CsvMetadata():
 
     def create_path_to_csv(self):
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
-        print "self.selected_machine from create_path_to_csv = %s" % (self.selected_machine)
+        # print "self.selected_machine from create_path_to_csv = %s" % (self.selected_machine)
 
         self.path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.selected_machine + "_info", self.selected_rundate)
         print "self.path_to_csv"
@@ -442,12 +447,14 @@ class CsvMetadata():
 
     def check_out_csv_files(self):
         for lane_domain, file_name in self.metadata_csv_file_names.items():
-            print "MMM"
-            print os.path.join(self.path_to_csv, file_name)
+            # print "MMM"
+            # print os.path.join(self.path_to_csv, file_name)
             if os.path.isfile(os.path.join(self.path_to_csv, file_name)):
                 self.files_created.append(os.path.join(self.path_to_csv, file_name))
 
     def update_out_metadata(self, my_post_dict, request):
+        print "update_out_metadata"
+        
         for header in self.HEADERS_TO_CSV:
             for i in self.out_metadata.keys():
                 try:
@@ -458,6 +465,8 @@ class CsvMetadata():
                     raise
                     
     def edit_out_metadata(self, request):
+        print "edit_out_metadata"
+        
         # print "FROM edit_out_metadata: request.session['out_metadata']"
         # print request.session['out_metadata']
 
@@ -492,7 +501,7 @@ class CsvMetadata():
             key = "_".join([adaptor, dna_region, domain])
 
             self.get_adaptors_full(adaptor, dna_region, domain)
-
+            
             try:
                 self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
                 self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
@@ -503,6 +512,8 @@ class CsvMetadata():
                 raise
 
     def add_out_metadata_table_to_out_metadata(self, request):
+        print "add_out_metadata_table_to_out_metadata"
+        
         # TODO: benchmark
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
             for header in self.HEADERS_TO_EDIT_METADATA:
@@ -524,6 +535,7 @@ class CsvMetadata():
         return my_post_dict
 
     def make_new_out_metadata(self):
+        print "make_new_out_metadata"
         idx = 0
         # print "self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content))
         # print "self.csv_content[0] =  head = %s" % (self.csv_content[0])
@@ -547,6 +559,8 @@ class CsvMetadata():
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
             domain     = self.csv_by_header['domain'][i]
+
+            self.get_adaptors_full(adaptor, dna_region, domain)
 
             key = "_".join([adaptor, dna_region, domain])
 
@@ -698,8 +712,6 @@ class CsvMetadata():
 
         self.get_initial_run_info_data_dict()
         request.session['run_info_from_csv'] = self.run_info_from_csv
-        print "request.session['run_info_from_csv'] 111 = " 
-        print request.session['run_info_from_csv']
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
         metadata_new_project_form = AddProjectForm()
@@ -771,8 +783,8 @@ class CsvMetadata():
 
         # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-        print "request.POST 222 = "
-        print request.POST
+        # print "request.POST 222 = "
+        # print request.POST
         request.session['run_info_form_post'] = request.POST
 
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
@@ -783,7 +795,7 @@ class CsvMetadata():
         return (request, metadata_run_info_form, formset)
         
     def create_submission_metadata_file(self, request):
-        print "EEE: request.POST = %s" % request.POST
+        # print "EEE: request.POST = %s" % request.POST
 
         """
         *) metadata table to show and edit
@@ -802,11 +814,17 @@ class CsvMetadata():
         my_post_dict = self.edit_post_metadata_table(request)
 
         self.add_out_metadata_table_to_out_metadata(request)
-        print "my_post_dict = %s" % my_post_dict
+        # print "my_post_dict = %s" % my_post_dict
 
         #*) metadata out edit
         self.out_metadata = request.session['out_metadata']
         self.update_out_metadata(my_post_dict, request)
+
+        # adaptor    = self.csv_by_header['adaptor'][i]
+        # dna_region = self.csv_by_header['dna_region'][i]
+        # domain     = self.csv_by_header['domain'][i]
+        #
+        # self.get_adaptors_full(adaptor, dna_region, domain)
 
         # ----
         self.selected_rundate       = request.session['run_info']['selected_rundate']

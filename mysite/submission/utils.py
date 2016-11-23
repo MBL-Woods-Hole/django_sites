@@ -100,8 +100,8 @@ class Run():
         
         if request.method == 'POST':
             form = RunForm(request.POST)
-            print "request.POST = "
-            print request.POST
+            # print "request.POST = "
+            # print request.POST
             if form.is_valid():
                 run_data['find_rundate'] = form.cleaned_data['find_rundate'].run
                 run_data['find_machine'] = form.cleaned_data['find_machine']
@@ -111,9 +111,9 @@ class Run():
                 run_data['perfect_overlap']   = self.utils.get_overlap(form.cleaned_data['find_machine'])
                 suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
                 primer_suite = self.get_primer_suites(run_data['find_rundate'], run_data['find_lane'], suite_domain)
-                print "primer_suite[1]"
-
-                print primer_suite[1]
+                # print "primer_suite[1]"
+                #
+                # print primer_suite[1]
 
                 if (primer_suite[0]):
                     run_data['primer_suite'] = primer_suite[1]
