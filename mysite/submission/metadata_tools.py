@@ -420,7 +420,7 @@ class CsvMetadata():
         self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv")
 
     def write_ini(self):
-        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s" % (self.selected_rundate, self.selected_machine_short)
+        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.selected_rundate, self.selected_machine_short)
         overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
 
         for lane_domain, ini_name in self.ini_names.items():
