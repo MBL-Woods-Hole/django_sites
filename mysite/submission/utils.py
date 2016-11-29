@@ -97,12 +97,7 @@ class Run():
         print "Running get_run from utils"
         error_message = ""
         run_data = {}
-<<<<<<< HEAD
-        print "request = "
-        print request
-=======
         
->>>>>>> csv_upload
         if request.method == 'POST':
             form = RunForm(request.POST)
             # print "request.POST = "
@@ -132,4 +127,3 @@ class Run():
         else:
             form = RunForm()
         return (form, error_message)
-

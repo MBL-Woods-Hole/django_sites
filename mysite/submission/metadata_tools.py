@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-import sys
-import models
-=======
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
->>>>>>> csv_upload
 from .utils import Utils, Dirs
 from collections import defaultdict
 from datetime import datetime
@@ -13,6 +8,7 @@ from django.db import connection, transaction
 from django.db.models import Q
 from django.forms import formset_factory
 from django.forms.models import model_to_dict
+from django.shortcuts import render
 from django.utils.datastructures import MultiValueDictKeyError
 import codecs
 import csv
@@ -82,15 +78,9 @@ class CsvMetadata():
         self.csv_content = []
         self.run_info_from_csv = {}
         self.errors = []
-<<<<<<< HEAD
-        self.csv_by_header_uniqued = defaultdict( list )
-        # self.csv_file_name = "submission/selenium_tests/ashipunova354276_VAMPS_submission_good.csv"
-        self.csv_file = ""
-=======
         self.csv_by_header_uniqued = defaultdict(list)
         self.csv_by_header = defaultdict(list)
         self.csvfile = ""
->>>>>>> csv_upload
         self.cause = ""
         self.path_to_csv = ""
         self.selected_lane = ""
@@ -165,165 +155,8 @@ class CsvMetadata():
         print "self.required_headers = %s" % self.required_headers
 
     def no_data_message(self):
-        return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csv_file)
+        return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
 
-    def upload(self, request):
-      input_file = request.FILES.get('csv_file')
-      input_file.seek(0)
-      
-      print "=== DDD1 ==="
-      print type(input_file)
-      input_file.seek(0)
-      
-      print "input_file.field_name"
-      print input_file.field_name
-      input_file.seek(0)
-      
-# csv_file
-      print "=== input_file.file"
-      print input_file.file
-      input_file.seek(0)
-      
-# <_io.BytesIO object at 0x110d34050>
-
-      print "=== input_file.name"
-      print input_file.name
-      input_file.seek(0)
-      
-# ashipunova354276_VAMPS_submission_good.csv
-#       print "=== input_file.newlines"
-#       print input_file.newlines
-# AttributeError: '_io.BytesIO' object has no attribute 'newlines'
-
-      print "=== input_file.read"
-      input_file.seek(0)
-      print input_file.read
-      input_file.seek(0)
-      
-# <built-in method read of _io.BytesIO object at 0x10b0f2050>
-
-      print "=== input_file.readline"
-      input_file.seek(0)
-      print input_file.readline
-      input_file.seek(0)
-      
-# <built-in method readline of _io.BytesIO object at 0x10b0f2050>
-
-      print "=== input_file.size"
-      input_file.seek(0)
-      print input_file.size
-      input_file.seek(0)
-      
-# 0
-      print "=== input_file.seek"
-      print input_file.seek
-      input_file.seek(0)
-      
-      # <built-in method seek of _io.BytesIO object at 0x10b0f2050>
-      
-      print "=== input_file.tell"
-      print input_file.tell
-      input_file.seek(0)
-      
-      # <built-in method tell of _io.BytesIO object at 0x10b0f2050>
-      
-
-      print "=== DDD1 end ==="
-      # print django.core.files.uploadedfile.InMemoryUploadedFile.__dir__
-      print "dir(input_file)"
-      print dir(input_file)
-      # print "help(input_file)"
-      # print help(input_file)
-      # print "help(uploadedfile)"
-      # print help(uploadedfile)
-      # try:
-      #     rr = input_file.readlines()
-      #     print "rr"
-      #     print rr
-          
-          # wb = xlrd.open_workbook(tmp)
-          # ...  # do what you have to do
-      # finally:
-      #     os.unlink(tmp)  # delete the temp file no matter what
-      # except:
-      #   raise
-        
-      print "=== DDD0 paramFile ==="
-      print request.FILES['csv_file'].read()
-      # print type(paramFile)
-      # print "paramFile"
-      # print paramFile
-      # portfolio = csv.DictReader(paramFile)
-      # print "=== DDD1 ==="
-      # print type(portfolio)
-      # users = []
-      # for row in portfolio:
-      #   print "=== DDD2 ==="
-      #   print row
-      #   print "==="
-      #   users.append(row)
-      #
-      # for row1 in users:
-      #   print "=== DDD3 ==="
-      #   print row1
-      #   print "==="    
-
-
-        # # data = csv.DictReader(request.FILES['file'])
-        #
-        # # paramFile = request.FILES['file'].read()
-        # # data = csv.DictReader(paramFile)
-        # data = csv.reader(request.FILES['csv_file'].)
-        #
-        # list1 = []
-        # for row in data:
-        #     print "RRR row"
-        #     print row
-        #     list1.append(row)
-        # print "=== DDD ==="
-        # # print data
-        # print list1
-        # print "==="
-        
-
-<<<<<<< HEAD
-    def import_from_file(self, csv_file):
-        print "csv_file"
-        print csv_file
-        print "csv_file.name"
-        print csv_file.name
-        self.csv_file = csv_file
-        
-
-        # lines = ["'A','bunch+of','multiline','CSV,LIKE,STRING'"]
-        # 
-        # reader = csv.reader(lines, quotechar="'")
-        # 
-        # with open('out.csv', 'wb') as f:
-        #    writer = csv.writer(f)
-        #    writer.writerows(list(reader))
-        # 
-        
-        # try:
-        #   dialect = csv.get_dialect(self.csv_file)
-        #   print "dialect = "
-        #   print dialect
-        #   if (dialect)
-        # csv_file_name = "submission/selenium_tests/ashipunova354276_VAMPS_submission_good.csv"
-        # TODO: get path from where?
-        csvfile_o = open(os.path.join("submission/selenium_tests", csv_file.name), 'rb')
-        # csvfile_o = open(csv_file_name, 'rb')
-        dialect = csv.Sniffer().sniff(csvfile_o.read(1024))
-        csvfile_o.seek(0)
-        self.reader = csv.reader(csvfile_o, dialect)
-
-
-        # self.get_reader(dialect)
-        # self.get_reader()
-        print "LLL self.reader"
-        print self.reader
-
-=======
     def import_from_file(self, csvfile):
         # print "csvfile"
         # print csvfile
@@ -333,7 +166,6 @@ class CsvMetadata():
         # print dialect
 
         self.get_reader(dialect)
->>>>>>> csv_upload
         self.csv_headers, self.csv_content = self.parce_csv()
         
         self.csvfile.seek(0)
@@ -347,35 +179,6 @@ class CsvMetadata():
             self.get_csv_by_header_uniqued()
             return 0
 
-<<<<<<< HEAD
-    # def get_dialect(self):
-    #     try:
-    #         # dialect = csv.Sniffer().sniff(self.csv_file.read(1024), delimiters=";,")
-    #         # dialect = csv.Sniffer().sniff(self.csv_file.read(1024), ",")
-    #         # dialect = csv.Sniffer().sniff(self.csv_file.read(1024), delimiters=";,")
-    #         try:
-    #             # with open(r'ashipunova354276_VAMPS_submission_good.csv', 'rb') as csv_file:
-    #             with open(self.csv_file_name, 'rb') as o_csv_file:
-    #                 reader = csv.reader(o_csv_file, delimiter=',') 
-    #                 for row in reader:
-    #                     print (', '.join(row))
-    #         except IOError:
-    #             print ("IOError: " + self.csv_file_name)
-    #             sys.exit()
-
-            # dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csv_file, "utf-8").read(1024), delimiters=',')
-            # self.csv_file.seek(0)
-            # print "dialect.delimiter"
-            # print dialect.delimiter
-            # return dialect
-        # except csv.Error as e:
-        #     self.errors.append('Warning for %s: %s' % (self.csv_file, e))
-        # except:
-        #     raise
-
-    # def get_reader(self, dialect):
-    def get_reader(self):
-=======
     def get_dialect(self):
         try:
             dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024), delimiters=',')
@@ -397,14 +200,11 @@ class CsvMetadata():
               print("WARNING, file %s is empty (size = %s), check it's path" % (self.csvfile.name, self.csvfile.size))
 
     def get_reader(self, dialect):
->>>>>>> csv_upload
         try:
-            self.csv_file.open()
-            # self.reader = csv.reader(codecs.EncodedFile(self.csv_file, "utf-8"), delimiter=',', dialect=dialect)
-            self.reader = csv.reader(codecs.EncodedFile(self.csv_file, "utf-8"), delimiter=',')
-            
+            self.csvfile.open()
+            self.reader = csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
         except csv.Error as e:
-            self.errors.append('%s is not a valid CSV file: %s' % (self.csv_file, e))
+            self.errors.append('%s is not a valid CSV file: %s' % (self.csvfile, e))
         except:
             raise
 
@@ -892,13 +692,13 @@ class CsvMetadata():
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
             self.errors.append("The file is empty or does not exist.")
-            return render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
+            render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
 
         has_empty_cells = self.import_from_file(csv_file)
         
         if has_empty_cells:                
             self.errors.append("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
-            return render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
+            render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
         
         # TODO:
         # validate size and type of the file
@@ -909,9 +709,8 @@ class CsvMetadata():
         # csv_validation = Validation()
         # csv_validation.required_cell_values_validation()
 
-        self.get_selected_variables(request.POST)
-
         self.get_initial_run_info_data_dict()
+        self.get_selected_variables(request.POST)
         request.session['run_info_from_csv'] = self.run_info_from_csv
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 

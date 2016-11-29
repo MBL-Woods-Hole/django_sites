@@ -6,12 +6,8 @@ from django.forms import formset_factory
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext, loader, Context
-<<<<<<< HEAD
-import csv
-=======
 from django.utils.html import escape
 import os 
->>>>>>> csv_upload
 
 def my_view(request):
     context = {'foo': 'bar'}
@@ -42,37 +38,6 @@ def upload_metadata(request):
     Form.errors
     """
     utils = Utils()
-<<<<<<< HEAD
-    if request.method == 'POST':
-     # and request.FILES:
-        # payload = {}
-        try:
-          payload = request.FILES
-          print "=== DDD101 ==="
-          for k, v in payload.items():
-            print "k ="
-            print k
-            print "v ="
-            print v
-          print "=== DDD11 ==="
-          print type(payload)
-          file = payload['csv_file']
-          print "File size:", file.size
-          
-          #   input_file = request.FILES.get('csv_file')
-          #   input_file.seek(0)
-          #
-          #   print "=== DDD11 ==="
-          #   print input_file.size
-          #   print "==="
-        except:
-            raise
-        
-      
-        csv_file = request.FILES['csv_file']
-        csv_handler = CsvMetadata()
-        csv_handler.upload(request)
-=======
     csv_handler = CsvMetadata()
     
     if request.method == 'POST' and request.FILES:
@@ -81,7 +46,6 @@ def upload_metadata(request):
         utils.clear_session(request)
         
         metadata_run_info_form, metadata_new_project_form = csv_handler.csv_file_upload(request)
->>>>>>> csv_upload
         
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form }
         
