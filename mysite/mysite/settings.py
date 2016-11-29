@@ -231,4 +231,7 @@ try:
 except:
     HOSTNAME = 'localhost'
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = None
+
 from settings_local import *
+
