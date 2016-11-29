@@ -41,7 +41,7 @@
   </div>
  {% endblock %}
 
- {% if errors_size > 0 %} 
+ {% if errors %}
   {% block errors %}
     <div class="red_message">
      Please correct the error{{ errors|pluralize }} below.
@@ -72,10 +72,11 @@
  {% if metadata_run_info_form %}
    {% block upload_metadata_run_info_form %}
 
-    <div class="grid_7 form">
+    <div class="grid_5 form">
      <fieldset id="run_info_form_run_info">
      <legend id="run_info_form_run_info-legend">Run info</legend>
 
+      <!-- {{ csv_by_header_uniqued }} -->
       <form action="" method="post">
        <table class="normal_table">
         {{ metadata_run_info_form.as_table }}
@@ -85,33 +86,10 @@
       </form>
      </fieldset>
      </div>
-     <div class="grid_5"></div>
+     <div class="grid_7"></div>
      <div class="clear"></div>
 
-    <div class="grid_7 form">
-     <fieldset id="new_project_form_new_project">
-     <legend id="new_project_form_new_project-legend">Add new project</legend>
-
-      <form action="" method="post">
-       <table class="normal_table">
-        {{ metadata_new_project_form.as_table }}
-       </table>
-        {% csrf_token %}
-        <input type="submit" name="submit_new_project" value="Submit New Project">
-      </form>
-     </fieldset>
-     </div>
-     <div class="grid_5"></div>
-     <div class="clear"></div>
-     
-     <div class="grid_12">
-      {% if new_project_created %}
-          <p class=green_message>Project {{ new_project_name }} was created</p>          
-      {% endif %}
-     </div>
-     <div class="clear"></div>
      <!--
-       AddProjectForm
      <br />
      <div class="grid_12">
       <form method="post" name="csv_run_info" id="csv_run_info" action="">
@@ -140,59 +118,43 @@
 
    {% endblock %}
   {% endif %}
-
+  
   {% if metadata_out_csv_form %}
     {% block upload_metadata_out_csv_form %}
-    {{ metadata_out_csv_form.management_form }}
-    
-    <!-- http://www.djangosnippets.org/snippets/1442/
-    http://stackoverflow.com/questions/2233929/horizontal-per-row-forms-in-a-django-formset
-      TODO: send out_metadata_table ad dict to metadata_out_csv_form! then print here
-       -->
-       
-      <div class="grid_12 form">
+      <div class="grid_5 form">
        <fieldset id="submission_metadata_form_submission_metadata">
        <legend id="submission_metadata_form_submission_metadata-legend">Submission metadata</legend>
 
         <!-- {{ csv_by_header_uniqued }} -->
         <form action="" method="post">
-         <table class="normal_table_w_borders">
+         <table class="normal_table">
+          {{ metadata_submission_metadata_form.as_table }}
+<!--          {{ metadata_out_csv_form }} -->
           <tr>
-          {% for header in out_metadata_table.headers %}
+          {% for header in metadata_out_csv_form.headers %}
               <th>{{ header }}</th>
           {% endfor %}
           </tr>
-
-        {% for form in metadata_out_csv_form %}        
-          <tr>
-            {% for field in form %}
-              <td>{% if field.errors %}{{ field.errors }}{% endif %}{{ field }}</td>
-            {% endfor %}
-          </tr>
-        {% endfor %}
-
+          {% for row in metadata_out_csv_form.rows %}
+            <tr>    
+              {% for value in row %}
+                <td>{{ value }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+          
          </table>
           {% csrf_token %}
           <input type="submit" name="create_submission_metadata_file" value="Create submission metadata file">
-          <!-- cancel button! -->
+          <!-- TODO: cancel button! -->
         </form>
        </fieldset>
        </div>
+       <div class="grid_7"></div>
        <div class="clear"></div>
-       
-       <div class="grid_12">
-        {% if files_created %}
-          {% for file_path in files_created %}
-            <p class=green_message>{{ file_path }} was created</p>
-          {% endfor %}
-            
-        {% endif %}
-       </div>
-       <div class="clear"></div>
-       
 
    {% endblock %}
   {% endif %}
-
+  
 
 {% endblock %}

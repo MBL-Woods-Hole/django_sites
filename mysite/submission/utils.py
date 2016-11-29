@@ -36,6 +36,10 @@ class Utils():
     def get_domain_name(self, domain_name):
         domain_choices = dict(models.Domain.SUITE_DOMAIN_CHOICES)
         return domain_choices[domain_name]
+        
+    def clear_session(self, request):
+        for key in request.session.keys():
+            del request.session[key]
             
 
 class Dirs:
@@ -75,9 +79,11 @@ class Dirs:
 class Run():
     def __init__(self):
         self.utils = Utils()
-    
+        self.all_suites = RunInfoIll.cache_all_method.select_related('run', 'primer_suite')
+        
     def get_primer_suites(self, run, lane, suite_domain):
-        all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
+        # all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
+        all_suites = self.all_suites.filter(run__run = run, lane = lane)
         primer_suites = set([entry.primer_suite for entry in all_suites if entry.primer_suite.primer_suite.startswith(suite_domain)])
         try:
           return (True, next(iter(primer_suites)).primer_suite)
@@ -91,12 +97,16 @@ class Run():
         print "Running get_run from utils"
         error_message = ""
         run_data = {}
+<<<<<<< HEAD
         print "request = "
         print request
+=======
+        
+>>>>>>> csv_upload
         if request.method == 'POST':
             form = RunForm(request.POST)
-            print "request.POST = "
-            print request.POST
+            # print "request.POST = "
+            # print request.POST
             if form.is_valid():
                 run_data['find_rundate'] = form.cleaned_data['find_rundate'].run
                 run_data['find_machine'] = form.cleaned_data['find_machine']
@@ -106,9 +116,9 @@ class Run():
                 run_data['perfect_overlap']   = self.utils.get_overlap(form.cleaned_data['find_machine'])
                 suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
                 primer_suite = self.get_primer_suites(run_data['find_rundate'], run_data['find_lane'], suite_domain)
-                print "primer_suite[1]"
-
-                print primer_suite[1]
+                # print "primer_suite[1]"
+                #
+                # print primer_suite[1]
 
                 if (primer_suite[0]):
                     run_data['primer_suite'] = primer_suite[1]
@@ -122,3 +132,4 @@ class Run():
         else:
             form = RunForm()
         return (form, error_message)
+

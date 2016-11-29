@@ -250,3 +250,46 @@ ol.help_list li
     padding-top: .5em;
     padding-left: 1em;
 }
+
+
+.normal_table_w_borders th {
+	border: solid 1.6px;
+	border-color: #eee;	
+    padding-right: 1ex;
+    text-align: center;
+}
+
+td .text_inp {	
+	border: 1.7px inset;	
+	border-collapse: separate;
+	border-color: rgb(238, 238, 238);
+	background-color: #eee; 
+}
+
+.errorlist {
+    color: red;   
+}
+
+#id_csv_path_to_raw_data {
+    width: 30em;
+}
+
+#id_csv_insert_size, #id_csv_read_length, #id_csv_seq_operator {
+    width: 3em;
+}
+
+#id_csv_rundate {
+    width: 6em;
+}
+
+.size_short_input {
+    width: 8em;
+}
+
+.size_number {
+	width: 4em;
+}
+
+.size_long_input {
+	width: 30em;    
+}

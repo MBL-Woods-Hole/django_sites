@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+INTERNAL_IPS = ['127.0.0.1',]
+# https://django-debug-toolbar.readthedocs.io/en/stable/tips.html
 
 # Application definition
 INSTALLED_APPS = [
@@ -39,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django_extensions',
+    'debug_toolbar',    
 ]
 
 SITE_ID = 1
@@ -52,6 +56,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -88,6 +93,18 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dj_test',
+#         'OPTIONS': {
+#             # 'read_default_file': '~/.my.cnf_dj',
+#             'read_default_file': '~/.my.cnf',
+#             'read_default_group': 'clientdj',
+#         },
+#     }
+# }
+# if 'test' not in sys.argv:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -97,45 +114,33 @@ DATABASES = {
             'read_default_file': '~/.my.cnf',
             'read_default_group': 'clientdj',
         },
-    }
+    },
+    'local_env454': {
+        'NAME': 'test_env454',
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': '~/.my.cnf',
+            'read_default_group': 'clientdj',
+        },
+    },
+    'local_vamps': {
+        'NAME': 'test_vamps',
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': '~/.my.cnf',
+            'read_default_group': 'clientdj',
+        },
+    },
 }
-if 'test' not in sys.argv:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'dj_test',
-            'OPTIONS': {
-                # 'read_default_file': '~/.my.cnf_dj',
-                'read_default_file': '~/.my.cnf',
-                'read_default_group': 'clientdj',
-            },
-        },
-        # 'vampsdev': {
-        #     'NAME': 'test',
-        #     'ENGINE': 'django.db.backends.mysql',
-        #     'OPTIONS': {
-        #         'read_default_file': '~/.my.cnf',
-        #         'read_default_group': 'clientvampsdev',
-        #     },
-        # },
-        'local_env454': {
-            'NAME': 'test_env454',
-            'ENGINE': 'django.db.backends.mysql',
-            'OPTIONS': {
-                'read_default_file': '~/.my.cnf',
-                'read_default_group': 'clienthome',
-            },
-        },
-        'local_vamps': {
-            'NAME': 'test_vamps',
-            'ENGINE': 'django.db.backends.mysql',
-            'OPTIONS': {
-                'read_default_file': '~/.my.cnf',
-                'read_default_group': 'clienthome',
-            },
-        },
-    }
 
+# 'vampsdev': {
+#     'NAME': 'test',
+#     'ENGINE': 'django.db.backends.mysql',
+#     'OPTIONS': {
+#         'read_default_file': '~/.my.cnf',
+#         'read_default_group': 'clientvampsdev',
+#     },
+# },
 # class submissionRouter(object):
 #     def db_for_read(self, model, **hints):
 #         "Point all operations on submission models to 'test_env454'"
@@ -226,4 +231,7 @@ try:
 except:
     HOSTNAME = 'localhost'
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = None
+
 from settings_local import *
+
