@@ -41,11 +41,7 @@
   </div>
  {% endblock %}
  
- <hr/>
- {{ errors }}
- <hr/>
-
- {% if errors_size > 0 or has_errors %} 
+ {% if errors_size > 0 %} 
   {% block errors %}
     <div class="red_message">
      Please correct the error{{ errors|pluralize }} below.

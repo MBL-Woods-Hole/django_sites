@@ -176,6 +176,11 @@ class CsvMetadata():
         
         print "self.empty_cells = "
         print self.empty_cells
+        print "len(self.empty_cells) > 0"
+        print len(self.empty_cells) > 0
+        print "len(self.empty_cells)"
+        print len(self.empty_cells)
+        
         if len(self.empty_cells) > 0:
             return len(self.empty_cells)
         else:
@@ -247,8 +252,8 @@ class CsvMetadata():
 
     def parce_csv(self):
       for y_index, row in enumerate(self.reader):
-          # print "parce_csv row"
-          # print row
+          print "parce_csv row"
+          print row
 
           self.csv_content.append(row)
           if y_index == 0:
@@ -702,11 +707,16 @@ class CsvMetadata():
             self.errors.append("The file is empty or does not exist.")
             render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
 
+        print "RRR request.FILES['csv_file']"
+        print request.FILES['csv_file']
+
+        print "csv_file.size"
+        print csv_file.size
         has_empty_cells = self.import_from_file(csv_file)
         
         if has_empty_cells:                
             self.errors.append("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
-            return ("", "", has_empty_cells)
+            return ("", has_empty_cells)
         
         # TODO:
         # validate size and type of the file

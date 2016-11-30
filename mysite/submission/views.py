@@ -46,25 +46,31 @@ def upload_metadata(request):
         
         
         metadata_run_info_form, has_empty_cells = csv_handler.csv_file_upload(request)
+        print "csv_handler.errors = "
+        print csv_handler.errors
+        print "all(not d for d in csv_handler.errors)"
+        print all(not d for d in csv_handler.errors)
+        
         if has_empty_cells:
-            print "AAA has_empty_cells"
-            print has_empty_cells
-            print "csv_handler.errors = "
-            print csv_handler.errors
-            print "len(csv_handler.errors) = "
-            print len(csv_handler.errors)
-            errors_size = len(csv_handler.errors)
+            errors_size = len(csv_handler.empty_cells)
+            print "errors_size = len(csv_handler.empty_cells)"
             print errors_size
-            has_errors = all(not d for d in formset.errors)
+            # has_errors = not all(not d for d in csv_handler.errors)
             
-            context = {'header': 'Upload metadata', 'errors': csv_handler.errors, 'has_errors': has_errors}
+            context = {'header': 'Upload metadata', 'errors': csv_handler.errors, 'errors_size': errors_size}
+            print "111 errors_size"
+            print errors_size
+            
             render(request, 'submission/upload_metadata.html', context)
             
         # print "CCC csv_handler.csv_by_header_uniqued = "
         # print csv_handler.csv_by_header_uniqued
         
+        errors_size = len(csv_handler.errors)
+        print "222 errors_size"
+        print errors_size
         
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors }
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
         
     elif 'submit_run_info' in request.POST:
         print "HHH"
@@ -73,6 +79,8 @@ def upload_metadata(request):
         request, metadata_run_info_form, formset = csv_handler.submit_run_info(request)
         
         errors_size = len(metadata_run_info_form.errors)
+        print "333 errors_size"
+        print errors_size
         
         if errors_size > 0:
             context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
@@ -105,8 +113,11 @@ def upload_metadata(request):
         print "44444466 files_created = "
         print csv_handler.files_created
         
-        
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': formset.total_error_count(), 'files_created': csv_handler.files_created}
+        errors_size = formset.total_error_count()
+        print "444 errors_size"
+        print errors_size
+
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': csv_handler.files_created}
         
     else:
         print "HHH"
