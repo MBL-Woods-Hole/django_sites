@@ -152,7 +152,7 @@ class CsvMetadata():
 
         self.required_headers = [header_name for header_name, values in
                                  self.HEADERS_FROM_CSV.items() if values['required']]
-        print "self.required_headers = %s" % self.required_headers
+        # print "self.required_headers = %s" % self.required_headers
 
     def no_data_message(self):
         return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
@@ -173,6 +173,9 @@ class CsvMetadata():
 
         self.check_headers_presence()
         self.check_req_info_presence()
+        
+        print "self.empty_cells = "
+        print self.empty_cells
         if len(self.empty_cells) > 0:
             return len(self.empty_cells)
         else:
@@ -215,8 +218,8 @@ class CsvMetadata():
     def get_csv_by_header_uniqued(self):
         self.csv_by_header_uniqued = ""
         self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
-        # print "self.csv_by_header_uniqued: "
-        # print self.csv_by_header_uniqued
+        print "self.csv_by_header_uniqued: "
+        print self.csv_by_header_uniqued
 
     def get_initial_run_info_data_dict(self):
         try:
@@ -255,6 +258,8 @@ class CsvMetadata():
 
     def check_headers_presence(self):
       missing_headers = set(self.required_headers) - set([r.lower() for r in self.csv_headers])
+      print "self.csv_headers = " 
+      print self.csv_headers
       if missing_headers:
           missing_headers_str = ', '.join(missing_headers)
           self.errors.append('Missing headers: %s' % (missing_headers_str))
@@ -382,14 +387,14 @@ class CsvMetadata():
             self.selected_dna_region    = request_post.get('csv_dna_region', False)
             self.selected_overlap       = request_post.get('csv_overlap', False)
         else:
-            # print "self.csv_by_header_uniqued['platform']"
-            # print self.csv_by_header_uniqued['platform']
+            print "self.csv_by_header_uniqued['platform']"
+            print self.csv_by_header_uniqued['platform']
             self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
-            # print "self.selected_machine 2 = %s" % self.selected_machine
-            # print "MMM self.machine_shortcuts_choices"
-            # print self.machine_shortcuts_choices
+            print "self.selected_machine 2 = %s" % self.selected_machine
+            print "MMM self.machine_shortcuts_choices"
+            print self.machine_shortcuts_choices
             self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
-            # print "self.selected_machine_short 2 = %s" % self.selected_machine_short
+            print "self.selected_machine_short 2 = %s" % self.selected_machine_short
 
             self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
 
@@ -698,7 +703,7 @@ class CsvMetadata():
         
         if has_empty_cells:                
             self.errors.append("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
-            render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
+            return ("", "", has_empty_cells)
         
         # TODO:
         # validate size and type of the file
@@ -739,7 +744,7 @@ class CsvMetadata():
         # if HOSTNAME.startswith("localhost"):
         #     print "local"
         
-        return (metadata_run_info_form, metadata_new_project_form)
+        return (metadata_run_info_form, metadata_new_project_form, has_empty_cells)
         
     def submit_new_project(self, request):
         # print "EEE: request.POST = %s" % request.POST

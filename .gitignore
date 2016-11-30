@@ -7,3 +7,6 @@ flake_res
 settings_local.py
 temp.csv
 mysite/tmp/*
+mysite/.DS_Store
+mysite/mysite/.DS_Store
+mysite/submission/.DS_Store

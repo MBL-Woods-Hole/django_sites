@@ -41,7 +41,7 @@
   </div>
  {% endblock %}
 
- {% if errors_size > 0 %} 
+ {% if errors_size > 0 or errors %} 
   {% block errors %}
     <div class="red_message">
      Please correct the error{{ errors|pluralize }} below.

@@ -45,7 +45,24 @@ def upload_metadata(request):
         print "111 request.method == 'POST' and request.FILES:"
         utils.clear_session(request)
         
-        metadata_run_info_form, metadata_new_project_form = csv_handler.csv_file_upload(request)
+        
+        metadata_run_info_form, metadata_new_project_form, has_empty_cells = csv_handler.csv_file_upload(request)
+        if has_empty_cells:
+            print "AAA has_empty_cells"
+            print has_empty_cells
+            print "csv_handler.errors = "
+            print csv_handler.errors
+            print "len(csv_handler.errors) = "
+            print len(csv_handler.errors)
+            errors_size = len(csv_handler.errors)
+            print errors_size
+            
+            context = {'errors': csv_handler.errors, 'errors_size': errors_size}
+            render(request, 'submission/upload_metadata.html', context)
+            
+        # print "CCC csv_handler.csv_by_header_uniqued = "
+        # print csv_handler.csv_by_header_uniqued
+        
         
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form }
         
