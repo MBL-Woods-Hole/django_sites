@@ -158,12 +158,8 @@ class CsvMetadata():
         return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
 
     def import_from_file(self, csvfile):
-        # print "csvfile"
-        # print csvfile
         self.csvfile = csvfile
         dialect = self.get_dialect()
-        # print "dialect = "
-        # print dialect
 
         self.get_reader(dialect)
         self.csv_headers, self.csv_content = self.parce_csv()
@@ -173,14 +169,7 @@ class CsvMetadata():
 
         self.check_headers_presence()
         self.check_req_info_presence()
-        
-        print "self.empty_cells = "
-        print self.empty_cells
-        print "len(self.empty_cells) > 0"
-        print len(self.empty_cells) > 0
-        print "len(self.empty_cells)"
-        print len(self.empty_cells)
-        
+            
         if len(self.empty_cells) > 0:
             return len(self.empty_cells)
         else:
@@ -223,8 +212,6 @@ class CsvMetadata():
     def get_csv_by_header_uniqued(self):
         self.csv_by_header_uniqued = ""
         self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
-        print "self.csv_by_header_uniqued: "
-        print self.csv_by_header_uniqued
 
     def get_initial_run_info_data_dict(self):
         try:
@@ -252,8 +239,8 @@ class CsvMetadata():
 
     def parce_csv(self):
       for y_index, row in enumerate(self.reader):
-          print "parce_csv row"
-          print row
+          # print "parce_csv row"
+          # print row
 
           self.csv_content.append(row)
           if y_index == 0:
@@ -263,8 +250,8 @@ class CsvMetadata():
 
     def check_headers_presence(self):
       missing_headers = set(self.required_headers) - set([r.lower() for r in self.csv_headers])
-      print "self.csv_headers = " 
-      print self.csv_headers
+      # print "self.csv_headers = " 
+      # print self.csv_headers
       if missing_headers:
           missing_headers_str = ', '.join(missing_headers)
           self.errors.append('Missing headers: %s' % (missing_headers_str))
@@ -366,7 +353,7 @@ class CsvMetadata():
                 contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
                 # .filter(vamps_name = vamps_user_id)
 
-                print "CCC contacts = %s" % contacts
+                # print "CCC contacts = %s" % contacts
 
                 # for row in contacts:
                 self.user_info_arr[submit_code] = model_to_dict(contacts)
@@ -392,14 +379,14 @@ class CsvMetadata():
             self.selected_dna_region    = request_post.get('csv_dna_region', False)
             self.selected_overlap       = request_post.get('csv_overlap', False)
         else:
-            print "self.csv_by_header_uniqued['platform']"
-            print self.csv_by_header_uniqued['platform']
+            # print "self.csv_by_header_uniqued['platform']"
+            # print self.csv_by_header_uniqued['platform']
             self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
-            print "self.selected_machine 2 = %s" % self.selected_machine
-            print "MMM self.machine_shortcuts_choices"
-            print self.machine_shortcuts_choices
+            # print "self.selected_machine 2 = %s" % self.selected_machine
+            # print "MMM self.machine_shortcuts_choices"
+            # print self.machine_shortcuts_choices
             self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
-            print "self.selected_machine_short 2 = %s" % self.selected_machine_short
+            # print "self.selected_machine_short 2 = %s" % self.selected_machine_short
 
             self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
 
@@ -458,16 +445,11 @@ class CsvMetadata():
 
     def check_out_csv_files(self):
         for lane_domain, file_name in self.metadata_csv_file_names.items():
-            print "MMM"
-            print os.path.join(self.path_to_csv, file_name)
-            print "os.path.isfile(os.path.join(self.path_to_csv, file_name)) = "
-            print os.path.isfile(os.path.join(self.path_to_csv, file_name))
             if os.path.isfile(os.path.join(self.path_to_csv, file_name)):
                 self.files_created.append(os.path.join(self.path_to_csv, file_name))
 
     def update_out_metadata(self, my_post_dict, request):
         print "update_out_metadata"
-        print "my_post_dict"
         
         for header in self.HEADERS_TO_CSV:
             for i in self.out_metadata.keys():
@@ -710,11 +692,6 @@ class CsvMetadata():
             
             # render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
 
-        print "RRR request.FILES['csv_file']"
-        print request.FILES['csv_file']
-
-        print "csv_file.size"
-        print csv_file.size
         has_empty_cells = self.import_from_file(csv_file)
         
         if has_empty_cells:                
@@ -770,12 +747,10 @@ class CsvMetadata():
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
         metadata_new_project_form = AddProjectForm(request.POST)
-        print "metadata_new_project_form = "
-        print metadata_new_project_form
         
         if metadata_new_project_form.is_valid():        
-            print "!!!metadata_new_project_form.cleaned_data"
-            print metadata_new_project_form.cleaned_data
+            # print "!!!metadata_new_project_form.cleaned_data"
+            # print metadata_new_project_form.cleaned_data
             """
             !!!metadata_new_project_form.cleaned_data
             {'env_source_name': <EnvSampleSource: 0: >, 'project_description': u'www', 'funding': u'rrr', 'project_title': u'sss', 'project': u'dfsdfs_dsfsdfs_B_v6', 'contact': <Contact: Eric Boyd>}
@@ -787,7 +762,6 @@ class CsvMetadata():
         return metadata_new_project_form
         
     def submit_run_info(self, request):
-        # print "EEE: request.POST = %s" % request.POST
         self.get_selected_variables(request.POST)
         request.session['run_info'] = {}
         request.session['run_info']['selected_rundate']         = self.selected_rundate
@@ -804,8 +778,6 @@ class CsvMetadata():
 
         # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
         metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-        # print "request.POST 222 = "
-        # print request.POST
         request.session['run_info_form_post'] = request.POST
 
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
@@ -835,7 +807,6 @@ class CsvMetadata():
         my_post_dict = self.edit_post_metadata_table(request)
 
         self.add_out_metadata_table_to_out_metadata(request)
-        # print "my_post_dict = %s" % my_post_dict
 
         #*) metadata out edit
         self.out_metadata = request.session['out_metadata']
