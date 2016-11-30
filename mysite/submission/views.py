@@ -45,13 +45,24 @@ def upload_metadata(request):
         utils.clear_session(request)
         
         
-        metadata_run_info_form, has_empty_cells = csv_handler.csv_file_upload(request)
+        metadata_run_info_form, has_file_errors = csv_handler.csv_file_upload(request)
         print "csv_handler.errors = "
         print csv_handler.errors
         print "all(not d for d in csv_handler.errors)"
         print all(not d for d in csv_handler.errors)
         
-        if has_empty_cells:
+        if has_file_errors == 'no_file':
+            errors_size = len(csv_handler.errors)
+            print "errors_size = len(csv_handler.errors)"
+            print errors_size
+            
+            context = {'header': 'Upload metadata', 'errors': csv_handler.errors, 'errors_size': errors_size}
+            print "999 errors_size"
+            print errors_size
+            
+            render(request, 'submission/upload_metadata.html', context)
+        
+        if has_file_errors == 'has_empty_cells':
             errors_size = len(csv_handler.empty_cells)
             print "errors_size = len(csv_handler.empty_cells)"
             print errors_size

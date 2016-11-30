@@ -702,10 +702,13 @@ class CsvMetadata():
 
 
     def csv_file_upload(self, request):
+
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
-            self.errors.append("The file is empty or does not exist.")
-            render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
+            self.errors.append("The file %s is empty or does not exist." % csv_file)
+            return ("", 'no_file')
+            
+            # render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
 
         print "RRR request.FILES['csv_file']"
         print request.FILES['csv_file']
@@ -716,7 +719,7 @@ class CsvMetadata():
         
         if has_empty_cells:                
             self.errors.append("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
-            return ("", has_empty_cells)
+            return ("", 'has_empty_cells')
         
         # TODO:
         # validate size and type of the file
