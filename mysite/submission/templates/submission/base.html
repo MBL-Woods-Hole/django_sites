@@ -30,7 +30,7 @@
               <li class="nav-li {% active 'add_project' %}"><a href="/submission/add_project">Add Project</a></li>
             </ul>
           </li> <!-- end Metadata -->
-          
+
           <li class="nav-li {% active 'demultiplex' %}"><a href="/submission/demultiplex">Demultiplex</a></li>
           <li class="nav-li {% active 'overlap' %}"><a href="/submission/overlap">Overlap</a></li>
           <li class="nav-li {% active 'chimera_checking' %}"><a href="/submission/chimera_checking">Chimeras</a></li>
@@ -111,7 +111,16 @@
               </div>
 
               <div class = "copy_command">
+                {% if run_data %}
+
               cd /xraid2-2/g454/run_new_pipeline/illumina/{{ run_data.find_rundate }}_{{ run_data.find_machine }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/{{ check_command }}; date
+
+                {% else %}
+
+                cd /xraid2-2/g454/run_new_pipeline/illumina/<span class = "insert_here">rundate</span>_<span class = "insert_here">machine</span>/lane_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span>/analysis/<span class = "insert_here">command</span>; date
+
+                {% endif %}
+
               </div>
 
             {% endblock %}
@@ -122,7 +131,6 @@
          {% endif %} <!-- end if else error_message -->
 
        </div> <!-- end content -->
-
 
     {% endblock %}
       <div class="grid_12">
