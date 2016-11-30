@@ -453,13 +453,16 @@ class CsvMetadata():
 
     def check_out_csv_files(self):
         for lane_domain, file_name in self.metadata_csv_file_names.items():
-            # print "MMM"
-            # print os.path.join(self.path_to_csv, file_name)
+            print "MMM"
+            print os.path.join(self.path_to_csv, file_name)
+            print "os.path.isfile(os.path.join(self.path_to_csv, file_name)) = "
+            print os.path.isfile(os.path.join(self.path_to_csv, file_name))
             if os.path.isfile(os.path.join(self.path_to_csv, file_name)):
                 self.files_created.append(os.path.join(self.path_to_csv, file_name))
 
     def update_out_metadata(self, my_post_dict, request):
         print "update_out_metadata"
+        print "my_post_dict"
         
         for header in self.HEADERS_TO_CSV:
             for i in self.out_metadata.keys():

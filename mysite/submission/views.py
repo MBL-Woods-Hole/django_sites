@@ -55,8 +55,9 @@ def upload_metadata(request):
             print len(csv_handler.errors)
             errors_size = len(csv_handler.errors)
             print errors_size
+            has_errors = all(not d for d in formset.errors)
             
-            context = {'errors': csv_handler.errors, 'errors_size': errors_size}
+            context = {'header': 'Upload metadata', 'errors': csv_handler.errors, 'has_errors': has_errors}
             render(request, 'submission/upload_metadata.html', context)
             
         # print "CCC csv_handler.csv_by_header_uniqued = "
@@ -76,7 +77,7 @@ def upload_metadata(request):
         if errors_size > 0:
             context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
         else:
-            context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
+            context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
 
 
     elif 'create_submission_metadata_file' in request.POST:
@@ -85,7 +86,27 @@ def upload_metadata(request):
         
         request, metadata_run_info_form, formset = csv_handler.create_submission_metadata_file(request)
         
-        context = {'metadata_run_info_form': metadata_run_info_form, 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': formset.total_error_count(), 'files_created': csv_handler.files_created}
+        # print "444444 request.session['out_metadata_table'] = "
+        # print request.session['out_metadata_table']
+        # print "44444411 metadata_run_info_form = "
+        # print metadata_run_info_form
+        # print "44444422 formset = "
+        # print formset
+
+        print "44444433 formset.errors = "
+        print formset.errors
+        print "44444433444 formset.errors = "
+        print all(not d for d in formset.errors)
+        
+        
+        print "44444455 formset.total_error_count() = "
+        print formset.total_error_count()
+
+        print "44444466 files_created = "
+        print csv_handler.files_created
+        
+        
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': formset.total_error_count(), 'files_created': csv_handler.files_created}
         
     else:
         print "HHH"
