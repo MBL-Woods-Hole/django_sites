@@ -11,7 +11,7 @@ class RunForm(forms.Form):
     # find_rundate = forms.ModelChoiceField(queryset = query, label = 'Run date', empty_label = None)
     query = Run.cache_all_method.all().filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
     find_rundate = forms.ModelChoiceField(queryset = query, label = 'Run date', empty_label = None)
-    
+
     find_machine = forms.ChoiceField(Machine.MACHINE_CHOICES, label = 'Machine name')
     find_domain  = forms.ChoiceField(Domain.DOMAIN_SHORTCUTS_CHOICES, label = 'Domain')
     find_lane    = forms.CharField(label = 'Lane number', max_length = 3)
@@ -54,11 +54,11 @@ class MetadataOutCsvForm(forms.Form):
     #TODO: add N's if needed
     run_key                 = forms.CharField(label = 'Run Key', max_length = 9, widget=forms.TextInput(attrs={'class': 'size_short_input'}))
     barcode_index           = forms.CharField(label = 'Barcode Index', max_length=12, widget=forms.TextInput(attrs={'class': 'size_short_input'}))
-    
+
     adaptor_query = IlluminaAdaptor.cache_all_method.all().order_by('illumina_adaptor')
     # adaptor_query = IlluminaAdaptor.objects.all().order_by('illumina_adaptor')
     adaptor                 = forms.ModelChoiceField(queryset = adaptor_query, to_field_name = 'illumina_adaptor')
-    
+
     project_query = Project.cache_all_method.all().order_by('project')
     # project_query = Project.objects.order_by('project')
     project                 = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
@@ -71,10 +71,8 @@ class MetadataOutCsvForm(forms.Form):
     tubelabel               = forms.CharField(max_length=32)
     barcode                 = forms.CharField(max_length=12, required=False)
     amp_operator            = forms.CharField(max_length=5, widget=forms.TextInput(attrs={'class': 'size_short_input'}))
-    
 
     # lane                    = forms.IntegerField(max_value = 9, widget=forms.TextInput(attrs={'class': 'size_number'}))
-
 
 class PhoneField(forms.MultiValueField):
     def __init__(self, *args, **kwargs):
@@ -103,10 +101,10 @@ class PhoneField(forms.MultiValueField):
             error_messages=error_messages, fields=fields,
             require_all_fields=False, *args, **kwargs
         )
-        
+
 class ComplexMultiWidget(forms.MultiWidget):
     def __init__(self, attrs=None):
-        
+
         widgets = (
             forms.TextInput(attrs={'class': 'size_short_input'}),
             forms.TextInput(attrs={'class': 'size_short_input'}),
@@ -120,7 +118,7 @@ class ComplexMultiWidget(forms.MultiWidget):
             data = value.split('_')
             return [data[0], data[1], data[2], data[3]]
         return [None, None, None, None]
-        
+
     def format_output(self, rendered_widgets):
         return u'\n'.join(rendered_widgets)
 
@@ -131,17 +129,16 @@ class ComplexField(forms.MultiValueField):
         fields = (
             # forms.CharField(validators=[RegexValidator('^[A-Za-z]+$'), message = "The first part of a project name could have only letters"], max_length = 4, error_messages={'max_length': 'The first part of a project name could have no more then 4 of characters.'}),
             forms.CharField(validators=[RegexValidator('^[A-Za-z]+$', message="The first part of a project name could have letters only")], max_length = 4, error_messages={'max_length': 'The first part of a project name could have no more then 4 characters'}),
-        
+
             forms.CharField(validators=[RegexValidator('^[A-Za-z0-9]+$', message="The second part of a project name could have only letters and numbers")], max_length = 6, error_messages={'max_length': 'The second part of a project name could have no more then 6 characters'}),
-        
+
             forms.ChoiceField(choices=Domain.DOMAIN_WITH_LETTER_CHOICES),
             forms.ChoiceField(choices=Ill_dna_region.DNA_REGION_CHOICES),
         )
         super(ComplexField, self).__init__(fields, required,
                                            widget, label, initial)
-                                           
-        # name.validators[-1].message = 'Your question is too long.'
 
+        # name.validators[-1].message = 'Your question is too long.'
 
     def compress(self, data_list):
         if data_list:
@@ -163,7 +160,6 @@ class AddProjectForm(forms.Form):
     # Please choose a valid env_source_name
     contact_query       = Contact.cache_all_method.all().order_by('last_name')
     contact             = forms.ModelChoiceField(queryset = contact_query, empty_label = None, to_field_name = 'contact')
-    
+
     # contact_name_query  = Contact.objects.all().order_by('last_name')
     # contact             = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
-    

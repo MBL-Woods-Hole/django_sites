@@ -36,11 +36,10 @@ class Utils():
     def get_domain_name(self, domain_name):
         domain_choices = dict(models.Domain.SUITE_DOMAIN_CHOICES)
         return domain_choices[domain_name]
-        
+
     def clear_session(self, request):
         for key in request.session.keys():
             del request.session[key]
-            
 
 class Dirs:
     """
@@ -50,7 +49,7 @@ class Dirs:
         self.utils = Utils()
         self.output_dir_name = None
         # self.get_path()
-        
+
     def check_and_make_dir(self, dir_name):
         try:
             os.makedirs(dir_name)
@@ -60,27 +59,27 @@ class Dirs:
             else:
                 raise    
         return dir_name
-    
+
     def check_dir(self, dir_name):
         if os.path.isdir(dir_name):
             return dir_name
         else:            
             return self.check_and_make_dir(dir_name) 
-            
+
     def get_path(self):
         # print "request.META['HTTP_HOST'] = %s" % (request.META['HTTP_HOST'])
         # if self.utils.is_local(request.META['HTTP_HOST']):
         #     root_dir  = C.output_root_mbl_local
-    
+
         self.output_dir = os.path.join(root_dir, platform, id_number)    
         if (lane_name != ''):
             self.output_dir = os.path.join(root_dir, platform, id_number, lane_name)
-            
+
 class Run():
     def __init__(self):
         self.utils = Utils()
         self.all_suites = RunInfoIll.cache_all_method.select_related('run', 'primer_suite')
-        
+
     def get_primer_suites(self, run, lane, suite_domain):
         # all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
         all_suites = self.all_suites.filter(run__run = run, lane = lane)
@@ -97,7 +96,7 @@ class Run():
         print "Running get_run from utils"
         error_message = ""
         run_data = {}
-        
+
         if request.method == 'POST':
             form = RunForm(request.POST)
             # print "request.POST = "

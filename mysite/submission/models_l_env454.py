@@ -29,7 +29,6 @@ class ModelChoiceIterator(object):
                 for obj in self.queryset.all():
                     yield self.choice(obj)
 
-
 class AllMethodCachingQueryset(models.query.QuerySet):
     def all(self, get_from_cache=True):
         if get_from_cache:
@@ -47,7 +46,7 @@ models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('env454_db',)
 class Contact(models.Model):
     objects = models.Manager()
     cache_all_method = AllMethodCachingManager()
-    
+
     contact_id  = models.SmallIntegerField(primary_key=True)
     contact	    = models.CharField(max_length=32)
     email	    = models.CharField(max_length=64)
@@ -64,11 +63,9 @@ class Contact(models.Model):
     # def __unicode__(self):
     #     return u'{0}'.format(self.illumina_adaptor)        
 
-
     def __str__(self):
         return self.contact
         # return "%s, %s, %s, %s, %s, %s, %s" % (self.contact_id, self.contact, self.email, self.institution, self.vamps_name, self.first_name, self.last_name)
-
 
 class Dataset(models.Model):
     dataset_id = models.SmallIntegerField(primary_key=True)
@@ -81,7 +78,6 @@ class Dataset(models.Model):
 
     def __str__(self):
         return self.dataset
-
 
 class DnaRegion(models.Model):
     dna_region_id = models.AutoField(primary_key=True, editable=False)
@@ -97,7 +93,7 @@ class DnaRegion(models.Model):
 class EnvSampleSource(models.Model):
     objects = models.Manager()
     cache_all_method = AllMethodCachingManager()
-    
+
     env_sample_source_id = models.IntegerField(primary_key=True)
     env_source_name = models.CharField(unique=True, max_length=50)
 
@@ -108,25 +104,24 @@ class EnvSampleSource(models.Model):
     def __str__(self):
         return "%s: %s" % (self.env_sample_source_id, self.env_source_name)
 
-
 class IlluminaAdaptor(models.Model):
     objects = models.Manager()
     cache_all_method = AllMethodCachingManager()
-    
+
     illumina_adaptor_id = models.SmallIntegerField(primary_key=True, editable=False)
     illumina_adaptor = models.CharField(unique=True, max_length=3, editable=False)
 
     class Meta:
         managed = False
         db_table = 'illumina_adaptor'
-        
+
     def __unicode__(self):
         return u'{0}'.format(self.illumina_adaptor)        
 
 class IlluminaAdaptorRef(models.Model):
     objects = models.Manager()
     cache_all_method = AllMethodCachingManager()
-    
+
     illumina_adaptor    = models.ForeignKey('IlluminaAdaptor', models.DO_NOTHING, primary_key=True, editable=False)
     illumina_index      = models.ForeignKey('IlluminaIndex', models.DO_NOTHING, editable=False)
     illumina_run_key    = models.ForeignKey('IlluminaRunKey', models.DO_NOTHING, editable=False)
@@ -137,10 +132,9 @@ class IlluminaAdaptorRef(models.Model):
         managed = False
         db_table = 'illumina_adaptor_ref'
         unique_together = (('illumina_adaptor', 'dna_region', 'domain'),)
-        
+
     def __str__(self):
         return "%s, %s, %s, %s, %s" % (self.illumina_adaptor, self.illumina_index, self.illumina_run_key, self.dna_region, self.domain)
-        
 
 class IlluminaIndex(models.Model):
     illumina_index_id = models.AutoField(primary_key=True, editable=False)
@@ -178,7 +172,6 @@ class Primer(models.Model):
         managed = False
         db_table = 'primer'
 
-
 class PrimerSuite(models.Model):
     primer_suite_id = models.SmallIntegerField(primary_key=True)
     primer_suite = models.CharField(unique=True, max_length=25)
@@ -193,10 +186,9 @@ class PrimerSuite(models.Model):
 class Project(models.Model):
     objects = models.Manager()
     cache_all_method = AllMethodCachingManager()
-    
+
     # form_class.base_fields['foo'].queryset = YourModel.cache_all_method.all()
-    
-    
+
     project_id = models.SmallIntegerField(primary_key=True)
     project = models.CharField(unique=True, max_length=32)
     title = models.CharField(max_length=64)
@@ -209,10 +201,9 @@ class Project(models.Model):
     class Meta:
         managed = False
         db_table = 'project'
-        
+
     def __unicode__(self):
         return u'{0}'.format(self.project) 
-
 
 class RefPrimerSuitePrimer(models.Model):
     primer_suite = models.ForeignKey(PrimerSuite, models.DO_NOTHING)
@@ -225,7 +216,7 @@ class RefPrimerSuitePrimer(models.Model):
 class Run(models.Model):
     objects = models.Manager()
     cache_all_method = AllMethodCachingManager()
-    
+
     run_id = models.SmallIntegerField(primary_key=True)
     run = models.CharField(max_length=16)
     run_prefix = models.CharField(max_length=7)
@@ -243,7 +234,7 @@ class Run(models.Model):
 class RunInfoIll(models.Model):
     objects = models.Manager()
     cache_all_method = AllMethodCachingManager()
-    
+
     run_info_ill_id = models.AutoField(primary_key=True)
     run_key = models.ForeignKey('RunKey', models.DO_NOTHING)
     run = models.ForeignKey('Run', models.DO_NOTHING)
@@ -289,8 +280,6 @@ insert_size: %s;
 file_prefix: %s;
 read_length: %s;
 primer_suite: %s; """ %  (self.run_info_ill_id, self.run_key, self.run, self.lane, self.dataset, self.project, self.tubelabel, self.barcode, self.adaptor, self.dna_region, self.amp_operator, self.seq_operator, self.barcode_index, self.overlap, self.insert_size, self.file_prefix, self.read_length, self.primer_suite)
-
-
 
 class RunKey(models.Model):
     run_key_id = models.SmallIntegerField(primary_key=True)

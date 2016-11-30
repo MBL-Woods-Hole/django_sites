@@ -38,68 +38,67 @@ def upload_metadata(request):
     """
     utils = Utils()
     csv_handler = CsvMetadata()
-    
+
     if request.method == 'POST' and request.FILES:
         print "HHH"
         print "111 request.method == 'POST' and request.FILES:"
         utils.clear_session(request)
-        
+
         metadata_run_info_form, has_file_errors = csv_handler.csv_file_upload(request)
-        
+
         if has_file_errors == 'no_file':
             errors_size = len(csv_handler.errors)
             context = {'header': 'Upload metadata', 'errors': csv_handler.errors, 'errors_size': errors_size}
-            
+
             render(request, 'submission/upload_metadata.html', context)
-        
+
         if has_file_errors == 'has_empty_cells':
             errors_size = len(csv_handler.empty_cells)
-            
+
             context = {'header': 'Upload metadata', 'errors': csv_handler.errors, 'errors_size': errors_size}
-            
+
             render(request, 'submission/upload_metadata.html', context)
-        
+
         errors_size = len(csv_handler.errors)
-        
+
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
-        
+
     elif 'submit_run_info' in request.POST:
         print "HHH"
         print "333 submit_run_info in request.POST"
 
         request, metadata_run_info_form, formset = csv_handler.submit_run_info(request)
-        
+
         errors_size = len(metadata_run_info_form.errors)
-        
+
         if errors_size > 0:
             context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
         else:
             context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
 
-
     elif 'create_submission_metadata_file' in request.POST:
         print "HHH"
         print "444 create_submission_metadata_file in request.POST"
-        
+
         request, metadata_run_info_form, formset = csv_handler.create_submission_metadata_file(request)
-        
+
         errors_size = formset.total_error_count()
 
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': csv_handler.files_created}
-        
+
     else:
         print "HHH"
         print "555 file_upload_form"
-        
+
         file_upload_form = FileUploadForm()
-        
+
         context = {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
 
     return render(request, 'submission/upload_metadata.html', context)
 
 def add_project(request):
     csv_handler = CsvMetadata()
-    
+
     if request.method == 'POST':
         # elif 'submit_new_project' in request.POST:
         print "HHH"
@@ -112,8 +111,6 @@ def add_project(request):
         metadata_new_project_form = AddProjectForm()
         context = {'header': 'Add New Project', 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form}
     return render(request, 'submission/add_project.html', context)
-
-
 
 # def my_view(request):
 #     context = {'foo': 'bar'}

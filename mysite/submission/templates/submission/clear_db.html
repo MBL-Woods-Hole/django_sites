@@ -12,7 +12,6 @@ mysql -h newbpcdb2 env454 -e 'DELETE from sequence_pdr_info_ill USING sequence_p
 mysql -h newbpcdb2 env454 -e 'DELETE FROM run_info_ill USING run_info_ill JOIN project using(project_id) JOIN dataset using(dataset_id) JOIN run using(run_id) JOIN primer_suite using(primer_suite_id) WHERE primer_suite = "{{ run_data.primer_suite }}" AND run = "{{ run_data.find_rundate }}" AND lane = "{{ run_data.find_lane }}";'
 </div>
 
-
 <div class = "copy_command">
 mysql -h newbpcdb2 env454 -e 'DELETE FROM sequence_uniq_info_ill USING sequence_uniq_info_ill LEFT JOIN sequence_pdr_info_ill USING(sequence_ill_id) WHERE sequence_pdr_info_ill_id is NULL; DELETE FROM sequence_ill USING sequence_ill LEFT JOIN sequence_pdr_info_ill USING(sequence_ill_id) WHERE sequence_pdr_info_ill_id IS NULL; '
 </div>

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # import settings
 
-
 class submissionRouter(object):
 
     def db_for_read(self, model, **hints):
@@ -23,7 +22,7 @@ class submissionRouter(object):
     def db_for_write(self, model, **hints):
         "Point all operations on submission models to 'local_env454'"
         db = 'default'
-        
+
         if model._meta.app_label == 'submission':
         #     return None
         # return 'default'
@@ -31,11 +30,9 @@ class submissionRouter(object):
                 db = 'local_vamps'
             else:
                 db = 'local_env454'
-            
 
         print "db_for_write = %s" % db
         return db
-        
 
     def allow_relation(self, obj1, obj2, **hints):
         db_list = ('local_env454', 'test_vamps')

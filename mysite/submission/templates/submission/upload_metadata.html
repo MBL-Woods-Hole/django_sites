@@ -40,7 +40,7 @@
 
   </div>
  {% endblock %}
- 
+
  {% if errors_size > 0 %} 
   {% block errors %}
     <div class="red_message">
@@ -53,7 +53,6 @@
     </div>
    {% endblock %}
  {% endif %}
-
 
  {% block file_upload_form %}
 
@@ -93,12 +92,12 @@
   {% if metadata_out_csv_form %}
     {% block upload_metadata_out_csv_form %}
     {{ metadata_out_csv_form.management_form }}
-    
+
     <!-- http://www.djangosnippets.org/snippets/1442/
     http://stackoverflow.com/questions/2233929/horizontal-per-row-forms-in-a-django-formset
       TODO: send out_metadata_table ad dict to metadata_out_csv_form! then print here
        -->
-       
+
       <div class="grid_12 form">
        <fieldset id="submission_metadata_form_submission_metadata">
        <legend id="submission_metadata_form_submission_metadata-legend">Submission metadata</legend>
@@ -128,20 +127,18 @@
        </fieldset>
        </div>
        <div class="clear"></div>
-       
+
        <div class="grid_12">
         {% if files_created %}
           {% for file_path in files_created %}
             <p class=green_message>{{ file_path }} was created</p>
           {% endfor %}
-            
+
         {% endif %}
        </div>
        <div class="clear"></div>
-       
 
    {% endblock %}
   {% endif %}
-
 
 {% endblock %}

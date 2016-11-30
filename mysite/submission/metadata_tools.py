@@ -163,13 +163,13 @@ class CsvMetadata():
 
         self.get_reader(dialect)
         self.csv_headers, self.csv_content = self.parce_csv()
-        
+
         self.csvfile.seek(0)
         next(self.reader)
 
         self.check_headers_presence()
         self.check_req_info_presence()
-            
+
         if len(self.empty_cells) > 0:
             return len(self.empty_cells)
         else:
@@ -260,7 +260,7 @@ class CsvMetadata():
           # raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
           return False
       return True
-      
+
     def check_req_info_presence(self):
         empty_cells_interim = []
         for row in self.reader:
@@ -335,7 +335,7 @@ class CsvMetadata():
 
         key = "_".join([adaptor, dna_region, domain])
         mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
-        
+
         # print "self.adaptors_full timing 2"
         # t0 = self.utils.benchmark_w_return_1()
         self.adaptors_full = {key: (row.illumina_index, row.illumina_run_key) for row in mm}
@@ -357,7 +357,7 @@ class CsvMetadata():
 
                 # for row in contacts:
                 self.user_info_arr[submit_code] = model_to_dict(contacts)
-                
+
                 # self.user_info_arr.append({submit_code: (model_to_dict(row)) for row in contacts})
 
             # print "self.user_info_arr = %s" % self.user_info_arr
@@ -405,10 +405,10 @@ class CsvMetadata():
             self.lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
         # print "self.lanes_domains = %s" % self.lanes_domains
         return self.lanes_domains
-        
+
     def create_out_file_names(self, pattern):
         return {lane_domain: pattern % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
-        
+
     def create_ini_names(self):
         self.ini_names = self.create_out_file_names("%s_%s_%s_run_info.ini")
 
@@ -433,7 +433,7 @@ class CsvMetadata():
         for lane_domain in self.metadata_csv_file_names.keys():
             writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
-            
+
         for idx, val in self.out_metadata.items():
             # todo: DRY
             domain_letter = self.domain_choices[val['domain']]
@@ -450,7 +450,7 @@ class CsvMetadata():
 
     def update_out_metadata(self, my_post_dict, request):
         print "update_out_metadata"
-        
+
         for header in self.HEADERS_TO_CSV:
             for i in self.out_metadata.keys():
                 try:
@@ -459,10 +459,10 @@ class CsvMetadata():
                     pass
                 except:
                     raise
-                    
+
     def edit_out_metadata(self, request):
         print "edit_out_metadata"
-        
+
         # print "FROM edit_out_metadata: request.session['out_metadata']"
         # print request.session['out_metadata']
 
@@ -497,7 +497,7 @@ class CsvMetadata():
             key = "_".join([adaptor, dna_region, domain])
 
             self.get_adaptors_full(adaptor, dna_region, domain)
-            
+
             try:
                 self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
                 self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
@@ -509,7 +509,7 @@ class CsvMetadata():
 
     def add_out_metadata_table_to_out_metadata(self, request):
         print "add_out_metadata_table_to_out_metadata"
-        
+
         # TODO: benchmark
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
             for header in self.HEADERS_TO_EDIT_METADATA:
@@ -522,7 +522,6 @@ class CsvMetadata():
         my_post_dict['form-TOTAL_FORMS']   = len(request.session['out_metadata'].keys())
         my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
         my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
-
 
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
             my_post_dict['form-'+str(x)+'-barcode_index'] = self.out_metadata_table['rows'][x]['barcode_index']
@@ -559,7 +558,6 @@ class CsvMetadata():
             self.get_adaptors_full(adaptor, dna_region, domain)
 
             key = "_".join([adaptor, dna_region, domain])
-
 
             # print i
             self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
@@ -669,19 +667,17 @@ class CsvMetadata():
                     raise
 
         # print "self.out_metadata_table BBB = %s" % self.out_metadata_table
-        
-        
+
     def add_new_project(self, request_post):
         project_name = request_post['project_0'] + "_" + request_post['project_1'] + "_" + request_post['project_2'] + request_post['project_3']
 
         owner = models_l_env454.Contact.cache_all_method.get(contact = request_post['contact'])
-        
-        # print "NNN project_name = %s, project_title = %s, funding = %s, env_sample_source_id = %s, contact_id = %d" % (project_name, request_post['project_title'], request_post['funding'], request_post['env_source_name'], owner.contact_id)
-        
-        return models_l_env454.Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name=project_name[::-1], funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
-        
-        # return created
 
+        # print "NNN project_name = %s, project_title = %s, funding = %s, env_sample_source_id = %s, contact_id = %d" % (project_name, request_post['project_title'], request_post['funding'], request_post['env_source_name'], owner.contact_id)
+
+        return models_l_env454.Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name=project_name[::-1], funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
+
+        # return created
 
     def csv_file_upload(self, request):
 
@@ -689,15 +685,15 @@ class CsvMetadata():
         if csv_file.size == 0:
             self.errors.append("The file %s is empty or does not exist." % csv_file)
             return ("", 'no_file')
-            
+
             # render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
 
         has_empty_cells = self.import_from_file(csv_file)
-        
+
         if has_empty_cells:                
             self.errors.append("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
             return ("", 'has_empty_cells')
-        
+
         # TODO:
         # validate size and type of the file
         # tmp_path = 'tmp/%s' % csv_file
@@ -734,33 +730,33 @@ class CsvMetadata():
         # HOSTNAME = request.get_host()
         # if HOSTNAME.startswith("localhost"):
         #     print "local"
-        
+
         return (metadata_run_info_form, has_empty_cells)
-        
+
     def submit_new_project(self, request):
         # print "EEE: request.POST = %s" % request.POST
-        
+
         # request.session['run_info_from_csv'] = self.run_info_from_csv
         # print "request.session['run_info_from_csv'] 111 = "
         # print request.session['run_info_from_csv']
-        
+
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
         metadata_new_project_form = AddProjectForm(request.POST)
-        
+
         if metadata_new_project_form.is_valid():        
             # print "!!!metadata_new_project_form.cleaned_data"
             # print metadata_new_project_form.cleaned_data
             """
             !!!metadata_new_project_form.cleaned_data
             {'env_source_name': <EnvSampleSource: 0: >, 'project_description': u'www', 'funding': u'rrr', 'project_title': u'sss', 'project': u'dfsdfs_dsfsdfs_B_v6', 'contact': <Contact: Eric Boyd>}
-            
+
             """
-            
+
             self.new_project, self.new_project_created = self.add_new_project(request.POST)
 
         return metadata_new_project_form
-        
+
     def submit_run_info(self, request):
         self.get_selected_variables(request.POST)
         request.session['run_info'] = {}
@@ -784,9 +780,9 @@ class CsvMetadata():
         formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
 
         request.session['out_metadata_table'] = self.out_metadata_table
-        
+
         return (request, metadata_run_info_form, formset)
-        
+
     def create_submission_metadata_file(self, request):
         # print "EEE: request.POST = %s" % request.POST
 
@@ -844,5 +840,5 @@ class CsvMetadata():
 
             # *) check if csv was created
             self.check_out_csv_files()
-            
+
         return (request, metadata_run_info_form, formset)

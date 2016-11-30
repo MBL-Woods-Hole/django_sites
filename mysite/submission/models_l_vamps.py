@@ -11,7 +11,6 @@ from django.db import models
 
 models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('vamps_db',)
 
-
 class VampsAuth(models.Model):
     user = models.CharField(unique=True, max_length=20)
     passwd = models.CharField(max_length=50)
@@ -31,7 +30,6 @@ class VampsAuth(models.Model):
         managed = False
         db_table = 'vamps_auth'
         unique_together = (('first_name', 'last_name', 'email', 'institution'),)
-
 
 class VampsSubmissions(models.Model):
     submit_code = models.CharField(unique=True, max_length=40)

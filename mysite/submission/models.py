@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Machine(models.Model):
     # machine_id = models.SmallIntegerField(primary_key=True)
     # machine    = models.CharField(max_length=16)
@@ -38,7 +37,6 @@ class Overlap(models.Model):
         ('ns_complete', 'complete'),
     )
 
-
 class Domain(models.Model):
 
     DOMAIN_CHOICES = (
@@ -54,7 +52,7 @@ class Domain(models.Model):
         ('E', 'Eukarya'),
         ('F', 'ITS1'),
     )
-    
+
     SUITE_DOMAIN_CHOICES = (
         ('B', 'Bacterial'),
         ('A', 'Archaeal'),
@@ -68,14 +66,13 @@ class Domain(models.Model):
         ('eukarya' , 'E'),
         ('its1'    , 'F'),
     )
-    
+
     DOMAIN_WITH_LETTER_CHOICES = (
         ('B', 'Bacteria (B)'),
         ('A', 'Archaea (A)' ),
         ('E', 'Eukarya (E)' ),
         ('F', 'ITS1 (ITS1)' ),
     )
-
 
 class Ill_dna_region(models.Model):
 
@@ -93,7 +90,6 @@ class Has_ns(models.Model):
         ('yes', 'Has NNNN in run_key'),
         ('no', 'Does not have NNNN in run_key (NextSeq)'),
     )
-
 
 # # class Forms_model(models.Model):
 # #     myDomainChoiceField = models.CharField(blank=True, default='') #max_length=5,
