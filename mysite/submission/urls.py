@@ -8,7 +8,6 @@ urlpatterns = [
     # ex: /submission/
     url(r'^$', views.upload_metadata, name='upload_metadata'),
     url(r'^upload_metadata/$', views.upload_metadata, name='upload_metadata'),
-    # url(r'^upload_metadata__run_info_form/$', views.upload_metadata__run_info_form, name='upload_metadata__run_info_form'),
     
     url(r'^demultiplex/$', views.demultiplex, name='demultiplex'),
     url(r'^overlap/$', views.overlap, name='overlap'),
