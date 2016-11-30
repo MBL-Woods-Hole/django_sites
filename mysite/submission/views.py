@@ -31,7 +31,6 @@ def help(request):
     return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
 def upload_metadata(request):
-
     # error_message = ""
     """TODO:
     https://docs.djangoproject.com/en/dev/ref/forms/api/#dynamic-initial-values
@@ -46,7 +45,7 @@ def upload_metadata(request):
         utils.clear_session(request)
         
         
-        metadata_run_info_form, metadata_new_project_form, has_empty_cells = csv_handler.csv_file_upload(request)
+        metadata_run_info_form, has_empty_cells = csv_handler.csv_file_upload(request)
         if has_empty_cells:
             print "AAA has_empty_cells"
             print has_empty_cells
@@ -64,16 +63,8 @@ def upload_metadata(request):
         # print csv_handler.csv_by_header_uniqued
         
         
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form }
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors }
         
-    elif 'submit_new_project' in request.POST:
-        print "HHH"
-        print "222 submit_new_project in request.POST"
-
-        metadata_run_info_form, metadata_new_project_form = csv_handler.submit_new_project(request)
-
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': csv_handler.new_project, 'new_project_created': csv_handler.new_project_created }    
-
     elif 'submit_run_info' in request.POST:
         print "HHH"
         print "333 submit_run_info in request.POST"
@@ -105,6 +96,22 @@ def upload_metadata(request):
         context = {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
 
     return render(request, 'submission/upload_metadata.html', context)
+
+def add_project(request):
+    if request.method == 'POST':
+        # elif 'submit_new_project' in request.POST:
+        print "HHH"
+        print "222 submit_new_project in request.POST"
+
+        metadata_new_project_form = csv_handler.submit_new_project(request)
+
+        context = {'header': 'Add New Project', 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': csv_handler.new_project, 'new_project_created': csv_handler.new_project_created}    
+    else:
+        metadata_new_project_form = AddProjectForm()
+        context = {'metadata_new_project_form': metadata_new_project_form}
+    return render(request, 'submission/add_project.html', context)
+
+
 
 # def my_view(request):
 #     context = {'foo': 'bar'}

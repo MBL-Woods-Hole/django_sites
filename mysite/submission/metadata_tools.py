@@ -719,8 +719,6 @@ class CsvMetadata():
         request.session['run_info_from_csv'] = self.run_info_from_csv
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
-        metadata_new_project_form = AddProjectForm()
-
         # # TODO: move to one method in metadata_tools, call from here as create info and create csv
         # request.session['lanes_domains'] = self.get_lanes_domains()
         # del request.session['lanes_domains']
@@ -744,7 +742,7 @@ class CsvMetadata():
         # if HOSTNAME.startswith("localhost"):
         #     print "local"
         
-        return (metadata_run_info_form, metadata_new_project_form, has_empty_cells)
+        return (metadata_run_info_form, has_empty_cells)
         
     def submit_new_project(self, request):
         # print "EEE: request.POST = %s" % request.POST

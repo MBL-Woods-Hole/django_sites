@@ -1,0 +1,29 @@
+{% extends "submission/base.html" %}
+
+{% block some_content %}
+
+    <div class="grid_7 form">
+     <fieldset id="new_project_form_new_project">
+     <legend id="new_project_form_new_project-legend">Add new project</legend>
+
+      <form action="" method="post">
+       <table class="normal_table">
+        {{ metadata_new_project_form.as_table }}
+       </table>
+        {% csrf_token %}
+        <input type="submit" name="submit_new_project" value="Submit New Project">
+      </form>
+     </fieldset>
+     </div>
+     <div class="grid_5"></div>
+     <div class="clear"></div>
+     
+     <div class="grid_12">
+      {% if new_project_created %}
+          <p class=green_message>Project {{ new_project_name }} was created</p>          
+      {% endif %}
+     </div>
+     <div class="clear"></div>
+
+
+{% endblock %}
