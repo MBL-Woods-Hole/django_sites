@@ -98,6 +98,8 @@ def upload_metadata(request):
     return render(request, 'submission/upload_metadata.html', context)
 
 def add_project(request):
+    csv_handler = CsvMetadata()
+    
     if request.method == 'POST':
         # elif 'submit_new_project' in request.POST:
         print "HHH"
@@ -108,7 +110,7 @@ def add_project(request):
         context = {'header': 'Add New Project', 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': csv_handler.new_project, 'new_project_created': csv_handler.new_project_created}    
     else:
         metadata_new_project_form = AddProjectForm()
-        context = {'metadata_new_project_form': metadata_new_project_form}
+        context = {'header': 'Add New Project', 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form}
     return render(request, 'submission/add_project.html', context)
 
 
