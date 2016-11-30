@@ -754,6 +754,8 @@ class CsvMetadata():
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
         metadata_new_project_form = AddProjectForm(request.POST)
+        print "metadata_new_project_form = "
+        print metadata_new_project_form
         
         if metadata_new_project_form.is_valid():        
             print "!!!metadata_new_project_form.cleaned_data"
@@ -766,7 +768,7 @@ class CsvMetadata():
             
             self.new_project, self.new_project_created = self.add_new_project(request.POST)
 
-        return (metadata_run_info_form, metadata_new_project_form)
+        return metadata_new_project_form
         
     def submit_run_info(self, request):
         # print "EEE: request.POST = %s" % request.POST
