@@ -346,13 +346,15 @@ class CsvMetadata():
         # self.utils.benchmark_w_return_2(t0)
 
     def get_user_info(self, db_name = "test_env454"):
+        print "HERE1"
         # todo: get db_name depending on local/not
         try:
+            print "HERE2"
             # TODO: collect submit_code and vamps_user_id into a dict, run one query with "OR"
             for submit_code in self.csv_by_header_uniqued['submit_code']:
-                # print "submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user'])
+                print "submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user'])
                 vamps_user_id = self.vamps_submissions[submit_code]['user']
-                # print "CCC1 vamps_user_id = %s" % vamps_user_id
+                print "CCC1 vamps_user_id = %s" % vamps_user_id
 
                 contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
                 # .filter(vamps_name = vamps_user_id)
@@ -366,9 +368,17 @@ class CsvMetadata():
 
             # print "self.user_info_arr = %s" % self.user_info_arr
         except KeyError as e:
+            print "HERE3"
             self.cause = e.args[0]
+            print "self.cause"
+            print self.cause
             self.errors.append(self.no_data_message())
+            self.errors.append(" Or the vamps_submission has no such submit_code.")
+            print "self.no_data_message()"
+            print self.no_data_message()
         except:
+            print "HERE4"
+            
             raise
 
     def get_selected_variables(self, request_post):
@@ -581,9 +591,14 @@ class CsvMetadata():
         # print self.adaptors_full['A08_v4v5_bacteria'][0].illumina_index
 
         self.get_user_info()
+        if self.errors:
+            return
+            
         for i in xrange(len(self.csv_content)-1):
 
             curr_submit_code = self.csv_by_header['submit_code'][i]
+            print "self.user_info_arr[curr_submit_code] = "
+            print self.user_info_arr[curr_submit_code]
 
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
@@ -755,7 +770,9 @@ class CsvMetadata():
         self.get_adaptor_from_csv_content()
 
         self.make_new_out_metadata()
-
+        if self.errors:
+            return (metadata_run_info_form, has_empty_cells)
+            
         request.session['out_metadata'] = self.out_metadata
 
         # TODO: use to get db_names
