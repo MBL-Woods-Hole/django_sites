@@ -158,6 +158,8 @@ class CsvMetadata():
         return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
 
     def import_from_file(self, csvfile):
+        print "import_from_file"
+        
         self.csvfile = csvfile
         dialect = self.get_dialect()
 
@@ -214,6 +216,8 @@ class CsvMetadata():
         self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
 
     def get_initial_run_info_data_dict(self):
+        print "get_initial_run_info_data_dict"
+        
         try:
             csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
 
@@ -429,6 +433,7 @@ class CsvMetadata():
             ini_file.close()
 
     def write_out_metadata_to_csv(self, my_post_dict, request):
+        print "write_out_metadata_to_csv"
         writers = {}
         for lane_domain in self.metadata_csv_file_names.keys():
             writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'), self.HEADERS_TO_CSV)
@@ -450,7 +455,7 @@ class CsvMetadata():
 
     def update_out_metadata(self, my_post_dict, request):
         print "update_out_metadata"
-
+        # ???
         for header in self.HEADERS_TO_CSV:
             for i in self.out_metadata.keys():
                 try:
@@ -486,8 +491,12 @@ class CsvMetadata():
         # print "self.out_metadata = %s" % self.out_metadata
 
     def edit_out_metadata_table(self, request):
-
+        print "edit_out_metadata_table"
+        
         self.out_metadata_table = request.session['out_metadata_table']
+
+        print "OOO request.session['run_info_form_post']['csv_has_ns']"
+        print request.session['run_info_form_post']['csv_has_ns']
 
         for x in range(0, len(self.out_metadata_table['rows'])):
             adaptor    = request.POST['form-'+str(x)+'-adaptor']
@@ -497,9 +506,13 @@ class CsvMetadata():
             key = "_".join([adaptor, dna_region, domain])
 
             self.get_adaptors_full(adaptor, dna_region, domain)
-
+            # nnnn = ""
+            
             try:
                 self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
+                # if (request.session['run_info_form_post']['csv_has_ns'] == 'yes'):
+                #     nnnn = "NNNN"
+                # self.out_metadata_table['rows'][x]['run_key']       = nnnn + self.adaptors_full[key][1].illumina_run_key
                 self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
             except KeyError:
                 self.out_metadata_table['rows'][x]['barcode_index'] = ""
@@ -509,24 +522,45 @@ class CsvMetadata():
 
     def add_out_metadata_table_to_out_metadata(self, request):
         print "add_out_metadata_table_to_out_metadata"
-
+        
+        nnnn = ""
         # TODO: benchmark
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
+            print "SSS1 self.out_metadata_table['rows'][x]['run_key']"
+            print self.out_metadata_table['rows'][x]['run_key']
             for header in self.HEADERS_TO_EDIT_METADATA:
                 if (self.out_metadata_table['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
                     self.out_metadata_table['rows'][x][header] = request.POST['form-'+str(x)+'-' + header]
+                    
+            if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
+                nnnn = "NNNN"
+            self.out_metadata_table['rows'][x]['run_key'] = nnnn + request.POST['form-'+str(x)+'-' + 'run_key']
+
+            print "SSS2 self.out_metadata_table['rows'][x]['run_key']"
+            print self.out_metadata_table['rows'][x]['run_key']
+                    
 
     def edit_post_metadata_table(self, request):
-
+        print "edit_post_metadata_table"
+        
         my_post_dict = request.POST.copy()
         my_post_dict['form-TOTAL_FORMS']   = len(request.session['out_metadata'].keys())
         my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
         my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
-
+        
+        
+        nnnn = ""
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
+            print "SSS3 self.out_metadata_table['rows'][x]['run_key']"
+            print self.out_metadata_table['rows'][x]['run_key']
             my_post_dict['form-'+str(x)+'-barcode_index'] = self.out_metadata_table['rows'][x]['barcode_index']
-            my_post_dict['form-'+str(x)+'-run_key']       = self.out_metadata_table['rows'][x]['run_key']
-
+            if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
+                nnnn = "NNNN"
+            my_post_dict['form-'+str(x)+'-run_key']       = nnnn + self.out_metadata_table['rows'][x]['run_key']
+            
+            print "SSS4 self.out_metadata_table['rows'][x]['run_key']"
+            print self.out_metadata_table['rows'][x]['run_key']
+                                
         return my_post_dict
 
     def make_new_out_metadata(self):
@@ -609,7 +643,7 @@ class CsvMetadata():
             # TODO:
             # $combined_metadata[$num]["locked"]             = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["locked"];
             # $combined_metadata[$num]["num_of_tubes"]       = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["num_of_tubes"];
-            # $combined_metadata[$num]["nnnn"]               = $nnnn;
+            # self.out_metadata[i]['nnnn']                 = self.csv_by_header['lane'][i]
             # $combined_metadata[$num]["op_empcr"]           = $csv_metadata_row["op_empcr"];
 
             self.out_metadata[i]['overlap']				 = self.csv_by_header['overlap'][i]
@@ -649,6 +683,8 @@ class CsvMetadata():
         # print "self.out_metadata = %s" % self.out_metadata
 
     def make_metadata_table(self):
+        print "make_metadata_table"
+        
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
 
         for i in xrange(len(self.out_metadata.keys())):
@@ -765,6 +801,11 @@ class CsvMetadata():
         request.session['run_info']['selected_machine']         = self.selected_machine
         request.session['run_info']['selected_dna_region']      = self.selected_dna_region
         request.session['run_info']['selected_overlap']         = self.selected_overlap
+
+        print "RRR request.POST from submit_run_info"
+        print request.POST
+
+            # self.out_metadata[i]['nnnn']                 = self.csv_by_header['lane'][i]
 
         #*) metadata table to show and edit
         self.edit_out_metadata(request)
