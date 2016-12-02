@@ -182,7 +182,9 @@ class CsvMetadata():
         try:
             dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024), delimiters=',')
         except csv.Error as e:
-            self.errors.append('Warning for %s: %s' % (self.csvfile, e))
+            print "Warning for %s: %s' % (self.csvfile, e)"
+            pass
+            # self.errors.append('Warning for %s: %s' % (self.csvfile, e))
         except:
             raise
         else:
@@ -468,10 +470,16 @@ class CsvMetadata():
     def edit_out_metadata(self, request):
         print "edit_out_metadata"
 
-        # print "FROM edit_out_metadata: request.session['out_metadata']"
-        # print request.session['out_metadata']
-
-        self.out_metadata = request.session['out_metadata']
+        try:
+            self.out_metadata = request.session['out_metadata']
+        except KeyError:
+            request.session['out_metadata'] = self.out_metadata
+        except:
+            raise
+        
+        print "FROM edit_out_metadata: request.session['out_metadata']"
+        print request.session['out_metadata']
+        
 
         for i, v in self.out_metadata.items():
             # print "i = %s" % i
