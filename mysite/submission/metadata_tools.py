@@ -792,7 +792,14 @@ class CsvMetadata():
         # logging.debug("request.session['run_info_from_csv'] 111 = ")
         # logging.debug(request.session['run_info_from_csv'])
 
-        metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+        # try:
+        #     metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+        # except KeyError as e:
+        #     metadata_run_info_form = CsvRunInfoUploadForm()
+        #     print "request.session['run_info_from_csv'] does not exist"
+        # except:
+        #     raise
+
 
         metadata_new_project_form = AddProjectForm(request.POST)
 
