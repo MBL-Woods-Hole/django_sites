@@ -41,8 +41,6 @@ if mysite_path not in sys.path:
 if site_packages_path not in sys.path:
     sys.path.append(site_packages_path)
 
-logging.info('"path = ')
-logging.info(path)
 logging.info('sys.path = ')
 logging.info(sys.path)
 
