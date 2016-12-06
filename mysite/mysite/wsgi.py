@@ -46,7 +46,8 @@ logging.info(sys.path)
 
 # os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
-    
+
+import django
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
