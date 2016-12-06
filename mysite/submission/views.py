@@ -197,9 +197,9 @@ def gast(request):
     run_data = {}
     try:
         form, run_data, error_message = run_utils.get_run(request)
-        # logging.debug("!!!form.cleaned_data"
+        # logging.debug("!!!form.cleaned_data")
         # print form.cleaned_data
-        # logging.debug("555 find_rundate = "
+        # logging.debug("555 find_rundate = ")
         # print run_data['find_rundate']
     except:
         form, error_message = run_utils.get_run(request)

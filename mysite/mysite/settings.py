@@ -105,33 +105,51 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 #     }
 # }
 # if 'test' not in sys.argv:
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dj_test',
-        'OPTIONS': {
-            # 'read_default_file': '~/.my.cnf_dj',
-            'read_default_file': '~/.my.cnf',
-            'read_default_group': 'clientdj',
-        },
-    },
-    'local_env454': {
-        'NAME': 'test_env454',
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': '~/.my.cnf',
-            'read_default_group': 'clientdj',
-        },
-    },
-    'local_vamps': {
-        'NAME': 'test_vamps',
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': '~/.my.cnf',
-            'read_default_group': 'clientdj',
-        },
-    },
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dj_test',
+#         'OPTIONS': {
+#             # 'read_default_file': '~/.my.cnf_dj',
+#             'read_default_file': '~/.my.cnf',
+#             'read_default_group': 'clientdj',
+#         },
+#     },
+#     'local_env454': {
+#         'NAME': 'test_env454',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'OPTIONS': {
+#             'read_default_file': '~/.my.cnf',
+#             'read_default_group': 'clientdj',
+#         },
+#     },
+#     'local_vamps': {
+#         'NAME': 'test_vamps',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'OPTIONS': {
+#             'read_default_file': '~/.my.cnf',
+#             'read_default_group': 'clientdj',
+#         },
+#     },
+#     'server_env454': {
+#         'NAME': 'env454',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': 'newbpcdb2',
+#         'OPTIONS': {
+#             'read_default_file': '~/.my.cnf',
+#         },
+#     },
+#     'server_vamps': {
+#         'NAME': 'vamps',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': 'vampsdb',
+#         'OPTIONS': {
+#             'read_default_file': '~/.my.cnf',
+#         },
+#     },
+# 
+# 
+# }
 
 # 'vampsdev': {
 #     'NAME': 'test',

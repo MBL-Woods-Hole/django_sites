@@ -13,13 +13,11 @@ class submissionRouter(object):
 
         if model._meta.app_label == 'submission':
             if hasattr(model._meta, 'vamps_db'):
-                db = 'local_vamps'
+                db = 'vamps'
             else:
-                db = 'local_env454'
+                db = 'env454'
 
-        # print "db_for_read = %s" % db
         logging.info("db_for_read = %s" % db)
-        
         return db
 
     def db_for_write(self, model, **hints):
@@ -35,7 +33,6 @@ class submissionRouter(object):
                 db = 'local_env454'
 
         logging.info("db_for_write = %s" % db)
-        # print "db_for_write = %s" % db
         return db
 
     def allow_relation(self, obj1, obj2, **hints):
