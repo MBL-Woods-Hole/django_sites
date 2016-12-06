@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # import settings
+import logging
 
 class submissionRouter(object):
 
@@ -16,7 +17,9 @@ class submissionRouter(object):
             else:
                 db = 'local_env454'
 
-        print "db_for_read = %s" % db
+        # print "db_for_read = %s" % db
+        logging.info("db_for_read = %s" % db)
+        
         return db
 
     def db_for_write(self, model, **hints):
@@ -31,7 +34,8 @@ class submissionRouter(object):
             else:
                 db = 'local_env454'
 
-        print "db_for_write = %s" % db
+        logging.info("db_for_write = %s" % db)
+        # print "db_for_write = %s" % db
         return db
 
     def allow_relation(self, obj1, obj2, **hints):

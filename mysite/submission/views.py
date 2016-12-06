@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.template import RequestContext, loader, Context
 from django.utils.html import escape
 import os 
+import logging
 
 def my_view(request):
     context = {'foo': 'bar'}
@@ -40,8 +41,9 @@ def upload_metadata(request):
     csv_handler = CsvMetadata()
 
     if request.method == 'POST' and request.FILES:
-        print "HHH"
-        print "111 request.method == 'POST' and request.FILES:"
+        # logging.debug('This message should go to the log file')
+        logging.debug("HHH")
+        logging.debug("111 request.method == 'POST' and request.FILES:")
         utils.clear_session(request)
 
         metadata_run_info_form, has_file_errors = csv_handler.csv_file_upload(request)
@@ -64,8 +66,8 @@ def upload_metadata(request):
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
 
     elif 'submit_run_info' in request.POST:
-        print "HHH"
-        print "333 submit_run_info in request.POST"
+        logging.debug("HHH")
+        logging.debug("333 submit_run_info in request.POST")
 
         request, metadata_run_info_form, formset = csv_handler.submit_run_info(request)
 
@@ -77,8 +79,8 @@ def upload_metadata(request):
             context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
 
     elif 'create_submission_metadata_file' in request.POST:
-        print "HHH"
-        print "444 create_submission_metadata_file in request.POST"
+        logging.debug("HHH")
+        logging.debug("444 create_submission_metadata_file in request.POST")
 
         request, metadata_run_info_form, formset = csv_handler.create_submission_metadata_file(request)
 
@@ -87,8 +89,8 @@ def upload_metadata(request):
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': csv_handler.files_created}
 
     else:
-        print "HHH"
-        print "555 file_upload_form"
+        logging.debug("HHH")
+        logging.debug("555 file_upload_form")
 
         file_upload_form = FileUploadForm()
 
@@ -101,8 +103,8 @@ def add_project(request):
 
     if request.method == 'POST':
         # elif 'submit_new_project' in request.POST:
-        print "HHH"
-        print "222 submit_new_project in request.POST"
+        logging.debug("HHH")
+        logging.debug("222 submit_new_project in request.POST")
 
         metadata_new_project_form = csv_handler.submit_new_project(request)
 
@@ -195,9 +197,9 @@ def gast(request):
     run_data = {}
     try:
         form, run_data, error_message = run_utils.get_run(request)
-        # print "!!!form.cleaned_data"
+        # logging.debug("!!!form.cleaned_data"
         # print form.cleaned_data
-        # print "555 find_rundate = "
+        # logging.debug("555 find_rundate = "
         # print run_data['find_rundate']
     except:
         form, error_message = run_utils.get_run(request)

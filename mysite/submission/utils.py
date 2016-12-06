@@ -4,12 +4,13 @@ from models_l_env454 import RunInfoIll
 
 import time
 import os
+import logging
 
 class Utils():
 
     def benchmark_w_return_1(self):
-        print  "\n"
-        print "-" * 10
+        logging.info("\n")
+        logging.info("-" * 10)
         return time.time()
 
     def benchmark_w_return_2(self, t0):
@@ -55,7 +56,7 @@ class Dirs:
             os.makedirs(dir_name)
         except OSError:
             if os.path.isdir(dir_name):
-                print "\nDirectory %s already exists."  % (dir_name)
+                logging.info("\nDirectory %s already exists."  % (dir_name))
             else:
                 raise    
         return dir_name
@@ -67,7 +68,7 @@ class Dirs:
             return self.check_and_make_dir(dir_name) 
 
     def get_path(self):
-        # print "request.META['HTTP_HOST'] = %s" % (request.META['HTTP_HOST'])
+        # logging.info("request.META['HTTP_HOST'] = %s" % (request.META['HTTP_HOST']))
         # if self.utils.is_local(request.META['HTTP_HOST']):
         #     root_dir  = C.output_root_mbl_local
 
@@ -93,13 +94,13 @@ class Run():
           raise
 
     def get_run(self, request):
-        print "Running get_run from utils"
+        logging.info("Running get_run from utils")
         error_message = ""
         run_data = {}
 
         if request.method == 'POST':
             form = RunForm(request.POST)
-            # print "request.POST = "
+            # logging.info("request.POST = ")
             # print request.POST
             if form.is_valid():
                 run_data['find_rundate'] = form.cleaned_data['find_rundate'].run
@@ -110,7 +111,7 @@ class Run():
                 run_data['perfect_overlap']   = self.utils.get_overlap(form.cleaned_data['find_machine'])
                 suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
                 primer_suite = self.get_primer_suites(run_data['find_rundate'], run_data['find_lane'], suite_domain)
-                # print "primer_suite[1]"
+                # logging.info("primer_suite[1]")
                 #
                 # print primer_suite[1]
 
@@ -118,8 +119,8 @@ class Run():
                     run_data['primer_suite'] = primer_suite[1]
                 else:
                     error_message = primer_suite[1]
-                print "run_data: "
-                print run_data
+                logging.info("run_data: ")
+                logging.info(run_data)
 
                 return (form, run_data, error_message)
         # if a GET (or any other method) we'll create a blank form
