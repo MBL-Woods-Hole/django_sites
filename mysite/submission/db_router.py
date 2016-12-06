@@ -21,22 +21,22 @@ class submissionRouter(object):
         return db
 
     def db_for_write(self, model, **hints):
-        "Point all operations on submission models to 'local_env454'"
+        "Point all operations on submission models to 'env454'"
         db = 'default'
 
         if model._meta.app_label == 'submission':
         #     return None
         # return 'default'
             if hasattr(model._meta, 'vamps_db'):
-                db = 'local_vamps'
+                db = 'vamps'
             else:
-                db = 'local_env454'
+                db = 'env454'
 
         logging.info("db_for_write = %s" % db)
         return db
 
     def allow_relation(self, obj1, obj2, **hints):
-        db_list = ('local_env454', 'test_vamps')
+        db_list = ('env454', 'vamps')
         if obj1._state.db in db_list and obj2._state.db in db_list:
             return True
         return None
@@ -56,7 +56,7 @@ class submissionRouter(object):
         return False
 
     def allow_syncdb(self, db, model):
-        if db == 'test_vamps' or db == 'local_env454' or model._meta.app_label == "submission":
+        if db == 'test_vamps' or db == 'env454' or model._meta.app_label == "submission":
             return False  # we're not using syncdb on our legacy database
         else:  # but all other models/databases are fine
             return True
