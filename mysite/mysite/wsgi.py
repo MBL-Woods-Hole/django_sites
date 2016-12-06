@@ -26,18 +26,20 @@ logging.basicConfig(filename='/usr/local/www/vamps/tmp/django_submission.log', l
 
 
 
-path = '/usr/local/www/vampsdev/projects/django/illumina_submission/django_sites/mysite/mysite'
+mysite_path = '/usr/local/www/vampsdev/projects/django/illumina_submission/django_sites/mysite'
 # sys.path.append('<PATH_TO_MY_DJANGO_PROJECT>/hellodjango')
 # 
 # add the virtualenv site-packages path to the sys.path
-sys.path.append('/bioware/python-2.7.11-201608021657/lib/python2.7/site-packages')
+site_packages_path = sys.path.append('/bioware/python-2.7.11-201608021657/lib/python2.7/site-packages')
 # 
 # # poiting to the project settings
 # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hellodjango.settings")
 
 
-if path not in sys.path:
-    sys.path.append(path)
+if mysite_path not in sys.path:
+    sys.path.append(mysite_path)
+if site_packages_path not in sys.path:
+    sys.path.append(site_packages_path)
 
 logging.info('"path = ')
 logging.info(path)
