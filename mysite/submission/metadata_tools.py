@@ -723,7 +723,7 @@ class CsvMetadata():
 
         # logging.debug("self.out_metadata_table BBB = %s" % self.out_metadata_table)
 
-    def add_new_project(self, request_post):
+    def insert_project(self, request_post):
         project_name = request_post['project_0'] + "_" + request_post['project_1'] + "_" + request_post['project_2'] + request_post['project_3']
 
         owner = models_l_env454.Contact.cache_all_method.get(contact = request_post['contact'])
@@ -817,7 +817,7 @@ class CsvMetadata():
 
             """
 
-            self.new_project, self.new_project_created = self.add_new_project(request.POST)
+            self.new_project, self.new_project_created = self.insert_project(request.POST)
 
         return metadata_new_project_form
 
@@ -910,8 +910,9 @@ class CsvMetadata():
             # *) check if csv was created
             self.check_out_csv_files()
             
-        run_date = self.insert_run(request)
-
+        self.new_rundate, self.new_rundate_created = self.insert_run(request)
+        logging.info("self.new_rundate = %s, self.new_rundate_created = %s" % (self.new_rundate, self.new_rundate_created))
+        
         return (request, metadata_run_info_form, formset)
         
     def insert_run(self, request):
