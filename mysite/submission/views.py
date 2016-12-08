@@ -49,12 +49,7 @@ def upload_metadata(request):
     elif 'create_submission_metadata_file' in request.POST:
         context = edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request)
     else:
-        logging.debug("HHH")
-        logging.debug("555 file_upload_form")
-
-        file_upload_form = FileUploadForm()
-
-        context = {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
+        context = initial_form()
 
     return render(request, 'submission/upload_metadata.html', context)
 
@@ -112,7 +107,14 @@ def edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(reque
 
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': csv_handler.files_created}
 
+def initial_form():
+    logging.debug("HHH")
+    logging.debug("555 file_upload_form")
 
+    file_upload_form = FileUploadForm()
+
+    return {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
+        
 def add_project(request):
     csv_handler = CsvMetadata()
 
