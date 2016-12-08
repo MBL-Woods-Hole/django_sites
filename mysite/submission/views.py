@@ -47,15 +47,7 @@ def upload_metadata(request):
         context = submit_run_info_n_edit_metadata_n_make_table(request)
 
     elif 'create_submission_metadata_file' in request.POST:
-        logging.debug("HHH")
-        logging.debug("444 create_submission_metadata_file in request.POST")
-
-        request, metadata_run_info_form, formset = csv_handler.create_submission_metadata_file(request)
-
-        errors_size = formset.total_error_count()
-
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': csv_handler.files_created}
-
+        context = edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request)
     else:
         logging.debug("HHH")
         logging.debug("555 file_upload_form")
@@ -109,6 +101,18 @@ def submit_run_info_n_edit_metadata_n_make_table(request):
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
     return context
             
+def edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request):
+    csv_handler = CsvMetadata()
+    logging.debug("HHH")
+    logging.debug("444 create_submission_metadata_file in request.POST")
+
+    request, metadata_run_info_form, formset = csv_handler.create_submission_metadata_file(request)
+
+    errors_size = formset.total_error_count()
+
+    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': csv_handler.files_created}
+
+
 def add_project(request):
     csv_handler = CsvMetadata()
 
