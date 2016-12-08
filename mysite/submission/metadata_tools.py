@@ -910,55 +910,10 @@ class CsvMetadata():
             # *) check if csv was created
             self.check_out_csv_files()
             
-        self.add_run(request)
+        run_date = self.insert_run(request)
 
         return (request, metadata_run_info_form, formset)
         
-    def add_new_data():
-        """
-        $arr_name["run_key_id"]    = get_id($arr_name, "run_key", $db_name, $connection);
-          $combined_metadata[$num]["dataset_id"]         = get_id($combined_metadata[$num], "dataset", $db_name, $connection);
-          $combined_metadata[$num]["dna_region_id"]      = get_id($session["run_info"], "dna_region_0", $db_name, $connection);
-          $combined_metadata[$num]["project_id"]         = get_id($combined_metadata[$num], "project", $db_name, $connection);
-            $combined_metadata[$num]["run_id"]           = get_id($session["run_info"], "run", $db_name, $connection);
+    def insert_run(self, request):
+        return models_l_env454.Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
         
-        $query = "INSERT IGNORE INTO " . $db_name . "." . $table_name .
-        "($table_name, run_prefix, date_trimmed) VALUES (\"". $data_array["rundate"] . "\", \"illumin\", \"0000-00-00\")";
-        """
-        pass
-        
-    def add_run(self, request):
-        # query = "INSERT IGNORE INTO %s.%s (table_name, run_prefix, date_trimmed) VALUES ('%s', '%s', '%s', '0000-00-00'" % ("db_name", "table_name", "rundate", "platform")
-        # logging.debug("query = %s" % query)
-        logging.debug("self.out_metadata = %s" % self.out_metadata)
-        
-        rrr = models_l_env454.Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
-        
-        logging.debug("rrr")
-        logging.debug(rrr)
-        # return models_l_env454.Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name=project_name[::-1], funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
-
-
-        """
-        u'run_info_form_post'
-	
-        {u'csrfmiddlewaretoken': u'vGjYAehQ7VElC6nKQeuHJOTC0WIZbFxl',
-         u'csv_dna_region': u'v6',
-         u'csv_has_ns': u'yes',
-         u'csv_insert_size': u'100',
-         u'csv_overlap': u'hs_complete',
-         u'csv_path_to_raw_data': u'/xraid2-2/sequencing/Illumina/20151111hs',
-         u'csv_platform': u'hiseq',
-         u'csv_read_length': u'300',
-         u'csv_rundate': u'20151111',
-         u'csv_seq_operator': u'JVJ',
-         u'submit_run_info': u'Submit Run Info'}
-        
-        'run_info'
-	
-        {u'selected_dna_region': u'v6',
-         u'selected_machine': u'hiseq',
-         u'selected_machine_short': u'hs',
-         u'selected_overlap': u'hs_complete',
-         u'selected_rundate': u'20151111'}
-        """
