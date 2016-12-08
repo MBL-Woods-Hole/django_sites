@@ -31,7 +31,42 @@ def index(request):
 def help(request):
     return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
-def upload_file_n_make_new_out_metadata(request):
+def upload_metadata(request):
+    # error_message = ""
+    """TODO:
+    https://docs.djangoproject.com/en/dev/ref/forms/api/#dynamic-initial-values
+    Form.errors
+    """
+    utils = Utils()
+    csv_handler = CsvMetadata()
+
+    if request.method == 'POST' and request.FILES:
+        context = upload_file_n_make_new_metadata(request)
+
+    elif 'submit_run_info' in request.POST:
+        context = submit_run_info_n_edit_metadata_n_make_table(request)
+
+    elif 'create_submission_metadata_file' in request.POST:
+        logging.debug("HHH")
+        logging.debug("444 create_submission_metadata_file in request.POST")
+
+        request, metadata_run_info_form, formset = csv_handler.create_submission_metadata_file(request)
+
+        errors_size = formset.total_error_count()
+
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': csv_handler.files_created}
+
+    else:
+        logging.debug("HHH")
+        logging.debug("555 file_upload_form")
+
+        file_upload_form = FileUploadForm()
+
+        context = {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
+
+    return render(request, 'submission/upload_metadata.html', context)
+
+def upload_file_n_make_new_metadata(request):
     utils = Utils()
     csv_handler = CsvMetadata()
     
@@ -58,53 +93,22 @@ def upload_file_n_make_new_out_metadata(request):
 
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
     
-
-def upload_metadata(request):
-    # error_message = ""
-    """TODO:
-    https://docs.djangoproject.com/en/dev/ref/forms/api/#dynamic-initial-values
-    Form.errors
-    """
-    utils = Utils()
+def submit_run_info_n_edit_metadata_n_make_table(request):
     csv_handler = CsvMetadata()
+    
+    logging.debug("HHH")
+    logging.debug("333 submit_run_info in request.POST")
 
-    if request.method == 'POST' and request.FILES:
-        context = upload_file_n_make_new_out_metadata(request)
+    request, metadata_run_info_form, formset = csv_handler.submit_run_info(request)
 
+    errors_size = len(metadata_run_info_form.errors)
 
-    elif 'submit_run_info' in request.POST:
-        logging.debug("HHH")
-        logging.debug("333 submit_run_info in request.POST")
-
-        request, metadata_run_info_form, formset = csv_handler.submit_run_info(request)
-
-        errors_size = len(metadata_run_info_form.errors)
-
-        if errors_size > 0:
-            context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
-        else:
-            context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
-
-    elif 'create_submission_metadata_file' in request.POST:
-        logging.debug("HHH")
-        logging.debug("444 create_submission_metadata_file in request.POST")
-
-        request, metadata_run_info_form, formset = csv_handler.create_submission_metadata_file(request)
-
-        errors_size = formset.total_error_count()
-
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': csv_handler.files_created}
-
+    if errors_size > 0:
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
     else:
-        logging.debug("HHH")
-        logging.debug("555 file_upload_form")
-
-        file_upload_form = FileUploadForm()
-
-        context = {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
-
-    return render(request, 'submission/upload_metadata.html', context)
-
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
+    return context
+            
 def add_project(request):
     csv_handler = CsvMetadata()
 
