@@ -437,18 +437,22 @@ class CsvMetadata():
 
     def write_out_metadata_to_csv(self, my_post_dict, request):
         logging.info("write_out_metadata_to_csv")
+        
         writers = {}
         for lane_domain in self.metadata_csv_file_names.keys():
-            writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'), self.HEADERS_TO_CSV)
+            # writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'), self.HEADERS_TO_CSV)
+            writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
-
+        
         for idx, val in self.out_metadata.items():
             # todo: DRY
             domain_letter = self.domain_choices[val['domain']]
             lane_domain = "%s_%s" % (val['lane'], domain_letter)
+            # for h in self.HEADERS_TO_CSV:
+            #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
 
             to_write = {h: val[h] for h in self.HEADERS_TO_CSV}
-
+                
             writers[lane_domain].writerow(to_write)
 
     def check_out_csv_files(self):
@@ -458,6 +462,7 @@ class CsvMetadata():
 
     def update_out_metadata(self, my_post_dict, request):
         logging.info("update_out_metadata")
+
         # ???
         for header in self.HEADERS_TO_CSV:
             for i in self.out_metadata.keys():
@@ -624,7 +629,7 @@ class CsvMetadata():
             # <option value="36">Nicole Webster</option>
             # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['contact_id']
             self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.user_info_arr[curr_submit_code]['last_name']
-            self.out_metadata[i]['data_owner']           = self.out_metadata[i]['contact_name']
+            self.out_metadata[i]['data_owner']           = self.user_info_arr[curr_submit_code]['vamps_name']
 
             self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
             self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
@@ -796,7 +801,7 @@ class CsvMetadata():
         #     metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
         # except KeyError as e:
         #     metadata_run_info_form = CsvRunInfoUploadForm()
-        #     print "request.session['run_info_from_csv'] does not exist"
+        #     logging.debug("request.session['run_info_from_csv'] does not exist")
         # except:
         #     raise
 
