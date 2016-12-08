@@ -31,6 +31,34 @@ def index(request):
 def help(request):
     return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
+def upload_file_n_make_new_out_metadata(request):
+    utils = Utils()
+    csv_handler = CsvMetadata()
+    
+    logging.debug("HHH")
+    logging.debug("111 request.method == 'POST' and request.FILES:")
+    utils.clear_session(request)
+
+    metadata_run_info_form, has_file_errors = csv_handler.csv_file_upload(request)
+
+    if has_file_errors == 'no_file':
+        errors_size = len(csv_handler.errors)
+        context = {'header': 'Upload metadata', 'errors': csv_handler.errors, 'errors_size': errors_size}
+
+        render(request, 'submission/upload_metadata.html', context)
+
+    if has_file_errors == 'has_empty_cells':
+        errors_size = len(csv_handler.empty_cells)
+
+        context = {'header': 'Upload metadata', 'errors': csv_handler.errors, 'errors_size': errors_size}
+
+        render(request, 'submission/upload_metadata.html', context)
+
+    errors_size = len(csv_handler.errors)
+
+    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
+    
+
 def upload_metadata(request):
     # error_message = ""
     """TODO:
@@ -41,29 +69,8 @@ def upload_metadata(request):
     csv_handler = CsvMetadata()
 
     if request.method == 'POST' and request.FILES:
-        # logging.debug('This message should go to the log file')
-        logging.debug("HHH")
-        logging.debug("111 request.method == 'POST' and request.FILES:")
-        utils.clear_session(request)
+        context = upload_file_n_make_new_out_metadata(request)
 
-        metadata_run_info_form, has_file_errors = csv_handler.csv_file_upload(request)
-
-        if has_file_errors == 'no_file':
-            errors_size = len(csv_handler.errors)
-            context = {'header': 'Upload metadata', 'errors': csv_handler.errors, 'errors_size': errors_size}
-
-            render(request, 'submission/upload_metadata.html', context)
-
-        if has_file_errors == 'has_empty_cells':
-            errors_size = len(csv_handler.empty_cells)
-
-            context = {'header': 'Upload metadata', 'errors': csv_handler.errors, 'errors_size': errors_size}
-
-            render(request, 'submission/upload_metadata.html', context)
-
-        errors_size = len(csv_handler.errors)
-
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
 
     elif 'submit_run_info' in request.POST:
         logging.debug("HHH")
