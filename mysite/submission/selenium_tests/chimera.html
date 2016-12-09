@@ -44,7 +44,7 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=h1</td>
-	<td>Chimera checking (for v4v5 region only)</td>
+	<td>Chimera checking (not needed for v6 region)</td>
 </tr>
 <tr>
 	<td>verifyText</td>
@@ -73,13 +73,13 @@
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>css=div.red_message</td>
+	<td>//div[@id='content']/div[11]/div</td>
 	<td>Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/20160504ms</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>css=div.copy_command</td>
-	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160504; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160504/metadata_20160504_ms_1_A.csv -s illumina_chimera_only -l debug -p illumina -r 20160504 -ft fastq -i /xraid2-2/sequencing/Illumina/20160504ms/ -cp True -lane_name lane_1_A -do_perfect False</td>
+	<td>cd /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160504; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160504/metadata_20160504_ms_1_A.csv -s illumina_chimera_only -l debug -p miseq -r 20160504 -ft fastq -i /xraid2-2/sequencing/Illumina/20160504ms/ -cp True -lane_name lane_1_A -do_perfect False</td>
 </tr>
 <tr>
 	<td>verifyText</td>
