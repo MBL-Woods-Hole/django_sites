@@ -177,18 +177,6 @@ ol.help_list li
 	padding-bottom: 0.2em;
 }
 
-.message {
-    color: red; font-weight: bold;
-}
-
-.green_message {
-    color: #006600;
-    font-weight: bold;
-    margin: 0.2em;
-  	margin-top: 0.5em;
-  	margin-bottom: 0.5em;
-}
-
 .copy_command {
   color: #006600;
 /*  margin: 0.2em;*/
@@ -202,15 +190,30 @@ ol.help_list li
 */
 }
 
+.message {
+    color: red; font-weight: bold;
+}
+
+.green_message {
+    color: #006600;
+    font-weight: bold;
+    margin: 0.2em;
+  	margin-top: 0.5em;
+  	margin-bottom: 0.5em;
+}
+
 .blue_message {
-    color: #0000FF; font-weight: bold;
+    margin-top: 0.5em;
+	margin-bottom: 0.5em;
+    color: #0000FF;
+    font-weight: bold;
 }
 
 .red_message {
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
-  color: red;
-  font-weight: bold;
+    color: red;
+    font-weight: bold;
 }
 
 .bordered {
