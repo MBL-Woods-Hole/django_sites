@@ -917,4 +917,4 @@ class CsvMetadata():
         
     def insert_run(self, request):
         return models_l_env454.Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
-        
+    

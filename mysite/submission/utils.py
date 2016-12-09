@@ -119,8 +119,9 @@ class Run():
                     run_data['primer_suite'] = primer_suite[1]
                 else:
                     error_message = primer_suite[1]
-                logging.info("run_data: ")
-                logging.info(run_data)
+                    run_data['primer_suite'] = ""
+                logging.debug("run_data: ")
+                logging.debug(run_data)
 
                 return (form, run_data, error_message)
         # if a GET (or any other method) we'll create a blank form
