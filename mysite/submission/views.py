@@ -256,7 +256,7 @@ def check_fa_counts(request):
         form, run_data, error_message = run_utils.get_run(request)
     except:
         form, error_message = run_utils.get_run(request)
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Check counts in fasta files', 'is_cluster': 'not', 'command': 'reads_overlap/; grep '>' *REMOVED.unique | wc -l; date',  'error_message': error_message})
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Check counts in fasta files', 'is_cluster': 'not', 'command': 'reads_overlap/; grep \'>\' *REMOVED.unique | wc -l; date',  'error_message': error_message})
 
 def check_db_counts(request):
     run_utils = Run()
