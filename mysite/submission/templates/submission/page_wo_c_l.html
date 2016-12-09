@@ -13,7 +13,7 @@
       cd /xraid2-2/g454/run_new_pipeline/{{ run_data.full_machine_name }}/{{ run_data.find_rundate }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/{{ command }}
 
       {% else %}
-      cd /xraid2-2/g454/run_new_pipeline/<span class = "insert_here">platform</span>/<span class = "insert_here">rundate</span>_<span class = "insert_here">machine</span>/lane_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span>/analysis/<span class = "insert_here">command</span>
+      cd /xraid2-2/g454/run_new_pipeline/<span class = "insert_here">fullMachineName</span>/<span class = "insert_here">rundate</span>/lane_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span>/analysis/; <span class = "insert_here">command</span>
 
       {% endif %}
 
