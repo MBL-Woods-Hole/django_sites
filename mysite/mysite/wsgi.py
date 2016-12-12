@@ -47,12 +47,8 @@ if mysite_path not in sys.path:
 # os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 
-# Activate your virtual env
-# activate_env=os.path.expanduser("~/.virtualenvs/myprojectenv/bin/activate_this.py")
 activate_this = '/usr/local/www/vamps/server/illumina-submission/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
-
-
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

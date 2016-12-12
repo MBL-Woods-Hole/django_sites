@@ -15,20 +15,6 @@ import logging
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-logging.info("BASE_DIR = ")
-logging.info(BASE_DIR)
-
-PROJECT_DIR = os.path.dirname(__file__)
-logging.info("PROJECT_DIR = ")
-logging.info(PROJECT_DIR)
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-
-STATIC_URL = os.path.join(PROJECT_DIR, '../submission/static')
-logging.info("STATIC_URL = ")
-logging.info(STATIC_URL)
-
 
 ILLUMINA_INFO_DIRS = ["hiseq_info", "nextseq_info", "miseq_info"]
 
@@ -96,7 +82,122 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-# see settings_local
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+# Database
+# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dj_test',
+#         'OPTIONS': {
+#             # 'read_default_file': '~/.my.cnf_dj',
+#             'read_default_file': '~/.my.cnf',
+#             'read_default_group': 'clientdj',
+#         },
+#     }
+# }
+# if 'test' not in sys.argv:
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dj_test',
+#         'OPTIONS': {
+#             # 'read_default_file': '~/.my.cnf_dj',
+#             'read_default_file': '~/.my.cnf',
+#             'read_default_group': 'clientdj',
+#         },
+#     },
+#     'local_env454': {
+#         'NAME': 'test_env454',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'OPTIONS': {
+#             'read_default_file': '~/.my.cnf',
+#             'read_default_group': 'clientdj',
+#         },
+#     },
+#     'local_vamps': {
+#         'NAME': 'test_vamps',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'OPTIONS': {
+#             'read_default_file': '~/.my.cnf',
+#             'read_default_group': 'clientdj',
+#         },
+#     },
+#     'server_env454': {
+#         'NAME': 'env454',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': 'newbpcdb2',
+#         'OPTIONS': {
+#             'read_default_file': '~/.my.cnf',
+#         },
+#     },
+#     'server_vamps': {
+#         'NAME': 'vamps',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': 'vampsdb',
+#         'OPTIONS': {
+#             'read_default_file': '~/.my.cnf',
+#         },
+#     },
+# 
+# 
+# }
+
+# 'vampsdev': {
+#     'NAME': 'test',
+#     'ENGINE': 'django.db.backends.mysql',
+#     'OPTIONS': {
+#         'read_default_file': '~/.my.cnf',
+#         'read_default_group': 'clientvampsdev',
+#     },
+# },
+# class submissionRouter(object):
+#     def db_for_read(self, model, **hints):
+#         "Point all operations on submission models to 'test_env454'"
+#         if model._meta.app_label == 'submission':
+#             return 'test_env454'
+#         # if model._meta.app_label == 'submission':
+#         #     return 'test_env454'
+#         return 'default'
+#
+#     def db_for_write(self, model, **hints):
+#         "Point all operations on submission models to 'test_env454'"
+#         return 'default'
+#
+#     def allow_relation(self, obj1, obj2, **hints):
+#         db_list = ('test_env454', 'test_vamps')
+#         if obj1._state.db in db_list and obj2._state.db in db_list:
+#             return True
+#         return None
+#
+#         # "Allow any relation if a both models in submission app"
+#         # if obj1._meta.app_label == 'submission' and obj2._meta.app_label == 'submission':
+#         #     return True
+#         # # Allow if neither is submission app
+#         # elif 'submission' not in [obj1._meta.app_label, obj2._meta.app_label]:
+#         #     return True
+#         # return False
+#
+#     def allow_migrate(self, db, app_label, model_name=None, **hints):
+#         """
+#         All non-auth models end up in this pool.
+#         """
+#         return False
+#
+#
+#     def allow_syncdb(self, db, model):
+#         if db == 'test_vamps' or db == 'test_env454' or model._meta.app_label == "submission":
+#             return False # we're not using syncdb on our legacy database
+#         else: # but all other models/databases are fine
+#             return True
 
 DATABASE_ROUTERS = ['submission.db_router.submissionRouter']
 
@@ -133,6 +234,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+
+STATIC_URL = '/static/'
 
 import socket
 
@@ -144,4 +249,3 @@ except:
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 
 from settings_local import *
-settings_local
