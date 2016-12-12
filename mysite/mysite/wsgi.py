@@ -50,7 +50,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 # Activate your virtual env
 # activate_env=os.path.expanduser("~/.virtualenvs/myprojectenv/bin/activate_this.py")
 activate_this = '/usr/local/www/vamps/server/illumina-submission/bin/activate_this.py'
-execfile(activate_env, dict(__file__=activate_env))
+execfile(activate_this, dict(__file__=activate_env))
 
 
 
