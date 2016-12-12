@@ -125,6 +125,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = os.path.join(PROJECT_DIR, 'static')
+logging.info("STATIC_URL = ")
+logging.info(STATIC_URL)
 
 import socket
 
