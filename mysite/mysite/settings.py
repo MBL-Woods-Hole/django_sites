@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ADD_URL = 'submissions/illumina'
 
-STATIC_ROOT = os.path.join(BASE_DIR, ADD_URL)
+# STATIC_ROOT = os.path.join(BASE_DIR, ADD_URL)
 
 # PROJECT_DIR=os.path.dirname(__file__)
 
