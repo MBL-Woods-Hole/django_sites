@@ -15,8 +15,20 @@ import logging
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+logging.info("BASE_DIR = ")
+logging.info(BASE_DIR)
 
 PROJECT_DIR = os.path.dirname(__file__)
+logging.info("PROJECT_DIR = ")
+logging.info(PROJECT_DIR)
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+
+STATIC_URL = os.path.join(PROJECT_DIR, '../submission/static')
+logging.info("STATIC_URL = ")
+logging.info(STATIC_URL)
+
 
 ILLUMINA_INFO_DIRS = ["hiseq_info", "nextseq_info", "miseq_info"]
 
@@ -121,12 +133,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-
-STATIC_URL = os.path.join(PROJECT_DIR, 'static')
-logging.info("STATIC_URL = ")
-logging.info(STATIC_URL)
 
 import socket
 
