@@ -50,9 +50,6 @@ if mysite_path1 not in sys.path:
 # logging.info('sys.path = ')
 # logging.info(sys.path)
 
-STATIC_ROOT = mysite_path1 = '/usr/local/www/vampsdev/projects/django/illumina_submission/django_sites/mysite/submission/static/'
-
-
 # os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 
