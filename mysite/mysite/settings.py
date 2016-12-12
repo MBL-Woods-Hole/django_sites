@@ -27,7 +27,7 @@ SECRET_KEY = 'jv#20+0b6rufp6(ug6wz-vt0h28yw-x&qg$ab^g6dh6kn)6uy$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['vampsdev.jbpc-np.mbl.edu']
 
 INTERNAL_IPS = ['127.0.0.1',]
 # https://django-debug-toolbar.readthedocs.io/en/stable/tips.html
