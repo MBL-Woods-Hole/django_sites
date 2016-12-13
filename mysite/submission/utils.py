@@ -143,7 +143,8 @@ class Run():
         else:
             try:
                 self.get_run_data_from_session(request)
-                rundate_id = models_l_env454.Run.cache_all_method.get(run = self.run_data['find_rundate']).pk
+                logging.debug("self.run_data['find_rundate'] = %s" % self.run_data['find_rundate'])
+                rundate_id = models_l_env454.Run.cache_all_method.get(run = self.run_data['find_rundate'], platform = self.run_data['full_machine_name']).pk
                 init_run_data = self.run_data.copy()
                 init_run_data.update({'find_rundate': rundate_id})
                 form = RunForm(initial = init_run_data)
