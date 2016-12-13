@@ -95,6 +95,7 @@ class Run():
     def __init__(self):
         self.utils = Utils()
         self.all_suites = models_l_env454.RunInfoIll.cache_all_method.select_related('run', 'primer_suite')
+        self.run_data = {}
 
     def get_primer_suites(self, run, lane, suite_domain):
         # all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
@@ -111,53 +112,63 @@ class Run():
     def get_run(self, request):
         logging.info("Running get_run from utils")
         error_message = ""
-        run_data = {}
 
         if request.method == 'POST':
             form = RunForm(request.POST)
             # logging.info("request.POST = ")
             # print request.POST
             if form.is_valid():
-                run_data['find_rundate'] = form.cleaned_data['find_rundate'].run
-                run_data['find_machine'] = form.cleaned_data['find_machine']
-                run_data['find_domain']  = form.cleaned_data['find_domain']
-                run_data['find_lane']    = form.cleaned_data['find_lane']
-                run_data['full_machine_name'] = self.utils.get_full_macine_name(form.cleaned_data['find_machine'])
-                run_data['perfect_overlap']   = self.utils.get_overlap(form.cleaned_data['find_machine'])
+                self.run_data['find_rundate'] = form.cleaned_data['find_rundate'].run
+                self.run_data['find_machine'] = form.cleaned_data['find_machine']
+                self.run_data['find_domain']  = form.cleaned_data['find_domain']
+                self.run_data['find_lane']    = form.cleaned_data['find_lane']
+                self.run_data['full_machine_name'] = self.utils.get_full_macine_name(form.cleaned_data['find_machine'])
+                self.run_data['perfect_overlap']   = self.utils.get_overlap(form.cleaned_data['find_machine'])
                 suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
-                primer_suite = self.get_primer_suites(run_data['find_rundate'], run_data['find_lane'], suite_domain)
+                primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
                 # logging.info("primer_suite[1]")
                 #
                 # print primer_suite[1]
 
                 if (primer_suite[0]):
-                    run_data['primer_suite'] = primer_suite[1]
+                    self.run_data['primer_suite'] = primer_suite[1]
                 else:
                     error_message = primer_suite[1]
-                    run_data['primer_suite'] = ""
-                # logging.debug("run_data: ")
-                # logging.debug(run_data)
+                    self.run_data['primer_suite'] = ""
+                # logging.debug("self.run_data: ")
+                # logging.debug(self.run_data)
 
-                # return (form, run_data, error_message)
+                # return (form, self.run_data, error_message)
         # if a GET (or any other method) we'll create a blank form
         else:
-            lanes_domains = self.utils.get_lanes_domains(request.session['out_metadata'])
-            random_lane_domain = lanes_domains[0].split("_")
+            try:
+                self.get_run_data_from_session(request)
+                rundate_id = models_l_env454.Run.cache_all_method.get(run = self.run_data['find_rundate']).pk
+                init_run_data = self.run_data.copy()
+                init_run_data.update({'find_rundate': rundate_id})
+                form = RunForm(initial = init_run_data)
+                
+            except KeyError:
+                form = RunForm()
+                
+            except:
+                raise
             
-            run_data['find_rundate']      = request.session['run_info']['selected_rundate']
-            run_data['find_machine']      = request.session['run_info']['selected_machine_short']
-            run_data['find_domain']       = random_lane_domain[1]
-            run_data['find_lane']         = random_lane_domain[0]
-            run_data['full_machine_name'] = request.session['run_info']['selected_machine']
-            run_data['perfect_overlap']   = self.utils.get_overlap(request.session['run_info']['selected_machine_short'])
-            suite_domain                  = self.utils.get_domain_name(run_data['find_domain'])
-            primer_suite = self.get_primer_suites(run_data['find_rundate'], run_data['find_lane'], suite_domain)
+        return (form, self.run_data, error_message)
+        
+    def get_run_data_from_session(self, request):
             
-            rundate_id = models_l_env454.Run.cache_all_method.get(run = run_data['find_rundate']).pk
-            init_run_data = run_data.copy()
-            init_run_data.update({'find_rundate': rundate_id})
+        lanes_domains = self.utils.get_lanes_domains(request.session['out_metadata'])
+        random_lane_domain = lanes_domains[0].split("_")
+        
+        self.run_data['find_rundate']      = request.session['run_info']['selected_rundate']
+        self.run_data['find_machine']      = request.session['run_info']['selected_machine_short']
+        self.run_data['find_domain']       = random_lane_domain[1]
+        self.run_data['find_lane']         = random_lane_domain[0]
+        self.run_data['full_machine_name'] = request.session['run_info']['selected_machine']
+        self.run_data['perfect_overlap']   = self.utils.get_overlap(request.session['run_info']['selected_machine_short'])
+        suite_domain                  = self.utils.get_domain_name(self.run_data['find_domain'])
+        primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
+        
 
-            form = RunForm(initial = init_run_data )
-            
-        return (form, run_data, error_message)
         
