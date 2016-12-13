@@ -115,7 +115,7 @@
 
                 {% else %}
 
-                cd /xraid2-2/g454/run_new_pipeline/<span class = "insert_here">fullMachineName</span>/<span class = "insert_here">rundate</span>/lane_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span>/analysis/; <span class = "insert_here">command</span>; date
+                cd /xraid2-2/g454/run_new_pipeline/<span class = "insert_here">fullMachineName</span>/<span class = "insert_here">rundate</span>/lane_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span>/analysis/; {{ check_command }}; date
 
                 {% endif %}
 
