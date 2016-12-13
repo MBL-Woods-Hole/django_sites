@@ -239,26 +239,7 @@ def gast(request):
     run_utils = Run()
     run_data = {}
     
-    from django.db import connections
-    cursor = connections['env454'].cursor()
-    cursor.execute("show databases;")
-    row = cursor.fetchone()
-    logging.debug("RRR")
-    logging.debug(row)
-#    print "RRR"
-#    print row
-#    print "connections['env454']"
-#    print connections['env454'].get_connection_params()
-    logging.debug("RRR")
-    logging.debug(row)
-    logging.debug("connections['env454']")
-    logging.debug(connections['env454'].get_connection_params())
-
-
-    
     form, run_data, error_message = run_utils.get_run(request)
-
-            
 
     return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': 'not', 'command': 'reads_overlap/; run_gast_ill_nonchim_sge.sh; date', 'what_to_check': 'the percent of "Unknown" taxa ', 'check_command': 'gast/; percent10_gast_unknowns.sh', 'error_message': error_message})
 
