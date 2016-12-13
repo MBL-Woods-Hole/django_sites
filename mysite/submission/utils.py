@@ -1,6 +1,8 @@
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm
 import models
 from models_l_env454 import RunInfoIll
+import models_l_env454
+
 
 import time
 import os
@@ -148,9 +150,49 @@ class Run():
             run_data['perfect_overlap']   = self.utils.get_overlap(request.session['run_info']['selected_machine_short'])
             suite_domain                  = self.utils.get_domain_name(run_data['find_domain'])
             primer_suite = self.get_primer_suites(run_data['find_rundate'], run_data['find_lane'], suite_domain)
-            form = RunForm()
+            
+            # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+            """
+            post data
+            u'find_domain'
+            [u'B']
+            u'find_lane'
+            [u'2']
+            u'find_machine'
+            [u'hs']
+            u'find_rundate'
+            [u'5427']
+            """
+            logging.debug("555 find_rundate = ")
+            print "555 find_rundate = "
+            print run_data['find_rundate']
+
+            try:
+
+                print "FFF request.POST['find_rundate'] = "
+                print request.POST['find_rundate']
+            except:
+                pass
+                
+            print "run_data: "
+            print run_data
+            
+            rundate_id = models_l_env454.Run.cache_all_method.get(run = run_data['find_rundate']).pk
+            print "rundate_id: "
+            print rundate_id
+            
+            init_run_data = run_data.copy()
+            init_run_data.update({'find_rundate': rundate_id})
+            print "222 init_run_data: "
+            print init_run_data
+
+            form = RunForm(initial = init_run_data )
+
+            
+            # form = RunForm(initial=run_data)
         return (form, run_data, error_message)
         
+    # TODO: combine with metadata_utils, DRY!
     def get_lanes_domains(self, request):
         domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
         lanes_domains = []
