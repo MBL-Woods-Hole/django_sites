@@ -238,6 +238,17 @@ def gast(request):
     #     pass
     run_utils = Run()
     run_data = {}
+
+    from django.db import connections
+    cursor = connections['env454'].cursor()
+    logging.debug("RRR")
+    logging.debug("connections['env454']")
+    aa = connections['env454'].get_connection_params()
+    logging.debug("connections['env454'].get_connection_params()['db']")
+    logging.debug(aa['db'])
+    logging.debug("connections['env454'].queries")
+    logging.debug(connections['env454'].queries)
+
     
     form, run_data, error_message = run_utils.get_run(request)
 
