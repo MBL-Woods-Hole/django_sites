@@ -1,6 +1,6 @@
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm
 import models
-from models_l_env454 import RunInfoIll
+# from models_l_env454 import RunInfoIll
 import models_l_env454
 
 
@@ -43,6 +43,19 @@ class Utils():
     def clear_session(self, request):
         for key in request.session.keys():
             del request.session[key]
+            
+    # TODO: combine with metadata_utils, DRY!
+    def get_lanes_domains(self, out_metadata):
+        domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
+        lanes_domains = []
+            
+        for idx, val in out_metadata.items():
+            domain_letter = domain_choices[val['domain']]
+            lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
+        # logging.debug("self.lanes_domains = %s" % self.lanes_domains)
+        return lanes_domains
+
+
 
 class Dirs:
     """
@@ -81,7 +94,7 @@ class Dirs:
 class Run():
     def __init__(self):
         self.utils = Utils()
-        self.all_suites = RunInfoIll.cache_all_method.select_related('run', 'primer_suite')
+        self.all_suites = models_l_env454.RunInfoIll.cache_all_method.select_related('run', 'primer_suite')
 
     def get_primer_suites(self, run, lane, suite_domain):
         # all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
@@ -134,18 +147,18 @@ class Run():
             print request.session['run_info']
             {u'selected_machine': u'nextseq', u'selected_dna_region': u'v6', u'selected_machine_short': u'ns', u'selected_rundate': u'20161122', u'selected_overlap': u'ms_partial'}
             """            
-            lanes_domains = self.get_lanes_domains(request)
+            lanes_domains = self.utils.get_lanes_domains(request.session['out_metadata'])
             """            
             print "lanes_domains = "
             print lanes_domains
             [u'2_B', u'1_A', u'1_B']
             """            
-            random_lane_domain = lanes_domains[1].split("_")
+            random_lane_domain = lanes_domains[0].split("_")
             
-            run_data['find_rundate'] = request.session['run_info']['selected_rundate']
-            run_data['find_machine'] = request.session['run_info']['selected_machine_short']
-            run_data['find_domain']  = random_lane_domain[1]
-            run_data['find_lane']    = random_lane_domain[0]
+            run_data['find_rundate']      = request.session['run_info']['selected_rundate']
+            run_data['find_machine']      = request.session['run_info']['selected_machine_short']
+            run_data['find_domain']       = random_lane_domain[1]
+            run_data['find_lane']         = random_lane_domain[0]
             run_data['full_machine_name'] = request.session['run_info']['selected_machine']
             run_data['perfect_overlap']   = self.utils.get_overlap(request.session['run_info']['selected_machine_short'])
             suite_domain                  = self.utils.get_domain_name(run_data['find_domain'])
@@ -192,14 +205,3 @@ class Run():
             # form = RunForm(initial=run_data)
         return (form, run_data, error_message)
         
-    # TODO: combine with metadata_utils, DRY!
-    def get_lanes_domains(self, request):
-        domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
-        lanes_domains = []
-            
-        for idx, val in request.session['out_metadata'].items():
-            domain_letter = domain_choices[val['domain']]
-            lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
-        # logging.debug("self.lanes_domains = %s" % self.lanes_domains)
-        return lanes_domains
-
