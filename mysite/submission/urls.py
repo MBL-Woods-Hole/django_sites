@@ -6,7 +6,7 @@ app_name = 'submission'
 
 urlpatterns = [
     # ex: /submission/
-    # url(r'^submissions/illumina/', include([
+    url(r'^submissions/illumina/', include([
         url(r'^$', views.upload_metadata, name='upload_metadata'),
         url(r'^upload_metadata/$', views.upload_metadata, name='upload_metadata'),
         url(r'^add_project/$', views.add_project, name='add_project'),
@@ -26,5 +26,5 @@ urlpatterns = [
         url(r'^clear_db/$', views.clear_db, name='clear_db'),
         url(r'^check_fa_counts/$', views.check_fa_counts, name='check_fa_counts'),
         url(r'^check_db_counts/$', views.check_db_counts, name='check_db_counts'),
-    # ])),
+    ])),
 ]
