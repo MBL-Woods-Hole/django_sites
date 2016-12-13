@@ -53,8 +53,13 @@ if mysite_path1 not in sys.path:
 # os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 
-activate_this = '/usr/local/www/vamps/server/illumina-submission/bin/activate_this.py'
-execfile(activate_this, dict(__file__=activate_this))
+try:
+    activate_this = '/usr/local/www/vamps/server/illumina-submission/bin/activate_this.py'
+    execfile(activate_this, dict(__file__=activate_this))
+except IOError:
+    pass
+except:
+    raise
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
