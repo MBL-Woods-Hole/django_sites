@@ -99,6 +99,7 @@ class Run():
         run_data = {}
 
         if request.method == 'POST':
+            print "III in here"
             form = RunForm(request.POST)
             # logging.info("request.POST = ")
             # print request.POST
@@ -126,5 +127,37 @@ class Run():
                 return (form, run_data, error_message)
         # if a GET (or any other method) we'll create a blank form
         else:
+            print "VVV in there"
+            """            print "request.session['run_info']"
+            print request.session['run_info']
+            {u'selected_machine': u'nextseq', u'selected_dna_region': u'v6', u'selected_machine_short': u'ns', u'selected_rundate': u'20161122', u'selected_overlap': u'ms_partial'}
+            """            
+            lanes_domains = self.get_lanes_domains(request)
+            """            
+            print "lanes_domains = "
+            print lanes_domains
+            [u'2_B', u'1_A', u'1_B']
+            """            
+            random_lane_domain = lanes_domains[1].split("_")
+            
+            run_data['find_rundate'] = request.session['run_info']['selected_rundate']
+            run_data['find_machine'] = request.session['run_info']['selected_machine_short']
+            run_data['find_domain']  = random_lane_domain[1]
+            run_data['find_lane']    = random_lane_domain[0]
+            run_data['full_machine_name'] = request.session['run_info']['selected_machine']
+            run_data['perfect_overlap']   = self.utils.get_overlap(request.session['run_info']['selected_machine_short'])
+            suite_domain                  = self.utils.get_domain_name(run_data['find_domain'])
+            primer_suite = self.get_primer_suites(run_data['find_rundate'], run_data['find_lane'], suite_domain)
             form = RunForm()
-        return (form, error_message)
+        return (form, run_data, error_message)
+        
+    def get_lanes_domains(self, request):
+        domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
+        lanes_domains = []
+            
+        for idx, val in request.session['out_metadata'].items():
+            domain_letter = domain_choices[val['domain']]
+            lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
+        # logging.debug("self.lanes_domains = %s" % self.lanes_domains)
+        return lanes_domains
+
