@@ -114,7 +114,6 @@ class Run():
         run_data = {}
 
         if request.method == 'POST':
-            print "III in here"
             form = RunForm(request.POST)
             # logging.info("request.POST = ")
             # print request.POST
@@ -136,23 +135,13 @@ class Run():
                 else:
                     error_message = primer_suite[1]
                     run_data['primer_suite'] = ""
-                logging.debug("run_data: ")
-                logging.debug(run_data)
+                # logging.debug("run_data: ")
+                # logging.debug(run_data)
 
-                return (form, run_data, error_message)
+                # return (form, run_data, error_message)
         # if a GET (or any other method) we'll create a blank form
         else:
-            print "VVV in there"
-            """            print "request.session['run_info']"
-            print request.session['run_info']
-            {u'selected_machine': u'nextseq', u'selected_dna_region': u'v6', u'selected_machine_short': u'ns', u'selected_rundate': u'20161122', u'selected_overlap': u'ms_partial'}
-            """            
             lanes_domains = self.utils.get_lanes_domains(request.session['out_metadata'])
-            """            
-            print "lanes_domains = "
-            print lanes_domains
-            [u'2_B', u'1_A', u'1_B']
-            """            
             random_lane_domain = lanes_domains[0].split("_")
             
             run_data['find_rundate']      = request.session['run_info']['selected_rundate']
@@ -164,44 +153,11 @@ class Run():
             suite_domain                  = self.utils.get_domain_name(run_data['find_domain'])
             primer_suite = self.get_primer_suites(run_data['find_rundate'], run_data['find_lane'], suite_domain)
             
-            # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-            """
-            post data
-            u'find_domain'
-            [u'B']
-            u'find_lane'
-            [u'2']
-            u'find_machine'
-            [u'hs']
-            u'find_rundate'
-            [u'5427']
-            """
-            logging.debug("555 find_rundate = ")
-            print "555 find_rundate = "
-            print run_data['find_rundate']
-
-            try:
-
-                print "FFF request.POST['find_rundate'] = "
-                print request.POST['find_rundate']
-            except:
-                pass
-                
-            print "run_data: "
-            print run_data
-            
             rundate_id = models_l_env454.Run.cache_all_method.get(run = run_data['find_rundate']).pk
-            print "rundate_id: "
-            print rundate_id
-            
             init_run_data = run_data.copy()
             init_run_data.update({'find_rundate': rundate_id})
-            print "222 init_run_data: "
-            print init_run_data
 
             form = RunForm(initial = init_run_data )
-
             
-            # form = RunForm(initial=run_data)
         return (form, run_data, error_message)
         

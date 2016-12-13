@@ -406,13 +406,6 @@ class CsvMetadata():
         logging.debug(self.path_to_csv)
         new_dir = self.dirs.check_and_make_dir(self.path_to_csv)
 
-    # def get_lanes_domains(self):
-    #     for idx, val in self.out_metadata.items():
-    #         domain_letter = self.domain_choices[val['domain']]
-    #         self.lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
-    #     # logging.debug("self.lanes_domains = %s" % self.lanes_domains)
-    #     return self.lanes_domains
-
     def create_out_file_names(self, pattern):
         return {lane_domain: pattern % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
 
