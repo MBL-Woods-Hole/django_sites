@@ -250,9 +250,9 @@ def gast(request):
     logging.debug(connections['env454'].queries)
 
     
-    form, run_data, error_message = run_utils.get_run(request)
+    form, run_data, error_message = run_utils.get_run(request)    
 
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': 'not', 'command': 'reads_overlap/; run_gast_ill_nonchim_sge.sh; date', 'what_to_check': 'the percent of "Unknown" taxa ', 'check_command': 'gast/; percent10_gast_unknowns.sh', 'error_message': error_message})
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': 'not', 'command': 'reads_overlap/; run_gast_ill_nonchim_sge.sh; date', 'what_to_check': 'the percent of "Unknown" taxa ', 'check_command': 'gast/; percent10_gast_unknowns.sh', 'error_message': error_message, 'url_extension': settings.URL_EXTENSION})
 
 def gzip_all(request):
     run_utils = Run()

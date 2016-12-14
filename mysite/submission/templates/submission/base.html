@@ -1,6 +1,6 @@
 {% load staticfiles %}
 {% load mytags %}
-{% load static %}
+<!-- {% load static %} -->
 
 <!DOCTYPE html PUBLIC "-/W3C/DTD XHTML 1.0 Strict/EN"      "http:/www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <html xmlns="http:/www.w3.org/1999/xhtml">
@@ -8,56 +8,53 @@
  <title>{% block title %}{% endblock %}</title>
  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
- <!-- <link rel="stylesheet" type="text/css" href="{% static 'submission/illumina/submission/reset.css' %}" />  -->
+ <!-- <link rel="stylesheet" type="text/css" href="{% static 'submissions/illumina/submission/reset.css' %}" />  -->
+  
  <link rel="stylesheet" type="text/css" href="{% static 'submission/960.css' %}" />
  <link rel="stylesheet" type="text/css" href="{% static 'submission/subm_style.css' %}" />
   <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/submission/style.css" /><![endif]-->
  </head>
   <body class="{% block bodyclass %}{% endblock %}">
     <div class="container_12">
-      <!-- <div class="grid_12">
-    {% block bunner %}
-      <div id="bunner"></div>
-    {% endblock %}
-    </div>
-    <div class="clear"></div> -->
-
+      url_extension
+      {{ url_extension }}
+      url_extension
     <div class="grid_12 darker_bg">
     {% block navigation %}
       <div  id="navigation" class="centered">
         <ul id="nav">
-          <li class="nav-li {% active 'upload_metadata' %}"><a href="/submissions/illumina/submission/upload_metadata">Metadata</a>
+          <li class="nav-li {% active 'upload_metadata' %}"><a href={{ url_extension }}"/submission/upload_metadata">Metadata</a>
             <ul class="nav first">
-              <li class="nav-li {% active 'add_project' %}"><a href="/submissions/illumina/submission/add_project">Add Project</a></li>
+              <li class="nav-li {% active 'add_project' %}"><a href={{ url_extension }}"/submission/add_project">Add Project</a></li>
             </ul>
           </li> <!-- end Metadata -->
 
-          <li class="nav-li {% active 'demultiplex' %}"><a href="/submissions/illumina/submission/demultiplex">Demultiplex</a></li>
-          <li class="nav-li {% active 'overlap' %}"><a href="/submissions/illumina/submission/overlap">Overlap</a></li>
-          <li class="nav-li {% active 'chimera_checking' %}"><a href="/submissions/illumina/submission/chimera_checking">Chimeras</a></li>
-          <li class="nav-li {% active 'gast' %}"><a href="/submissions/illumina/submission/gast">Gast</a></li>
-          <li class="nav-li {% active 'run_info_upload' %}"><a href="/submissions/illumina/submission/run_info_upload">Run_info to db</a></li>
-          <li class="nav-li {% active 'data_upload' %}"><a href="/submissions/illumina/submission/data_upload">Data to db</a></li>
-          <li class="nav-li {% active 'gzip_all' %}"><a href="/submissions/illumina/submission/gzip_all">Gzip</a></li>
-          <li class="nav-li {% active 'help' %}"><a href="/submissions/illumina/submission/help">Help</a></li>
+          <li class="nav-li {% active 'demultiplex' %}"><a href={{ url_extension }}"/submission/demultiplex">Demultiplex</a></li>
+          <li class="nav-li {% active 'overlap' %}"><a href={{ url_extension }}"/submission/overlap">Overlap</a></li>
+          <li class="nav-li {% active 'chimera_checking' %}"><a href={{ url_extension }}"/submission/chimera_checking">Chimeras</a></li>
+          <li class="nav-li {% active 'gast' %}"><a href={{ url_extension }}"/submission/gast">Gast</a></li>
+          <li class="nav-li {% active 'run_info_upload' %}"><a href={{ url_extension }}"/submission/run_info_upload">Run_info to db</a></li>
+          <li class="nav-li {% active 'data_upload' %}"><a href={{ url_extension }}"/submission/data_upload">Data to db</a></li>
+          <li class="nav-li {% active 'gzip_all' %}"><a href={{ url_extension }}"/submission/gzip_all">Gzip</a></li>
+          <li class="nav-li {% active 'help' %}"><a href={{ url_extension }}"/submission/help">Help</a></li>
           <li class="nav-li"><a href="{{ request.path }}">All steps</a>
           <ul class="nav first">
-            <li class="nav-li {% active 'upload_metadata' %}"><a href="/submissions/illumina/submission/upload_metadata">Metadata</a>
-            <li class="nav-li {% active 'add_project' %}"><a href="/submissions/illumina/submission/add_project">Add Project</a></li>
-            <li class="nav-li {% active 'demultiplex' %}"><a href="/submissions/illumina/submission/demultiplex">Demultiplex</a></li>
-            <li class="nav-li {% active 'overlap_only' %}"><a href="/submissions/illumina/submission/overlap_only">Overlap only</a></li>
-            <li class="nav-li {% active 'filter_mismatch' %}"><a href="/submissions/illumina/submission/filter_mismatch">Filtering mismatch</a></li>
-            <li class="nav-li {% active 'uniqueing' %}"><a href="/submissions/illumina/submission/uniqueing">Uniqueing</a></li>
-            <li class="nav-li {% active 'chimera_checking' %}"><a href="/submissions/illumina/submission/chimera_checking">Chimera checking</a></li>
-            <li class="nav-li {% active 'gast' %}"><a href="/submissions/illumina/submission/gast">Gast</a></li>
-            <li class="nav-li {% active 'run_info_upload' %}"><a href="/submissions/illumina/submission/run_info_upload">Run_info to db</a></li>
-            <li class="nav-li {% active 'data_upload' %}"><a href="/submissions/illumina/submission/data_upload">Data to db</a></li>
-            <li class="nav-li {% active 'clear_db' %}"><a href="/submissions/illumina/submission/clear_db">Clear db</a></li>
-            <li class="nav-li {% active 'check_fa_counts' %}"><a href="/submissions/illumina/submission/check_fa_counts">Check counts in fa files</a></li>
-            <li class="nav-li {% active 'check_db_counts' %}"><a href="/submissions/illumina/submission/check_db_counts">Check counts in db</a></li>
-            <li class="nav-li {% active 'gzip_all' %}"><a href="/submissions/illumina/submission/gzip_all">Gzip all</a></li>
-            <li class="nav-li {% active 'gunzip_all' %}"><a href="/submissions/illumina/submission/gunzip_all">Gunzip all</a></li>
-            <li class="nav-li {% active 'help' %}"><a href="/submissions/illumina/submission/help">Help</a></li>
+            <li class="nav-li {% active 'upload_metadata' %}"><a href={{ url_extension }}"/submission/upload_metadata">Metadata</a>
+            <li class="nav-li {% active 'add_project' %}"><a href={{ url_extension }}"/submission/add_project">Add Project</a></li>
+            <li class="nav-li {% active 'demultiplex' %}"><a href={{ url_extension }}"/submission/demultiplex">Demultiplex</a></li>
+            <li class="nav-li {% active 'overlap_only' %}"><a href={{ url_extension }}"/submission/overlap_only">Overlap only</a></li>
+            <li class="nav-li {% active 'filter_mismatch' %}"><a href={{ url_extension }}"/submission/filter_mismatch">Filtering mismatch</a></li>
+            <li class="nav-li {% active 'uniqueing' %}"><a href={{ url_extension }}"/submission/uniqueing">Uniqueing</a></li>
+            <li class="nav-li {% active 'chimera_checking' %}"><a href={{ url_extension }}"/submission/chimera_checking">Chimera checking</a></li>
+            <li class="nav-li {% active 'gast' %}"><a href={{ url_extension }}"/submission/gast">Gast</a></li>
+            <li class="nav-li {% active 'run_info_upload' %}"><a href={{ url_extension }}"/submission/run_info_upload">Run_info to db</a></li>
+            <li class="nav-li {% active 'data_upload' %}"><a href={{ url_extension }}"/submission/data_upload">Data to db</a></li>
+            <li class="nav-li {% active 'clear_db' %}"><a href={{ url_extension }}"/submission/clear_db">Clear db</a></li>
+            <li class="nav-li {% active 'check_fa_counts' %}"><a href={{ url_extension }}"/submission/check_fa_counts">Check counts in fa files</a></li>
+            <li class="nav-li {% active 'check_db_counts' %}"><a href={{ url_extension }}"/submission/check_db_counts">Check counts in db</a></li>
+            <li class="nav-li {% active 'gzip_all' %}"><a href={{ url_extension }}"/submission/gzip_all">Gzip all</a></li>
+            <li class="nav-li {% active 'gunzip_all' %}"><a href={{ url_extension }}"/submission/gunzip_all">Gunzip all</a></li>
+            <li class="nav-li {% active 'help' %}"><a href={{ url_extension }}"/submission/help">Help</a></li>
             </ul>
           </li> <!-- end nav first -->
         </ul> <!-- end nav -->
