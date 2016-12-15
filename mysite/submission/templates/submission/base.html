@@ -8,18 +8,8 @@
  <title>{% block title %}{% endblock %}</title>
  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
- <!-- <link rel="stylesheet" type="text/css" href="{% static 'submissions/illumina/submission/reset.css' %}" />  -->
-  
- <!-- <link rel="stylesheet" type="text/css" href="{{ url_extension }}submission/960.css" /> -->
- <link rel="stylesheet" type="text/css" href="{% static 'submission/960.css' %}" />
- 
- <!-- <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}/submission/subm_style.css" /> -->
- <!-- <link rel="stylesheet" type="text/css" href="/submissions/illumina/submission/static/submission/subm_style.css" /> -->
+ <link rel="stylesheet" type="text/css" href="{{ url_extension }}/submission/static/submission/960.css'" /> 
  <link rel="stylesheet" type="text/css" href="{{ url_extension }}/submission/static/submission/subm_style.css" />
- 
- 
- <!-- https://vampsdev.jbpc-np.mbl.edu/submissions/illumina/submission/static/submission/subm_style.css -->
- <!-- <link rel="stylesheet" type="text/css" href="{% static 'submission/subm_style.css' %}" /> -->
   <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/submission/style.css" /><![endif]-->
  </head>
   <body class="{% block bodyclass %}{% endblock %}">
