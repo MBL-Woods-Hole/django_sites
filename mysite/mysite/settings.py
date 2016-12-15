@@ -14,29 +14,17 @@ import os, sys
 import logging
 import socket
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 REPOSITORY_ROOT = os.path.join(BASE_DIR, 'submission')
 
-# STATIC_ROOT = os.path.dirname(os.path.join(BASE_DIR, 'submission/static'))
-# STATIC_URL = '/submissions/illumina/static/'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(REPOSITORY_ROOT, 'static/')
-# settings.STATIC_ROOT = /Users/ashipunova/BPC/python_web/django_sites/mysite/static/
 
-# print """EEE BASE_DIR = %s,
-# REPOSITORY_ROOT = %s,
-# STATIC_ROOT = %s""" % (BASE_DIR, REPOSITORY_ROOT, STATIC_ROOT)
-
-STATICFILES_FINDERS = ( 
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-)
+# STATICFILES_FINDERS = (
+#     'django.contrib.staticfiles.finders.FileSystemFinder',
+#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+# #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+# )
 
 
 ILLUMINA_INFO_DIRS = ["hiseq_info", "nextseq_info", "miseq_info"]
