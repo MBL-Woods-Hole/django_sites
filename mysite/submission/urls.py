@@ -1,8 +1,13 @@
 from django.conf.urls import url, include
+from django.conf import settings
+from django.conf.urls.static import static
+import logging
 
 from . import views
 
 app_name = 'submission'
+logging.debug("settings.STATIC_URL = %s, settings.STATIC_ROOT = %s, settings.REPOSITORY_ROOT = %s, settings.BASE_DIR = %s" % (settings.STATIC_URL, settings.STATIC_ROOT, settings.REPOSITORY_ROOT, settings.BASE_DIR))
+# /Users/ashipunova/BPC/python_web/django_sites/mysite/static/
 
 urlpatterns = [
     # ex: /submission/
@@ -27,4 +32,10 @@ urlpatterns = [
         url(r'^check_fa_counts/$', views.check_fa_counts, name='check_fa_counts'),
         url(r'^check_db_counts/$', views.check_db_counts, name='check_db_counts'),
     # ])),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+
+# urlpatterns = [
+    # ... the rest of your URLconf goes here ...
+# ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
