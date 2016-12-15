@@ -28,9 +28,6 @@ ILLUMINA_INFO_DIRS = ["hiseq_info", "nextseq_info", "miseq_info"]
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'jv#20+0b6rufp6(ug6wz-vt0h28yw-x&qg$ab^g6dh6kn)6uy$'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = ['vampsdev.jbpc-np.mbl.edu']
 
 INTERNAL_IPS = ['127.0.0.1',]
