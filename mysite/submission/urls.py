@@ -6,7 +6,7 @@ import logging
 from . import views
 
 app_name = 'submission'
-logging.debug("settings.STATIC_URL = %s, settings.STATIC_ROOT = %s, settings.REPOSITORY_ROOT = %s, settings.BASE_DIR = %s" % (settings.STATIC_URL, settings.STATIC_ROOT, settings.REPOSITORY_ROOT, settings.BASE_DIR))
+logging.debug("GGG settings.STATIC_URL = %s, settings.STATIC_ROOT = %s, settings.REPOSITORY_ROOT = %s, settings.BASE_DIR = %s" % (settings.STATIC_URL, settings.STATIC_ROOT, settings.REPOSITORY_ROOT, settings.BASE_DIR))
 # /Users/ashipunova/BPC/python_web/django_sites/mysite/static/
 
 urlpatterns = [
