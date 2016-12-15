@@ -239,8 +239,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATIC_ROOT = os.path.dirname(os.path.join(BASE_DIR, 'submission/static'))
-STATIC_URL = '/submissions/illumina/static/'
+# STATIC_ROOT = os.path.dirname(os.path.join(BASE_DIR, 'submission/static'))
+STATIC_ROOT = ''
+# STATIC_URL = '/submissions/illumina/static/'
+STATIC_URL = '/static/'
+STATICFILES_FINDERS = ( 
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
+
 
 try:
     HOSTNAME = socket.gethostname()
