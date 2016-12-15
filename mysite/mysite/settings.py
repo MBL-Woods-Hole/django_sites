@@ -20,13 +20,6 @@ REPOSITORY_ROOT = os.path.join(BASE_DIR, 'submission')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(REPOSITORY_ROOT, 'static/')
 
-# STATICFILES_FINDERS = (
-#     'django.contrib.staticfiles.finders.FileSystemFinder',
-#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-# #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-# )
-
-
 ILLUMINA_INFO_DIRS = ["hiseq_info", "nextseq_info", "miseq_info"]
 
 # Quick-start development settings - unsuitable for production
