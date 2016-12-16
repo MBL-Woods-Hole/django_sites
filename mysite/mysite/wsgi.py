@@ -19,7 +19,7 @@ import os
 import sys
 import logging
 
-logging.basicConfig(filename='/usr/local/www/vamps/tmp/django_submission.log', level=logging.DEBUG)
+# logging.basicConfig(filename='/usr/local/www/vamps/tmp/django_submission.log', level=logging.DEBUG)
 # logging.debug('This message should go to the log file')
 # logging.info('So should this')
 # logging.warning('And this, too')
