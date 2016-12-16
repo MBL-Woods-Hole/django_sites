@@ -17,23 +17,36 @@
 </ul>
 </li>
 
-<li><span class="emph">If you are processing NextSeq:</span>
+<li><span class="emph">If your raw file names start with 'IDX' instead of an actual index:</span>
 <ul>
-	<li>If your raw file names start with 'IDX' instead of an actual index run the following in the directory with the raw files on any server:
+	<li>Run the following in the directory with the raw files on any server:
 		<ul>
 			<li><span class="copy_command">python /bioware/seqinfo/bin/rename_idxnum_to_index.py <i>bacteria v6</i></span></li>
 		</ul>
-
-		to rename the files. Change <b><i>bacteria v6</i></b> as needed. To get all domain/dna_region available run
-		<ul>
-			<li><span class="copy_command">python /bioware/seqinfo/bin/rename_idxnum_to_index.py -h</span>.</li>
-		</ul>
-	</li>
-	<li>Choose "Does not have NNNN in run_key (NextSeq)" for "has_Ns" when create a csv if needed.</li>
-	<li>Choose "hiseq" for "Machine name".</li>
-	<li>If you are looking for your csv file it is in hiseq_info/rundate for now.</li>
+    to rename the files. Change <b><i>bacteria v6</i></b> as needed. To get all domain/dna_region available run
+    <ul>
+      <li><span class="copy_command">python /bioware/seqinfo/bin/rename_idxnum_to_index.py -h</span>.</li>
+    </ul>    
 </ul>
 </li>
+
+<!-- <li><span class="emph">If you are processing NextSeq:</span>
+<ul>
+  <li>If your raw file names start with 'IDX' instead of an actual index run the following in the directory with the raw files on any server:
+    <ul>
+      <li><span class="copy_command">python /bioware/seqinfo/bin/rename_idxnum_to_index.py <i>bacteria v6</i></span></li>
+    </ul>
+
+    to rename the files. Change <b><i>bacteria v6</i></b> as needed. To get all domain/dna_region available run
+    <ul>
+      <li><span class="copy_command">python /bioware/seqinfo/bin/rename_idxnum_to_index.py -h</span>.</li>
+    </ul>
+  </li>
+  <li>Choose "Does not have NNNN in run_key (NextSeq)" for "has_Ns" when create a csv if needed.</li>
+  <li>Choose "hiseq" for "Machine name".</li>
+  <li>If you are looking for your csv file it is in hiseq_info/rundate for now.</li>
+</ul>
+</li> -->
 
 <li><span class="emph">Is the cluster done?</span>
 <ul>
