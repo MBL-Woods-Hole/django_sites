@@ -301,7 +301,7 @@ class CsvMetadata():
         out_file_name = "temp_subm_info"
         try:
             for submit_code in self.csv_by_header_uniqued['submit_code']:
-                # logging.debug("submit_code = %s" % submit_code)
+                logging.debug("db_name = %s, submit_code = %s" % (db_name, submit_code))
                 query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
                     FROM %s.vamps_submissions AS subm
                     JOIN %s.vamps_auth AS auth

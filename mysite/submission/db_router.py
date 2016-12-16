@@ -21,7 +21,6 @@ class submissionRouter(object):
         return db
 
     def db_for_write(self, model, **hints):
-        "Point all operations on submission models to 'env454'"
         db = 'default'
 
         if model._meta.app_label == 'submission':
