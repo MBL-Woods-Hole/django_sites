@@ -627,7 +627,6 @@ class CsvMetadata():
                 self.out_metadata[i]['barcode_index'] = ""
             except:
                 raise
-
             # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['last_name'] + ', ' + self.user_info_arr[curr_submit_code]['first_name']
             # <option value="36">Nicole Webster</option>
             # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['contact_id']

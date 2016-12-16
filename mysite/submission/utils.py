@@ -68,7 +68,7 @@ class Dirs:
 
     def check_and_make_dir(self, dir_name):
         try:
-            os.makedirs(dir_name)
+            os.makedirs(dir_name, 0775)
         except OSError:
             if os.path.isdir(dir_name):
                 logging.info("\nDirectory %s already exists."  % (dir_name))
