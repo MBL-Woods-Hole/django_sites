@@ -239,8 +239,8 @@ def gast(request):
     run_utils = Run()
     run_data = {}
 
-    from django.db import connections
-    cursor = connections['env454'].cursor()
+    # from django.db import connections
+    # cursor = connections['env454'].cursor()
     # logging.debug("RRR")
     # logging.debug("settings.DEBUG = %s" % settings.DEBUG)
     # logging.debug("connections['env454']")
