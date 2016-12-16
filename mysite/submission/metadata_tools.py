@@ -5,6 +5,7 @@ from datetime import datetime
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import connection, transaction
+from django.db import connections
 from django.db.models import Q
 from django.forms import formset_factory
 from django.forms.models import model_to_dict
@@ -282,7 +283,8 @@ class CsvMetadata():
 
     def run_query_to_dict(self, query):
         res_dict = {}
-        cursor = connection.cursor()
+        cursor = connections['vamps'].cursor()
+        # cursor = connection.cursor()
         cursor.execute(query)
 
         column_names = [d[0] for d in cursor.description]
