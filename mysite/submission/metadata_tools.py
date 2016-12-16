@@ -762,7 +762,7 @@ class CsvMetadata():
         # request.session['lanes_domains'] = self.get_lanes_domains()
         # del request.session['lanes_domains']
 
-        self.get_vamps_submission_info()
+        self.get_vamps_submission_info("vamps")
 
         self.get_csv_by_header()
 

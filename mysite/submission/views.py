@@ -240,26 +240,26 @@ def gast(request):
     run_utils = Run()
     run_data = {}
 
-    from django.db import connections
-    cursor = connections['vamps'].cursor()
-    logging.debug("RRR")
-    logging.debug("connections['vamps']")
-    aa = connections['vamps'].get_connection_params()
-    logging.debug("connections['vamps'].get_connection_params()['db']")
-    logging.debug(aa['db'])
-    logging.debug("connections['vamps'].queries")
-    logging.debug(connections['vamps'].queries)
-    db_name = "vamps"
-    submit_code = "lmaignien_177212"
-    logging.debug("db_name = %s, submit_code = %s" % (db_name, submit_code))
-    logging.debug("db_name = %s, submit_code = %s" % (db_name, submit_code))
-    query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
-        FROM %s.vamps_submissions AS subm
-        JOIN %s.vamps_auth AS auth
-          ON (auth.id = subm.vamps_auth_id)
-        WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
-
-    
+    # from django.db import connections
+    # cursor = connections['vamps'].cursor()
+    # logging.debug("RRR")
+    # logging.debug("connections['vamps']")
+    # aa = connections['vamps'].get_connection_params()
+    # logging.debug("connections['vamps'].get_connection_params()['db']")
+    # logging.debug(aa['db'])
+    # logging.debug("connections['vamps'].queries")
+    # logging.debug(connections['vamps'].queries)
+    # db_name = "vamps"
+    # submit_code = "lmaignien_177212"
+    # logging.debug("db_name = %s, submit_code = %s" % (db_name, submit_code))
+    # logging.debug("db_name = %s, submit_code = %s" % (db_name, submit_code))
+    # query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
+    #     FROM %s.vamps_submissions AS subm
+    #     JOIN %s.vamps_auth AS auth
+    #       ON (auth.id = subm.vamps_auth_id)
+    #     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
+    #
+    #
     
     form, run_data, error_message = run_utils.get_run(request)    
 
