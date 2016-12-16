@@ -73,8 +73,14 @@ class CsvMetadata():
     csv: HEADERS_TO_CSV
     """
 
-    def __init__(self):
+    def __init__(self, request):
 
+        self.utils = Utils()
+        self.db_prefix = ""
+        logging.info("self.utils.is_local(request) = %s" % self.utils.is_local(request))
+        if (self.utils.is_local(request)):
+            self.db_prefix = "test_"
+        
         self.RUN_INFO_FORM_FIELD_HEADERS = ["dna_region", "insert_size", "op_seq", "overlap", "read_length", "rundate"]
         self.csv_headers = []
         self.csv_content = []
@@ -100,15 +106,12 @@ class CsvMetadata():
         self.adaptors_full = {}
         self.domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
         self.machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
-        self.utils = Utils()
         self.files_created = []
         self.empty_cells = []
         self.new_project = ""
         self.new_project_created = False
         self.adaptor_ref = self.get_all_adaptors()
-
-        # error = True
-
+        
         self.HEADERS_FROM_CSV = {
             'id': {'field': 'id', 'required': True},
             'submit_code': {'field': 'submit_code', 'required': True},
@@ -296,9 +299,10 @@ class CsvMetadata():
       # dump it to a json string
       # self.vamps_submissions = json.dumps(info)
 
-    def get_vamps_submission_info(self, db_name = "test_vamps"):
-        # todo: get db_name depending on local/not
-        out_file_name = "temp_subm_info"
+    def get_vamps_submission_info(self):
+        db_name = self.db_prefix + "vamps"
+        
+        # out_file_name = "temp_subm_info"
         try:
             for submit_code in self.csv_by_header_uniqued['submit_code']:
                 logging.debug("db_name = %s, submit_code = %s" % (db_name, submit_code))
@@ -334,10 +338,12 @@ class CsvMetadata():
 
             self.get_adaptors_full(adaptor, dna_region, domain)
 
-    def get_all_adaptors(self, db_name = "test_env454"):
+    def get_all_adaptors(self):
+        db_name = self.db_prefix + "env454"
         return models_l_env454.IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
 
-    def get_adaptors_full(self, adaptor, dna_region, domain, db_name = "test_env454"):
+    def get_adaptors_full(self, adaptor, dna_region, domain):
+        db_name = self.db_prefix + "env454"
         # self.adaptor_ref
         # links = models_l_env454.IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # logging.debug(links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08")))
@@ -350,7 +356,9 @@ class CsvMetadata():
         self.adaptors_full = {key: (row.illumina_index, row.illumina_run_key) for row in mm}
         # self.utils.benchmark_w_return_2(t0)
 
-    def get_user_info(self, db_name = "test_env454"):
+    def get_user_info(self):
+        db_name = self.db_prefix + "env454"
+        
         # todo: get db_name depending on local/not
         try:
             # TODO: collect submit_code and vamps_user_id into a dict, run one query with "OR"
@@ -599,15 +607,11 @@ class CsvMetadata():
             # logging.debug("self.user_info_arr[curr_submit_code] = ")
             # logging.debug(self.user_info_arr[curr_submit_code])
 
-            logging.debug("BEFORE csv_by_header")
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
             domain     = self.csv_by_header['domain'][i]
-            logging.debug("ATFER csv_by_header")
 
-            logging.debug("BEFORE get_adaptors_full")
             self.get_adaptors_full(adaptor, dna_region, domain)
-            logging.debug("ATFER get_adaptors_full")
 
             key = "_".join([adaptor, dna_region, domain])
 
@@ -766,7 +770,7 @@ class CsvMetadata():
         # request.session['lanes_domains'] = self.get_lanes_domains()
         # del request.session['lanes_domains']
 
-        self.get_vamps_submission_info("vamps")
+        self.get_vamps_submission_info()
 
         self.get_csv_by_header()
 
@@ -778,9 +782,7 @@ class CsvMetadata():
             
         request.session['out_metadata'] = self.out_metadata
 
-        # TODO: use to get db_names
-        logging.info("self.utils.is_local(request) = %s" % self.utils.is_local(request))
-        # utils.is_local(request) = True
+        # 
 
         # utils.is_local(request)
         # HOSTNAME = request.get_host()

@@ -39,7 +39,7 @@ def upload_metadata(request):
     Form.errors
     """
     utils = Utils()
-    csv_handler = CsvMetadata()
+    csv_handler = CsvMetadata(request)
 
     if request.method == 'POST' and request.FILES:
         context = upload_file_n_make_new_metadata(request)
@@ -56,7 +56,7 @@ def upload_metadata(request):
 
 def upload_file_n_make_new_metadata(request):
     utils = Utils()
-    csv_handler = CsvMetadata()
+    csv_handler = CsvMetadata(request)
     
     logging.debug("HHH")
     logging.debug("111 request.method == 'POST' and request.FILES:")
@@ -82,7 +82,7 @@ def upload_file_n_make_new_metadata(request):
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
     
 def submit_run_info_n_edit_metadata_n_make_table(request):
-    csv_handler = CsvMetadata()
+    csv_handler = CsvMetadata(request)
     
     logging.debug("HHH")
     logging.debug("333 submit_run_info in request.POST")
@@ -98,7 +98,7 @@ def submit_run_info_n_edit_metadata_n_make_table(request):
     return context
             
 def edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request):
-    csv_handler = CsvMetadata()
+    csv_handler = CsvMetadata(request)
     logging.debug("HHH")
     logging.debug("444 create_submission_metadata_file in request.POST")
 
@@ -117,7 +117,7 @@ def initial_form():
     return {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
         
 def add_project(request):
-    csv_handler = CsvMetadata()
+    csv_handler = CsvMetadata(request)
 
     if request.method == 'POST':
         # elif 'submit_new_project' in request.POST:
