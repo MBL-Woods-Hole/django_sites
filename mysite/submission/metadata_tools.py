@@ -308,7 +308,7 @@ class CsvMetadata():
                       ON (auth.id = subm.vamps_auth_id)
                     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
                 self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
-            # logging.debug("self.vamps_submissions = %s" % self.vamps_submissions)
+            logging.debug("self.vamps_submissions = %s" % self.vamps_submissions)
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
@@ -596,14 +596,18 @@ class CsvMetadata():
         for i in xrange(len(self.csv_content)-1):
 
             curr_submit_code = self.csv_by_header['submit_code'][i]
-            logging.debug("self.user_info_arr[curr_submit_code] = ")
-            logging.debug(self.user_info_arr[curr_submit_code])
+            # logging.debug("self.user_info_arr[curr_submit_code] = ")
+            # logging.debug(self.user_info_arr[curr_submit_code])
 
+            logging.debug("BEFORE csv_by_header")
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
             domain     = self.csv_by_header['domain'][i]
+            logging.debug("ATFER csv_by_header")
 
+            logging.debug("BEFORE get_adaptors_full")
             self.get_adaptors_full(adaptor, dna_region, domain)
+            logging.debug("ATFER get_adaptors_full")
 
             key = "_".join([adaptor, dna_region, domain])
 
