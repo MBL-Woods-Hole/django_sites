@@ -305,14 +305,12 @@ class CsvMetadata():
         # out_file_name = "temp_subm_info"
         try:
             for submit_code in self.csv_by_header_uniqued['submit_code']:
-                logging.debug("db_name = %s, submit_code = %s" % (db_name, submit_code))
                 query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
                     FROM %s.vamps_submissions AS subm
                     JOIN %s.vamps_auth AS auth
                       ON (auth.id = subm.vamps_auth_id)
                     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
                 self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
-            logging.debug("self.vamps_submissions = %s" % self.vamps_submissions)
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
@@ -512,8 +510,8 @@ class CsvMetadata():
         
         self.out_metadata_table = request.session['out_metadata_table']
 
-        logging.debug("OOO request.session['run_info_form_post']['csv_has_ns']")
-        logging.debug(request.session['run_info_form_post']['csv_has_ns'])
+        # logging.debug("OOO request.session['run_info_form_post']['csv_has_ns']")
+        # logging.debug(request.session['run_info_form_post']['csv_has_ns'])
 
         for x in range(0, len(self.out_metadata_table['rows'])):
             adaptor    = request.POST['form-'+str(x)+'-adaptor']
@@ -543,8 +541,8 @@ class CsvMetadata():
         nnnn = ""
         # TODO: benchmark
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
-            logging.debug("SSS1 self.out_metadata_table['rows'][x]['run_key']")
-            logging.debug(self.out_metadata_table['rows'][x]['run_key'])
+            # logging.debug("SSS1 self.out_metadata_table['rows'][x]['run_key']")
+            # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
             for header in self.HEADERS_TO_EDIT_METADATA:
                 if (self.out_metadata_table['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
                     self.out_metadata_table['rows'][x][header] = request.POST['form-'+str(x)+'-' + header]
@@ -553,8 +551,8 @@ class CsvMetadata():
                 nnnn = "NNNN"
             self.out_metadata_table['rows'][x]['run_key'] = nnnn + request.POST['form-'+str(x)+'-' + 'run_key']
 
-            logging.debug("SSS2 self.out_metadata_table['rows'][x]['run_key']")
-            logging.debug(self.out_metadata_table['rows'][x]['run_key'])
+            # logging.debug("SSS2 self.out_metadata_table['rows'][x]['run_key']")
+            # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
                     
 
     def edit_post_metadata_table(self, request):
@@ -568,15 +566,15 @@ class CsvMetadata():
         
         nnnn = ""
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
-            logging.debug("SSS3 self.out_metadata_table['rows'][x]['run_key']")
-            logging.debug(self.out_metadata_table['rows'][x]['run_key'])
+            # logging.debug("SSS3 self.out_metadata_table['rows'][x]['run_key']")
+            # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
             my_post_dict['form-'+str(x)+'-barcode_index'] = self.out_metadata_table['rows'][x]['barcode_index']
             if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
                 nnnn = "NNNN"
             my_post_dict['form-'+str(x)+'-run_key']       = nnnn + self.out_metadata_table['rows'][x]['run_key']
             
-            logging.debug("SSS4 self.out_metadata_table['rows'][x]['run_key']")
-            logging.debug(self.out_metadata_table['rows'][x]['run_key'])
+            # logging.debug("SSS4 self.out_metadata_table['rows'][x]['run_key']")
+            # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
                                 
         return my_post_dict
 
