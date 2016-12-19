@@ -68,8 +68,7 @@ class Dirs:
 
     def check_and_make_dir(self, dir_name):
         try:
-            os.makedirs(dir_name, 0775)
-            os.chmod(dir_name, 0775)            
+            os.makedirs(dir_name)
         except OSError:
             if os.path.isdir(dir_name):
                 logging.info("\nDirectory %s already exists."  % (dir_name))
@@ -100,15 +99,18 @@ class Run():
 
     def get_primer_suites(self, run, lane, suite_domain):
         # all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
-        all_suites = self.all_suites.filter(run__run = run, lane = lane)
-        primer_suites = set([entry.primer_suite for entry in all_suites if entry.primer_suite.primer_suite.startswith(suite_domain)])
         try:
-          return (True, next(iter(primer_suites)).primer_suite)
+            all_suites = self.all_suites.filter(run__run = run, lane = lane)
+            primer_suites = set([entry.primer_suite for entry in all_suites if entry.primer_suite.primer_suite.startswith(suite_domain)])
+            return (True, next(iter(primer_suites)).primer_suite)
         except StopIteration:
-          error_message = "There is no such combination in our database: run = %s, lane = %s, and domain = %s" % (run, lane, suite_domain)
-          return (False, error_message)
+            error_message = "There is no such combination in our database: run = %s, lane = %s, and domain = %s" % (run, lane, suite_domain)
+            return (False, error_message)
+        except ValueError:
+            error_message = "The lane number you entered is not valid: lane = %s" % (lane)
+            return (False, error_message)
         except:
-          raise
+            raise
 
     def get_run(self, request):
         logging.info("Running get_run from utils")
