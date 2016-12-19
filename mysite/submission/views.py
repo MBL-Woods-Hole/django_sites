@@ -255,8 +255,6 @@ def gzip_all(request):
     
     logging.debug("DDD info_dir = ") 
     logging.debug(info_dir)
-    logging.debug("SSS settings.ILLUMINA_RES_DIR = ") 
-    logging.debug(settings.ILLUMINA_RES_DIR)
     return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not', 'command': '; time gzip -r *; cd %s; time gzip -r *' % (info_dir), 'error_message': error_message})
 
 def clear_db(request):
