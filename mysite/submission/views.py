@@ -249,13 +249,17 @@ def gast(request):
 def gzip_all(request):
     run_utils = Run()
     run_data = {}
-    
+
     form, run_data, error_message = run_utils.get_run(request)
-    info_dir = os.path.join(settings.ILLUMINA_RES_DIR, run_data['full_machine_name'] + "_info/", run_data['find_rundate'])
+    try:
+        info_dir = os.path.join(settings.ILLUMINA_RES_DIR, run_data['full_machine_name'] + "_info/", run_data['find_rundate'])
+        return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not', 'command': '; time gzip -r *; cd %s; time gzip -r *' % (info_dir), 'error_message': error_message})
+        
+    except:
+        info_dir = settings.ILLUMINA_RES_DIR
+        error_message = "Please check run info."
     
-    logging.debug("DDD info_dir = ") 
-    logging.debug(info_dir)
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not', 'command': '; time gzip -r *; cd %s; time gzip -r *' % (info_dir), 'error_message': error_message})
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'error_message': error_message})
 
 def clear_db(request):
     run_utils = Run()
