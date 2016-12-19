@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/1.9/howto/deployment/wsgi/
 
 import os
 import sys
-import settings
-
-# logging settings are in settings_local.py
-# import logging
+import logging
+logging.basicConfig(filename='/usr/local/www/vamps/tmp/django_submission.log', 
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    level=logging.DEBUG)
 
 mysite_path = '/usr/local/www/vampsdev/projects/django/illumina_submission/django_sites/'
 mysite_path1 = '/usr/local/www/vampsdev/projects/django/illumina_submission/django_sites/mysite'
