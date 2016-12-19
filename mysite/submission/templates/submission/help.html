@@ -17,6 +17,12 @@
 </ul>
 </li>
 
+<li><span class="emph">If you try to upload data to the database and got a "<span class="message">_mysql_exceptions.OperationalError: (1213, 'Deadlock found when trying to get lock; try restarting transaction')</span>" message in your terminal:</span>
+<ul>
+	<li>That usually happens if two or more upload commands are running simultaniously. When they try to write to the same table (= the same place) database is confused. It is better to wait until one upload has finished before start the next one.</li>
+</ul>
+</li>
+
 <li><span class="emph">If your raw file names start with 'IDX' instead of an actual index:</span>
 <ul>
 	<li>Run the following in the directory with the raw files on any server:
