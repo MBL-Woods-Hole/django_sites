@@ -1,0 +1,37 @@
+#! /bin/bash
+
+cp add_new_project.html add_new_project_server.html
+cp check_db_counts.html check_db_counts_server.html
+cp check_run_data.html check_run_data_server.html
+cp chimera.html chimera_server.html
+cp clear_db.html clear_db_server.html
+cp db_upload.html db_upload_server.html
+cp demultiplex.html demultiplex_server.html
+cp dropdown_menu.html dropdown_menu_server.html
+cp empty_cell.html empty_cell_server.html
+cp empty_file.html empty_file_server.html
+cp euk_and_fungi.html euk_and_fungi_server.html
+cp filter_mismatch.html filter_mismatch_server.html
+cp gast.html gast_server.html
+cp gunzip_all.html gunzip_all_server.html
+cp gzip_all.html gzip_all_server.html
+cp gzip_all_server.html gzip_all_server_server.html
+cp help.html help_server.html
+cp hssu.html hssu_server.html
+cp hssu_metadata.html hssu_metadata_server.html
+cp last_run.html last_run_server.html
+cp laz_htssu.html laz_htssu_server.html
+cp metadata_out_metadata_err.html metadata_out_metadata_err_server.html
+cp metadata_upload_full_csv.html metadata_upload_full_csv_server.html
+cp metadata_upload_good_csv.html metadata_upload_good_csv_server.html
+cp metadata_upload_miss_headers_csv.html metadata_upload_miss_headers_csv_server.html
+cp metadata_upload_run_info.html metadata_upload_run_info_server.html
+cp new_project.html new_project_server.html
+cp new_project_ok.html new_project_ok_server.html
+cp new_project_wrong.html new_project_wrong_server.html
+cp on_server.html on_server_server.html
+cp overlap.html overlap_server.html
+cp overlap_only.html overlap_only_server.html
+cp run_info_upload.html run_info_upload_server.html
+cp submission_suite.html submission_suite_server.html
+cp uniqueing.html uniqueing_server.html

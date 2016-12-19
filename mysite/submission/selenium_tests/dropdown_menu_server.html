@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://vampsdev.jbpc-np.mbl.edu/" />
+<title>dropdown_menu</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">dropdown_menu</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/submissions/illumina/submission/help/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Help</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Demultiplex</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=All steps</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=ul.nav.first &gt; li.nav-li.active &gt; a</td>
+	<td>Demultiplex</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Demultiplex Illumina files by index/run_key/lane</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=(//a[contains(text(),'Overlap')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Overlap reads in already demultiplexed files</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Filtering mismatch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=p</td>
+	<td>Filtering partial (Ev4, v4v5 and ITS1) merged</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='content']/div/h1/p[2]</td>
+	<td>Maximum number of mismatches allowed in the overlapped region is 3</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Uniqueing</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Uniqueing fasta files</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Chimera checking</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Chimera checking (not needed for v6 region)</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=(//a[contains(text(),'Gast')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Gast</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Clear db</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Remove old data from db</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Check counts in fa files</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Check counts in fasta files</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Check counts in db</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Check counts in db</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Gzip all</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Gzip all files</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Gunzip all</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Gunzip all files</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=(//a[contains(text(),'Help')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=h1</td>
+	<td>Help and tips</td>
+</tr>
+</tbody></table>
+</body>
+</html>

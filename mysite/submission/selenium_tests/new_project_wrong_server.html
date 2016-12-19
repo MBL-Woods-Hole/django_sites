@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://vampsdev.jbpc-np.mbl.edu/" />
+<title>new_project_wrong</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">new_project_wrong</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/submissions/illumina/submission/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=csv_file</td>
+	<td>/Users/ashipunova/Dropbox/mix/today_ch/leslie_primers/LAZ_metadata.csv</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=file_upload</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_project_0</td>
+	<td>dfsdfs</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_project_1</td>
+	<td>dsfsdfs</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_project_title</td>
+	<td>sss</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_project_description</td>
+	<td>www</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_funding</td>
+	<td>rrr</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_env_source_name</td>
+	<td>label=10: air</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_env_source_name</td>
+	<td>label=0:</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit_new_project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=a.RequestPanel</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#RequestPanel &gt; div.djDebugPanelTitle &gt; a.djDebugClose</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=ul.errorlist &gt; li</td>
+	<td>The first part of a project name could have no more then 4 characters</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[@id='new_project_form_new_project']/form/table/tbody/tr/td/ul/li[2]</td>
+	<td>The second part of a project name could have no more then 6 characters</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[@id='new_project_form_new_project']/form/table/tbody/tr[6]/td/ul/li</td>
+	<td>This field is required.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_project_0</td>
+	<td>dfdfsd$$</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit_new_project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=ul.errorlist &gt; li</td>
+	<td>The first part of a project name could have letters only</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_project_0</td>
+	<td>df$$</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_project_1</td>
+	<td>dsfs342 4$$$dfs</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit_new_project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=ul.errorlist &gt; li</td>
+	<td>The first part of a project name could have letters only</td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//fieldset[@id='new_project_form_new_project']/form/table/tbody/tr/td/ul/li[2]</td>
+	<td>The second part of a project name could have only letters and numbers</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[@id='new_project_form_new_project']/form/table/tbody/tr/td/ul/li[3]</td>
+	<td>The second part of a project name could have no more then 6 characters</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
