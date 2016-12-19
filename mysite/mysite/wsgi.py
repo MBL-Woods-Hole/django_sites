@@ -7,36 +7,15 @@ For more information on this file, see
 https://docs.djangoproject.com/en/1.9/howto/deployment/wsgi/
 """
 
-# import os
-# 
-# from django.core.wsgi import get_wsgi_application
-# 
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
-# 
-# application = get_wsgi_application()
-
 import os
 import sys
-import logging
+import settings
 
-# logging.basicConfig(filename='/usr/local/www/vamps/tmp/django_submission.log', level=logging.DEBUG)
-# logging.debug('This message should go to the log file')
-# logging.info('So should this')
-# logging.warning('And this, too')
-
-
+# logging settings are in settings_local.py
+# import logging
 
 mysite_path = '/usr/local/www/vampsdev/projects/django/illumina_submission/django_sites/'
 mysite_path1 = '/usr/local/www/vampsdev/projects/django/illumina_submission/django_sites/mysite'
-
-
-# sys.path.append('<PATH_TO_MY_DJANGO_PROJECT>/hellodjango')
-# 
-# add the virtualenv site-packages path to the sys.path
-# site_packages_path = '/bioware/python-2.7.11-201608021657/lib/python2.7/site-packages'
-# 
-# # poiting to the project settings
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hellodjango.settings")
 
 
 if mysite_path not in sys.path:
@@ -44,13 +23,6 @@ if mysite_path not in sys.path:
 if mysite_path1 not in sys.path:
     sys.path.append(mysite_path1)
 
-# if site_packages_path not in sys.path:
-#     sys.path.append(site_packages_path)
-
-# logging.info('sys.path = ')
-# logging.info(sys.path)
-
-# os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 
 try:
