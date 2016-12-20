@@ -8,9 +8,10 @@ https://docs.djangoproject.com/en/1.9/howto/deployment/wsgi/
 """
 
 import os
+import stat
 import sys
 import logging
-logging.basicConfig(filename='/usr/local/www/vamps/tmp/django_submission.log', 
+logging.basicConfig(filename='/usr/local/www/vamps/tmp/django_submission.1.log', 
                     format='%(asctime)s %(levelname)s %(message)s',
                     level=logging.DEBUG)
 
