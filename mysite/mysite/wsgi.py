@@ -8,19 +8,19 @@ https://docs.djangoproject.com/en/1.9/howto/deployment/wsgi/
 """
 
 import os
-import stat
+# import stat
 import sys
 import logging
-log_filename = '/usr/local/www/vamps/tmp/django_submission.1.log'
+log_filename = '/usr/local/www/vamps/tmp/django_submission.log'
 logging.basicConfig(filename=log_filename, 
                     format='%(asctime)s %(levelname)s %(message)s',
                     level=logging.DEBUG)
 
-st = os.stat(log_filename)
-logging.debug("st.st_mode")
-logging.debug(st.st_mode)
-
-os.chmod(log_filename, st.st_mode | stat.S_IWGRP)
+# st = os.stat(log_filename)
+# logging.debug("st.st_mode")
+# logging.debug(st.st_mode)
+# 
+# os.chmod(log_filename, st.st_mode | stat.S_IWGRP)
 
 # os.chmod(log_filename, stat.S_IRWXU | stat.S_IRUSR | stat.S_IWGRP)
 # os.chmod(log_filename,  stat.S_IWGRP)
