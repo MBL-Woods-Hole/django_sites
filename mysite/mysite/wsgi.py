@@ -20,6 +20,8 @@ st = os.stat(log_filename)
 logging.debug("st.st_mode")
 logging.debug(st.st_mode)
 
+os.chmod(log_filename, st.st_mode | stat.S_IWGRP)
+
 # os.chmod(log_filename, stat.S_IRWXU | stat.S_IRUSR | stat.S_IWGRP)
 # os.chmod(log_filename,  stat.S_IWGRP)
                     
