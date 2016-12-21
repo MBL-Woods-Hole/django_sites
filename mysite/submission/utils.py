@@ -147,6 +147,7 @@ class Run():
             try:
                 self.get_run_data_from_session(request)
                 logging.debug("self.run_data['find_rundate'] = %s" % self.run_data['find_rundate'])
+                # rundate_id = models_l_env454.Run.cache_all_method.get_object_or_404(run = self.run_data['find_rundate'], platform = self.run_data['full_machine_name']).pk
                 rundate_id = models_l_env454.Run.cache_all_method.get(run = self.run_data['find_rundate'], platform = self.run_data['full_machine_name']).pk
                 init_run_data = self.run_data.copy()
                 init_run_data.update({'find_rundate': rundate_id})
@@ -154,7 +155,8 @@ class Run():
                 
             except KeyError:
                 form = RunForm()
-                
+            except models_l_env454.Run.DoesNotExist:
+                form = RunForm()
             except:
                 raise
             
