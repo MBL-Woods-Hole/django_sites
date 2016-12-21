@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8000/" />
+<title>keep_run_data_between_pages</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">keep_run_data_between_pages</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/submission/gast/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Gast</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_find_rundate</td>
+	<td>label=20160115</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_find_machine</td>
+	<td>label=nextseq</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_find_lane</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.blue_message</td>
+	<td>Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/20160115ns</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.copy_command</td>
+	<td>cd /xraid2-2/g454/run_new_pipeline/nextseq/20160115/lane_1_B/analysis/reads_overlap/; run_gast_ill_nonchim_sge.sh; date</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='content']/div[13]/div[2]</td>
+	<td>cd /xraid2-2/g454/run_new_pipeline/nextseq/20160115/lane_1_B/analysis/gast/; percent10_gast_unknowns.sh; date</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Chimeras</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.blue_message</td>
+	<td>Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/20160115ns</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.copy_command</td>
+	<td>cd /Users/ashipunova/BPC/local_illumina_res/nextseq_info/20160115; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv /Users/ashipunova/BPC/local_illumina_res/nextseq_info/20160115/metadata_20160115_ns_1_B.csv -s illumina_chimera_only -l debug -p nextseq -r 20160115 -ft fastq -i /xraid2-2/sequencing/Illumina/20160115ns/ -cp True -lane_name lane_1_B -do_perfect True</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='content']/div[13]/div[2]</td>
+	<td>cd /xraid2-2/g454/run_new_pipeline/nextseq/20160115/lane_1_B/analysis/chimera/; chimera_stats.py; date</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

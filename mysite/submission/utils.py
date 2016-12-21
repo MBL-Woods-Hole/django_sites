@@ -129,9 +129,6 @@ class Run():
                 self.run_data['perfect_overlap']   = self.utils.get_overlap(form.cleaned_data['find_machine'])
                 suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
                 primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
-                # logging.info("primer_suite[1]")
-                #
-                # print primer_suite[1]
 
                 if (primer_suite[0]):
                     self.run_data['primer_suite'] = primer_suite[1]
@@ -140,36 +137,18 @@ class Run():
                     self.run_data['primer_suite'] = ""
                 
                 request.session['run_form_data'] = self.run_data
-                
-        elif request.session['run_form_data']:
-            form = RunForm(request.session['run_form_data'])
-            
-            print "request.session['run_form_data'] = "
-            print request.session['run_form_data']
-        
-            self.run_data = request.session['run_form_data']
-            print "EEE self.run_data['find_rundate']"
-            print self.run_data['find_rundate']
+               
+        else:    
+            try:            
+                if request.session['run_form_data']:
+                    self.run_data = request.session['run_form_data']
+                else:
+                    self.get_run_data_from_session(request)
 
-            print "self.run_data['full_machine_name']"
-            print self.run_data['full_machine_name']
-
-            try:
-                self.run_data['find_rundate'] = models_l_env454.Run.cache_all_method.get(run = self.run_data['find_rundate'], platform = self.run_data['full_machine_name']).pk
-            except models_l_env454.Run.DoesNotExist:
-                form = RunForm()
-            
-        
-        # if a GET (or any other method) we'll create a blank form
-        else:
-            try:
-                self.get_run_data_from_session(request)
-                logging.debug("self.run_data['find_rundate'] = %s" % self.run_data['find_rundate'])
                 rundate_id = models_l_env454.Run.cache_all_method.get(run = self.run_data['find_rundate'], platform = self.run_data['full_machine_name']).pk
                 init_run_data = self.run_data.copy()
                 init_run_data.update({'find_rundate': rundate_id})
-                form = RunForm(initial = init_run_data)
-                
+                form = RunForm(initial = init_run_data)        
             except KeyError:
                 form = RunForm()
             except models_l_env454.Run.DoesNotExist:
@@ -178,20 +157,6 @@ class Run():
                 raise
             
         return (form, self.run_data, error_message)
-        
-        """
-        'run_form_data'
-	
-        {'find_domain': u'B',
-         'find_lane': u'1',
-         'find_machine': u'hs',
-         'find_rundate': u'20160504',
-         'full_machine_name': 'hiseq',
-         'perfect_overlap': 'True',
-         'primer_suite': u'Bacterial V4-V5 Suite'}
-            
-        
-        """
         
     def get_run_data_from_session(self, request):
 
