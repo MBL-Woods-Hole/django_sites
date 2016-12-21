@@ -228,10 +228,14 @@ class CsvMetadata():
         try:
             csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
 
+            
+            platform = "".join(self.csv_by_header_uniqued['platform'])
+            self.selected_machine_short = self.machine_shortcuts_choices[platform]
+            
             self.run_info_from_csv = {
                 'csv_rundate':          csv_rundate,
                 'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s%s" % (csv_rundate, self.selected_machine_short),
-                'csv_platform':	        "".join(self.csv_by_header_uniqued['platform']),
+                'csv_platform':	        platform,
                 'csv_dna_region':	    "".join(self.csv_by_header_uniqued['dna_region']),
                 'csv_overlap':		    "".join(self.csv_by_header_uniqued['overlap']),
                 'csv_has_ns':		    "".join(self.csv_by_header_uniqued['rundate']),
