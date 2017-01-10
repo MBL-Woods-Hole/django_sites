@@ -296,3 +296,7 @@ td .text_inp {
 .insert_here {
     color: red; font-weight: bold;
 }
+
+#path_ext_msg {
+    width: 30em;
+}
