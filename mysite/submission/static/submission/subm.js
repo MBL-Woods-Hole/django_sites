@@ -17,6 +17,6 @@ function show_alert()
     var x = row.insertCell(2);
     x.innerHTML = msg;
     x.style.color = "red";
-    // alert(msg);
+    alert(msg);
 }
 
