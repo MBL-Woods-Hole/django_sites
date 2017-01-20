@@ -772,6 +772,7 @@ class CsvMetadata():
             
             """
             #MIMINUM:
+            self.out_metadata[i]['id']          = self.csv_by_header['id'][i]
             self.out_metadata[i]['submit_code'] = self.csv_by_header['submit_code'][i]
             self.out_metadata[i]['direction']   = self.csv_by_header['direction'][i]
             self.out_metadata[i]['enzyme']      = self.csv_by_header['enzyme'][i]
@@ -1029,6 +1030,7 @@ class CsvMetadata():
     
     def insert_submission_tubes(self, request):
         for i in self.out_metadata.keys():
+            id = self.out_metadata[i]['id']
             submit_code = self.out_metadata[i]['submit_code']
             barcode = self.out_metadata[i]['barcode']
             pool = self.out_metadata[i]['pool']
@@ -1044,6 +1046,7 @@ class CsvMetadata():
             # sample_received = self.out_metadata[i]['sample_received']
         
             print """
+            id = %s,\n
             submit_code = %s,\n
             barcode= %s,\n
             pool= %s,\n
@@ -1055,7 +1058,7 @@ class CsvMetadata():
             op_empcr= %s,\n
             enzyme= %s,\n
             rundate= %s,\n
-            """ % (submit_code, barcode, pool, lane, direction, platform, op_amp, op_seq, op_empcr, enzyme, rundate)
+            """ % (id, submit_code, barcode, pool, lane, direction, platform, op_amp, op_seq, op_empcr, enzyme, rundate)
         
         
         """
@@ -1075,3 +1078,11 @@ class CsvMetadata():
         self.out_metadata[i]['pool']            = self.csv_by_header['pool'][i]
         rundate = session['run_info_from_csv']['rundate']
         """
+        print "CCC"
+        print self.csv_by_header_uniqued
+        for submit_code in self.csv_by_header_uniqued['submit_code']:
+            print "VVVVV"
+            print self.vamps_submissions[submit_code]
+            print "---"
+            
+        # obj, created = models_l_vamps.Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
