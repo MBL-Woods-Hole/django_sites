@@ -17,6 +17,7 @@ import models
 import models_l_env454
 import models_l_vamps
 import os
+import stat
 import time
 import logging
 
@@ -442,6 +443,7 @@ class CsvMetadata():
             ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
             ini_file.write(ini_text)
             ini_file.close()
+            
 
     def write_out_metadata_to_csv(self, my_post_dict, request):
         logging.info("write_out_metadata_to_csv")
@@ -466,7 +468,16 @@ class CsvMetadata():
     def check_out_csv_files(self):
         for lane_domain, file_name in self.metadata_csv_file_names.items():
             if os.path.isfile(os.path.join(self.path_to_csv, file_name)):
-                self.files_created.append(os.path.join(self.path_to_csv, file_name))
+                curr_file = os.path.join(self.path_to_csv, file_name)
+                self.files_created.append(curr_file)
+                self.chmod_wg(curr_file)
+
+    def chmod_wg(self, curr_file):
+        print "CCC curr_file"
+        print curr_file
+        st = os.stat(curr_file)
+        print st
+        os.chmod(curr_file, st.st_mode | stat.S_IWGRP)
 
     def update_out_metadata(self, my_post_dict, request):
         logging.info("update_out_metadata")
