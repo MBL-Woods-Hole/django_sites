@@ -440,9 +440,11 @@ class CsvMetadata():
         for lane_domain, ini_name in self.ini_names.items():
             ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
                         ''' % (self.selected_rundate, lane_domain, self.selected_dna_region, path_to_raw_data, overlap_choices[self.selected_overlap], self.selected_machine)
-            ini_file = open(os.path.join(self.path_to_csv, ini_name), 'w')
+            full_ini_name = os.path.join(self.path_to_csv, ini_name)
+            ini_file = open(full_ini_name, 'w')
             ini_file.write(ini_text)
             ini_file.close()
+            self.chmod_wg(full_ini_name)
             
 
     def write_out_metadata_to_csv(self, my_post_dict, request):
