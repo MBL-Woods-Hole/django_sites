@@ -705,108 +705,42 @@ class CsvMetadata():
             self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tube_label'][i]
             """
             for VampsSubmissions and VampsSubmissionsTubes:
-            self.csv_content[0] =  head = ['adaptor'
-'barcode'
-'barcode_index'
-'concentration'
-'dataset_description'
-'dataset_name'
-'date_initial'
-'date_updated'
-'direction'
-'dna_region'
-'domain'
-'duplicate'
-'env_sample_source_id'
-'enzyme'
-'id'
-'insert_size'
-'lane'
-'on_vamps'
-'op_amp'
-'op_empcr'
-'op_seq'
-'overlap'
-'platform'
-'pool'
-'primer_suite'
-'project_name'
-'quant_method'
-'read_length'
-'rundate'
-'runkey'
-'sample_received'
-'submit_code'
-'trim_distal'
-'tube_label'
-'tube_number'
-'user'
-]
-            empty on vamps:
-            barcode
-            pool
-            lane
-            direction
-            platform
-            op_amp
-            op_seq
-            op_empcr
-            enzyme
-            rundate
-            on_vamps
-            sample_received
-            
-            
-            barcode = self.out_metadata[i]['barcode']
-            
-            lane = diff for each
-            platform = session['run_info_from_csv']['csv_platform']
-            op_amp = self.out_metadata[i]['amp_operator']
-            op_seq = session['run_info_from_csv']['csv_seq_operator']
-            self.out_metadata[i]['op_empcr']        = self.csv_by_header['op_empcr'][i]
-            self.out_metadata[i]['pool']            = self.csv_by_header['pool'][i]
-            rundate = session['run_info_from_csv']['rundate']
-            
             """
-            #MIMINUM:
-            self.out_metadata[i]['concentration']  = self.csv_by_header['concentration'][i]
+            #MIMINUM VampsSubmissionsTubes:
             self.out_metadata[i]['direction']   = self.csv_by_header['direction'][i]
-            self.out_metadata[i]['enzyme']      = self.csv_by_header['enzyme'][i]
             self.out_metadata[i]['id']          = self.csv_by_header['id'][i]
             self.out_metadata[i]['op_empcr']    = self.csv_by_header['op_empcr'][i]
             self.out_metadata[i]['pool']        = self.csv_by_header['pool'][i]
             self.out_metadata[i]['submit_code'] = self.csv_by_header['submit_code'][i]
-            self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
             
-            # ALL:
-            # self.out_metadata[i]['rundate']        = self.csv_by_header['rundate'][i]
-            # self.out_metadata[i]['submit_code']    = self.csv_by_header['submit_code'][i]
-            # # self.out_metadata[i]['num_of_tubes']   = self.csv_by_header['num_of_tubes'][i]
-            # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
-            # self.out_metadata[i]['op_amp']         = self.csv_by_header['op_amp'][i]
+            # ALL VampsSubmissionsTubes:
             # self.out_metadata[i]['concentration']  = self.csv_by_header['concentration'][i]
-            # self.out_metadata[i]['on_vamps']       = self.csv_by_header['on_vamps'][i]
-            # self.out_metadata[i]['trim_distal']    = self.csv_by_header['trim_distal'][i]
-            # # self.out_metadata[i]['title']          = self.csv_by_header['title'][i]
-            # # self.out_metadata[i]['duplicate']      = self.csv_by_header['duplicate'][i]
-            # self.out_metadata[i]['platform']       = self.csv_by_header['platform'][i]
-            # self.out_metadata[i]['enzyme']         = self.csv_by_header['enzyme'][i]
-            # # self.out_metadata[i]['temp_project']   = self.csv_by_header['temp_project'][i]
-            # self.out_metadata[i]['tube_label']     = self.csv_by_header['tube_label'][i]
-            # self.out_metadata[i]['op_seq']         = self.csv_by_header['op_seq'][i]
-            # # self.out_metadata[i]['managed']        = self.csv_by_header['managed'][i]
-            # self.out_metadata[i]['direction']      = self.csv_by_header['direction'][i]
-            # self.out_metadata[i]['project_name']   = self.csv_by_header['project_name'][i]
-            # self.out_metadata[i]['sample_received'] = self.csv_by_header['sample_received'][i]
-            # self.out_metadata[i]['op_empcr']        = self.csv_by_header['op_empcr'][i]
-            # self.out_metadata[i]['quant_method']    = self.csv_by_header['quant_method'][i]
-            # self.out_metadata[i]['pool']            = self.csv_by_header['pool'][i]
-            # self.out_metadata[i]['runkey']          = self.csv_by_header['runkey'][i]
-            # # self.out_metadata[i]['locked']          = self.csv_by_header['locked'][i]
-            # # self.out_metadata[i]['env_sample_source'] = self.csv_by_header['env_sample_source'][i]
             # self.out_metadata[i]['dataset_name']      = self.csv_by_header['dataset_name'][i]
-            #
-            #
+            # self.out_metadata[i]['direction']      = self.csv_by_header['direction'][i]
+            # self.out_metadata[i]['duplicate']      = self.csv_by_header['duplicate'][i]
+            # self.out_metadata[i]['env_sample_source'] = self.csv_by_header['env_sample_source'][i]
+            # self.out_metadata[i]['enzyme']         = self.csv_by_header['enzyme'][i]
+            # self.out_metadata[i]['locked']          = self.csv_by_header['locked'][i]
+            # self.out_metadata[i]['managed']        = self.csv_by_header['managed'][i]
+            # self.out_metadata[i]['num_of_tubes']   = self.csv_by_header['num_of_tubes'][i]
+            # self.out_metadata[i]['on_vamps']       = self.csv_by_header['on_vamps'][i]
+            # self.out_metadata[i]['op_amp']         = self.csv_by_header['op_amp'][i]
+            # self.out_metadata[i]['op_empcr']        = self.csv_by_header['op_empcr'][i]
+            # self.out_metadata[i]['op_seq']         = self.csv_by_header['op_seq'][i]
+            # self.out_metadata[i]['platform']       = self.csv_by_header['platform'][i]
+            # self.out_metadata[i]['pool']            = self.csv_by_header['pool'][i]
+            # self.out_metadata[i]['project_name']   = self.csv_by_header['project_name'][i]
+            # self.out_metadata[i]['quant_method']    = self.csv_by_header['quant_method'][i]
+            # self.out_metadata[i]['rundate']        = self.csv_by_header['rundate'][i]
+            # self.out_metadata[i]['runkey']          = self.csv_by_header['runkey'][i]
+            # self.out_metadata[i]['sample_received'] = self.csv_by_header['sample_received'][i]
+            # self.out_metadata[i]['submit_code']    = self.csv_by_header['submit_code'][i]
+            # self.out_metadata[i]['temp_project']   = self.csv_by_header['temp_project'][i]
+            # self.out_metadata[i]['title']          = self.csv_by_header['title'][i]
+            # self.out_metadata[i]['trim_distal']    = self.csv_by_header['trim_distal'][i]
+            # self.out_metadata[i]['tube_label']     = self.csv_by_header['tube_label'][i]
+            # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
+
 
         # logging.debug("self.out_metadata = %s" % self.out_metadata)
 
@@ -1017,7 +951,7 @@ class CsvMetadata():
             # *) check if csv was created
             self.check_out_csv_files()
             
-            self.insert_submission_tubes(request)
+            self.update_submission_tubes(request)
             
         self.new_rundate, self.new_rundate_created = self.insert_run(request)
         logging.info("self.new_rundate = %s, self.new_rundate_created = %s" % (self.new_rundate, self.new_rundate_created))
@@ -1027,15 +961,13 @@ class CsvMetadata():
     def insert_run(self, request):
         return models_l_env454.Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
     
-    def insert_submission_tubes(self, request):
+    def update_submission_tubes(self, request):
         overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
         
         for i in self.out_metadata.keys():
             barcode = self.out_metadata[i]['barcode']
-            concentration = self.out_metadata[i]['concentration']
             direction = self.out_metadata[i]['direction']
             env_sample_source_id = self.out_metadata[i]['env_sample_source_id']
-            enzyme = self.out_metadata[i]['enzyme']
             id = self.out_metadata[i]['id']
             insert_size = request.session['run_info_form_post']['csv_insert_size']
             lane = self.out_metadata[i]['lane']
@@ -1047,7 +979,6 @@ class CsvMetadata():
             pool = self.out_metadata[i]['pool']
             rundate = request.session['run_info']['selected_rundate']
             submit_code = self.out_metadata[i]['submit_code']
-            tube_number = self.out_metadata[i]['tube_number']
             
             updated =  models_l_vamps.VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
                 barcode = barcode,
@@ -1064,7 +995,7 @@ class CsvMetadata():
                 rundate = rundate,
                 date_updated = datetime.now()
             )
-            print "UUU updated = "
-            print updated
+            # print "UUU updated = "
+            # print updated
 
 
