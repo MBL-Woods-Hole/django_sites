@@ -15,6 +15,7 @@ import codecs
 import csv
 import models
 import models_l_env454
+import models_l_vamps
 import os
 import time
 import logging
@@ -772,12 +773,14 @@ class CsvMetadata():
             
             """
             #MIMINUM:
-            self.out_metadata[i]['id']          = self.csv_by_header['id'][i]
-            self.out_metadata[i]['submit_code'] = self.csv_by_header['submit_code'][i]
+            self.out_metadata[i]['concentration']  = self.csv_by_header['concentration'][i]
             self.out_metadata[i]['direction']   = self.csv_by_header['direction'][i]
             self.out_metadata[i]['enzyme']      = self.csv_by_header['enzyme'][i]
+            self.out_metadata[i]['id']          = self.csv_by_header['id'][i]
             self.out_metadata[i]['op_empcr']    = self.csv_by_header['op_empcr'][i]
             self.out_metadata[i]['pool']        = self.csv_by_header['pool'][i]
+            self.out_metadata[i]['submit_code'] = self.csv_by_header['submit_code'][i]
+            self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
             
             # ALL:
             # self.out_metadata[i]['rundate']        = self.csv_by_header['rundate'][i]
@@ -1029,6 +1032,8 @@ class CsvMetadata():
         return models_l_env454.Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
     
     def insert_submission_tubes(self, request):
+        overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
+        
         for i in self.out_metadata.keys():
             id = self.out_metadata[i]['id']
             submit_code = self.out_metadata[i]['submit_code']
@@ -1042,6 +1047,13 @@ class CsvMetadata():
             op_empcr = self.out_metadata[i]['op_empcr']
             enzyme = self.out_metadata[i]['enzyme']
             rundate = request.session['run_info']['selected_rundate']
+            tube_number = self.out_metadata[i]['tube_number']
+            overlap = overlap_choices[self.out_metadata[i]['overlap']]
+            concentration = self.out_metadata[i]['concentration']
+            insert_size = request.session['run_info_form_post']['csv_insert_size']
+            env_sample_source_id = self.out_metadata[i]['env_sample_source_id']
+            
+            # hs_complete
             # on_vamps = self.out_metadata[i]['on_vamps']
             # sample_received = self.out_metadata[i]['sample_received']
         
@@ -1058,31 +1070,40 @@ class CsvMetadata():
             op_empcr= %s,\n
             enzyme= %s,\n
             rundate= %s,\n
-            """ % (id, submit_code, barcode, pool, lane, direction, platform, op_amp, op_seq, op_empcr, enzyme, rundate)
+            tube_number= %s,\n
+            overlap= %s,\n
+            insert_size= %s,\n
+            """ % (id, submit_code, barcode, pool, lane, direction, platform, op_amp, op_seq, op_empcr, enzyme, rundate, tube_number, overlap, insert_size)
         
         
-        """
-        obj, created = Person.objects.update_or_create(
-            first_name='John', last_name='Lennon',
-            defaults={'first_name': 'Bob'},
-        )
+            """
+            obj, created = Person.objects.update_or_create(
+                first_name='John', last_name='Lennon',
+                defaults={'first_name': 'Bob'},
+            )
+            VideoRate.objects.filter(user_id=1, video_id=1, crit_id=1).update(rate=2)
+            """
+            print models_l_vamps.VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
+                barcode = barcode,
+                concentration = concentration,
+                direction = direction,
+                env_sample_source_id = env_sample_source_id,
+                enzyme = enzyme,
+                insert_size = insert_size,
+                lane = lane,
+                op_amp = op_amp,
+                op_empcr = op_empcr,
+                op_seq = op_seq,
+                overlap = overlap,
+                platform = platform,
+                pool = pool,
+                rundate = rundate,
+                # tube_number = tube_number,
+            )
         
-        
-        barcode = self.out_metadata[i]['barcode']
-        
-        lane = diff for each
-        platform = session['run_info_from_csv']['csv_platform']
-        op_amp = self.out_metadata[i]['amp_operator']
-        op_seq = session['run_info_from_csv']['csv_seq_operator']
-        self.out_metadata[i]['op_empcr']        = self.csv_by_header['op_empcr'][i]
-        self.out_metadata[i]['pool']            = self.csv_by_header['pool'][i]
-        rundate = session['run_info_from_csv']['rundate']
-        """
-        print "CCC"
-        print self.csv_by_header_uniqued
-        for submit_code in self.csv_by_header_uniqued['submit_code']:
-            print "VVVVV"
-            print self.vamps_submissions[submit_code]
-            print "---"
-            
-        # obj, created = models_l_vamps.Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
+        #  checklist_enterprise_type = models.CharField('Type of Enterprise', max_length=50, choices=zip(ENTERPRISE_CHOICES, ENTERPRISE_CHOICES))
+        # Should Be:
+        #
+        #  checklist_enterprise_type = models.CharField(verbose_name='Type of Enterprise', max_length=50, choices=zip(ENTERPRISE_CHOICES, ENTERPRISE_CHOICES))
+        #
+        #

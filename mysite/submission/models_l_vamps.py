@@ -51,6 +51,12 @@ class VampsSubmissions(models.Model):
     def __str__(self):
         return "%s: %s" % (self.submit_code, self.temp_project)
 
+OVERLAPCHOICE = (
+    ('complete', 'complete'),
+    ('partial', 'partial'),
+    ('none', 'none'),
+)
+
 class VampsSubmissionsTubes(models.Model):
     submit_code = models.CharField(max_length=40)
     tube_number = models.IntegerField()
@@ -80,12 +86,13 @@ class VampsSubmissionsTubes(models.Model):
     sample_received = models.CharField(max_length=15)
     concentration = models.DecimalField(max_digits=10, decimal_places=4)
     quant_method = models.CharField(max_length=15)
-    overlap = models.CharField(max_length=8)
+    overlap = models.CharField(max_length=8,choices=OVERLAPCHOICE)
     insert_size = models.IntegerField()
     barcode_index = models.CharField(max_length=12, blank=True, null=True)
     read_length = models.SmallIntegerField(blank=True, null=True)
     trim_distal = models.CharField(max_length=5, blank=True, null=True)
     env_sample_source = models.ForeignKey('NewEnvSampleSource', models.DO_NOTHING)
+    # env_sample_source = models.ForeignKey(verbose_name='NewEnvSampleSource')
 
     class Meta:
         vamps_db = True
@@ -95,3 +102,24 @@ class VampsSubmissionsTubes(models.Model):
 
     def __str__(self):
         return "%s: %s, %s, %s" % (self.submit_code, self.project_name, self.dataset_name, self.dna_region)
+
+class NewEnvSampleSource(models.Model):
+    env_sample_source_id = models.IntegerField(primary_key=True)
+    env_source_name = models.CharField(unique=True, max_length=50)
+
+    class Meta:
+        vamps_db = True
+        db_table = 'new_env_sample_source'
+
+    def __str__(self):
+        return "%s: %s" % (self.env_sample_source_id, self.env_source_name)
+
+#
+#
+# CREATE TABLE `new_env_sample_source` (
+#   `env_sample_source_id` tinyint(3) unsigned NOT NULL DEFAULT '0',
+#   `env_source_name` varchar(50) NOT NULL DEFAULT '',
+#   PRIMARY KEY (`env_sample_source_id`),
+#   UNIQUE KEY `env_source_name` (`env_source_name`)
+# ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+    # illumina_adaptor    = models.ForeignKey('IlluminaAdaptor', models.DO_NOTHING, primary_key=True, editable=False)
