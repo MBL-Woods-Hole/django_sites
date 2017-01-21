@@ -983,18 +983,34 @@ class CsvMetadata():
             updated =  models_l_vamps.VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
                 barcode = barcode,
                 direction = direction,
-                env_sample_source_id = env_sample_source_id,
                 insert_size = insert_size,
                 lane = lane,
                 op_amp = op_amp,
                 op_empcr = op_empcr,
                 op_seq = op_seq,
-                overlap = overlap,
                 platform = platform,
                 pool = pool,
                 rundate = rundate,
                 date_updated = datetime.now()
             )
+            """
+            empty on vamps:
+            barcode
+            direction
+            enzyme
+            lane
+            on_vamps
+            op_amp
+            op_empcr
+            op_seq
+            platform
+            pool
+            rundate
+            sample_received
+
+            
+            
+            """
             # print "UUU updated = "
             # print updated
 
