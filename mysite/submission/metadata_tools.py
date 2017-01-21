@@ -350,10 +350,12 @@ class CsvMetadata():
         # self.adaptor_ref
         # links = models_l_env454.IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # logging.debug(links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08")))
-
+        
         key = "_".join([adaptor, dna_region, domain])
         mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
-
+                
+        # TODO: make once self.adaptors_full.update({})
+        
         # logging.debug("self.adaptors_full timing 2")
         # t0 = self.utils.benchmark_w_return_1()
         self.adaptors_full = {key: (row.illumina_index, row.illumina_run_key) for row in mm}
@@ -969,7 +971,7 @@ class CsvMetadata():
             direction = self.out_metadata[i]['direction']
             env_sample_source_id = self.out_metadata[i]['env_sample_source_id']
             id = self.out_metadata[i]['id']
-            insert_size = request.session['run_info_form_post']['csv_insert_size']
+            insert_size = int(self.out_metadata[i]['insert_size'])
             lane = self.out_metadata[i]['lane']
             op_amp = self.out_metadata[i]['amp_operator']
             op_empcr = self.out_metadata[i]['op_empcr']
@@ -977,6 +979,8 @@ class CsvMetadata():
             overlap = overlap_choices[self.out_metadata[i]['overlap']]
             platform = request.session['run_info']['selected_machine']
             pool = self.out_metadata[i]['pool']
+            project_name = self.out_metadata[i]['project']
+            read_length = self.out_metadata[i]['read_length']
             rundate = request.session['run_info']['selected_rundate']
             submit_code = self.out_metadata[i]['submit_code']
             
@@ -988,8 +992,11 @@ class CsvMetadata():
                 op_amp = op_amp,
                 op_empcr = op_empcr,
                 op_seq = op_seq,
+                overlap = overlap,
                 platform = platform,
                 pool = pool,
+                project_name = project_name,
+                read_length = read_length,
                 rundate = rundate,
                 date_updated = datetime.now()
             )
