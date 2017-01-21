@@ -589,10 +589,6 @@ class CsvMetadata():
         # logging.debug("self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content)))
         # logging.debug("self.csv_content[0] =  head = %s" % (self.csv_content[0]))
 
-        print "self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content))
-        print "self.csv_content[0] =  head = %s" % (self.csv_content[0])
-
-
         # logging.debug(" &&&&&&& list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))")
         # a = list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))
         # logging.debug(a)
@@ -1035,60 +1031,28 @@ class CsvMetadata():
         overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
         
         for i in self.out_metadata.keys():
-            id = self.out_metadata[i]['id']
-            submit_code = self.out_metadata[i]['submit_code']
             barcode = self.out_metadata[i]['barcode']
-            pool = self.out_metadata[i]['pool']
-            lane = self.out_metadata[i]['lane']
-            direction = self.out_metadata[i]['direction']
-            platform = request.session['run_info']['selected_machine']
-            op_amp = self.out_metadata[i]['amp_operator']
-            op_seq = request.session['run_info_form_post']['csv_seq_operator']
-            op_empcr = self.out_metadata[i]['op_empcr']
-            enzyme = self.out_metadata[i]['enzyme']
-            rundate = request.session['run_info']['selected_rundate']
-            tube_number = self.out_metadata[i]['tube_number']
-            overlap = overlap_choices[self.out_metadata[i]['overlap']]
             concentration = self.out_metadata[i]['concentration']
-            insert_size = request.session['run_info_form_post']['csv_insert_size']
+            direction = self.out_metadata[i]['direction']
             env_sample_source_id = self.out_metadata[i]['env_sample_source_id']
+            enzyme = self.out_metadata[i]['enzyme']
+            id = self.out_metadata[i]['id']
+            insert_size = request.session['run_info_form_post']['csv_insert_size']
+            lane = self.out_metadata[i]['lane']
+            op_amp = self.out_metadata[i]['amp_operator']
+            op_empcr = self.out_metadata[i]['op_empcr']
+            op_seq = request.session['run_info_form_post']['csv_seq_operator']
+            overlap = overlap_choices[self.out_metadata[i]['overlap']]
+            platform = request.session['run_info']['selected_machine']
+            pool = self.out_metadata[i]['pool']
+            rundate = request.session['run_info']['selected_rundate']
+            submit_code = self.out_metadata[i]['submit_code']
+            tube_number = self.out_metadata[i]['tube_number']
             
-            # hs_complete
-            # on_vamps = self.out_metadata[i]['on_vamps']
-            # sample_received = self.out_metadata[i]['sample_received']
-        
-            print """
-            id = %s,\n
-            submit_code = %s,\n
-            barcode= %s,\n
-            pool= %s,\n
-            lane= %s,\n
-            direction= %s,\n
-            platform= %s,\n
-            op_amp= %s,\n
-            op_seq= %s,\n
-            op_empcr= %s,\n
-            enzyme= %s,\n
-            rundate= %s,\n
-            tube_number= %s,\n
-            overlap= %s,\n
-            insert_size= %s,\n
-            """ % (id, submit_code, barcode, pool, lane, direction, platform, op_amp, op_seq, op_empcr, enzyme, rundate, tube_number, overlap, insert_size)
-        
-        
-            """
-            obj, created = Person.objects.update_or_create(
-                first_name='John', last_name='Lennon',
-                defaults={'first_name': 'Bob'},
-            )
-            VideoRate.objects.filter(user_id=1, video_id=1, crit_id=1).update(rate=2)
-            """
-            print models_l_vamps.VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
+            updated =  models_l_vamps.VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
                 barcode = barcode,
-                concentration = concentration,
                 direction = direction,
                 env_sample_source_id = env_sample_source_id,
-                enzyme = enzyme,
                 insert_size = insert_size,
                 lane = lane,
                 op_amp = op_amp,
@@ -1098,12 +1062,9 @@ class CsvMetadata():
                 platform = platform,
                 pool = pool,
                 rundate = rundate,
-                # tube_number = tube_number,
+                date_updated = datetime.now()
             )
-        
-        #  checklist_enterprise_type = models.CharField('Type of Enterprise', max_length=50, choices=zip(ENTERPRISE_CHOICES, ENTERPRISE_CHOICES))
-        # Should Be:
-        #
-        #  checklist_enterprise_type = models.CharField(verbose_name='Type of Enterprise', max_length=50, choices=zip(ENTERPRISE_CHOICES, ENTERPRISE_CHOICES))
-        #
-        #
+            print "UUU updated = "
+            print updated
+
+

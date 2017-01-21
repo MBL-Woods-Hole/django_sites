@@ -80,8 +80,8 @@ class VampsSubmissionsTubes(models.Model):
     enzyme = models.CharField(max_length=10)
     rundate = models.CharField(max_length=10)
     adaptor = models.CharField(max_length=3)
-    date_initial = models.DateField()
-    date_updated = models.DateField()
+    date_initial = models.DateField(auto_now_add=True)
+    date_updated = models.DateField(auto_now=True)
     on_vamps = models.CharField(max_length=10)
     sample_received = models.CharField(max_length=15)
     concentration = models.DecimalField(max_digits=10, decimal_places=4)
@@ -114,12 +114,3 @@ class NewEnvSampleSource(models.Model):
     def __str__(self):
         return "%s: %s" % (self.env_sample_source_id, self.env_source_name)
 
-#
-#
-# CREATE TABLE `new_env_sample_source` (
-#   `env_sample_source_id` tinyint(3) unsigned NOT NULL DEFAULT '0',
-#   `env_source_name` varchar(50) NOT NULL DEFAULT '',
-#   PRIMARY KEY (`env_sample_source_id`),
-#   UNIQUE KEY `env_source_name` (`env_source_name`)
-# ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-    # illumina_adaptor    = models.ForeignKey('IlluminaAdaptor', models.DO_NOTHING, primary_key=True, editable=False)
