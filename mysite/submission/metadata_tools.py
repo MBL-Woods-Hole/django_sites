@@ -976,8 +976,8 @@ class CsvMetadata():
     def update_submission_tubes(self, request):
         try:
             self.out_metadata = request.session['out_metadata']
-            logging.info("self.out_metadata = ")
-            logging.info(self.out_metadata)
+            # logging.debug("self.out_metadata = ")
+            # logging.debug(self.out_metadata)
         except:
             raise
         
