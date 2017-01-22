@@ -475,10 +475,10 @@ class CsvMetadata():
                 self.chmod_wg(curr_file)
 
     def chmod_wg(self, curr_file):
-        print "CCC curr_file"
-        print curr_file
+        logging.info("CCC curr_file")
+        logging.info(curr_file)
         st = os.stat(curr_file)
-        print st
+        logging.info(st)
         os.chmod(curr_file, st.st_mode | stat.S_IWGRP)
 
     def update_out_metadata(self, my_post_dict, request):
