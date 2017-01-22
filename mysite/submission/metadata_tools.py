@@ -475,10 +475,7 @@ class CsvMetadata():
                 self.chmod_wg(curr_file)
 
     def chmod_wg(self, curr_file):
-        logging.info("CCC curr_file")
-        logging.info(curr_file)
         st = os.stat(curr_file)
-        logging.info(st)
         os.chmod(curr_file, st.st_mode | stat.S_IWGRP)
 
     def update_out_metadata(self, my_post_dict, request):
@@ -981,7 +978,7 @@ class CsvMetadata():
         
         for i in self.out_metadata.keys():
             barcode = self.out_metadata[i]['barcode']
-            direction = self.out_metadata[i]['direction']
+            # direction = self.out_metadata[i]['direction']
             env_sample_source_id = self.out_metadata[i]['env_sample_source_id']
             id = self.out_metadata[i]['id']
             insert_size = int(self.out_metadata[i]['insert_size'])
@@ -999,7 +996,7 @@ class CsvMetadata():
             
             updated =  models_l_vamps.VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
                 barcode = barcode,
-                direction = direction,
+                # direction = direction,
                 insert_size = insert_size,
                 lane = lane,
                 op_amp = op_amp,
@@ -1029,8 +1026,9 @@ class CsvMetadata():
             sample_received
 
             
-            
             """
+            logging.info("VampsSubmissionsTubes updated = %s" % (updated))
+            
             # print "UUU updated = "
             # print updated
 
