@@ -974,11 +974,18 @@ class CsvMetadata():
         return models_l_env454.Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
     
     def update_submission_tubes(self, request):
+        try:
+            self.out_metadata = request.session['out_metadata']
+            logging.info("self.out_metadata = ")
+            logging.info(self.out_metadata)
+        except:
+            raise
+        
         overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
         
         for i in self.out_metadata.keys():
             barcode = self.out_metadata[i]['barcode']
-            # direction = self.out_metadata[i]['direction']
+            direction = self.out_metadata[i]['direction']
             env_sample_source_id = self.out_metadata[i]['env_sample_source_id']
             id = self.out_metadata[i]['id']
             insert_size = int(self.out_metadata[i]['insert_size'])
@@ -996,7 +1003,7 @@ class CsvMetadata():
             
             updated =  models_l_vamps.VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
                 barcode = barcode,
-                # direction = direction,
+                direction = direction,
                 insert_size = insert_size,
                 lane = lane,
                 op_amp = op_amp,
