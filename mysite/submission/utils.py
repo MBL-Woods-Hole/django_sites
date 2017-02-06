@@ -69,14 +69,14 @@ class Dirs:
         
     def chmod_wg1(self, curr_name):
         st = os.stat(curr_name)
-        print "SSS:st"
-        print st
+        logging.info("SSS:st")
+        logging.info(st)
         os.chmod(curr_name, st.st_mode | stat.S_IWGRP)
 
     def chmod_wg2(self, curr_name):
         a = subprocess.call(['chmod', '-R', '+w', curr_name])
-        print "curr_name = subprocess.call(['chmod', '-R', '+w', curr_name])"
-        print a
+        # print "curr_name = subprocess.call(['chmod', '-R', '+w', curr_name])"
+        # print a
         
         
     def chmod_wg2(self, curr_name):
@@ -94,11 +94,11 @@ class Dirs:
 
     def check_and_make_dir(self, dir_name):
         try:
-            print "MMM I'm here: dir_name"
+            # print "MMM I'm here: dir_name"
             os.makedirs(dir_name)
             # drwxr-xr-x  4 ashipunova  staff  136 Feb  6 11:48 20170203
             
-            print "MMM1 I'm here: dir_name"
+            # print "MMM1 I'm here: dir_name"
             self.chmod_wg1(dir_name)
             # posix.stat_result(st_mode=16877, st_ino=7551672, st_dev=16777218, st_nlink=2, st_uid=501, st_gid=20, st_size=68, st_atime=1486399798, st_mtime=1486399798, st_ctime=1486399798)
             # drwxrwxr-x  4 ashipunova  staff  136 Feb  6 11:49 20170203
