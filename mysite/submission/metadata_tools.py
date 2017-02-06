@@ -444,7 +444,7 @@ class CsvMetadata():
             ini_file = open(full_ini_name, 'w')
             ini_file.write(ini_text)
             ini_file.close()
-            self.chmod_wg(full_ini_name)
+            self.dirs.chmod_wg(full_ini_name)
             
 
     def write_out_metadata_to_csv(self, my_post_dict, request):
@@ -472,11 +472,11 @@ class CsvMetadata():
             if os.path.isfile(os.path.join(self.path_to_csv, file_name)):
                 curr_file = os.path.join(self.path_to_csv, file_name)
                 self.files_created.append(curr_file)
-                self.chmod_wg(curr_file)
+                self.dirs.chmod_wg(curr_file)
 
-    def chmod_wg(self, curr_file):
-        st = os.stat(curr_file)
-        os.chmod(curr_file, st.st_mode | stat.S_IWGRP)
+    # def chmod_wg(self, curr_file):
+    #     st = os.stat(curr_file)
+    #     os.chmod(curr_file, st.st_mode | stat.S_IWGRP)
 
     def update_out_metadata(self, my_post_dict, request):
         logging.info("update_out_metadata")
