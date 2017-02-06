@@ -474,10 +474,6 @@ class CsvMetadata():
                 self.files_created.append(curr_file)
                 self.dirs.chmod_wg(curr_file)
 
-    # def chmod_wg(self, curr_file):
-    #     st = os.stat(curr_file)
-    #     os.chmod(curr_file, st.st_mode | stat.S_IWGRP)
-
     def update_out_metadata(self, my_post_dict, request):
         logging.info("update_out_metadata")
 
