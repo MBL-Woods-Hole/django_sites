@@ -69,8 +69,8 @@ class Dirs:
         
     def chmod_wg1(self, curr_name):
         st = os.stat(curr_name)
-        logging.info("SSS:st")
-        logging.info(st)
+        # logging.info("SSS:st")
+        # logging.info(st)
         os.chmod(curr_name, st.st_mode | stat.S_IWGRP)
 
     def chmod_wg2(self, curr_name):
@@ -94,6 +94,13 @@ class Dirs:
 
     def check_and_make_dir(self, dir_name):
         try:
+            # print "DDD dir_name"
+            a = dir_name + "_1"
+            b = dir_name + "_2"
+            import shutil
+            shutil.rmtree(a)
+            shutil.rmtree(b)
+            
             # print "MMM I'm here: dir_name"
             os.makedirs(dir_name)
             # drwxr-xr-x  4 ashipunova  staff  136 Feb  6 11:48 20170203
