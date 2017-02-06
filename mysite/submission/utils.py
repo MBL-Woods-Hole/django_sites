@@ -67,56 +67,15 @@ class Dirs:
         self.output_dir_name = None
         # self.get_path()
         
-    def chmod_wg1(self, curr_name):
+    def chmod_wg(self, curr_name):
         st = os.stat(curr_name)
-        # logging.info("SSS:st")
-        # logging.info(st)
         os.chmod(curr_name, st.st_mode | stat.S_IWGRP)
-
-    def chmod_wg2(self, curr_name):
-        a = subprocess.call(['chmod', '-R', '+w', curr_name])
-        # print "curr_name = subprocess.call(['chmod', '-R', '+w', curr_name])"
-        # print a
-        
-        
-    def chmod_wg2(self, curr_name):
-        import os, stat
-
-    def get_perm(self, fname):
-        return stat.S_IMODE(os.lstat(fname)[stat.ST_MODE])
-
-    def make_writeable_recursive(self, path):
-        for root, dirs, files in os.walk(path, topdown=False):
-            for dir in [os.path.join(root, d) for d in dirs]:
-                os.chmod(dir, self.get_perm(dir) | os.ST_WRITE)
-            for file in [os.path.join(root, f) for f in files]:
-                os.chmod(file, self.get_perm(file) | os.ST_WRITE)
 
     def check_and_make_dir(self, dir_name):
         try:
-            # print "DDD dir_name"
-            a = dir_name + "_1"
-            b = dir_name + "_2"
-            import shutil
-            shutil.rmtree(a)
-            shutil.rmtree(b)
-            
-            # print "MMM I'm here: dir_name"
             os.makedirs(dir_name)
-            # drwxr-xr-x  4 ashipunova  staff  136 Feb  6 11:48 20170203
-            
-            # print "MMM1 I'm here: dir_name"
-            self.chmod_wg1(dir_name)
-            # posix.stat_result(st_mode=16877, st_ino=7551672, st_dev=16777218, st_nlink=2, st_uid=501, st_gid=20, st_size=68, st_atime=1486399798, st_mtime=1486399798, st_ctime=1486399798)
-            # drwxrwxr-x  4 ashipunova  staff  136 Feb  6 11:49 20170203
-            
-            # print "MMM2 I'm here: dir_name"
-            # self.chmod_wg2(dir_name)
-            # drwxr-xr-x  4 ashipunova  staff  136 Feb  6 11:50 20170203
-            # print "MMM3 I'm here: dir_name"
-            # self.make_writeable_recursive(dir_name)
-            # drwxr-xr-x  4 ashipunova  staff  136 Feb  6 11:51 20170203
-            
+            self.chmod_wg(dir_name)
+
         except OSError:
             if os.path.isdir(dir_name):
                 logging.info("\nDirectory %s already exists."  % (dir_name))
