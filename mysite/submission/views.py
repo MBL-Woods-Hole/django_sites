@@ -291,20 +291,20 @@ def check_fa_counts(request):
     
 
     try:
-        print "run_data['find_machine']"
-        r = run_data['find_machine']
-        print r
+        # print "run_data['find_machine']"
+        # r = run_data['find_machine']
+        # print r
         # ms
-        print "file_name_choices(run_data['find_machine'])"
-        print file_name_choices[r]
-        # PERFECT_reads.fa
-        print "---"
+        # print "file_name_choices(run_data['find_machine'])"
+        # print file_name_choices[run_data['find_machine']]
+        # MERGED-MAX-MISMATCH-3.unique.nonchimeric.fa
+        # print "---"
         # print file_name_choices
         # {'hs': 'PERFECT_reads.fa', 'ns': 'MERGED_V6_PRIMERS_REMOVED.unique', 'ms': 'MERGED-MAX-MISMATCH-3.unique.nonchimeric.fa'}
 
         # if run_data['find_machine'] = 
-        # fa_files_extension = 
-        # command_line = "reads_overlap/; grep \'>\' %s | wc -l; date" % fa_files_extension
+        fa_files_extension = file_name_choices[run_data['find_machine']]
+        command_line = "reads_overlap/; grep \'>\' *%s | wc -l; date" % (fa_files_extension)
         # *REMOVED.unique run_data['find_machine']
     except:
         pass
