@@ -285,29 +285,9 @@ def check_fa_counts(request):
     
     run_utils = Run()
     run_data = {}
-    fa_files_extension = ""
     command_line = ""
     form, run_data, error_message = run_utils.get_run(request)
-    
-
-    try:
-        # print "run_data['find_machine']"
-        # r = run_data['find_machine']
-        # print r
-        # ms
-        # print "file_name_choices(run_data['find_machine'])"
-        # print file_name_choices[run_data['find_machine']]
-        # MERGED-MAX-MISMATCH-3.unique.nonchimeric.fa
-        # print "---"
-        # print file_name_choices
-        # {'hs': 'PERFECT_reads.fa', 'ns': 'MERGED_V6_PRIMERS_REMOVED.unique', 'ms': 'MERGED-MAX-MISMATCH-3.unique.nonchimeric.fa'}
-
-        # if run_data['find_machine'] = 
-        fa_files_extension = file_name_choices[run_data['find_machine']]
-        command_line = "reads_overlap/; grep \'>\' *%s | wc -l; date" % (fa_files_extension)
-        # *REMOVED.unique run_data['find_machine']
-    except:
-        pass
+    command_line = "reads_overlap/; grep \'>\' *%s | wc -l; date" % (file_name_choices[run_data['find_machine']])
     
     return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Check counts in fasta files', 'is_cluster': 'not', 'command': command_line,  'error_message': error_message})
 
