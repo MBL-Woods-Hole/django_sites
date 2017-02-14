@@ -91,6 +91,14 @@ class Has_ns(models.Model):
         ('no', 'Does not have NNNN in run_key (NextSeq)'),
     )
 
+class File_name(models.Model):
+    FILE_NAME_CHOICES = (
+        ('ms', 'MERGED-MAX-MISMATCH-3.unique.nonchimeric.fa'),
+        ('hs', 'PERFECT_reads.fa'),
+        ('ns', 'MERGED_V6_PRIMERS_REMOVED.unique'),
+    )
+
+
 # # class Forms_model(models.Model):
 # #     myDomainChoiceField = models.CharField(blank=True, default='') #max_length=5,
 # #     class Meta:

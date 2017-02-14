@@ -279,10 +279,37 @@ def uniqueing(request):
     return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Uniqueing fasta files', 'is_cluster': '', 'command': 'reads_overlap/; run_unique_fa.sh; date',  'error_message': error_message })
 
 def check_fa_counts(request):
+    from .models import File_name
+    file_names = File_name()
+    file_name_choices = dict(file_names.FILE_NAME_CHOICES)
+    
     run_utils = Run()
     run_data = {}
+    fa_files_extension = ""
+    command_line = ""
     form, run_data, error_message = run_utils.get_run(request)
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Check counts in fasta files', 'is_cluster': 'not', 'command': 'reads_overlap/; grep \'>\' *REMOVED.unique | wc -l; date',  'error_message': error_message})
+    
+
+    try:
+        print "run_data['find_machine']"
+        r = run_data['find_machine']
+        print r
+        # ms
+        print "file_name_choices(run_data['find_machine'])"
+        print file_name_choices[r]
+        # PERFECT_reads.fa
+        print "---"
+        # print file_name_choices
+        # {'hs': 'PERFECT_reads.fa', 'ns': 'MERGED_V6_PRIMERS_REMOVED.unique', 'ms': 'MERGED-MAX-MISMATCH-3.unique.nonchimeric.fa'}
+
+        # if run_data['find_machine'] = 
+        # fa_files_extension = 
+        # command_line = "reads_overlap/; grep \'>\' %s | wc -l; date" % fa_files_extension
+        # *REMOVED.unique run_data['find_machine']
+    except:
+        pass
+    
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Check counts in fasta files', 'is_cluster': 'not', 'command': command_line,  'error_message': error_message})
 
 def check_db_counts(request):
     run_utils = Run()
