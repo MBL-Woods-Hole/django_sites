@@ -20,7 +20,9 @@ class Utils():
         t1 = time.time()
         total = float(t1-t0) / 60
         # print 'time: %.2f m' % total
-        print 'time: %f s' % total
+        # print 'time: %f s' % total
+        logging.info('time: %f s' % total)
+        
 
     def is_local(self, request):
         hostname = request.get_host()
