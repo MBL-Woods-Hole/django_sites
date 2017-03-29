@@ -247,7 +247,7 @@ class RunInfoIll(models.Model):
     dna_region = models.ForeignKey('DnaRegion', models.DO_NOTHING)
     amp_operator = models.CharField(max_length=5)
     seq_operator = models.CharField(max_length=5)
-    barcode_index = models.CharField(max_length=12)
+    # barcode_index = models.CharField(max_length=12)
     overlap = models.CharField(max_length=8)
     insert_size = models.SmallIntegerField()
     file_prefix = models.CharField(max_length=45)
@@ -255,11 +255,12 @@ class RunInfoIll(models.Model):
     primer_suite = models.ForeignKey('PrimerSuite', models.DO_NOTHING)
     updated = models.DateTimeField()
     platform = models.CharField(max_length=7, blank=True, null=True)
+    illumina_index = models.ForeignKey('IlluminaIndex', models.DO_NOTHING)
 
     class Meta:
         managed = False
         db_table = 'run_info_ill'
-        unique_together = (('run', 'run_key', 'barcode_index', 'lane'),)
+        unique_together = (('run', 'run_key', 'illumina_index', 'lane'),)
 
     def __str__(self):
         return """run_info_ill_id: %s;
@@ -274,12 +275,12 @@ adaptor: %s;
 dna_region: %s;
 amp_operator: %s;
 seq_operator: %s;
-barcode_index: %s;
+illumina_index: %s;
 overlap: %s;
 insert_size: %s;
 file_prefix: %s;
 read_length: %s;
-primer_suite: %s; """ %  (self.run_info_ill_id, self.run_key, self.run, self.lane, self.dataset, self.project, self.tubelabel, self.barcode, self.adaptor, self.dna_region, self.amp_operator, self.seq_operator, self.barcode_index, self.overlap, self.insert_size, self.file_prefix, self.read_length, self.primer_suite)
+primer_suite: %s; """ %  (self.run_info_ill_id, self.run_key, self.run, self.lane, self.dataset, self.project, self.tubelabel, self.barcode, self.adaptor, self.dna_region, self.amp_operator, self.seq_operator, self.illumina_index, self.overlap, self.insert_size, self.file_prefix, self.read_length, self.primer_suite)
 
 class RunKey(models.Model):
     run_key_id = models.SmallIntegerField(primary_key=True)
