@@ -59,7 +59,37 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=div.copy_command</td>
-	<td>exact:cd /xraid2-2/g454/run_new_pipeline/hiseq/20160629/lane_1_B/analysis/reads_overlap/; grep '&gt;' *REMOVED.unique | wc -l; date</td>
+	<td>exact:cd /xraid2-2/g454/run_new_pipeline/hiseq/20160629/lane_1_B/analysis/reads_overlap/; grep '&gt;' *PERFECT_reads.fa | wc -l; date</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_find_rundate</td>
+	<td>label=20161123</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_find_machine</td>
+	<td>label=miseq</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div.copy_command</td>
+	<td>exact:cd /xraid2-2/g454/run_new_pipeline/miseq/20161123/lane_1_B/analysis/reads_overlap/; grep '&gt;' *MERGED-MAX-MISMATCH-3.unique.nonchimeric.fa | wc -l; date</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=id_find_machine</td>
+	<td>label=nextseq</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
 </tr>
 </tbody></table>
 </body>
