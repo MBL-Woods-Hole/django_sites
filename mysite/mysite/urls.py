@@ -20,6 +20,7 @@ from django.conf import settings
 urlpatterns = [
     url(r'^submission/', include('submission.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^metadata_template/', include('metadata_template.urls')),
 ]
 
 if settings.DEBUG:
