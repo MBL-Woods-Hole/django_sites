@@ -20,46 +20,68 @@ function show_alert()
     // alert(msg);
 }
 
-var States = [{
-  key: 13,
-  name: "State1",
-  cities: ["City1", "City2", "Silver Spring"]
-}, {
-  key: 2,
-  name: "State2",
-  cities: ["City5", "City9", "City8","San Diego"]
-}];
-//populate states
-for (var i = 0; i < States.length; i++) {
-  var opt = States[i];
+var Biomes = [
+  {
+    key: 1,
+    name: "marine",
+    secondary_biome: ["pelagic", "bathyal", "hadal", "neritic", "abyssal", "continental margin"]
+  }, {
+    key: 2,
+    name: "terrestrial",
+    secondary_biome: ["aquatic", "freshwater lake", "freshwater river"]
+  }, {
+    key: 3,
+    name: "subterrestrial",
+    secondary_biome: ["aquatic"]
+  }, {
+    key: 4,
+    name: "subseafloor",
+    secondary_biome: ["aquatic", "continental margin"]
+  }
+//
+//
+//   {
+//   key: 1,
+//   name: "State1",
+//   secondary_biome: ["City1", "City2", "Silver Spring"]
+// }, {
+//   key: 2,
+//   name: "State2",
+//   secondary_biome: ["City5", "City9", "City8","San Diego"]
+// }
+];
+
+//populate Biomes
+for (var i = 0; i < Biomes.length; i++) {
+  var opt = Biomes[i];
   var el = document.createElement("option");
   el.textContent = opt.name;
   el.value = opt.key;
-  StatesList.appendChild(el);
+  BiomesList.appendChild(el);
 }
-//Populate initial cities
-populateCities();
+//Populate initial secondary_biome
+populatesecondary_biome();
 
 
-//populate cities
-function populateCities() {
-  //clear the cities list
-  document.getElementById('CitiesList').options.length = 0;
-  var e = document.getElementById("StatesList");
+//populate secondary_biome
+function populatesecondary_biome() {
+  //clear the secondary_biome list
+  document.getElementById('secondary_biomeList').options.length = 0;
+  var e = document.getElementById("BiomesList");
   var selectedState = e.options[e.selectedIndex].value;
-  var listOfCities;
-  for (var i = 0; i < States.length; i++) {
-    if (States[i].key == selectedState) {
-      listOfCities = States[i].cities;
+  var listOfsecondary_biome;
+  for (var i = 0; i < Biomes.length; i++) {
+    if (Biomes[i].key == selectedState) {
+      listOfsecondary_biome = Biomes[i].secondary_biome;
       break;
     }
   }
-  //populate Cities DropDown menu
-  for (var i = 0; i < listOfCities.length; i++) {
-    var opt = listOfCities[i];
+  //populate secondary_biome DropDown menu
+  for (var i = 0; i < listOfsecondary_biome.length; i++) {
+    var opt = listOfsecondary_biome[i];
     var el = document.createElement("option");
     el.textContent = opt;
     el.value = opt;
-    CitiesList.appendChild(el);
+    secondary_biomeList.appendChild(el);
   }
 }
