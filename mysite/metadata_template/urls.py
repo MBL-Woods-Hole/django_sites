@@ -9,3 +9,4 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^metadata_form/$', views.metadata_form, name='metadata_form'),
 ]
+# ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

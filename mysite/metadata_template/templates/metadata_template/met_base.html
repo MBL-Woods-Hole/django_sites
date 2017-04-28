@@ -1,0 +1,108 @@
+{% load staticfiles %}
+{% load mytags %}
+<!-- {% load static %} -->
+
+<!DOCTYPE html PUBLIC "-/W3C/DTD XHTML 1.0 Strict/EN"      "http:/www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html xmlns="http:/www.w3.org/1999/xhtml">
+    <head>
+ <title>{% block title %}{% endblock %}</title>
+ <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+ <link rel="stylesheet" type="text/css" href="{{ url_extension }}/submission/static/submission/960.css" /> 
+ <link rel="stylesheet" type="text/css" href="{{ url_extension }}/submission/static/submission/subm_style.css" />
+  <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{{ url_extension }}/submission/static/submission/style.css" /><![endif]-->
+ </head>
+  <body class="{% block bodyclass %}{% endblock %}">
+    <div class="container_12">
+    <div class="grid_12 darker_bg">
+    {% block navigation %}
+      <div  id="navigation" class="centered">
+        <ul id="nav">
+          <li class="nav-li {% active 'upload_metadata' %}"><a href="{{ url_extension }}/metadata_template/metadata_form/">Census of Deep Life (CoDL) sample metadata</a>
+            <!-- <ul class="nav first">
+              <li class="nav-li {% active 'add_project' %}"><a href="{{ url_extension }}/submission/add_project">Add Project</a></li>
+            </ul> -->
+          </li> <!-- end Metadata -->
+
+          <!-- <li class="nav-li {% active 'demultiplex' %}"><a href="{{ url_extension }}/submission/demultiplex">Demultiplex</a></li> -->
+
+          <!-- </li> --> <!-- end nav first -->
+        </ul> <!-- end nav -->
+      </div>
+    {% endblock %} <!-- end navigation -->
+    </div> <!-- end grid_12 -->
+    <div class="clear"></div>
+
+    {% block content %}
+
+      <div id="content">
+
+        <div class="grid_12">
+          <h1>{% block header %}{{ header|linebreaks }}{% endblock %}</h1>
+        </div>
+        <div class="clear"></div>
+
+        {% if form %}
+          <div class="grid_5">&nbsp;</div>
+          <div class="grid_4">
+            {% block run_choosing %}{% include 'submission/select_run.html' %}{% endblock %}
+          </div>
+          <div class="grid_3"></div>
+          <div class="clear"></div>
+        {% endif %}
+
+        <div class="grid_12">
+           <div class = "red_message">
+             {{ error_message }}
+           </div>
+        </div>
+        <div class="clear"></div>
+
+        <div class="grid_12">
+           {% block some_content %}{% endblock %}
+        </div>
+        <div class="clear"></div>
+
+        <div class="grid_12">
+          {% block first_copy_command %}{% endblock %}
+        </div>
+        <div class="clear"></div>
+
+        <div class="grid_12">
+          {% if what_to_check %}
+            {% block copy_check_command %}
+
+              <div class = "notes">
+              Afterwards you can check {{ what_to_check }} by using the following command on any <span class="emph">not</span> cluster:
+              </div>
+
+              <div class = "copy_command">
+                {% if run_data %}
+
+              cd /xraid2-2/g454/run_new_pipeline/{{ run_data.full_machine_name }}/{{ run_data.find_rundate }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/{{ check_command }}; date
+
+                {% else %}
+
+                cd /xraid2-2/g454/run_new_pipeline/<span class = "insert_here">fullMachineName</span>/<span class = "insert_here">rundate</span>/lane_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span>/analysis/; {{ check_command }}; date
+
+                {% endif %}
+
+              </div>
+
+            {% endblock %}
+          {% endif %}
+
+        </div>
+        <div class="clear"></div>
+
+       </div> <!-- end content -->
+
+    {% endblock %}
+      <div class="grid_12">
+          {% block footer %}{% endblock %}
+      </div>
+      <div class="clear"></div>
+    </div> <!-- end container_12 -->
+    <script type="text/javascript" src="{{ url_extension }}/submission/static/submission/subm.js"></script>
+  </body>
+ </html>

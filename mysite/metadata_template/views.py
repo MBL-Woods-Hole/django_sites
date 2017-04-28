@@ -10,8 +10,3 @@ def index(request):
 def metadata_form(request):
     return render(request, 'metadata_template/metadata_form.html', {})
     
-    """
-    django.template.loaders.app_directories.Loader: /Users/ashipunova/BPC/python_web/django_sites/mysite/submission/templates/metadata_template/metadata_form.html (Source does not exist)
-    
-    """
-    
