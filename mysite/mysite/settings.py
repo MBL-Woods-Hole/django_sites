@@ -32,6 +32,7 @@ INTERNAL_IPS = ['127.0.0.1',]
 # Application definition
 INSTALLED_APPS = [
     'submission.apps.SubmissionConfig',
+    'metadata_template.apps.MetadataTemplateConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,7 +78,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-DATABASE_ROUTERS = ['submission.db_router.submissionRouter']
+DATABASE_ROUTERS = ['submission.db_router.submissionRouter', 'metadata_template.db_router.metadata_templateRouter']
 
 DATABASE_APPS_MAPPING = {'submission': 'local_env454'}
 
