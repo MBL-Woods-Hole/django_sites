@@ -38,20 +38,25 @@ var Biomes = [
     name: "subseafloor",
     secondary_biome: ["aquatic", "continental margin"]
   }
-//
-//
-//   {
-//   key: 1,
-//   name: "State1",
-//   secondary_biome: ["City1", "City2", "Silver Spring"]
-// }, {
-//   key: 2,
-//   name: "State2",
-//   secondary_biome: ["City5", "City9", "City8","San Diego"]
-// }
 ];
 
+
 //populate Biomes
+// addEvent(window, 'load', populate_biomes);
+
+function populate_biomes() {
+  // alert("msg");
+  
+  biomes_menu = document.getElementById("Biomes");
+  populateprimary_biome()
+  //Populate initial secondary_biome
+  populatesecondary_biome();
+  
+  biomes_menu.onchange = populatesecondary_biome()
+}
+
+function populateprimary_biome() {
+
 for (var i = 0; i < Biomes.length; i++) {
   var opt = Biomes[i];
   var el = document.createElement("option");
@@ -59,9 +64,7 @@ for (var i = 0; i < Biomes.length; i++) {
   el.value = opt.key;
   BiomesList.appendChild(el);
 }
-//Populate initial secondary_biome
-populatesecondary_biome();
-
+}
 
 //populate secondary_biome
 function populatesecondary_biome() {
@@ -76,6 +79,7 @@ function populatesecondary_biome() {
       break;
     }
   }
+  
   //populate secondary_biome DropDown menu
   for (var i = 0; i < listOfsecondary_biome.length; i++) {
     var opt = listOfsecondary_biome[i];
