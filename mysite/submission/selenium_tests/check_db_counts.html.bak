@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="https://vampsdev.jbpc-np.mbl.edu/" />
+<link rel="selenium.base" href="http://localhost:8000/" />
 <title>check_db_counts</title>
 </head>
 <body>
@@ -13,7 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/submissions/illumina/submission/overlap/</td>
+	<td>/submission/overlap/</td>
 	<td></td>
 </tr>
 <tr>
@@ -29,7 +29,7 @@
 <tr>
 	<td>select</td>
 	<td>id=id_find_machine</td>
-	<td>label=hiseq</td>
+	<td>label=nextseq</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -44,9 +44,8 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=div.copy_command</td>
-	<td>exact:mysql -h bpcdb1 env454 -e 'SELECT count(*) FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) JOIN sequence_uniq_info_ill USING(sequence_ill_id) WHERE primer_suite = &quot;Bacterial V6 Suite&quot; AND run = &quot;20160624&quot; AND lane = &quot;1&quot;;'</td>
+	<td>exact:mysql -h newbpcdb2 env454 -e 'SELECT count(*) FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) JOIN sequence_uniq_info_ill USING(sequence_ill_id) WHERE primer_suite = &quot;Bacterial V6 Suite&quot; AND run = &quot;20160624&quot; AND lane = &quot;1&quot;;'</td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
