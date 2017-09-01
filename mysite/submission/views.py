@@ -287,7 +287,16 @@ def check_fa_counts(request):
     run_data = {}
     command_line = ""
     form, run_data, error_message = run_utils.get_run(request)
-    command_line = "reads_overlap/; grep \'>\' *%s | wc -l; date" % (file_name_choices[run_data['find_machine']])
+    try:
+      command_line = "reads_overlap/; grep \'>\' *%s | wc -l; date" % (file_name_choices[run_data['find_machine']])
+    except KeyError:
+      # command_line = "reads_overlap/; grep \'>\' *.fa | wc -l; date" % (file_name_choices[run_data['find_machine']])
+      logging.debug("FFF run_data")
+      logging.debug(run_data)
+      # pass
+    except:
+      raise
+      
     
     return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Check counts in fasta files', 'is_cluster': 'not', 'command': command_line,  'error_message': error_message})
 
