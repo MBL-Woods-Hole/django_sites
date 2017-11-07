@@ -371,10 +371,11 @@ class CsvMetadata():
             for submit_code in self.csv_by_header_uniqued['submit_code']:
                 # logging.debug("submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user']))
                 vamps_user_id = self.vamps_submissions[submit_code]['user']
+                print "VVV vamps_user_id = %s" % (vamps_user_id)
                 try:
                   contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
                 except models_l_env454.Contact.DoesNotExist as e:
-                    self.cause = e.args[0]
+                    # self.cause = e.args[0]
                     self.errors.append("Please add contact information for %s." % vamps_user_id)
                 except:
                     raise
@@ -390,10 +391,13 @@ class CsvMetadata():
                 # self.user_info_arr.append({submit_code: (model_to_dict(row)) for row in contacts})
 
             # logging.debug("self.user_info_arr = %s" % self.user_info_arr)
-        except KeyError as e:
-            self.cause = e.args[0]
-            self.errors.append(self.no_data_message())
-            self.errors.append(" Or the vamps_submission table has no such submit_code.")
+        # except KeyError as e:
+        #     self.cause = e.args[0]
+        #     print "self.cause SSS" 
+        #     print self.cause
+        #     
+        #     self.errors.append(self.no_data_message())
+        #     self.errors.append(" Or the vamps_submission table has no such submit_code.")
         except:
             raise
 
