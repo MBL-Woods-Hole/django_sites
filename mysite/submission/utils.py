@@ -25,8 +25,9 @@ class Utils():
         
 
     def is_local(self, request):
+        local_hostnames = ["127.0.0.1", "localhost"]
         hostname = request.get_host()
-        if hostname.startswith("localhost"):
+        if hostname.startswith(tuple(local_hostnames)):
             return True
         else:
             return False
