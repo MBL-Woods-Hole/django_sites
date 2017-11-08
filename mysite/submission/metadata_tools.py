@@ -370,8 +370,21 @@ class CsvMetadata():
             # TODO: collect submit_code and vamps_user_id into a dict, run one query with "OR"
             for submit_code in self.csv_by_header_uniqued['submit_code']:
                 # logging.debug("submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user']))
+                print "\n---\nVVV1 vamps_user_id = %s, submit_code = %s" % (self.vamps_submissions[submit_code], submit_code)
+                print "MMM self.csv_content = %s" % (self.csv_content)
+                submit_code_idx = self.csv_content[0].index("submit_code")
+                user_name_idx = self.csv_content[0].index("user")
+                
+                for sublist in self.csv_content:
+                   if sublist[submit_code_idx] == submit_code:
+                       print "FFF Found it!", sublist
+                       user_name_by_submit_code = sublist[user_name_idx]
+                       break
+                "Found it! ['38830', 'morrison_882616', 'lottapurkamo', '4', '4', 'OTA_3_DNA_A', '', 'bacteria', 'Bacterial V4-V5 Suite', 'v4v5', 'DCO_PUR_Bv4v5', 'OTA_3_DNA_A', '', '', '', '1', '', 'miseq', 'AM', 'AM', '', '', '20171030', 'C09', '9/18/17', '9/18/17', '', '', '5', 'qubit', 'partial', '550', '', '300', '', '20']"
+                
+                print "VVV2 vamps_user_id = %s" % (self.vamps_submissions[submit_code]['user'])
                 vamps_user_id = self.vamps_submissions[submit_code]['user']
-                print "VVV vamps_user_id = %s" % (vamps_user_id)
+                print "VVV3 vamps_user_id = %s" % (vamps_user_id)
                 try:
                   contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
                 except models_l_env454.Contact.DoesNotExist as e:
