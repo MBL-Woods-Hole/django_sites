@@ -370,10 +370,8 @@ class CsvMetadata():
 
       for sublist in self.csv_content:
          if sublist[submit_code_idx] == submit_code:
-             # print "FFF Found it!", sublist
              user_name_by_submit_code = sublist[user_name_idx]
              break
-      "Found it! ['38830', 'morrison_882616', 'lottapurkamo', '4', '4', 'OTA_3_DNA_A', '', 'bacteria', 'Bacterial V4-V5 Suite', 'v4v5', 'DCO_PUR_Bv4v5', 'OTA_3_DNA_A', '', '', '', '1', '', 'miseq', 'AM', 'AM', '', '', '20171030', 'C09', '9/18/17', '9/18/17', '', '', '5', 'qubit', 'partial', '550', '', '300', '', '20']"
       return user_name_by_submit_code
 
     def get_user_info(self):
