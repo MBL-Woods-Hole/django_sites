@@ -625,11 +625,9 @@ class CsvMetadata():
       for i in xrange(len(self.csv_content)-1):
         try:
           csv_project = self.csv_by_header['project_name'][i]
-          print "TTT0 csv_project %s " % (csv_project)
           db_project = models_l_env454.Project.objects.get(project=csv_project)
-          print "TTT1 db_project %s " % (db_project)
         except models_l_env454.Project.DoesNotExist as e:
-          print "EEE = %s" % e
+          # print "EEE = %s" % e
           missing_projects.append(csv_project)
           # pass
           
@@ -637,9 +635,12 @@ class CsvMetadata():
         except:
           raise
           
-      a = set(missing_projects)
-      print "missing_projects = PPP"
-      print a
+      # a = set(missing_projects)
+      missing_projects_list = ", ".join(list(set(missing_projects)))
+      self.errors.append("Please add project information for %s to env454." % missing_projects_list)
+        
+      # print "missing_projects = PPP"
+      # print a
       # print "MMM models_l_env454.Project.objects = %s" % (db_project)
       # self.errors.append("Please add Project information for %s to env454." % db_project)
       
