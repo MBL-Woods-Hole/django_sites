@@ -621,20 +621,28 @@ class CsvMetadata():
         return my_post_dict
         
     def check_projects(self):
-      projects = {}
+      missing_projects = []
       for i in xrange(len(self.csv_content)-1):
-        print "TTT self.csv_by_header['project_name'][i] %s " % (self.csv_by_header['project_name'][i])
         try:
           csv_project = self.csv_by_header['project_name'][i]
-          projects[csv_project] = ""
-          vamps_project = models_l_env454.Project.objects.get(project=csv_project)
-          print "MMM models_l_env454.Project.objects = %s" % (vamps_project)
-          projects[csv_project] = vamps_project
+          print "TTT0 csv_project %s " % (csv_project)
+          db_project = models_l_env454.Project.objects.get(project=csv_project)
+          print "TTT1 db_project %s " % (db_project)
         except models_l_env454.Project.DoesNotExist as e:
-            # self.cause = e.args[0]
-            self.errors.append("Please add Project information for %s to env454." % vamps_project)
+          print "EEE = %s" % e
+          missing_projects.append(csv_project)
+          # pass
+          
+          # self.cause = e.args[0]
         except:
-            raise
+          raise
+          
+      a = set(missing_projects)
+      print "missing_projects = PPP"
+      print a
+      # print "MMM models_l_env454.Project.objects = %s" % (db_project)
+      # self.errors.append("Please add Project information for %s to env454." % db_project)
+      
       
 
     def make_new_out_metadata(self):
