@@ -632,7 +632,7 @@ class CsvMetadata():
           raise
           
       missing_projects_list = ", ".join(list(set(missing_projects)))
-      if len(missing_projects_list) > 0:
+        if len(missing_projects_list) > 0:
         self.errors.append("Please add project information for %s to env454." % missing_projects_list)
 
     def make_new_out_metadata(self):
