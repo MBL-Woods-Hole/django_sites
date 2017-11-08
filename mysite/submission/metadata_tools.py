@@ -374,6 +374,7 @@ class CsvMetadata():
              break
       return user_name_by_submit_code
 
+
     def get_user_info(self):
         db_name = self.db_prefix + "env454"
 
@@ -388,7 +389,7 @@ class CsvMetadata():
                   self.errors.append("Please check if contact information for %s exists in VAMPS." % user_name_by_submit_code)
                   return                    
                 except:
-                    raise
+                  raise
 
                 try:
                   contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
@@ -397,7 +398,6 @@ class CsvMetadata():
                     self.errors.append("Please add contact information for %s to env454." % vamps_user_id)
                 except:
                     raise
-
 
                 # .filter(vamps_name = vamps_user_id)
 
@@ -619,6 +619,23 @@ class CsvMetadata():
             # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
                                 
         return my_post_dict
+        
+    def check_projects(self):
+      projects = {}
+      for i in xrange(len(self.csv_content)-1):
+        print "TTT self.csv_by_header['project_name'][i] %s " % (self.csv_by_header['project_name'][i])
+        try:
+          csv_project = self.csv_by_header['project_name'][i]
+          projects[csv_project] = ""
+          vamps_project = models_l_env454.Project.objects.get(project=csv_project)
+          print "MMM models_l_env454.Project.objects = %s" % (vamps_project)
+          projects[csv_project] = vamps_project
+        except models_l_env454.Project.DoesNotExist as e:
+            # self.cause = e.args[0]
+            self.errors.append("Please add Project information for %s to env454." % vamps_project)
+        except:
+            raise
+      
 
     def make_new_out_metadata(self):
         logging.info("make_new_out_metadata")
@@ -638,6 +655,7 @@ class CsvMetadata():
         # logging.debug(self.adaptors_full['A08_v4v5_bacteria'][0].illumina_index)
 
         self.get_user_info()
+        self.check_projects()
         if self.errors:
             return
             
@@ -713,6 +731,8 @@ class CsvMetadata():
             # $combined_metadata[$num]["primer_suite_id"]    = get_primer_suite_id($combined_metadata[$num]["dna_region"], $combined_metadata[$num]["domain"], $db_name, $connection);
 
             self.out_metadata[i]['project']				 = self.csv_by_header['project_name'][i]
+            
+            
             self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
             try:
                 self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['title']
