@@ -362,38 +362,45 @@ class CsvMetadata():
         self.adaptors_full = {key: (row.illumina_index, row.illumina_run_key) for row in mm}
         # self.utils.benchmark_w_return_2(t0)
 
+
+    def get_user_name_by_submit_code(self, submit_code):
+      submit_code_idx = self.csv_content[0].index("submit_code")
+      user_name_idx   = self.csv_content[0].index("user")
+      user_name_by_submit_code = ""
+
+      for sublist in self.csv_content:
+         if sublist[submit_code_idx] == submit_code:
+             # print "FFF Found it!", sublist
+             user_name_by_submit_code = sublist[user_name_idx]
+             break
+      "Found it! ['38830', 'morrison_882616', 'lottapurkamo', '4', '4', 'OTA_3_DNA_A', '', 'bacteria', 'Bacterial V4-V5 Suite', 'v4v5', 'DCO_PUR_Bv4v5', 'OTA_3_DNA_A', '', '', '', '1', '', 'miseq', 'AM', 'AM', '', '', '20171030', 'C09', '9/18/17', '9/18/17', '', '', '5', 'qubit', 'partial', '550', '', '300', '', '20']"
+      return user_name_by_submit_code
+
     def get_user_info(self):
         db_name = self.db_prefix + "env454"
-        
-        # todo: get db_name depending on local/not
+
         try:
             # TODO: collect submit_code and vamps_user_id into a dict, run one query with "OR"
             for submit_code in self.csv_by_header_uniqued['submit_code']:
                 # logging.debug("submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user']))
-                print "\n---\nVVV1 vamps_user_id = %s, submit_code = %s" % (self.vamps_submissions[submit_code], submit_code)
-                print "MMM self.csv_content = %s" % (self.csv_content)
-                submit_code_idx = self.csv_content[0].index("submit_code")
-                user_name_idx = self.csv_content[0].index("user")
-                
-                for sublist in self.csv_content:
-                   if sublist[submit_code_idx] == submit_code:
-                       print "FFF Found it!", sublist
-                       user_name_by_submit_code = sublist[user_name_idx]
-                       break
-                "Found it! ['38830', 'morrison_882616', 'lottapurkamo', '4', '4', 'OTA_3_DNA_A', '', 'bacteria', 'Bacterial V4-V5 Suite', 'v4v5', 'DCO_PUR_Bv4v5', 'OTA_3_DNA_A', '', '', '', '1', '', 'miseq', 'AM', 'AM', '', '', '20171030', 'C09', '9/18/17', '9/18/17', '', '', '5', 'qubit', 'partial', '550', '', '300', '', '20']"
-                
-                print "VVV2 vamps_user_id = %s" % (self.vamps_submissions[submit_code]['user'])
-                vamps_user_id = self.vamps_submissions[submit_code]['user']
-                print "VVV3 vamps_user_id = %s" % (vamps_user_id)
+                try:
+                  vamps_user_id = self.vamps_submissions[submit_code]['user']
+                except KeyError as e:
+                  user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
+                  self.errors.append("Please check if contact information for %s exists in VAMPS." % user_name_by_submit_code)
+                  return                    
+                except:
+                    raise
+
                 try:
                   contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
                 except models_l_env454.Contact.DoesNotExist as e:
                     # self.cause = e.args[0]
-                    self.errors.append("Please add contact information for %s." % vamps_user_id)
+                    self.errors.append("Please add contact information for %s to env454." % vamps_user_id)
                 except:
                     raise
-                  
-                  
+
+
                 # .filter(vamps_name = vamps_user_id)
 
                 # logging.debug("CCC contacts = %s" % contacts)
