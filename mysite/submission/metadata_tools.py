@@ -627,24 +627,13 @@ class CsvMetadata():
           csv_project = self.csv_by_header['project_name'][i]
           db_project = models_l_env454.Project.objects.get(project=csv_project)
         except models_l_env454.Project.DoesNotExist as e:
-          # print "EEE = %s" % e
           missing_projects.append(csv_project)
-          # pass
-          
-          # self.cause = e.args[0]
         except:
           raise
           
-      # a = set(missing_projects)
       missing_projects_list = ", ".join(list(set(missing_projects)))
-      self.errors.append("Please add project information for %s to env454." % missing_projects_list)
-        
-      # print "missing_projects = PPP"
-      # print a
-      # print "MMM models_l_env454.Project.objects = %s" % (db_project)
-      # self.errors.append("Please add Project information for %s to env454." % db_project)
-      
-      
+      if len(missing_projects_list) > 0:
+        self.errors.append("Please add project information for %s to env454." % missing_projects_list)
 
     def make_new_out_metadata(self):
         logging.info("make_new_out_metadata")
