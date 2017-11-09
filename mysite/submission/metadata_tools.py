@@ -291,7 +291,17 @@ class CsvMetadata():
         self.empty_cells = list(set(empty_cells_interim))
 
     def run_query_to_dict(self, query):
+        import pprint
+        pp = pprint.PrettyPrinter(indent=4)
+        
         res_dict = {}
+        # print "111 connections"
+        # for k, v in connections.items():
+        #   pp.pprint("k = %s, v = %s") % (k,v)
+        #
+        # print "222 connection"
+        # print connection.values()
+        
         cursor = connections['vamps'].cursor()
         # cursor = connection.cursor()
         cursor.execute(query)
