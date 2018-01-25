@@ -135,9 +135,11 @@ class Run():
                 self.run_data['find_machine'] = form.cleaned_data['find_machine']
                 self.run_data['find_domain']  = form.cleaned_data['find_domain']
                 self.run_data['find_lane']    = form.cleaned_data['find_lane']
-                self.run_data['find_db_name']      = form.cleaned_data['find_db_name']
                 self.run_data['full_machine_name'] = self.utils.get_full_macine_name(form.cleaned_data['find_machine'])
                 self.run_data['perfect_overlap']   = self.utils.get_overlap(form.cleaned_data['find_machine'])
+                self.run_data['rundate_dir']       = self.calculate_rundate_dir(self.run_data['find_rundate'])
+                self.run_data['find_db_name']      = form.cleaned_data['find_db_name']
+
                 suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
                 primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
 
@@ -150,13 +152,15 @@ class Run():
                 request.session['run_form_data'] = self.run_data
                
         else:    
-            try:            
+            try:
                 if request.session['run_form_data']:
                     self.run_data = request.session['run_form_data']
                 else:
                     self.get_run_data_from_session(request)
 
                 rundate_id = models_l_env454.Run.cache_all_method.get(run = self.run_data['find_rundate'], platform = self.run_data['full_machine_name']).pk
+                self.run_data['rundate_dir'] = self.calculate_rundate_dir(self.run_data['find_rundate'])
+
                 init_run_data = self.run_data.copy()
                 init_run_data.update({'find_rundate': rundate_id})
                 form = RunForm(initial = init_run_data)        
@@ -185,9 +189,15 @@ class Run():
         self.run_data['perfect_overlap']   = self.utils.get_overlap(request.session['run_info']['selected_machine_short'])
         suite_domain                  = self.utils.get_domain_name(self.run_data['find_domain'])
         primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
+        self.run_data['find_db_name'] = request.session['run_info']['find_db_name']
 
         # print "self.run_data from out_metadata"
         # print self.out_metadata
         
 
-    
+    def calculate_rundate_dir(self, rundate):
+        year = str(rundate)[0:4]
+        if int(year) < 2017:
+            return "runs_%s/" % year
+        else:
+            return ""
