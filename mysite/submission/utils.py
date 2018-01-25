@@ -135,6 +135,7 @@ class Run():
                 self.run_data['find_machine'] = form.cleaned_data['find_machine']
                 self.run_data['find_domain']  = form.cleaned_data['find_domain']
                 self.run_data['find_lane']    = form.cleaned_data['find_lane']
+                self.run_data['find_db_name']      = form.cleaned_data['find_db_name']
                 self.run_data['full_machine_name'] = self.utils.get_full_macine_name(form.cleaned_data['find_machine'])
                 self.run_data['perfect_overlap']   = self.utils.get_overlap(form.cleaned_data['find_machine'])
                 suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
@@ -184,7 +185,7 @@ class Run():
         self.run_data['perfect_overlap']   = self.utils.get_overlap(request.session['run_info']['selected_machine_short'])
         suite_domain                  = self.utils.get_domain_name(self.run_data['find_domain'])
         primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
-    
+
         # print "self.run_data from out_metadata"
         # print self.out_metadata
         

@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import fields
 from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project, EnvSampleSource
-from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns
+from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, Db_name
 from django.core.validators import RegexValidator, validate_slug
 import datetime
 from django.db import models
@@ -15,6 +15,7 @@ class RunForm(forms.Form):
     find_machine = forms.ChoiceField(Machine.MACHINE_CHOICES, label = 'Machine name')
     find_domain  = forms.ChoiceField(Domain.DOMAIN_SHORTCUTS_CHOICES, label = 'Domain')
     find_lane    = forms.CharField(label = 'Lane number', max_length = 3)
+    find_db_name = forms.ChoiceField(Db_name.DB_NAME_CHOICES, label = 'Database name')
 
 class FileUploadForm(forms.Form):
 

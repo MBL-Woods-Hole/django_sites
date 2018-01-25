@@ -12,3 +12,4 @@ mysite/.DS_Store
 mysite/mysite/.DS_Store
 mysite/submission/.DS_Store
 django_sites/lib/*
+.idea/*

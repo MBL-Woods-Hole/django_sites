@@ -23,6 +23,12 @@ class Machine(models.Model):
         ('nextseq', 'NextSeq'),
     )
 
+class Db_name(models.Model):
+    DB_NAME_CHOICES = (
+        ('env454', 'env454'),
+        ('vamps2', 'vamps2'),
+    )
+
 class Overlap(models.Model):
 
     COMPLETE_OVERLAP_CHOICES = (
