@@ -106,6 +106,7 @@ class Run():
         self.utils = Utils()
         self.all_suites = models_l_env454.RunInfoIll.cache_all_method.select_related('run', 'primer_suite')
         self.run_data = {}
+        self.db_host = {"env454": "bpcdb1", "vamps2": "vampsdb"}
 
     def get_primer_suites(self, run, lane, suite_domain):
         # all_suites = RunInfoIll.objects.filter(run__run = run, lane = lane)
@@ -139,6 +140,8 @@ class Run():
                 self.run_data['perfect_overlap']   = self.utils.get_overlap(form.cleaned_data['find_machine'])
                 self.run_data['rundate_dir']       = self.calculate_rundate_dir(self.run_data['find_rundate'])
                 self.run_data['find_db_name']      = form.cleaned_data['find_db_name']
+                self.run_data['find_db_host']      = self.db_host[self.run_data['find_db_name']]
+
 
                 suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
                 primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
@@ -190,6 +193,7 @@ class Run():
         suite_domain                  = self.utils.get_domain_name(self.run_data['find_domain'])
         primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
         self.run_data['find_db_name'] = request.session['run_info']['find_db_name']
+        self.run_data['find_db_host'] = self.db_host[self.run_data['find_db_name']]
 
         # print "self.run_data from out_metadata"
         # print self.out_metadata
