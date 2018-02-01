@@ -403,9 +403,10 @@ class CsvMetadata():
 
                 try:
                   contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
-                  logging.debug("CCC contacts = %s" % contacts)
-                  logging.debug(type(contacts))
-                  logging.debug("TTT")
+                  # logging.debug("CCC contacts = %s" % contacts)
+                  # logging.debug(type(contacts))
+                  # <class 'submission.models_l_env454.Contact'>
+                  # logging.debug("TTT")
                   # for row in contacts:
                   self.user_info_arr[submit_code] = model_to_dict(contacts)
 
