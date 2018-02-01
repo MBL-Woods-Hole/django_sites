@@ -403,29 +403,21 @@ class CsvMetadata():
 
                 try:
                   contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
+                  logging.debug("CCC contacts = %s" % contacts)
+                  logging.debug(type(contacts))
+                  logging.debug("TTT")
+                  # for row in contacts:
+                  self.user_info_arr[submit_code] = model_to_dict(contacts)
+
                 except models_l_env454.Contact.DoesNotExist as e:
                     # self.cause = e.args[0]
                     self.errors.append("Please add contact information for %s to env454." % vamps_user_id)
                 except:
                     raise
 
-                # .filter(vamps_name = vamps_user_id)
 
-                # logging.debug("CCC contacts = %s" % contacts)
 
-                # for row in contacts:
-                self.user_info_arr[submit_code] = model_to_dict(contacts)
 
-                # self.user_info_arr.append({submit_code: (model_to_dict(row)) for row in contacts})
-
-            # logging.debug("self.user_info_arr = %s" % self.user_info_arr)
-        # except KeyError as e:
-        #     self.cause = e.args[0]
-        #     print "self.cause SSS" 
-        #     print self.cause
-        #     
-        #     self.errors.append(self.no_data_message())
-        #     self.errors.append(" Or the vamps_submission table has no such submit_code.")
         except:
             raise
 
