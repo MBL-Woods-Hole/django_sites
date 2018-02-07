@@ -59,7 +59,7 @@ MIDDLEWARE_CLASSES = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-ROOT_URLCONF = 'mysite.urls'
+ROOT_URLCONF = 'mysite_run.urls'
 
 TEMPLATES = [
     {
@@ -78,7 +78,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mysite.wsgi.application'
+WSGI_APPLICATION = 'mysite_run.wsgi.application'
 
 DATABASE_ROUTERS = ['submission.db_router.submissionRouter', 'metadata_template.db_router.metadata_templateRouter']
 
