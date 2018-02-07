@@ -27,9 +27,8 @@ ILLUMINA_INFO_DIRS = ["hiseq_info", "nextseq_info", "miseq_info"]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
-ALLOWED_HOSTS = ['vampsdev.jbpc-np.mbl.edu']
-
-INTERNAL_IPS = ['127.0.0.1',]
+ALLOWED_HOSTS = ['vampsdev.jbpc-np.mbl.edu', 'localhost']
+INTERNAL_IPS = ['127.0.0.1', 'localhost']
 # https://django-debug-toolbar.readthedocs.io/en/stable/tips.html
 
 # Application definition
@@ -48,6 +47,12 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
+MIDDLEWARE = [
+    # ...
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # ...
+]
+
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -57,7 +62,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'mysite_run.urls'

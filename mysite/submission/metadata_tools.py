@@ -13,10 +13,10 @@ from django.shortcuts import render
 from django.utils.datastructures import MultiValueDictKeyError
 import codecs
 import csv
-import models
-import models_l_env454
-import models_l_vamps
-import os
+from .models import *
+from .models_l_env454 import *
+from .models_l_vamps import *
+import os, sys
 import stat
 import time
 import logging
@@ -526,7 +526,7 @@ class CsvMetadata():
             for i in self.out_metadata.keys():
                 try:
                     self.out_metadata[i][header] = my_post_dict['form-' + str(i) + '-' + header]
-                except MultiValueDictKeyError, e:
+                except MultiValueDictKeyError:
                     pass
                 except:
                     raise
@@ -828,8 +828,10 @@ class CsvMetadata():
             for header in self.HEADERS_TO_EDIT_METADATA:
                 try:
                     self.out_metadata_table['rows'][int(r_num)][header] = (self.out_metadata[r_num][header])
-                except KeyError, e:
-                    logging.warning("KeyError, e = %s" % e)
+                except KeyError:
+                    e = sys.exc_info()[1]
+                    # self.utils.print_both("Error %d: %s" % (e.args[0], e.args[1]))
+                    logging.warning("KeyError, e = %s" % e.args[1])
                     self.out_metadata_table['rows'][int(r_num)][header] = ""
                 except:
                     raise

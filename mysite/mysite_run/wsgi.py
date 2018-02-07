@@ -43,7 +43,12 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite_run.settings")
 
 try:
     activate_this = '/usr/local/www/vamps/server/illumina-submission/bin/activate_this.py'
-    execfile(activate_this, dict(__file__=activate_this))
+    try:
+        execfile(activate_this, dict(__file__=activate_this))
+    except:
+        # execfile(filename, globals, locals)
+        # by
+        exec (compile(open(activate_this, "rb").read(), activate_this, 'exec'), dict(__file__=activate_this))
 except IOError:
     pass
 except:

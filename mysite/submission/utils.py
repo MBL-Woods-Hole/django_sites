@@ -1,7 +1,7 @@
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm
-import models
+from .models import *
 # from models_l_env454 import RunInfoIll
-import models_l_env454
+from .models_l_env454 import *
 
 import time
 import os

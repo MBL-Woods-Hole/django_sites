@@ -141,8 +141,8 @@ class ComplexField(forms.MultiValueField):
             forms.ChoiceField(choices=Domain.DOMAIN_WITH_LETTER_CHOICES),
             forms.ChoiceField(choices=Ill_dna_region.DNA_REGION_CHOICES),
         )
-        super(ComplexField, self).__init__(fields, required,
-                                           widget, label, initial)
+        super(ComplexField, self).__init__(fields, required=True,
+                                           widget =widget, label=label, initial=initial)
 
         # name.validators[-1].message = 'Your question is too long.'
 
