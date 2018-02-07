@@ -1,5 +1,5 @@
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm
-from .models import *
+from .model_choices import *
 # from models_l_env454 import RunInfoIll
 from .models_l_env454 import *
 
@@ -33,15 +33,15 @@ class Utils():
             return False
 
     def get_overlap(self, machine_name):
-        overlap_choices = dict(models.Overlap.COMPLETE_OVERLAP_CHOICES)
+        overlap_choices = dict(model_choices.Overlap.COMPLETE_OVERLAP_CHOICES)
         return overlap_choices[machine_name]
 
     def get_full_macine_name(self, machine_name):
-        machine_choices = dict(models.Machine.MACHINE_CHOICES)
+        machine_choices = dict(model_choices.Machine.MACHINE_CHOICES)
         return machine_choices[machine_name]
 
     def get_domain_name(self, domain_name):
-        domain_choices = dict(models.Domain.SUITE_DOMAIN_CHOICES)
+        domain_choices = dict(model_choices.Domain.SUITE_DOMAIN_CHOICES)
         return domain_choices[domain_name]
 
     def clear_session(self, request):
@@ -50,7 +50,7 @@ class Utils():
             
     # TODO: combine with metadata_utils, DRY!
     def get_lanes_domains(self, out_metadata):
-        domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
+        domain_choices = dict(model_choices.Domain.LETTER_BY_DOMAIN_CHOICES)
         lanes_domains = []
             
         for idx, val in out_metadata.items():

@@ -13,8 +13,8 @@ from django.shortcuts import render
 from django.utils.datastructures import MultiValueDictKeyError
 import codecs
 import csv
-from .model_choises import *
-from .models_l_env454 import *
+from .model_choices import Domain, Machine, Overlap
+from .models_l_env454 import IlluminaAdaptorRef, Contact, Project, Run
 from .models_l_vamps import *
 import os, sys
 import stat
@@ -108,8 +108,8 @@ class CsvMetadata():
         self.vamps_submissions = {}
         self.user_info_arr = {}
         self.adaptors_full = {}
-        self.domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
-        self.machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
+        self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
+        self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
         self.files_created = []
         self.empty_cells = []
         self.new_project = ""
@@ -366,7 +366,7 @@ class CsvMetadata():
 
     def get_all_adaptors(self):
         db_name = self.db_prefix + "env454"
-        return models_l_env454.IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+        return IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
 
     def get_adaptors_full(self, adaptor, dna_region, domain):
         db_name = self.db_prefix + "env454"
@@ -414,7 +414,7 @@ class CsvMetadata():
                   raise
 
                 try:
-                  contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
+                  contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
                   # logging.debug("CCC contacts = %s" % contacts)
                   # logging.debug(type(contacts))
                   # <class 'submission.models_l_env454.Contact'>
@@ -422,7 +422,7 @@ class CsvMetadata():
                   # for row in contacts:
                   self.user_info_arr[submit_code] = model_to_dict(contacts)
 
-                except models_l_env454.Contact.DoesNotExist as e:
+                except Contact.DoesNotExist as e:
                     # self.cause = e.args[0]
                     self.errors.append("Please add contact information for %s to env454." % vamps_user_id)
                 except:
@@ -436,7 +436,7 @@ class CsvMetadata():
 
     def get_selected_variables(self, request_post):
         # change from form if needed
-        # machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
+        # machine_shortcuts_choices = dict(model_choices.Machine.MACHINE_SHORTCUTS_CHOICES)
 
         if 'submit_run_info' in request_post:
             self.selected_machine       = request_post.get('csv_platform', False)
@@ -479,7 +479,7 @@ class CsvMetadata():
 
     def write_ini(self):
         path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.selected_rundate, self.selected_machine_short)
-        overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
+        overlap_choices = dict(Overlap.OVERLAP_CHOICES)
 
         for lane_domain, ini_name in self.ini_names.items():
             ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
@@ -640,8 +640,8 @@ class CsvMetadata():
       for i in xrange(len(self.csv_content)-1):
         try:
           csv_project = self.csv_by_header['project_name'][i]
-          db_project = models_l_env454.Project.objects.get(project=csv_project)
-        except models_l_env454.Project.DoesNotExist as e:
+          db_project = Project.objects.get(project=csv_project)
+        except Project.DoesNotExist as e:
           missing_projects.append(csv_project)
         except:
           raise
@@ -841,11 +841,11 @@ class CsvMetadata():
     def insert_project(self, request_post):
         project_name = request_post['project_0'] + "_" + request_post['project_1'] + "_" + request_post['project_2'] + request_post['project_3']
 
-        owner = models_l_env454.Contact.cache_all_method.get(contact = request_post['contact'])
+        owner = Contact.cache_all_method.get(contact = request_post['contact'])
 
         # logging.debug("NNN project_name = %s, project_title = %s, funding = %s, env_sample_source_id = %s, contact_id = %d" % (project_name, request_post['project_title'], request_post['funding'], request_post['env_source_name'], owner.contact_id))
 
-        return models_l_env454.Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name=project_name[::-1], funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
+        return Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name=project_name[::-1], funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
 
         # return created
 
@@ -1031,7 +1031,7 @@ class CsvMetadata():
         return (request, metadata_run_info_form, formset)
         
     def insert_run(self, request):
-        return models_l_env454.Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
+        return Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
     
     def update_submission_tubes(self, request):
         try:
@@ -1041,7 +1041,7 @@ class CsvMetadata():
         except:
             raise
         
-        overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
+        overlap_choices = dict(Overlap.OVERLAP_CHOICES)
         
         for i in self.out_metadata.keys():
             barcode = self.out_metadata[i]['barcode']
