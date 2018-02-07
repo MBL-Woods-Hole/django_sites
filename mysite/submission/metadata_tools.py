@@ -40,20 +40,11 @@ class CsvMetadata():
         HEADERS_TO_EDIT_METADATA
 
     Taken from csv: HEADERS_FROM_CSV
-    Taken from vamps_submission tables on vamps:
-        'vamps_auth_id'
-        'first_name'
-        'project_description'
-        'funding'
+    Taken from user tables on vamps2:
+            'user'
         'institution'
-        'title'
-        'num_of_tubes'
-        'date_initial'
-        'submit_code'
         'email'
-        'date_updated'
         'last_name'
-        'temp_project'
         'user'
         'passwd'
         'security_level'
@@ -61,6 +52,17 @@ class CsvMetadata():
         'locked'
         'date_added'
         'id'
+
+    Taken from vamps_submission tables on vamps:
+        'user_id'
+        'project_description'
+        'funding'
+        'title'
+        'num_of_tubes'
+        'date_initial'
+        'submit_code'
+        'date_updated'
+        'temp_project'
     Taken from user table on env454:
         see models
 
@@ -321,11 +323,21 @@ class CsvMetadata():
         # out_file_name = "temp_subm_info"
         try:
             for submit_code in self.csv_by_header_uniqued['submit_code']:
-                query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
+                query_subm = """
+                SELECT subm.*, auth.username, auth.encrypted_password, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.current_sign_in_at, auth.last_sign_in_at
                     FROM %s.vamps_submissions AS subm
-                    JOIN %s.vamps_auth AS auth
-                      ON (auth.id = subm.vamps_auth_id)
-                    WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
+                    JOIN vamps2.user AS auth
+                      USING(user_id)
+                    WHERE submit_code = \"%s\"""" % (db_name, submit_code)
+                #
+                #
+                # query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
+                #     FROM %s.vamps_submissions AS subm
+                #     JOIN %s.vamps_auth AS auth
+                #       ON (auth.id = subm.vamps_auth_id)
+                #     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
+                print("QQQ query_subm")
+                print(query_subm)
                 self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
         except KeyError as e:
             self.cause = e.args[0]
