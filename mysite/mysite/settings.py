@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os, sys
 import socket
+sys.path.append('../')
+sys.path.append('./')
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 REPOSITORY_ROOT = os.path.join(BASE_DIR, 'submission')
