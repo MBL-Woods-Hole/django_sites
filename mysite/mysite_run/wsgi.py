@@ -28,14 +28,18 @@ logging.basicConfig(filename=log_filename,
 
 mysite_path = '/usr/local/www/vampsdev/projects/django/illumina_submission/django_sites/'
 mysite_path1 = '/usr/local/www/vampsdev/projects/django/illumina_submission/django_sites/mysite'
+mysite_path2 = '/usr/local/www/vampsdev/projects/django/illumina_submission/django_sites/mysite/mysite_run'
 
 
 if mysite_path not in sys.path:
     sys.path.append(mysite_path)
 if mysite_path1 not in sys.path:
     sys.path.append(mysite_path1)
+if mysite_path2 not in sys.path:
+    sys.path.append(mysite_path2)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite_run.settings")
+#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 
 try:
     activate_this = '/usr/local/www/vamps/server/illumina-submission/bin/activate_this.py'
