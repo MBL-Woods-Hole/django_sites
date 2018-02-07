@@ -14,6 +14,7 @@ import os, sys
 import socket
 sys.path.append('../')
 sys.path.append('./')
+sys.path.append('./mysite_run')
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 REPOSITORY_ROOT = os.path.join(BASE_DIR, 'submission')
