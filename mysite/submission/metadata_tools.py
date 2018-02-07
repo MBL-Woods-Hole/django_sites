@@ -13,7 +13,7 @@ from django.shortcuts import render
 from django.utils.datastructures import MultiValueDictKeyError
 import codecs
 import csv
-from .models import *
+from .model_choises import *
 from .models_l_env454 import *
 from .models_l_vamps import *
 import os, sys
