@@ -11,29 +11,10 @@ from django.db import models
 
 models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('vamps_db',)
 
-class VampsAuth(models.Model):
-    user = models.CharField(unique=True, max_length=20)
-    passwd = models.CharField(max_length=50)
-    first_name = models.CharField(max_length=20, blank=True, null=True)
-    last_name = models.CharField(max_length=20, blank=True, null=True)
-    active = models.IntegerField()
-    security_level = models.IntegerField(blank=True, null=True)
-    email = models.CharField(max_length=64)
-    institution = models.CharField(max_length=128, blank=True, null=True)
-    date_added = models.CharField(max_length=10, blank=True, null=True)
-
-    def __str__(self):
-        return "%s, %s %s, %s" % (self.user, self.first_name, self.last_name, self.institution)
-
-    class Meta:
-        vamps_db = True
-        managed = False
-        db_table = 'vamps_auth'
-        unique_together = (('first_name', 'last_name', 'email', 'institution'),)
-
 class VampsSubmissions(models.Model):
     submit_code = models.CharField(unique=True, max_length=40)
-    vamps_auth = models.ForeignKey(VampsAuth, models.DO_NOTHING)
+    user_id = models.IntegerField()
+        # models.ForeignKey(User, models.DO_NOTHING)
     temp_project = models.CharField(max_length=100)
     title = models.CharField(max_length=132)
     project_description = models.CharField(max_length=255)
