@@ -49,6 +49,7 @@ SITE_ID = 1
 
 MIDDLEWARE = [
     # ...
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     # ...
 ]
