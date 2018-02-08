@@ -36,10 +36,12 @@ if mysite_path1 not in sys.path:
     sys.path.append(mysite_path1)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
+# os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
 try:
     activate_this = '/usr/local/www/vamps/server/illumina-submission/bin/activate_this.py'
-    execfile(activate_this, dict(__file__=activate_this))
+    # execfile(activate_this, dict(__file__=activate_this))
+    exec(compile(open(activate_this, "rb").read(), activate_this, 'exec'), dict(__file__=activate_this))
 except IOError:
     pass
 except:
