@@ -402,7 +402,7 @@ class CsvMetadata():
                   raise
 
                 try:
-                  contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
+                    contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
                 except models_l_env454.Contact.DoesNotExist as e:
                     # self.cause = e.args[0]
                     self.errors.append("Please add contact information for %s to env454." % vamps_user_id)
