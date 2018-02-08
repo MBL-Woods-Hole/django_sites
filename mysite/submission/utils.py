@@ -45,8 +45,12 @@ class Utils():
         return domain_choices[domain_name]
 
     def clear_session(self, request):
-        for key in request.session.keys():
-            del request.session[key]
+        try:
+            for key in list(request.session):
+                del request.session[key]
+        except KeyError:
+            pass
+        
             
     # TODO: combine with metadata_utils, DRY!
     def get_lanes_domains(self, out_metadata):
