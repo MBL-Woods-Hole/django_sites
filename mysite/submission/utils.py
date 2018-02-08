@@ -1,7 +1,7 @@
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm
-import models
-# from models_l_env454 import RunInfoIll
-import models_l_env454
+from .model_choices import *
+from .models_l_env454 import RunInfoIll, Run as model_run
+# import models_l_env454
 
 import time
 import os
@@ -33,15 +33,15 @@ class Utils():
             return False
 
     def get_overlap(self, machine_name):
-        overlap_choices = dict(models.Overlap.COMPLETE_OVERLAP_CHOICES)
+        overlap_choices = dict(Overlap.COMPLETE_OVERLAP_CHOICES)
         return overlap_choices[machine_name]
 
     def get_full_macine_name(self, machine_name):
-        machine_choices = dict(models.Machine.MACHINE_CHOICES)
+        machine_choices = dict(Machine.MACHINE_CHOICES)
         return machine_choices[machine_name]
 
     def get_domain_name(self, domain_name):
-        domain_choices = dict(models.Domain.SUITE_DOMAIN_CHOICES)
+        domain_choices = dict(Domain.SUITE_DOMAIN_CHOICES)
         return domain_choices[domain_name]
 
     def clear_session(self, request):
@@ -50,7 +50,7 @@ class Utils():
             
     # TODO: combine with metadata_utils, DRY!
     def get_lanes_domains(self, out_metadata):
-        domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
+        domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         lanes_domains = []
             
         for idx, val in out_metadata.items():
@@ -104,7 +104,7 @@ class Dirs:
 class Run():
     def __init__(self):
         self.utils = Utils()
-        self.all_suites = models_l_env454.RunInfoIll.cache_all_method.select_related('run', 'primer_suite')
+        self.all_suites = RunInfoIll.cache_all_method.select_related('run', 'primer_suite')
         self.run_data = {}
 
     def get_primer_suites(self, run, lane, suite_domain):
@@ -158,7 +158,7 @@ class Run():
                 else:
                     self.get_run_data_from_session(request)
 
-                rundate_id = models_l_env454.Run.cache_all_method.get(run = self.run_data['find_rundate'], platform = self.run_data['full_machine_name']).pk
+                rundate_id = model_run.cache_all_method.get(run = self.run_data['find_rundate'], platform = self.run_data['full_machine_name']).pk
                 self.run_data['rundate_dir'] = self.calculate_rundate_dir(self.run_data['find_rundate'])
 
                 init_run_data = self.run_data.copy()
@@ -166,7 +166,7 @@ class Run():
                 form = RunForm(initial = init_run_data)        
             except KeyError:
                 form = RunForm()
-            except models_l_env454.Run.DoesNotExist:
+            except model_run.DoesNotExist:
                 form = RunForm()
             except:
                 raise
