@@ -1,15 +1,10 @@
 from django import forms
 from django.forms import fields
-from .model_choices import Machine, Domain, Ill_dna_region, Overlap, Has_ns, Db_name
 from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project, EnvSampleSource
+from .model_choices import Machine, Domain, Ill_dna_region, Overlap, Has_ns, Db_name
 from django.core.validators import RegexValidator, validate_slug
 import datetime
 from django.db import models
-
-# from django import forms
-#
-# class NameForm(forms.Form):
-#     your_name = forms.CharField(label='Your name', max_length=100)
 
 class RunForm(forms.Form):
     # query = Run.objects.filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
@@ -141,8 +136,8 @@ class ComplexField(forms.MultiValueField):
             forms.ChoiceField(choices=Domain.DOMAIN_WITH_LETTER_CHOICES),
             forms.ChoiceField(choices=Ill_dna_region.DNA_REGION_CHOICES),
         )
-        super(ComplexField, self).__init__(fields, required=True,
-                                           widget =widget, label=label, initial=initial)
+        super(ComplexField, self).__init__(fields, required=required,
+                                           widget=widget, label=label, initial=initial)
 
         # name.validators[-1].message = 'Your question is too long.'
 

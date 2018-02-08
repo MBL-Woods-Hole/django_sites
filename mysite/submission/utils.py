@@ -1,6 +1,7 @@
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm
-from .model_choices import Machine, Domain, Ill_dna_region, Overlap, Has_ns, Db_name
-from .models_l_env454 import RunInfoIll, Run
+from .model_choices import *
+from .models_l_env454 import RunInfoIll, Run as model_run
+# import models_l_env454
 
 import time
 import os
@@ -44,8 +45,12 @@ class Utils():
         return domain_choices[domain_name]
 
     def clear_session(self, request):
-        for key in request.session.keys():
-            del request.session[key]
+        try:
+            for key in list(request.session):
+                del request.session[key]
+        except KeyError:
+            pass
+
             
     # TODO: combine with metadata_utils, DRY!
     def get_lanes_domains(self, out_metadata):
@@ -157,7 +162,7 @@ class Run():
                 else:
                     self.get_run_data_from_session(request)
 
-                rundate_id = Run.cache_all_method.get(run = self.run_data['find_rundate'], platform = self.run_data['full_machine_name']).pk
+                rundate_id = model_run.cache_all_method.get(run = self.run_data['find_rundate'], platform = self.run_data['full_machine_name']).pk
                 self.run_data['rundate_dir'] = self.calculate_rundate_dir(self.run_data['find_rundate'])
 
                 init_run_data = self.run_data.copy()
@@ -165,8 +170,8 @@ class Run():
                 form = RunForm(initial = init_run_data)        
             except KeyError:
                 form = RunForm()
-            # except Run.DoesNotExist:
-            #     form = RunForm()
+            except model_run.DoesNotExist:
+                form = RunForm()
             except:
                 raise
             

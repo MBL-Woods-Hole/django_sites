@@ -94,4 +94,3 @@ class NewEnvSampleSource(models.Model):
 
     def __str__(self):
         return "%s: %s" % (self.env_sample_source_id, self.env_source_name)
-

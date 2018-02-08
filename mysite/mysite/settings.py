@@ -12,9 +12,6 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os, sys
 import socket
-sys.path.append('../')
-sys.path.append('./')
-sys.path.append('./mysite_run')
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 REPOSITORY_ROOT = os.path.join(BASE_DIR, 'submission')
@@ -27,7 +24,8 @@ ILLUMINA_INFO_DIRS = ["hiseq_info", "nextseq_info", "miseq_info"]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
-ALLOWED_HOSTS = ['vampsdev.jbpc-np.mbl.edu', 'localhost']
+ALLOWED_HOSTS = ['vampsdev.jbpc-np.mbl.edu', '127.0.0.1', 'localhost' ]
+
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
 # https://django-debug-toolbar.readthedocs.io/en/stable/tips.html
 
@@ -48,25 +46,18 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
-    # ...
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    # ...
-]
-
-MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-ROOT_URLCONF = 'mysite_run.urls'
+ROOT_URLCONF = 'mysite.urls'
 
 TEMPLATES = [
     {
@@ -85,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mysite_run.wsgi.application'
+WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASE_ROUTERS = ['submission.db_router.submissionRouter', 'metadata_template.db_router.metadata_templateRouter']
 
@@ -129,4 +120,4 @@ except:
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 
-from settings_local import *
+from .settings_local import *
