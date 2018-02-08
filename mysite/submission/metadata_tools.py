@@ -17,7 +17,7 @@ import csv
 from .model_choices import Overlap, Machine, Domain
 from .models_l_env454 import *
 from .models_l_vamps import VampsSubmissionsTubes
-import os
+import os, sys
 import stat
 import time
 import logging
@@ -77,6 +77,13 @@ class CsvMetadata():
     """
 
     def __init__(self, request):
+        # try:
+        #     range
+        # except NameError:
+        #     range = xrange
+
+        if sys.version_info[0] == 2:
+            range = xrange
 
         self.utils = Utils()
         self.db_prefix = ""
@@ -395,7 +402,7 @@ class CsvMetadata():
     #   logging.debug('time: %.2f m' % total)
 
     def get_adaptor_from_csv_content(self):
-        for i in xrange(len(self.csv_content)-1):
+        for i in range(len(self.csv_content)-1):
             # logging.debug("+" * 9)
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
@@ -412,12 +419,12 @@ class CsvMetadata():
         # self.adaptor_ref
         # links = IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # logging.debug(links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08")))
-        
+
         key = "_".join([adaptor, dna_region, domain])
         mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
-                
+
         # TODO: make once self.adaptors_full.update({})
-        
+
         # logging.debug("self.adaptors_full timing 2")
         # t0 = self.utils.benchmark_w_return_1()
         self.adaptors_full = {key: (row.illumina_index, row.illumina_run_key) for row in mm}
@@ -448,7 +455,7 @@ class CsvMetadata():
                 except KeyError as e:
                   user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
                   self.errors.append("Please check if contact information for %s exists in VAMPS." % user_name_by_submit_code)
-                  return                    
+                  return
                 except:
                   raise
 
@@ -472,9 +479,9 @@ class CsvMetadata():
             # logging.debug("self.user_info_arr = %s" % self.user_info_arr)
         # except KeyError as e:
         #     self.cause = e.args[0]
-        #     print "self.cause SSS" 
+        #     print "self.cause SSS"
         #     print self.cause
-        #     
+        #
         #     self.errors.append(self.no_data_message())
         #     self.errors.append(" Or the vamps_submission table has no such submit_code.")
         except:
@@ -535,17 +542,17 @@ class CsvMetadata():
             ini_file.write(ini_text)
             ini_file.close()
             self.dirs.chmod_wg(full_ini_name)
-            
+
 
     def write_out_metadata_to_csv(self, my_post_dict, request):
         logging.info("write_out_metadata_to_csv")
-        
+
         writers = {}
         for lane_domain in self.metadata_csv_file_names.keys():
             # writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'), self.HEADERS_TO_CSV)
             writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
-        
+
         for idx, val in self.out_metadata.items():
             # todo: DRY
             domain_letter = self.domain_choices[val['domain']]
@@ -554,7 +561,7 @@ class CsvMetadata():
             #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
 
             to_write = {h: val[h] for h in self.HEADERS_TO_CSV}
-                
+
             writers[lane_domain].writerow(to_write)
 
     def check_out_csv_files(self):
@@ -586,10 +593,10 @@ class CsvMetadata():
             request.session['out_metadata'] = self.out_metadata
         except:
             raise
-        
+
         # logging.debug("FROM edit_out_metadata: request.session['out_metadata']")
         # logging.debug(request.session['out_metadata'])
-        
+
 
         for i, v in self.out_metadata.items():
             # logging.debug("i = %s" % i)
@@ -610,7 +617,7 @@ class CsvMetadata():
 
     def edit_out_metadata_table(self, request):
         logging.info("edit_out_metadata_table")
-        
+
         self.out_metadata_table = request.session['out_metadata_table']
 
         # logging.debug("OOO request.session['run_info_form_post']['csv_has_ns']")
@@ -625,7 +632,7 @@ class CsvMetadata():
 
             self.get_adaptors_full(adaptor, dna_region, domain)
             # nnnn = ""
-            
+
             try:
                 self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
                 # if (request.session['run_info_form_post']['csv_has_ns'] == 'yes'):
@@ -640,7 +647,7 @@ class CsvMetadata():
 
     def add_out_metadata_table_to_out_metadata(self, request):
         logging.info("add_out_metadata_table_to_out_metadata")
-        
+
         nnnn = ""
         # TODO: benchmark
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
@@ -649,24 +656,24 @@ class CsvMetadata():
             for header in self.HEADERS_TO_EDIT_METADATA:
                 if (self.out_metadata_table['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
                     self.out_metadata_table['rows'][x][header] = request.POST['form-'+str(x)+'-' + header]
-                    
+
             if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
                 nnnn = "NNNN"
             self.out_metadata_table['rows'][x]['run_key'] = nnnn + request.POST['form-'+str(x)+'-' + 'run_key']
 
             # logging.debug("SSS2 self.out_metadata_table['rows'][x]['run_key']")
             # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
-                    
+
 
     def edit_post_metadata_table(self, request):
         logging.info("edit_post_metadata_table")
-        
+
         my_post_dict = request.POST.copy()
         my_post_dict['form-TOTAL_FORMS']   = len(request.session['out_metadata'].keys())
         my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
         my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
-        
-        
+
+
         nnnn = ""
         for x in range(0, len(request.session['out_metadata_table']['rows'])):
             # logging.debug("SSS3 self.out_metadata_table['rows'][x]['run_key']")
@@ -675,15 +682,15 @@ class CsvMetadata():
             if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
                 nnnn = "NNNN"
             my_post_dict['form-'+str(x)+'-run_key']       = nnnn + self.out_metadata_table['rows'][x]['run_key']
-            
+
             # logging.debug("SSS4 self.out_metadata_table['rows'][x]['run_key']")
             # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
-                                
+
         return my_post_dict
-        
+
     def check_projects(self):
       missing_projects = []
-      for i in xrange(len(self.csv_content)-1):
+      for i in range(len(self.csv_content)-1):
         try:
           csv_project = self.csv_by_header['project_name'][i]
           db_project = Project.objects.get(project=csv_project)
@@ -717,8 +724,8 @@ class CsvMetadata():
         self.check_projects()
         if self.errors:
             return
-            
-        for i in xrange(len(self.csv_content)-1):
+
+        for i in range(len(self.csv_content)-1):
 
             curr_submit_code = self.csv_by_header['submit_code'][i]
             # logging.debug("self.user_info_arr[curr_submit_code] = ")
@@ -790,8 +797,8 @@ class CsvMetadata():
             # $combined_metadata[$num]["primer_suite_id"]    = get_primer_suite_id($combined_metadata[$num]["dna_region"], $combined_metadata[$num]["domain"], $db_name, $connection);
 
             self.out_metadata[i]['project']				 = self.csv_by_header['project_name'][i]
-            
-            
+
+
             self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
             try:
                 self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['title']
@@ -828,7 +835,7 @@ class CsvMetadata():
             self.out_metadata[i]['op_empcr']    = self.csv_by_header['op_empcr'][i]
             self.out_metadata[i]['pool']        = self.csv_by_header['pool'][i]
             self.out_metadata[i]['submit_code'] = self.csv_by_header['submit_code'][i]
-            
+
             # ALL VampsSubmissionsTubes:
             # self.out_metadata[i]['concentration']  = self.csv_by_header['concentration'][i]
             # self.out_metadata[i]['dataset_name']      = self.csv_by_header['dataset_name'][i]
@@ -862,10 +869,10 @@ class CsvMetadata():
 
     def make_metadata_table(self):
         logging.info("make_metadata_table")
-        
+
         self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
 
-        for i in xrange(len(self.out_metadata.keys())):
+        for i in range(len(self.out_metadata.keys())):
             self.out_metadata_table['rows'].append({})
 
         # logging.debug("OOO self.out_metadata_table = %s" % self.out_metadata_table)
