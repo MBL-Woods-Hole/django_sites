@@ -301,7 +301,7 @@ class CsvMetadata():
           # read().decode('utf-8')
       # self.csv_headers = [header_name.lower() for header_name in self.reader.fieldnames if header_name]
       self.csv_content = [row for row in self.reader]
-      self.csv_headers = self.csv_content.pop(0)
+      self.csv_headers = [header_name.lower() for header_name in self.csv_content[0]]
       # for row in self.reader:
       #     self.csv_content.append(row)
 
