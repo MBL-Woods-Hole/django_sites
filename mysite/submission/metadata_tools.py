@@ -174,11 +174,9 @@ class CsvMetadata():
         self.get_reader(dialect)
         self.csv_headers, self.csv_content = self.parce_csv()
 
-        self.csvfile.seek(0)
-        for r in self.reader:
-            print("PPP parce_csv row")
-            print(r)
-        next(self.reader)
+        # self.csvfile.seek(0)
+        # self.reader.seek(0)
+        # next(self.reader)
 
         self.check_headers_presence()
         self.check_req_info_presence()
@@ -215,7 +213,12 @@ class CsvMetadata():
               logging.warning("WARNING, file %s is empty (size = %s), check it's path" % (self.csvfile.name, self.csvfile.size))
 
     def get_reader(self, dialect):
+        import io
         try:
+            self.csvfile.seek(0)
+            self.reader = csv.reader(io.StringIO(self.csvfile.read().decode('utf-8')))
+            # self.reader = csv.DictReader(io.StringIO(self.csvfile.read().decode('utf-8')))
+
             # open_file = codecs.EncodedFile(self.csvfile, "utf-8")
             # open_file_part = open_file.read().decode("utf-8")
 
@@ -226,10 +229,15 @@ class CsvMetadata():
             # param_file = self.csvfile.read()
             # self.reader = csv.reader(open_file, delimiter=',', dialect=dialect)
 
-            csvfile = csv.reader(codecs.iterdecode(self.csvfile, 'utf-8'))
-            for line in csvfile:
-                print("LLL LINE")  # do something with line
-                print(line)  # do something with line
+            # self.reader = csv.reader(codecs.iterdecode(self.csvfile, 'utf-8'), delimiter=',', dialect=dialect)
+            # for line in self.reader:
+            #     print("LLL LINE")  # do something with line
+            #     print(line)  # do something with line
+
+            # ifile = open(self.csvfile, "r")
+            # self.reader = csv.reader(ifile)
+            # for row in self.reader:
+            #     print(row)
 
 
         except csv.Error as e:
@@ -275,21 +283,37 @@ class CsvMetadata():
         except:
             raise
 
+      # def parce_csv(self):
+      #     for y_index, row in enumerate(self.reader):
+      #         # logging.debug("parce_csv row")
+      #         # logging.debug(row)
+      #
+      #         self.csv_content.append(row)
+      #         if y_index == 0:
+      #             self.csv_headers = [header_name.lower() for header_name in row if header_name]
+      #             continue
+      #     return self.csv_headers, self.csv_content
+
     def parce_csv(self):
-      for r in self.reader:
-          print("PPP parce_csv row")
-          print(r)
+      # for r in self.reader:
+      #     print("PPP parce_csv row")
+      #     print(r)
           # read().decode('utf-8')
+      # self.csv_headers = [header_name.lower() for header_name in self.reader.fieldnames if header_name]
+      self.csv_content = [row for row in self.reader]
+      self.csv_headers = self.csv_content.pop(0)
+      # for row in self.reader:
+      #     self.csv_content.append(row)
 
 
-      for y_index, row in enumerate(self.reader):
-          print("parce_csv row")
-          print(row)
-
-          self.csv_content.append(row)
-          if y_index == 0:
-              self.csv_headers = [header_name.lower() for header_name in row if header_name]
-              continue
+      # for y_index, row in enumerate(self.reader):
+      #     print("parce_csv row")
+      #     print(row)
+      #
+      #     self.csv_content.append(row)
+      #     if y_index == 0:
+      #         self.csv_headers = [header_name.lower() for header_name in row if header_name]
+      #         continue
       return self.csv_headers, self.csv_content
 
     def check_headers_presence(self):
