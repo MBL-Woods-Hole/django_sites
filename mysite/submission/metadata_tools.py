@@ -379,11 +379,22 @@ class CsvMetadata():
         # out_file_name = "temp_subm_info"
         try:
             for submit_code in self.csv_by_header_uniqued['submit_code']:
-                query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
+                # query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
+                #     FROM %s.vamps_submissions AS subm
+                #     JOIN %s.vamps_auth AS auth
+                #       ON (auth.id = subm.vamps_auth_id)
+                #     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
+
+                query_subm = """
+                SELECT subm.*, auth.username, auth.encrypted_password, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.current_sign_in_at, auth.last_sign_in_at
                     FROM %s.vamps_submissions AS subm
-                    JOIN %s.vamps_auth AS auth
-                      ON (auth.id = subm.vamps_auth_id)
-                    WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
+                    JOIN vamps2.user AS auth
+                      USING(user_id)
+                    WHERE submit_code = \"%s\"""" % (db_name, submit_code)
+                # print("QQQ query_subm")
+                # print(query_subm)
+
+
                 self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
         except KeyError as e:
             self.cause = e.args[0]
