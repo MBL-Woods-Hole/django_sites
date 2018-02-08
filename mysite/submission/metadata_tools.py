@@ -14,8 +14,8 @@ from django.utils.datastructures import MultiValueDictKeyError
 import codecs
 import csv
 from .model_choices import Overlap, Machine, Domain
-import models_l_env454
-import models_l_vamps
+from .models_l_env454 import *
+from .models_l_vamps import *
 import os
 import stat
 import time
@@ -354,12 +354,12 @@ class CsvMetadata():
 
     def get_all_adaptors(self):
         db_name = self.db_prefix + "env454"
-        return models_l_env454.IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+        return IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
 
     def get_adaptors_full(self, adaptor, dna_region, domain):
         db_name = self.db_prefix + "env454"
         # self.adaptor_ref
-        # links = models_l_env454.IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+        # links = IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
         # logging.debug(links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08")))
         
         key = "_".join([adaptor, dna_region, domain])
@@ -402,8 +402,8 @@ class CsvMetadata():
                   raise
 
                 try:
-                    contacts = models_l_env454.Contact.cache_all_method.get(vamps_name = vamps_user_id)
-                except models_l_env454.Contact.DoesNotExist as e:
+                    contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
+                except Contact.DoesNotExist as e:
                     # self.cause = e.args[0]
                     self.errors.append("Please add contact information for %s to env454." % vamps_user_id)
                 except:
@@ -521,7 +521,7 @@ class CsvMetadata():
             for i in self.out_metadata.keys():
                 try:
                     self.out_metadata[i][header] = my_post_dict['form-' + str(i) + '-' + header]
-                except MultiValueDictKeyError, e:
+                except MultiValueDictKeyError as e:
                     pass
                 except:
                     raise
@@ -635,8 +635,8 @@ class CsvMetadata():
       for i in xrange(len(self.csv_content)-1):
         try:
           csv_project = self.csv_by_header['project_name'][i]
-          db_project = models_l_env454.Project.objects.get(project=csv_project)
-        except models_l_env454.Project.DoesNotExist as e:
+          db_project = Project.objects.get(project=csv_project)
+        except Project.DoesNotExist as e:
           missing_projects.append(csv_project)
         except:
           raise
@@ -823,7 +823,7 @@ class CsvMetadata():
             for header in self.HEADERS_TO_EDIT_METADATA:
                 try:
                     self.out_metadata_table['rows'][int(r_num)][header] = (self.out_metadata[r_num][header])
-                except KeyError, e:
+                except KeyError as e:
                     logging.warning("KeyError, e = %s" % e)
                     self.out_metadata_table['rows'][int(r_num)][header] = ""
                 except:
@@ -834,11 +834,11 @@ class CsvMetadata():
     def insert_project(self, request_post):
         project_name = request_post['project_0'] + "_" + request_post['project_1'] + "_" + request_post['project_2'] + request_post['project_3']
 
-        owner = models_l_env454.Contact.cache_all_method.get(contact = request_post['contact'])
+        owner = Contact.cache_all_method.get(contact = request_post['contact'])
 
         # logging.debug("NNN project_name = %s, project_title = %s, funding = %s, env_sample_source_id = %s, contact_id = %d" % (project_name, request_post['project_title'], request_post['funding'], request_post['env_source_name'], owner.contact_id))
 
-        return models_l_env454.Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name=project_name[::-1], funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
+        return Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name=project_name[::-1], funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
 
         # return created
 
@@ -1024,7 +1024,7 @@ class CsvMetadata():
         return (request, metadata_run_info_form, formset)
         
     def insert_run(self, request):
-        return models_l_env454.Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
+        return Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
     
     def update_submission_tubes(self, request):
         try:
