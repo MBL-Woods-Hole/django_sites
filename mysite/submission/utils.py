@@ -50,7 +50,7 @@ class Utils():
                 del request.session[key]
         except KeyError:
             pass
-        
+
             
     # TODO: combine with metadata_utils, DRY!
     def get_lanes_domains(self, out_metadata):

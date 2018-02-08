@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
 from .utils import Utils, Dirs
 from collections import defaultdict
@@ -187,7 +188,10 @@ class CsvMetadata():
 
     def get_dialect(self):
         try:
-            dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024), delimiters=',')
+            open_file = codecs.EncodedFile(self.csvfile, "utf-8")
+            open_file_part = open_file.read(1024).decode("utf-8")
+            # dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024), delimiters=',')
+            dialect = csv.Sniffer().sniff(open_file_part, delimiters=',')
         except csv.Error as e:
             logging.warning("Warning for %s: %s' % (self.csvfile, e)")
             pass
