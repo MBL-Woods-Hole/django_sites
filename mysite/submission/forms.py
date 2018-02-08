@@ -12,10 +12,10 @@ class RunForm(forms.Form):
     query = Run.cache_all_method.all().filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
     find_rundate = forms.ModelChoiceField(queryset = query, label = 'Run date', empty_label = None)
 
-    find_machine = forms.ChoiceField(Machine.MACHINE_CHOICES, label = 'Machine name')
-    find_domain  = forms.ChoiceField(Domain.DOMAIN_SHORTCUTS_CHOICES, label = 'Domain')
+    find_machine = forms.ChoiceField(choices=Machine.MACHINE_CHOICES, label = 'Machine name')
+    find_domain  = forms.ChoiceField(choices=Domain.DOMAIN_SHORTCUTS_CHOICES, label = 'Domain')
     find_lane    = forms.CharField(label = 'Lane number', max_length = 3)
-    find_db_name = forms.ChoiceField(Db_name.DB_NAME_CHOICES, label = 'Database name')
+    find_db_name = forms.ChoiceField(choices=Db_name.DB_NAME_CHOICES, label = 'Database name')
 
 class FileUploadForm(forms.Form):
 
@@ -27,10 +27,10 @@ class CsvRunInfoUploadForm(forms.Form):
 
     csv_rundate = forms.DateField(label = 'Run date', input_formats = ['%Y%m%d'])
     csv_path_to_raw_data = forms.CharField(label = 'Path to raw data', max_length = 128, widget = forms.TextInput(attrs = {'id': 'path_ext_msg'})) # <span class="emph">/xraid2-2/sequencing/Illumina/</span>
-    csv_platform         = forms.ChoiceField(Machine.PLATFORM_CHOICES, label = 'Platform')
-    csv_dna_region       = forms.ChoiceField(Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region')
-    csv_overlap          = forms.ChoiceField(Overlap.OVERLAP_CHOICES, label = 'Overlap')
-    csv_has_ns           = forms.ChoiceField(Has_ns.HAVING_NS_CHOICES, label = 'Has Ns')
+    csv_platform         = forms.ChoiceField(choices=Machine.PLATFORM_CHOICES, label = 'Platform')
+    csv_dna_region       = forms.ChoiceField(choices=Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region')
+    csv_overlap          = forms.ChoiceField(choices=Overlap.OVERLAP_CHOICES, label = 'Overlap')
+    csv_has_ns           = forms.ChoiceField(choices=Has_ns.HAVING_NS_CHOICES, label = 'Has Ns')
     csv_seq_operator     = forms.CharField(label = 'Seq Operator', max_length = 3)
     csv_insert_size      = forms.IntegerField(label = 'Insert Size', min_value = 1, max_value = 800)
     csv_read_length      = forms.IntegerField(label = 'Read Length', min_value = 1, max_value = 300)
@@ -45,7 +45,7 @@ class CsvRunInfoUploadForm(forms.Form):
 
 class MetadataOutCsvForm(forms.Form):
     # todo: add css class size_number to input
-    domain                  = forms.ChoiceField(Domain.DOMAIN_CHOICES, label = '')
+    domain                  = forms.ChoiceField(choices=Domain.DOMAIN_CHOICES, label = '')
     lane                    = forms.IntegerField(max_value = 9, widget=forms.TextInput(attrs={'class': 'size_number'}))
     # contact_name_query      = Contact.objects.all().order_by('last_name')
     contact_name_query      = Contact.cache_all_method.all().order_by('contact')
