@@ -120,4 +120,4 @@ except:
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 
-from settings_local import *
+from .settings_local import *
