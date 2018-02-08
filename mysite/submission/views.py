@@ -276,7 +276,7 @@ def uniqueing(request):
     return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Uniqueing fasta files', 'is_cluster': '', 'command': 'reads_overlap/; run_unique_fa.sh; date',  'error_message': error_message })
 
 def check_fa_counts(request):
-    from .models import File_name
+    from .model_choices import File_name
     file_names = File_name()
     file_name_choices = dict(file_names.FILE_NAME_CHOICES)
     
