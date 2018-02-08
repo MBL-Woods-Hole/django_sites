@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import fields
 from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project, EnvSampleSource
-from .models import Machine, Domain, Ill_dna_region, Overlap, Has_ns, Db_name
+from .model_choices import Machine, Domain, Ill_dna_region, Overlap, Has_ns, Db_name
 from django.core.validators import RegexValidator, validate_slug
 import datetime
 from django.db import models

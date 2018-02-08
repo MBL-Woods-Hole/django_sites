@@ -13,7 +13,7 @@ from django.shortcuts import render
 from django.utils.datastructures import MultiValueDictKeyError
 import codecs
 import csv
-import models
+from .model_choices import Overlap, Machine, Domain
 import models_l_env454
 import models_l_vamps
 import os
@@ -106,8 +106,8 @@ class CsvMetadata():
         self.vamps_submissions = {}
         self.user_info_arr = {}
         self.adaptors_full = {}
-        self.domain_choices = dict(models.Domain.LETTER_BY_DOMAIN_CHOICES)
-        self.machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
+        self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
+        self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
         self.files_created = []
         self.empty_cells = []
         self.new_project = ""
@@ -431,7 +431,7 @@ class CsvMetadata():
 
     def get_selected_variables(self, request_post):
         # change from form if needed
-        # machine_shortcuts_choices = dict(models.Machine.MACHINE_SHORTCUTS_CHOICES)
+        # machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
 
         if 'submit_run_info' in request_post:
             self.selected_machine       = request_post.get('csv_platform', False)
@@ -474,7 +474,7 @@ class CsvMetadata():
 
     def write_ini(self):
         path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.selected_rundate, self.selected_machine_short)
-        overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
+        overlap_choices = dict(Overlap.OVERLAP_CHOICES)
 
         for lane_domain, ini_name in self.ini_names.items():
             ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
@@ -1034,7 +1034,7 @@ class CsvMetadata():
         except:
             raise
         
-        overlap_choices = dict(models.Overlap.OVERLAP_CHOICES)
+        overlap_choices = dict(Overlap.OVERLAP_CHOICES)
         
         for i in self.out_metadata.keys():
             barcode = self.out_metadata[i]['barcode']
