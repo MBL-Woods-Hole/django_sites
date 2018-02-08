@@ -16,7 +16,7 @@ import codecs
 import csv
 from .model_choices import Overlap, Machine, Domain
 from .models_l_env454 import *
-from .models_l_vamps import *
+from .models_l_vamps import VampsSubmissionsTubes
 import os
 import stat
 import time
@@ -691,7 +691,7 @@ class CsvMetadata():
           missing_projects.append(csv_project)
         except:
           raise
-          
+
       missing_projects_list = ", ".join(list(set(missing_projects)))
       if len(missing_projects_list) > 0:
         self.errors.append("Please add project information for %s to env454." % missing_projects_list)
@@ -1105,7 +1105,7 @@ class CsvMetadata():
             rundate = request.session['run_info']['selected_rundate']
             submit_code = self.out_metadata[i]['submit_code']
             
-            updated =  models_l_vamps.VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
+            updated = VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
                 barcode = barcode,
                 direction = direction,
                 insert_size = insert_size,
