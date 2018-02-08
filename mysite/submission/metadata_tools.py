@@ -175,6 +175,9 @@ class CsvMetadata():
         self.csv_headers, self.csv_content = self.parce_csv()
 
         self.csvfile.seek(0)
+        for r in self.reader:
+            print("PPP parce_csv row")
+            print(r)
         next(self.reader)
 
         self.check_headers_presence()
@@ -213,8 +216,22 @@ class CsvMetadata():
 
     def get_reader(self, dialect):
         try:
-            self.csvfile.open()
-            self.reader = csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
+            # open_file = codecs.EncodedFile(self.csvfile, "utf-8")
+            # open_file_part = open_file.read().decode("utf-8")
+
+            # open_file = codecs.EncodedFile(self.csvfile, "utf-8")
+            # open_file_part = open_file.read().decode("utf-8")
+            # self.csvfile.open()
+            # self.reader = csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
+            # param_file = self.csvfile.read()
+            # self.reader = csv.reader(open_file, delimiter=',', dialect=dialect)
+
+            csvfile = csv.reader(codecs.iterdecode(self.csvfile, 'utf-8'))
+            for line in csvfile:
+                print("LLL LINE")  # do something with line
+                print(line)  # do something with line
+
+
         except csv.Error as e:
             self.errors.append('%s is not a valid CSV file: %s' % (self.csvfile, e))
         except:
@@ -259,9 +276,15 @@ class CsvMetadata():
             raise
 
     def parce_csv(self):
+      for r in self.reader:
+          print("PPP parce_csv row")
+          print(r)
+          # read().decode('utf-8')
+
+
       for y_index, row in enumerate(self.reader):
-          # logging.debug("parce_csv row")
-          # logging.debug(row)
+          print("parce_csv row")
+          print(row)
 
           self.csv_content.append(row)
           if y_index == 0:
