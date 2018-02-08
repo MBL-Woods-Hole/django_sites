@@ -24,9 +24,9 @@ ILLUMINA_INFO_DIRS = ["hiseq_info", "nextseq_info", "miseq_info"]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
-ALLOWED_HOSTS = ['vampsdev.jbpc-np.mbl.edu']
+ALLOWED_HOSTS = ['vampsdev.jbpc-np.mbl.edu', '127.0.0.1' ]
 
-INTERNAL_IPS = ['127.0.0.1',]
+INTERNAL_IPS = ['127.0.0.1', 'localhost']
 # https://django-debug-toolbar.readthedocs.io/en/stable/tips.html
 
 # Application definition
