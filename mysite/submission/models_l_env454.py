@@ -60,9 +60,6 @@ class Contact(models.Model):
         db_table = 'contact'
         unique_together = (('contact', 'email', 'institution'),)
 
-    # def __unicode__(self):
-    #     return u'{0}'.format(self.illumina_adaptor)        
-
     def __str__(self):
         return self.contact
         # return "%s, %s, %s, %s, %s, %s, %s" % (self.contact_id, self.contact, self.email, self.institution, self.vamps_name, self.first_name, self.last_name)
@@ -115,8 +112,8 @@ class IlluminaAdaptor(models.Model):
         managed = False
         db_table = 'illumina_adaptor'
 
-    def __unicode__(self):
-        return u'{0}'.format(self.illumina_adaptor)        
+    def __str__(self):
+        return "%s" % (self.illumina_adaptor)
 
 class IlluminaAdaptorRef(models.Model):
     objects = models.Manager()
@@ -202,8 +199,8 @@ class Project(models.Model):
         managed = False
         db_table = 'project'
 
-    def __unicode__(self):
-        return u'{0}'.format(self.project) 
+    def __str__(self):
+        return "%s" % (self.project)
 
 class RefPrimerSuitePrimer(models.Model):
     primer_suite = models.ForeignKey(PrimerSuite, models.DO_NOTHING)

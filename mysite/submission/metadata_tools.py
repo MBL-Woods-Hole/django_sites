@@ -462,7 +462,7 @@ class CsvMetadata():
             for submit_code in self.csv_by_header_uniqued['submit_code']:
                 # logging.debug("submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user']))
                 try:
-                  vamps_user_id = self.vamps_submissions[submit_code]['user']
+                  vamps_user_id = self.vamps_submissions[submit_code]['username']
                 except KeyError as e:
                   user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
                   self.errors.append("Please check if contact information for %s exists in VAMPS." % user_name_by_submit_code)

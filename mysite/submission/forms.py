@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import fields
-from .models_l_env454 import Run, Contact, IlluminaAdaptor, Project, EnvSampleSource
+
+from .models_l_env454 import Run as models_run, Contact, IlluminaAdaptor, Project, EnvSampleSource
 from .model_choices import Machine, Domain, Ill_dna_region, Overlap, Has_ns, Db_name
 from django.core.validators import RegexValidator, validate_slug
 import datetime
@@ -9,7 +10,7 @@ from django.db import models
 class RunForm(forms.Form):
     # query = Run.objects.filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
     # find_rundate = forms.ModelChoiceField(queryset = query, label = 'Run date', empty_label = None)
-    query = Run.cache_all_method.all().filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
+    query = models_run.cache_all_method.all().filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
     find_rundate = forms.ModelChoiceField(queryset = query, label = 'Run date', empty_label = None)
 
     find_machine = forms.ChoiceField(choices=Machine.MACHINE_CHOICES, label = 'Machine name')

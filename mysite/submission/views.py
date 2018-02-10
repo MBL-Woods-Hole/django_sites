@@ -11,10 +11,10 @@ import os
 import logging
 
 
-def my_view(request):
-    context = {'foo': 'bar'}
-    return render(request, 'my_template.html', context)
-from .models_l_env454 import Run
+# def my_view(request):
+#     context = {'foo': 'bar'}
+#     return render(request, 'my_template.html', context)
+from .models_l_env454 import Run as models_run
 
 # from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
 from .forms import FileUploadForm, AddProjectForm
@@ -24,7 +24,7 @@ from .metadata_tools import CsvMetadata
 # , Validation
 
 def index(request):
-    latest_run_list = Run.cache_all_method.order_by('-run')[:10]
+    latest_run_list = models_run.cache_all_method.order_by('-run')[:10]
     context = {'latest_run_list': latest_run_list}
     current_url = request.META["HTTP_REFERER"]
 
