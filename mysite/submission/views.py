@@ -254,7 +254,9 @@ def gzip_all(request):
     form, run_data, error_message = run_utils.get_run(request)
     try:
         info_dir = os.path.join(settings.ILLUMINA_RES_DIR, run_data['full_machine_name'] + "_info/", run_data['find_rundate'])
-        return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not', 'command': '; time gzip -r *; cd %s; time gzip -r *' % (info_dir), 'error_message': error_message})
+        gzip_not_gzipped = 'find . -type f ! -name "*gz*" -exec gzip {} \;'
+        gzip_command = '; ' + gzip_not_gzipped + ' ; cd %s; ' % (info_dir) + gzip_not_gzipped
+        return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not', 'command': gzip_command, 'error_message': error_message})
         
     except:
         info_dir = settings.ILLUMINA_RES_DIR

@@ -146,8 +146,6 @@ class Run():
                 self.run_data['find_db_name']      = form.cleaned_data['find_db_name']
                 self.run_data['db_host']      = self.db_info[self.run_data['find_db_name']]
 
-
-
                 suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
                 primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
 
