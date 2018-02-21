@@ -147,7 +147,7 @@ def data_upload(request):
     run_data = {}
     form, run_data, error_message = run_utils.get_run(request)
 
-    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db (Please run twice, for env454 and vamp2)', 'is_cluster': 'not', 'pipeline_command': 'file_to_db_upload', 'error_message': error_message})
+    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db (Please run twice, both for env454 and vamps2)', 'is_cluster': 'not', 'pipeline_command': 'file_to_db_upload', 'error_message': error_message})
 
 def run_info_upload(request):
     run_utils = Run()
