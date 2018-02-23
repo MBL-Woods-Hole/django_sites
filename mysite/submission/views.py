@@ -257,7 +257,7 @@ def gzip_all(request):
         gzip_not_gzipped = 'find . -type f ! -name "*gz*" -exec gzip {} \;'
         gzip_command = '; ' + gzip_not_gzipped + ' ; cd %s; ' % (info_dir) + gzip_not_gzipped
         return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gzip all files', 'is_cluster': 'not', 'command': gzip_command, 'error_message': error_message})
-        
+
     except:
         info_dir = settings.ILLUMINA_RES_DIR
         error_message = "Please check run info."
@@ -269,8 +269,9 @@ def clear_db(request):
     run_data = {}
 
     form, run_data, error_message = run_utils.get_run(request)
+    table_names = {"vamps2": {"pdr": "sequence_pdr_info", "uniq": "sequence_uniq_info", "seq": "sequence", "join_pr": "", "run_info_join": "dataset"}, "env454": {"pdr": "sequence_pdr_info_ill", "uniq": "sequence_uniq_info_ill", "seq": "sequence_ill", "join_pr": " JOIN project using(project_id) ", "run_info_join": "run_info_ill"}}
 
-    return render(request, 'submission/clear_db.html', {'form': form, 'run_data': run_data, 'header': 'Remove old data from db',  'error_message': error_message})
+    return render(request, 'submission/clear_db.html', {'form': form, 'run_data': run_data, 'header': 'Remove old data from db', 'table_names': table_names[run_data['find_db_name']], 'error_message': error_message})
 
 def uniqueing(request):
     run_utils = Run()
