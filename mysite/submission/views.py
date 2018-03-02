@@ -310,5 +310,7 @@ def check_db_counts(request):
 def gunzip_all(request):
     run_utils = Run()
     run_data = {}
+    gunzip_command = "; time find . -name '*.gz' -exec sh -c 'gunzip {}' ';'"
     form, run_data, error_message = run_utils.get_run(request)
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gunzip all files', 'is_cluster': 'not', 'command': '; time gunzip -r *.gz',  'error_message': error_message})
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gunzip all files', 'is_cluster': 'not', 'command': gunzip_command,  'error_message': error_message})
+
