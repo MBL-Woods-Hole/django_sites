@@ -147,7 +147,20 @@ def data_upload(request):
     run_data = {}
     form, run_data, error_message = run_utils.get_run(request)
 
-    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db (Please run twice, both for env454 and vamps2)', 'is_cluster': 'not', 'pipeline_command': 'file_to_db_upload', 'error_message': error_message})
+    # return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db (Please run twice, both for env454 and vamps2)', 'is_cluster': 'not', 'pipeline_command': 'file_to_db_upload', 'error_message': error_message})
+
+    try:
+        find_rundate = run_data['find_rundate']
+        find_lane    = run_data['find_lane']
+        primer_suite = run_data['primer_suite']
+    except:
+        find_rundate = ""
+        find_lane = ""
+        primer_suite = ""
+
+    check_command = '''; diff <(mysql -h bpcdb1 env454 -e 'SELECT sum(seq_count), dataset FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) WHERE run = "%s" AND lane = "%s" AND primer_suite = "%s" group by dataset ORDER BY dataset')  <(mysql -h vampsdb vamps2 -e 'SELECT sum(seq_count), dataset FROM sequence_pdr_info JOIN run_info_ill USING(dataset_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) WHERE run = "%s" AND lane = "%s" AND primer_suite = "%s" group by dataset ORDER BY dataset')''' % (find_rundate, find_lane, primer_suite, find_rundate, find_lane, primer_suite)
+
+    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Run info upload to db', 'is_cluster': 'not', 'pipeline_command': 'run_info_upload', 'what_to_check': 'counts in env454 and VAMPS2 ', 'check_command': check_command, 'error_message': error_message })
 
 def run_info_upload(request):
     run_utils = Run()
