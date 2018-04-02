@@ -320,7 +320,13 @@ def check_db_counts(request):
     run_utils = Run()
     run_data = {}
     form, run_data, error_message = run_utils.get_run(request)
-    return render(request, 'submission/check_db_counts.html', {'form': form, 'run_data': run_data, 'header': 'Check counts in db', 'error_message': error_message})
+
+    table_names = {"vamps2": {"pdr": "sequence_pdr_info", "uniq": "sequence_uniq_info", "seq": "sequence", "join_pr": "", "run_info_join": "dataset_id, run_info_ill_id"}, "env454": {"pdr": "sequence_pdr_info_ill", "uniq": "sequence_uniq_info_ill", "seq": "sequence_ill", "join_pr": " JOIN project using(project_id) ", "run_info_join": "run_info_ill_id"}}
+
+    return render(request, 'submission/check_db_counts.html', {'form': form, 'run_data': run_data, 'header': 'Check counts in db', 'table_names': table_names[run_data['find_db_name']], 'error_message': error_message})
+
+
+    # return render(request, 'submission/check_db_counts.html', {'form': form, 'run_data': run_data, 'header': 'Check counts in db', 'error_message': error_message})
 
 def gunzip_all(request):
     run_utils = Run()

@@ -5,7 +5,7 @@
 <br/>
 
 <div class = "copy_command">
-mysql -h bpcdb1 env454 -e 'SELECT count(*) FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) JOIN sequence_uniq_info_ill USING(sequence_ill_id) WHERE primer_suite = "{{ run_data.primer_suite }}" AND run = "{{ run_data.find_rundate }}" AND lane = "{{ run_data.find_lane }}";'
+mysql -h {{ run_data.db_host }} {{ run_data.find_db_name }} -e 'SELECT count(*) FROM {{ table_names.pdr }} JOIN run_info_ill using({{ table_names.run_info_join }}) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) JOIN {{ table_names.uniq }} USING({{ table_names.seq }}_id) WHERE primer_suite = "{{ run_data.primer_suite }}" AND run = "{{ run_data.find_rundate }}" AND lane = "{{ run_data.find_lane }}";'
 </div>
 
 {% endblock %}
