@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
+from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm, ChooseProjectNOwnerForm
 from .utils import Utils, Dirs
 from collections import defaultdict
 from datetime import datetime
@@ -997,7 +997,8 @@ where project in ('%s')
         self.get_initial_run_info_data_dict()
         self.get_selected_variables(request.POST)
         request.session['run_info_from_csv'] = self.run_info_from_csv
-        metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+        metadata_run_info_form = ChooseProjectNOwnerForm()
+            # CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
         # # TODO: move to one method in metadata_tools, call from here as create info and create csv
         # request.session['lanes_domains'] = self.get_lanes_domains()
