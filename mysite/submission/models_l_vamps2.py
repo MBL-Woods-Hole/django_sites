@@ -42,6 +42,7 @@ class AllMethodCachingManager(models.Manager):
 models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('vamps_db',)
 
 class User(models.Model):
+    cache_all_method = AllMethodCachingManager()
     username = models.CharField(unique=True, max_length=20)
     email = models.EmailField(max_length=64)
         # models.CharField(max_length=64)
