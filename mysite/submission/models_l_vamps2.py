@@ -9,6 +9,36 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+class ModelChoiceIterator(object):
+    def __iter__(self):
+        if self.field.empty_label is not None:
+            yield ("", self.field.empty_label)
+        if self.field.cache_choices:
+            if self.field.choice_cache is None:
+                self.field.choice_cache = [
+                    self.choice(obj) for obj in self.queryset.all()
+                ]
+            for choice in self.field.choice_cache:
+                yield choice
+        else:
+            try:
+                for obj in self.queryset:
+                    yield self.choice(obj)
+            except TypeError:
+                for obj in self.queryset.all():
+                    yield self.choice(obj)
+
+class AllMethodCachingQueryset(models.query.QuerySet):
+    def all(self, get_from_cache=True):
+        if get_from_cache:
+            return self
+        else:
+            return self._clone()
+
+class AllMethodCachingManager(models.Manager):
+    def get_query_set(self):
+        return AllMethodCachingQueryset(self.model, using=self._db)
+
 models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('vamps_db',)
 
 class User(models.Model):
@@ -34,3 +64,25 @@ class User(models.Model):
         managed = False
         db_table = 'user'
         unique_together = (('first_name', 'last_name', 'email', 'institution'),)
+
+
+class Project_vamps2(models.Model):
+    objects = models.Manager()
+    cache_all_method = AllMethodCachingManager()
+
+    # form_class.base_fields['foo'].queryset = YourModel.cache_all_method.all()
+
+    project_id = models.SmallIntegerField(primary_key=True)
+    project = models.CharField(unique=True, max_length=32)
+    title = models.CharField(max_length=64)
+    project_description = models.CharField(max_length=255)
+    rev_project_name = models.CharField(unique=True, max_length=32)
+    funding = models.CharField(max_length=64)
+    user = models.ForeignKey(User, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'project'
+
+    def __str__(self):
+        return "%s" % (self.project)

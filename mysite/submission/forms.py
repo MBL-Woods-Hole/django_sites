@@ -2,6 +2,7 @@ from django import forms
 from django.forms import fields
 
 from .models_l_env454 import Run as models_run, Contact, IlluminaAdaptor, Project, EnvSampleSource
+from .models_l_vamps2 import User, Project_vamps2
 from .model_choices import Machine, Domain, Ill_dna_region, Overlap, Has_ns, Db_name
 from django.core.validators import RegexValidator, validate_slug
 import datetime
@@ -165,3 +166,11 @@ class AddProjectForm(forms.Form):
 
     # contact_name_query  = Contact.objects.all().order_by('last_name')
     # contact             = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
+
+
+class ProjectNUserForm(forms.Form):
+    contact_query = User.cache_all_method.all().order_by('last_name')
+    # contact_query = User.order_by('last_name')
+    contact       = forms.ModelChoiceField(queryset = contact_query, empty_label = None, to_field_name = 'contact')
+    project_query = Project_vamps2.cache_all_method.all().order_by('project')
+    project       = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')

@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
+from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm, ProjectNUserForm
 from .utils import Utils, Dirs
 from collections import defaultdict
 from datetime import datetime
@@ -353,6 +353,7 @@ class CsvMetadata():
         pp = pprint.PrettyPrinter(indent=4)
         
         res_dict = {}
+        res_dict_list = []
         # print "111 connections"
         # for k, v in connections.items():
         #   pp.pprint("k = %s, v = %s") % (k,v)
@@ -360,47 +361,69 @@ class CsvMetadata():
         # print "222 connection"
         # print connection.values()
         
-        cursor = connections['vamps'].cursor()
+        cursor = connections['vamps2'].cursor()
         # cursor = connection.cursor()
         cursor.execute(query)
 
         column_names = [d[0] for d in cursor.description]
 
         for row in cursor:
-          res_dict = dict(zip(column_names, row))
+          res_dict_list.append(dict(zip(column_names, row)))
 
-        return res_dict
+        return res_dict_list
       # dump it to a json string
       # self.vamps_submissions = json.dumps(info)
 
-    def get_vamps_submission_info(self):
-        db_name = self.db_prefix + "vamps"
-        
-        # out_file_name = "temp_subm_info"
+    def get_vamps2_submission_info(self):
+        db_name = "vamps2"
+        # TODO: get project_names from the project_n_user form, join with quotes
+        project_names = 'MA_AAA_Av4'
+        # TODO: get from the project_n_user form add to query:
+        owner_user_id = '2383'
         try:
-            for submit_code in self.csv_by_header_uniqued['submit_code']:
-                # query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
-                #     FROM %s.vamps_submissions AS subm
-                #     JOIN %s.vamps_auth AS auth
-                #       ON (auth.id = subm.vamps_auth_id)
-                #     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
+            query_subm = """
+                select username as data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title as project_title,  tubelabel
+                from %s.dataset join %s.project using(project_id) join %s.user on(owner_user_id = user_id)
+                where project in ('%s')              
+                """ % (db_name, db_name, db_name, project_names)
+            # print("QQQ query_subm")
+            # print(query_subm)
 
-                query_subm = """
-                SELECT subm.*, auth.username, auth.encrypted_password, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.current_sign_in_at, auth.last_sign_in_at
-                    FROM %s.vamps_submissions AS subm
-                    JOIN vamps2.user AS auth
-                      USING(user_id)
-                    WHERE submit_code = \"%s\"""" % (db_name, submit_code)
-                # print("QQQ query_subm")
-                # print(query_subm)
-
-
-                self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
+            self.vamps_submissions[owner_user_id] = self.run_query_to_dict(query_subm)
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
         except:
             raise
+
+    # def get_vamps_submission_info(self):
+    #     db_name = self.db_prefix + "vamps"
+    #
+    #     # out_file_name = "temp_subm_info"
+    #     try:
+    #         for submit_code in self.csv_by_header_uniqued['submit_code']:
+    #             # query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
+    #             #     FROM %s.vamps_submissions AS subm
+    #             #     JOIN %s.vamps_auth AS auth
+    #             #       ON (auth.id = subm.vamps_auth_id)
+    #             #     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
+    #
+    #             query_subm = """
+    #             SELECT subm.*, auth.username, auth.encrypted_password, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.current_sign_in_at, auth.last_sign_in_at
+    #                 FROM %s.vamps_submissions AS subm
+    #                 JOIN vamps2.user AS auth
+    #                   USING(user_id)
+    #                 WHERE submit_code = \"%s\"""" % (db_name, submit_code)
+    #             # print("QQQ query_subm")
+    #             # print(query_subm)
+    #
+    #
+    #             self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
+    #     except KeyError as e:
+    #         self.cause = e.args[0]
+    #         self.errors.append(self.no_data_message())
+    #     except:
+    #         raise
 
     # def benchmark_w_return_1(self):
     #   logging.debug("\n")
@@ -914,56 +937,87 @@ class CsvMetadata():
     def csv_file_upload(self, request):
 
         csv_file = request.FILES['csv_file']
-        if csv_file.size == 0:
-            self.errors.append("The file %s is empty or does not exist." % csv_file)
-            return ("", 'no_file')
+        # render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
 
-            # render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
+        has_empty_cells = 1
 
-        has_empty_cells = self.import_from_file(csv_file)
-
-        if has_empty_cells:                
-            self.errors.append("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
-            return ("", 'has_empty_cells')
-
-        # TODO:
-        # validate size and type of the file
-        # tmp_path = 'tmp/%s' % csv_file
-        # default_storage.save(tmp_path, ContentFile(csv_file.file.read()))
-        # full_tmp_path = os.path.join(settings.BASE_DIR, tmp_path)
-        # - See more at: http://blog.hayleyanderson.us/2015/07/18/validating-file-types-in-django/#sthash.Ux4hWNaD.dpuf
-        # csv_validation = Validation()
-        # csv_validation.required_cell_values_validation()
-
-        self.get_initial_run_info_data_dict()
-        self.get_selected_variables(request.POST)
-        request.session['run_info_from_csv'] = self.run_info_from_csv
-        metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+        # self.get_initial_run_info_data_dict()
+        # self.get_selected_variables(request.POST)
+        # request.session['run_info_from_csv'] = self.run_info_from_csv
+        metadata_run_info_form = ProjectNUserForm()
+            # initial = request.session['run_info_from_csv'])
 
         # # TODO: move to one method in metadata_tools, call from here as create info and create csv
         # request.session['lanes_domains'] = self.get_lanes_domains()
         # del request.session['lanes_domains']
 
-        self.get_vamps_submission_info()
+        self.get_vamps2_submission_info()
+        #
+        # self.get_csv_by_header()
+        #
+        # self.get_adaptor_from_csv_content()
+        #
+        # self.make_new_out_metadata()
+        # if self.errors:
+        #     return (metadata_run_info_form, has_empty_cells)
 
-        self.get_csv_by_header()
-
-        self.get_adaptor_from_csv_content()
-
-        self.make_new_out_metadata()
-        if self.errors:
-            return (metadata_run_info_form, has_empty_cells)
-            
-        request.session['out_metadata'] = self.out_metadata
-
-        # 
-
-        # utils.is_local(request)
-        # HOSTNAME = request.get_host()
-        # if HOSTNAME.startswith("localhost"):
-        #     logging.debug("local")
+        # request.session['out_metadata'] = self.out_metadata
 
         return (metadata_run_info_form, has_empty_cells)
+
+    # def csv_file_upload(self, request):
+    #
+    #     csv_file = request.FILES['csv_file']
+    #     if csv_file.size == 0:
+    #         self.errors.append("The file %s is empty or does not exist." % csv_file)
+    #         return ("", 'no_file')
+    #
+    #         # render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
+    #
+    #     has_empty_cells = self.import_from_file(csv_file)
+    #
+    #     if has_empty_cells:
+    #         self.errors.append("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
+    #         return ("", 'has_empty_cells')
+    #
+    #     # TODO:
+    #     # validate size and type of the file
+    #     # tmp_path = 'tmp/%s' % csv_file
+    #     # default_storage.save(tmp_path, ContentFile(csv_file.file.read()))
+    #     # full_tmp_path = os.path.join(settings.BASE_DIR, tmp_path)
+    #     # - See more at: http://blog.hayleyanderson.us/2015/07/18/validating-file-types-in-django/#sthash.Ux4hWNaD.dpuf
+    #     # csv_validation = Validation()
+    #     # csv_validation.required_cell_values_validation()
+    #
+    #     self.get_initial_run_info_data_dict()
+    #     self.get_selected_variables(request.POST)
+    #     request.session['run_info_from_csv'] = self.run_info_from_csv
+    #     metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+    #
+    #     # # TODO: move to one method in metadata_tools, call from here as create info and create csv
+    #     # request.session['lanes_domains'] = self.get_lanes_domains()
+    #     # del request.session['lanes_domains']
+    #
+    #     self.get_vamps_submission_info()
+    #
+    #     self.get_csv_by_header()
+    #
+    #     self.get_adaptor_from_csv_content()
+    #
+    #     self.make_new_out_metadata()
+    #     if self.errors:
+    #         return (metadata_run_info_form, has_empty_cells)
+    #
+    #     request.session['out_metadata'] = self.out_metadata
+    #
+    #     #
+    #
+    #     # utils.is_local(request)
+    #     # HOSTNAME = request.get_host()
+    #     # if HOSTNAME.startswith("localhost"):
+    #     #     logging.debug("local")
+    #
+    #     return (metadata_run_info_form, has_empty_cells)
 
     def submit_new_project(self, request):
         # logging.debug("EEE: request.POST = %s" % request.POST)
