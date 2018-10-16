@@ -14,6 +14,8 @@ class submissionRouter(object):
         if model._meta.app_label == 'submission':
             if hasattr(model._meta, 'vamps_db'):
                 db = 'vamps'
+            elif hasattr(model._meta, 'vamps2'):
+                db = 'vamps2'
             else:
                 db = 'env454'
 
@@ -35,7 +37,7 @@ class submissionRouter(object):
         return db
 
     def allow_relation(self, obj1, obj2, **hints):
-        db_list = ('env454', 'vamps')
+        db_list = ('env454', 'vamps', 'vamps2')
         if obj1._state.db in db_list and obj2._state.db in db_list:
             return True
         return None

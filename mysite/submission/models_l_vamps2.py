@@ -40,8 +40,10 @@ class AllMethodCachingManager(models.Manager):
         return AllMethodCachingQueryset(self.model, using=self._db)
 
 models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('vamps2',)
+print("MMM models.options.DEFAULT_NAMES")
+print(models.options.DEFAULT_NAMES)
 
-class User_vamps2(models.Model):
+class User(models.Model):
     cache_all_method = AllMethodCachingManager()
 
     user_id = models.SmallIntegerField(primary_key=True)
@@ -60,16 +62,16 @@ class User_vamps2(models.Model):
 
 
     def __str__(self):
-        return "%s, %s %s, %s" % (self.user, self.first_name, self.last_name, self.institution)
+        return "%s, %s %s, %s" % (self.username, self.first_name, self.last_name, self.institution)
 
     class Meta:
-        # vamps_db = True
+        vamps2 = True
         managed = False
         db_table = 'user'
         unique_together = (('first_name', 'last_name', 'email', 'institution'),)
 
 
-class Project_vamps2(models.Model):
+class ProjectVamps2(models.Model):
     objects = models.Manager()
     cache_all_method = AllMethodCachingManager()
 
@@ -81,7 +83,7 @@ class Project_vamps2(models.Model):
     project_description = models.CharField(max_length=255)
     rev_project_name = models.CharField(unique=True, max_length=32)
     funding = models.CharField(max_length=64)
-    user = models.ForeignKey(User_vamps2, models.DO_NOTHING)
+    user = models.ForeignKey(User, models.DO_NOTHING, db_column = 'owner_user_id') # owner_user_id
 
     class Meta:
         managed = False
