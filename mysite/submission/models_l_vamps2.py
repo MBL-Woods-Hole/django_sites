@@ -39,9 +39,9 @@ class AllMethodCachingManager(models.Manager):
     def get_query_set(self):
         return AllMethodCachingQueryset(self.model, using=self._db)
 
-models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('vamps_db',)
+models.options.DEFAULT_NAMES = models.options.DEFAULT_NAMES + ('vamps2',)
 
-class User(models.Model):
+class User_vamps2(models.Model):
     cache_all_method = AllMethodCachingManager()
 
     user_id = models.SmallIntegerField(primary_key=True)
@@ -63,7 +63,7 @@ class User(models.Model):
         return "%s, %s %s, %s" % (self.user, self.first_name, self.last_name, self.institution)
 
     class Meta:
-        vamps_db = True
+        # vamps_db = True
         managed = False
         db_table = 'user'
         unique_together = (('first_name', 'last_name', 'email', 'institution'),)
@@ -81,7 +81,7 @@ class Project_vamps2(models.Model):
     project_description = models.CharField(max_length=255)
     rev_project_name = models.CharField(unique=True, max_length=32)
     funding = models.CharField(max_length=64)
-    user = models.ForeignKey(User, models.DO_NOTHING)
+    user = models.ForeignKey(User_vamps2, models.DO_NOTHING)
 
     class Meta:
         managed = False

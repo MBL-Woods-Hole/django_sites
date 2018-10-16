@@ -10,6 +10,7 @@ app_name = 'submission'
 urlpatterns = [
     # ex: /submission/
     url(r'^$', views.upload_metadata, name='upload_metadata'),
+    url(r'^start_page/$', views.upload_metadata, name='start_page'),
     url(r'^upload_metadata/$', views.upload_metadata, name='upload_metadata'),
     url(r'^add_project/$', views.add_project, name='add_project'),
 

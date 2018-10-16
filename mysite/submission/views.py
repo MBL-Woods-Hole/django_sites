@@ -17,7 +17,7 @@ import logging
 from .models_l_env454 import Run as models_run
 
 # from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
-from .forms import FileUploadForm, AddProjectForm
+from .forms import FileUploadForm, AddProjectForm, ProjectNUserForm
 from .utils import Run, Utils
 
 from .metadata_tools import CsvMetadata
@@ -51,7 +51,9 @@ def upload_metadata(request):
     elif 'create_submission_metadata_file' in request.POST:
         context = edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request)
     else:
-        context = initial_form()
+        # context = {'metadata_run_info_form': ProjectNUserForm, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
+
+        return render(request, 'submission/start_page.html', {'header': 'Get metadata', 'inital_form': ProjectNUserForm})
 
     return render(request, 'submission/upload_metadata.html', context)
 
@@ -113,9 +115,10 @@ def initial_form():
     logging.debug("HHH")
     logging.debug("555 file_upload_form")
 
-    file_upload_form = FileUploadForm()
+    inital_form = ProjectNUserForm()
 
-    return {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
+    # return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
+    return {'inital_form': inital_form, 'header': 'Upload metadata', 'formset': {}}
         
 def add_project(request):
     csv_handler = CsvMetadata(request)

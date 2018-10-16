@@ -1,0 +1,29 @@
+{% extends "submission/base.html" %}
+
+{% block some_content %}
+ HERE goes the form
+  <div class="grid_12 form">
+    <form action="/your-name/" method="post">
+        {% csrf_token %}
+        {{ inital_form }}
+        <input type="submit" value="Submit">
+    </form>
+  </div>
+  <div class="clear"></div>
+
+
+{% endblock %}
+
+{% if errors_size > 0 %}
+{% block errors %}
+<div class="red_message">
+ Please correct the error{{ errors|pluralize }} below.
+ {% for err in errors %}
+  <p class="notes">
+   {{ err|safe }}
+  </p>
+ {% endfor %}
+</div>
+{% endblock %}
+{% endif %}
+
