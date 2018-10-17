@@ -380,6 +380,7 @@ class CsvMetadata():
         project_names = 'MA_AAA_Av4'
         # TODO: get from the project_n_user form add to query:
         owner_user_id = '2383'
+
         try:
             query_subm = """
                 select username as data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title as project_title,  tubelabel
@@ -936,6 +937,7 @@ class CsvMetadata():
 
     def csv_file_upload(self, request):
 
+        self.get_vamps2_submission_info()
         csv_file = request.FILES['csv_file']
         # render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
 
