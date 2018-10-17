@@ -42,7 +42,12 @@ def upload_metadata(request):
     utils = Utils()
     csv_handler = CsvMetadata(request)
 
-    if request.method == 'POST' and request.FILES:
+    if request.method == 'POST':
+        # selected_item = get_object_or_404(Item, pk=request.POST.get('item_id'))
+        # get the user you want (connect for example) in the var "user"
+        # user.item = selected_item
+        # user.save()
+
         context = upload_file_n_make_new_metadata(request)
 
     elif 'submit_run_info' in request.POST:
@@ -158,9 +163,9 @@ def data_upload(request):
         find_lane = ""
         primer_suite = ""
 
-    where_part = 'WHERE run = "%s" AND lane = "%s" AND primer_suite = "%s"' % (find_rundate, find_lane, primer_suite)
+    where_part = 'WHERE primer_suite = "%s" AND run = "%s" AND lane = "%s"' % (primer_suite, find_rundate, find_lane)
 
-    check_command = '''; diff <(mysql -h bpcdb1 env454 -e 'SELECT sum(seq_count), dataset FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) %s group by dataset ORDER BY dataset')  <(mysql -h vampsdb vamps2 -e 'SELECT sum(seq_count), dataset FROM sequence_pdr_info JOIN run_info_ill USING(run_info_ill_id, dataset_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) %s group by dataset ORDER BY dataset')''' % (where_part, where_part)
+    check_command = '''; diff <(mysql -h bpcdb1 env454 -e 'SELECT sum(seq_count), dataset, project FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id) %s group by dataset ORDER BY dataset')  <(mysql -h vampsdb vamps2 -e 'SELECT sum(seq_count), dataset, project FROM sequence_pdr_info JOIN run_info_ill USING(run_info_ill_id, dataset_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id) %s group by dataset ORDER BY dataset')''' % (where_part, where_part)
 
     return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db (Please run twice, both for env454 and vamps2)', 'is_cluster': 'not', 'pipeline_command': 'file_to_db_upload', 'what_to_check': 'counts in env454 and VAMPS2 (there should be no difference) ', 'check_command': check_command, 'error_message': error_message })
 
