@@ -62,7 +62,7 @@ class User(models.Model):
 
 
     def __str__(self):
-        return "%s, %s %s, %s" % (self.username, self.first_name, self.last_name, self.institution)
+        return "%s %s, %s" % (self.first_name, self.last_name, self.institution)
 
     class Meta:
         vamps2 = True
@@ -84,7 +84,7 @@ class ProjectVamps2(models.Model):
     rev_project_name = models.CharField(unique=True, max_length=32)
     funding = models.CharField(max_length=64)
     # owner_user_id = models.SmallIntegerField()
-    # owner_user_id = models.ForeignKey(User, models.DO_NOTHING) # owner_user_id
+    # owner_user = models.ForeignKey(User, models.DO_NOTHING) # owner_user_id
     # run_key = models.ForeignKey('RunKey', models.DO_NOTHING)
 
     class Meta:
