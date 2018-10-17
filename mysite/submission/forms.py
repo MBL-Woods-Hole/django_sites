@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import fields
 
+from .models_l_vamps2 import ProjectVamps2
 from .models_l_env454 import Run as models_run, Contact, IlluminaAdaptor, Project, EnvSampleSource
 from .model_choices import Machine, Domain, Ill_dna_region, Overlap, Has_ns, Db_name
 from django.core.validators import RegexValidator, validate_slug
@@ -22,6 +23,13 @@ class RunForm(forms.Form):
 
 class FileUploadForm(forms.Form):
     csv_file = forms.FileField()
+    projects = ProjectVamps2.objects.using('vamps2').all()
+
+    print("PPP projects from forms.FileUploadForm")
+    print(projects)
+
+    # project_query = Project.cache_all_method.all().order_by('project')
+    # project = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
     # print "csv_file from forms.FileUploadForm"
     # print csv_file
 
@@ -185,8 +193,8 @@ class AddProjectForm(forms.Form):
     # contact             = forms.ModelChoiceField(queryset = contact_name_query, label = 'Contact Name', empty_label = None, to_field_name = 'contact')
 
 
-class ChooseProjectNOwnerForm(forms.Form):
-    project_query = Project.cache_all_method.all().order_by('project')
-    project = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
-    contact_query = Contact.cache_all_method.all().order_by('last_name')
-    contact = forms.ModelChoiceField(queryset = contact_query, empty_label = None, to_field_name = 'contact')
+# class ChooseProjectNOwnerForm(forms.Form):
+#     project_query = Project.cache_all_method.all().order_by('project')
+#     project = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
+#     contact_query = Contact.cache_all_method.all().order_by('last_name')
+#     contact = forms.ModelChoiceField(queryset = contact_query, empty_label = None, to_field_name = 'contact')
