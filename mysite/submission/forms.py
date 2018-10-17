@@ -23,7 +23,7 @@ class RunForm(forms.Form):
 
 class FileUploadForm(forms.Form):
     csv_file = forms.FileField()
-    projects = ProjectVamps2.objects.using('vamps2').all()
+    projects = ProjectVamps2.objects.using('vamps2').all().order_by('-project_id')
 
     print("PPP projects from forms.FileUploadForm")
     print(projects)
