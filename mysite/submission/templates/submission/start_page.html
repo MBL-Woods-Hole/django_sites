@@ -5,7 +5,9 @@
   <div class="grid_12 form">
     <form action="/your-name/" method="post">
         {% csrf_token %}
-        {{ inital_form }}
+        <table class="normal_table">
+            {{ inital_form.as_table }}
+        </table>
         <input type="submit" value="Submit">
     </form>
   </div>

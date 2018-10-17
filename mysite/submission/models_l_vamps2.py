@@ -84,7 +84,7 @@ class ProjectVamps2(models.Model):
     rev_project_name = models.CharField(unique=True, max_length=32)
     funding = models.CharField(max_length=64)
     # owner_user_id = models.SmallIntegerField()
-    # user = models.ForeignKey(User, models.DO_NOTHING, db_column = 'owner_user_id') # owner_user_id
+    # owner_user_id = models.ForeignKey(User, models.DO_NOTHING) # owner_user_id
     # run_key = models.ForeignKey('RunKey', models.DO_NOTHING)
 
     class Meta:
