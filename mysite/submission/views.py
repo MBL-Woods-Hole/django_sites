@@ -42,16 +42,14 @@ def upload_metadata(request):
     utils = Utils()
     csv_handler = CsvMetadata(request)
 
-    if request.method == 'POST':
-        # selected_item = get_object_or_404(Item, pk=request.POST.get('item_id'))
-        # get the user you want (connect for example) in the var "user"
-        # user.item = selected_item
-        # user.save()
-
+    if request.method == 'POST' and request.FILES and 'file_upload' in request.POST:
         context = upload_file_n_make_new_metadata(request)
 
     elif 'submit_run_info' in request.POST:
         context = submit_run_info_n_edit_metadata_n_make_table(request)
+
+    elif 'choose_project' in request.POST:
+        context = choose_project(request)
 
     elif 'create_submission_metadata_file' in request.POST:
         context = edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request)
@@ -59,6 +57,9 @@ def upload_metadata(request):
         context = initial_form()
 
     return render(request, 'submission/upload_metadata.html', context)
+
+def choose_project(request):
+    pass
 
 def upload_file_n_make_new_metadata(request):
     utils = Utils()

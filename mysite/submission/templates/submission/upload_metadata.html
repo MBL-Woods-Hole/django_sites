@@ -60,13 +60,15 @@
     <table class="normal_table">
      {{ file_upload_form.as_table }}
     </table>
+    <input type="submit" name="file_upload" value="Upload" />
 
+    or
     <select name="project">
     {% for p in file_upload_form.projects %}
         <option value="{{ p }}">{{ p }}</option>
     {% endfor %}
     </select>
-     <input type="submit" name="file_upload" value="Upload" />
+     <input type="submit" name="choose_project" value="Submit" />
 
    </form>
   </div>
