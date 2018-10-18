@@ -23,13 +23,13 @@ class RunForm(forms.Form):
 
 class FileUploadForm(forms.Form):
     csv_file = forms.FileField()
-    projects = ProjectVamps2.objects.using('vamps2').all().order_by('-project_id')
+    # projects = ProjectVamps2.objects.using('vamps2').all().order_by('-project_id')
+    project_query = Project.cache_all_method.all().order_by('-project_id')
+    projects = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
 
     print("PPP projects from forms.FileUploadForm")
     print(projects)
 
-    # project_query = Project.cache_all_method.all().order_by('project')
-    # project = forms.ModelChoiceField(queryset = project_query, empty_label = None, to_field_name = 'project')
     # print "csv_file from forms.FileUploadForm"
     # print csv_file
 
