@@ -62,7 +62,10 @@
     </table>
     <input type="submit" name="file_upload" value="Upload" />
 
+    <br/>
     or
+    <br/>
+
     <select name="project">
     {% for p in file_upload_form.projects %}
         <option value="{{ p }}">{{ p }}</option>
@@ -77,6 +80,12 @@
   <div class="clear"></div>
 
  {% endblock %}
+
+ {% if choose_project_form %}
+  {% block choose_project_form %}
+
+  {% endblock %}
+ {% endif %}
 
 
  {% if metadata_run_info_form %}

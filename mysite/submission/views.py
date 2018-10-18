@@ -17,7 +17,7 @@ import logging
 from .models_l_env454 import Run as models_run
 
 # from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
-from .forms import FileUploadForm, AddProjectForm
+from .forms import FileUploadForm, AddProjectForm, ChooseProjectForm
 from .utils import Run, Utils
 
 from .metadata_tools import CsvMetadata
@@ -120,8 +120,9 @@ def initial_form():
     logging.debug("555 file_upload_form")
 
     file_upload_form = FileUploadForm()
+    choose_project_form = ChooseProjectForm()
 
-    return {'file_upload_form': file_upload_form, 'header': 'Upload metadata', 'formset': {}}
+    return {'file_upload_form': file_upload_form, 'choose_project_form': choose_project_form, 'header': 'Upload metadata', 'formset': {}}
         
 def add_project(request):
     csv_handler = CsvMetadata(request)
