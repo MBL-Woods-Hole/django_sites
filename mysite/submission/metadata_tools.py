@@ -267,7 +267,7 @@ class CsvMetadata():
             csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
 
             
-            platform = "".join(self.csv_by_header_uniqued['platform'])
+            platform = "".join(self.csv_by_header_uniqued['platform']).lower()
             self.selected_machine_short = self.machine_shortcuts_choices[platform]
             
             self.run_info_from_csv = {
