@@ -59,7 +59,15 @@ def upload_metadata(request):
     return render(request, 'submission/upload_metadata.html', context)
 
 def choose_project(request):
-    pass
+    utils = Utils()
+    csv_handler = CsvMetadata(request)
+
+    metadata_run_info_form = csv_handler.get_vamps2_submission_info(request.POST['projects'])
+
+    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued}
+
+    # return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
+
 
 def upload_file_n_make_new_metadata(request):
     utils = Utils()

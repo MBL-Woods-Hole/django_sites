@@ -377,7 +377,7 @@ class CsvMetadata():
         import pprint
         pp = pprint.PrettyPrinter(indent = 4)
 
-        res_dict = {}
+        res_arr_dict = []
         cursor = connections['vamps2'].cursor()
         # cursor = connection.cursor()
         cursor.execute(query)
@@ -385,43 +385,22 @@ class CsvMetadata():
         column_names = [d[0] for d in cursor.description]
 
         for row in cursor:
-            res_dict = dict(zip(column_names, row))
+            res_arr_dict.append(dict(zip(column_names, row)))
 
-        return res_dict
+        return res_arr_dict
 
-    def get_vamps2_submission_info(self):
+    def get_vamps2_submission_info(self, project_id = ""):
         db_name = "vamps2"
         try:
-            project_names = "";
-            query_subm = """
-            SELECT * FROM project WHERE project regexp "AAA";
-            """
-            self.vamps_submissions = self.run_query_to_dict_vamps2(query_subm)
+            # query_subm = """
+            # SELECT * FROM project WHERE project_id = %s;
+            # """ % (project_id)
+            query_subm = """select username as data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title as project_title, tubelabel
+            from dataset join project using(project_id) join user on(owner_user_id = user_id)
+            where project_id = %s""" % (project_id)
+            self.vamps2_project_results = self.run_query_to_dict_vamps2(query_subm)
 
-            """
-            select username as data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title as project_title,  tubelabel
-from dataset join project using(project_id) join user on(owner_user_id = user_id)
-where project in ('%s')
-            """ % (project_names)
-        # out_file_name = "temp_subm_info"
-        # try:
-        #     for submit_code in self.csv_by_header_uniqued['submit_code']:
-        #         # query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
-        #         #     FROM %s.vamps_submissions AS subm
-        #         #     JOIN %s.vamps_auth AS auth
-        #         #       ON (auth.id = subm.vamps_auth_id)
-        #         #     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
-        #
-        #         query_subm = """
-        #         SELECT subm.*, auth.username, auth.encrypted_password, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.current_sign_in_at, auth.last_sign_in_at
-        #             FROM %s.vamps_submissions AS subm
-        #             JOIN vamps2.user AS auth
-        #               USING(user_id)
-        #             WHERE submit_code = \"%s\"""" % (db_name, submit_code)
-        #         # print("QQQ query_subm")
-        #         # print(query_subm)
-        #
-        #         self.vamps_submissions[submit_code] = self.run_query_to_dict_vamps2(query_subm)
+            return self.vamps2_project_results
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.append(self.no_data_message())
@@ -971,7 +950,6 @@ where project in ('%s')
 
     def csv_file_upload(self, request):
 
-        self.get_vamps2_submission_info()
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
             self.errors.append("The file %s is empty or does not exist." % csv_file)

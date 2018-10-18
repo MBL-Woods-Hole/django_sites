@@ -52,6 +52,8 @@
    {% endblock %}
  {% endif %}
 
+ {% if file_upload_form %}
+
  {% block file_upload_form %}
 
   <div class="grid_12 form">
@@ -64,12 +66,13 @@
    </form>
   </div>
 
-
   <div class="clear"></div>
 
  {% endblock %}
+ {% endif %}
 
  {% if choose_project_form %}
+   <br/>
    OR
    <br/>
   {% block choose_project_form %}
