@@ -61,18 +61,6 @@
      {{ file_upload_form.as_table }}
     </table>
     <input type="submit" name="file_upload" value="Upload" />
-
-    <br/>
-    or
-    <br/>
-
-    <select name="project">
-    {% for p in file_upload_form.projects %}
-        <option value="{{ p }}">{{ p }}</option>
-    {% endfor %}
-    </select>
-     <input type="submit" name="choose_project" value="Submit" />
-
    </form>
   </div>
 
@@ -82,8 +70,21 @@
  {% endblock %}
 
  {% if choose_project_form %}
+   OR
+   <br/>
   {% block choose_project_form %}
+  <div class="grid_12 form">
+   <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
 
+    <table class="normal_table">
+     {{ choose_project_form.as_table }}
+    </table>
+    <input type="submit" name="choose_project" value="Submit" />
+
+   </form>
+  </div>
+
+  <div class="clear"></div>
   {% endblock %}
  {% endif %}
 
