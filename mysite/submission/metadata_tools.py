@@ -1069,6 +1069,7 @@ class CsvMetadata():
                 for d, letter in self.domain_choices.items():
                     if letter == self.domain_letter:
                         domain = d
+                        break
 
                 # self.get_adaptors_full(adaptor, dna_region, domain)
 
@@ -1088,7 +1089,6 @@ class CsvMetadata():
                 #     raise
                 # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['last_name'] + ', ' + self.user_info_arr[curr_submit_code]['first_name']
                 # <option value="36">Nicole Webster</option>
-                # self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['contact_id']
                 self.out_metadata[i]['contact_name']         = self.vamps2_project_results[i]['first_name'] + ' ' + self.vamps2_project_results[i]['last_name']
                 self.out_metadata[i]['data_owner']           = self.vamps2_project_results[i]['data_owner']
 
@@ -1111,8 +1111,8 @@ class CsvMetadata():
                 # self.out_metadata[i]["env_sample_source_id"] = self.csv_by_header['env_sample_source_id'][i];
                 # self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
                 self.out_metadata[i]['first_name']           = self.vamps2_project_results[i]['first_name']
-                # self.out_metadata[i]['funding']                = self.vamps2_project_results[i]['funding']
-                self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
+                self.out_metadata[i]['funding']              = self.vamps2_project_results[i]['funding']
+                # self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
                 self.out_metadata[i]['institution']			 = self.vamps2_project_results[i]['institution']
                 # self.out_metadata[i]['lane']				 = self.csv_by_header['lane'][i]
                 self.out_metadata[i]['last_name']            = self.vamps2_project_results[i]['last_name']
@@ -1151,43 +1151,6 @@ class CsvMetadata():
                 # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
                 # self.out_metadata[i]['seq_operator']       = self.csv_by_header['seq_operator'][i]
                 self.out_metadata[i]['tubelabel']			 = self.vamps2_project_results[i]['tubelabel']
-                """
-                for VampsSubmissions and VampsSubmissionsTubes:
-                """
-                #MIMINUM VampsSubmissionsTubes:
-                # self.out_metadata[i]['direction']   = self.csv_by_header['direction'][i]
-                # self.out_metadata[i]['id']          = self.csv_by_header['id'][i]
-                # self.out_metadata[i]['op_empcr']    = self.csv_by_header['op_empcr'][i]
-                # self.out_metadata[i]['pool']        = self.csv_by_header['pool'][i]
-                # self.out_metadata[i]['submit_code'] = self.csv_by_header['submit_code'][i]
-
-                # ALL VampsSubmissionsTubes:
-                # self.out_metadata[i]['concentration']  = self.csv_by_header['concentration'][i]
-                # self.out_metadata[i]['dataset_name']      = self.csv_by_header['dataset_name'][i]
-                # self.out_metadata[i]['direction']      = self.csv_by_header['direction'][i]
-                # self.out_metadata[i]['duplicate']      = self.csv_by_header['duplicate'][i]
-                # self.out_metadata[i]['env_sample_source'] = self.csv_by_header['env_sample_source'][i]
-                # self.out_metadata[i]['enzyme']         = self.csv_by_header['enzyme'][i]
-                # self.out_metadata[i]['locked']          = self.csv_by_header['locked'][i]
-                # self.out_metadata[i]['managed']        = self.csv_by_header['managed'][i]
-                # self.out_metadata[i]['num_of_tubes']   = self.csv_by_header['num_of_tubes'][i]
-                # self.out_metadata[i]['on_vamps']       = self.csv_by_header['on_vamps'][i]
-                # self.out_metadata[i]['op_amp']         = self.csv_by_header['op_amp'][i]
-                # self.out_metadata[i]['op_empcr']        = self.csv_by_header['op_empcr'][i]
-                # self.out_metadata[i]['op_seq']         = self.csv_by_header['op_seq'][i]
-                # self.out_metadata[i]['platform']       = self.csv_by_header['platform'][i]
-                # self.out_metadata[i]['pool']            = self.csv_by_header['pool'][i]
-                # self.out_metadata[i]['project_name']   = self.csv_by_header['project_name'][i]
-                # self.out_metadata[i]['quant_method']    = self.csv_by_header['quant_method'][i]
-                # self.out_metadata[i]['rundate']        = self.csv_by_header['rundate'][i]
-                # self.out_metadata[i]['runkey']          = self.csv_by_header['runkey'][i]
-                # self.out_metadata[i]['sample_received'] = self.csv_by_header['sample_received'][i]
-                # self.out_metadata[i]['submit_code']    = self.csv_by_header['submit_code'][i]
-                # self.out_metadata[i]['temp_project']   = self.csv_by_header['temp_project'][i]
-                # self.out_metadata[i]['title']          = self.csv_by_header['title'][i]
-                # self.out_metadata[i]['trim_distal']    = self.csv_by_header['trim_distal'][i]
-                # self.out_metadata[i]['tube_label']     = self.csv_by_header['tube_label'][i]
-                # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
             except IndexError:
                 pass
             except:
