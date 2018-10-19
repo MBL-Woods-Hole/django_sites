@@ -547,15 +547,8 @@ class CsvMetadata():
             self.selected_dna_region    = request_post.get('csv_dna_region', False)
             self.selected_overlap       = request_post.get('csv_overlap', False)
         else:
-            # logging.debug("self.csv_by_header_uniqued['platform']")
-            # logging.debug(self.csv_by_header_uniqued['platform'])
             self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
-            # logging.debug("self.selected_machine 2 = %s" % self.selected_machine)
-            # logging.debug("MMM self.machine_shortcuts_choices")
-            # logging.debug(self.machine_shortcuts_choices)
             self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
-            # logging.debug("self.selected_machine_short 2 = %s" % self.selected_machine_short)
-
             self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
 
     def create_path_to_csv(self):
@@ -1002,6 +995,64 @@ class CsvMetadata():
         #     logging.debug("local")
 
         return (metadata_run_info_form, has_empty_cells)
+
+    def new_submission(self, request):
+        data_from_db = self.get_vamps2_submission_info(request.POST['projects'])
+
+        # self.get_initial_run_info_data_dict()
+        # csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
+        #
+        # platform = "".join(self.csv_by_header_uniqued['platform']).lower()
+        # self.selected_machine_short = self.machine_shortcuts_choices[platform]
+        #
+        # self.run_info_from_csv = {
+        #     'csv_rundate'         : csv_rundate,
+        #     'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s%s" % (csv_rundate, self.selected_machine_short),
+        #     'csv_platform'        : platform,
+        #     'csv_dna_region'      : "".join(self.csv_by_header_uniqued['dna_region']),
+        #     'csv_overlap'         : "".join(self.csv_by_header_uniqued['overlap']),
+        #     'csv_has_ns'          : "".join(self.csv_by_header_uniqued['rundate']),
+        #     'csv_seq_operator'    : "".join(self.csv_by_header_uniqued['op_seq']),
+        #     'csv_insert_size'     : "".join(self.csv_by_header_uniqued['insert_size']),
+        #     'csv_read_length'     : "".join(self.csv_by_header_uniqued['read_length'])
+        # }
+        csv_dna_region = [k.split("_")[-1] for k in list(set([x['project'] for x in data_from_db]))][0][1:] #'v4' assuming only one region and a correct project name
+
+        # self.get_selected_variables(request.POST) - no data at this point
+
+        self.run_info_from_csv = { # TODO: rename everywhere
+            'csv_rundate'         : "",
+            'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/",
+            'csv_platform'        : "",
+            'csv_dna_region'      : "".join(self.csv_by_header_uniqued['dna_region']),
+            'csv_overlap'         : "",
+            'csv_has_ns'          : "",
+            'csv_seq_operator'    : "",
+            'csv_insert_size'     : "",
+            'csv_read_length'     : ""
+        }
+
+        request.session['run_info_from_csv'] = self.run_info_from_csv
+        metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+            # CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+
+        # # TODO: move to one method in metadata_tools, call from here as create info and create csv
+        # request.session['lanes_domains'] = self.get_lanes_domains()
+        # del request.session['lanes_domains']
+
+        # self.get_vamps_submission_info()
+        #
+        # self.get_csv_by_header()
+        #
+        # self.get_adaptor_from_csv_content()
+
+        self.make_new_out_metadata()
+        if self.errors:
+            return (metadata_run_info_form)
+
+        request.session['out_metadata'] = self.out_metadata
+
+        return (metadata_run_info_form)
 
     def submit_new_project(self, request):
         # logging.debug("EEE: request.POST = %s" % request.POST)
