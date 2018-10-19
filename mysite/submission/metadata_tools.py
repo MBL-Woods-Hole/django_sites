@@ -1300,15 +1300,15 @@ class CsvMetadata():
         #     'csv_insert_size'     : "".join(self.csv_by_header_uniqued['insert_size']),
         #     'csv_read_length'     : "".join(self.csv_by_header_uniqued['read_length'])
         # }
-        csv_dna_region = [k.split("_")[-1] for k in list(set([x['project'] for x in data_from_db]))][0][1:] #'v4' assuming only one region and a correct project name
-
-        # self.get_selected_variables(request.POST) - no data at this point
+        domain_dna_region = [k.split("_")[-1] for k in list(set([x['project'] for x in data_from_db]))]
+        csv_dna_region = domain_dna_region[0][1:] #'v4' assuming only one region and a correct project name
+        self.domain_letter = domain_dna_region[0][0] #'A' assuming only one region and a correct project name
 
         self.run_info_from_csv = { # TODO: rename everywhere
             'csv_rundate'         : "",
             'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/",
             'csv_platform'        : "",
-            'csv_dna_region'      : "".join(self.csv_by_header_uniqued['dna_region']),
+            'csv_dna_region'      : csv_dna_region,
             'csv_overlap'         : "",
             'csv_has_ns'          : "",
             'csv_seq_operator'    : "",
