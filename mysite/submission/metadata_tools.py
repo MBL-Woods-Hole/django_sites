@@ -92,7 +92,6 @@ class CsvMetadata():
             self.db_prefix = "test_"
         
         self.RUN_INFO_FORM_FIELD_HEADERS = ["dna_region", "insert_size", "op_seq", "overlap", "read_length", "rundate"]
-        # self.out_metadata = defaultdict(lambda: defaultdict(int))
         self.adaptor_ref = self.get_all_adaptors()
         self.adaptors_full = {}
         self.cause = ""
@@ -162,7 +161,7 @@ class CsvMetadata():
             'env_sample_source_id': {'field': 'env_sample_source_id', 'required': True},
         }
 
-        self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
+        self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_source_name', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
         self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
 
@@ -596,13 +595,13 @@ class CsvMetadata():
             writers[lane_domain].writeheader()
 
         for idx, val in self.out_metadata.items():
-            # todo: DRY
+            # todo: DRY, use util get_lanes_domains(self, out_metadata)
             domain_letter = self.domain_choices[val['domain']]
             lane_domain = "%s_%s" % (val['lane'], domain_letter)
             # for h in self.HEADERS_TO_CSV:
             #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
 
-            to_write = {h: val[h] for h in self.HEADERS_TO_CSV} #env_sample_source_id err
+            to_write = {h: val[h] for h in self.HEADERS_TO_CSV} #primer_suite err
 
             writers[lane_domain].writerow(to_write)
 
@@ -616,7 +615,7 @@ class CsvMetadata():
     def update_out_metadata(self, my_post_dict, request):
         logging.info("update_out_metadata")
 
-        # ???
+        # Check for 'form-2-env_source_name' vs.  'env_sample_source_id'
         for header in self.HEADERS_TO_CSV:
             for i in self.out_metadata.keys():
                 try:
@@ -669,6 +668,7 @@ class CsvMetadata():
             adaptor    = request.POST['form-'+str(x)+'-adaptor']
             dna_region = request.session['run_info_form_post']['csv_dna_region']
             domain     = request.POST['form-'+str(x)+'-domain']
+            env_source_name = request.POST['form-' + str(x) + '-env_source_name']
 
             key = "_".join([adaptor, dna_region, domain])
 
@@ -681,9 +681,14 @@ class CsvMetadata():
                 #     nnnn = "NNNN"
                 # self.out_metadata_table['rows'][x]['run_key']       = nnnn + self.adaptors_full[key][1].illumina_run_key
                 self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
+                self.out_metadata_table['rows'][x]['env_source_name'] = env_source_name
+                self.out_metadata_table['rows'][x]['env_sample_source_id'] = env_source_name
+
             except KeyError:
                 self.out_metadata_table['rows'][x]['barcode_index'] = ""
                 self.out_metadata_table['rows'][x]['run_key']       = ""
+                self.out_metadata_table['rows'][x]['env_source_name'] = 0
+                self.out_metadata_table['rows'][x]['env_sample_source_id'] = 0
             except:
                 raise
 
@@ -822,7 +827,7 @@ class CsvMetadata():
             # TODO: make dropdown menu, camelize, choose
             self.out_metadata[i]['domain']			     = self.csv_by_header['domain'][i]
             self.out_metadata[i]['email']                = self.user_info_arr[curr_submit_code]['email']
-            self.out_metadata[i]["env_sample_source_id"] = self.csv_by_header['env_sample_source_id'][i];
+            self.out_metadata[i]["env_sample_source_id"] = self.csv_by_header['env_sample_source_id'][i]
             self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
             self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
             self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
