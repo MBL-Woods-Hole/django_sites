@@ -103,7 +103,7 @@ class CsvMetadata():
         self.csvfile = ""
         self.dirs = Dirs()
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
-        self.domain_letter = ""
+        self.domain_dna_regions = []
         self.dna_region = ""
         self.empty_cells = []
         self.errors = []
@@ -602,7 +602,7 @@ class CsvMetadata():
             # for h in self.HEADERS_TO_CSV:
             #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
 
-            to_write = {h: val[h] for h in self.HEADERS_TO_CSV}
+            to_write = {h: val[h] for h in self.HEADERS_TO_CSV} #env_sample_source_id err
 
             writers[lane_domain].writerow(to_write)
 
@@ -915,7 +915,9 @@ class CsvMetadata():
 
 
     def make_metadata_out_from_project_data(self):
-        for i in range(len(self.vamps2_project_results)-1):
+        # TODO: test with csv if changes still work from
+        # for i in range(len(self.vamps2_project_results)-1):
+        for i in range(len(self.vamps2_project_results)):
 
             # curr_submit_code = self.csv_by_header['submit_code'][i]
             # # logging.debug("self.user_info_arr[curr_submit_code] = ")
@@ -923,10 +925,10 @@ class CsvMetadata():
             #
             # adaptor    = self.csv_by_header['adaptor'][i]
             try:
-                dna_region = self.dna_region
-
+                # TODO - method, use here and in write_out_metadata_to_csv?
+                domain_letter = self.domain_dna_regions[i][0]
                 for d, letter in self.domain_choices.items():
-                    if letter == self.domain_letter:
+                    if letter == domain_letter:
                         domain = d
                         break
 
@@ -959,12 +961,12 @@ class CsvMetadata():
                 # TODO:
                 # $combined_metadata[$num]["date_updated"]       = date("Y-m-d");
 
-                # self.out_metadata[i]['dna_region']			 = self.csv_by_header['dna_region'][i]
+                self.out_metadata[i]['dna_region']			 = self.dna_region
                 # TODO:
                 # $combined_metadata[$num]["dna_region_id"]      = get_id($session["run_info"], "dna_region_0", $db_name, $connection);
 
                 # TODO: make dropdown menu, camelize, choose
-                # self.out_metadata[i]['domain']			     = self.csv_by_header['domain'][i]
+                self.out_metadata[i]['domain']			     = domain
                 self.out_metadata[i]['email']                = self.vamps2_project_results[i]['email']
                 # self.out_metadata[i]["env_sample_source_id"] = self.csv_by_header['env_sample_source_id'][i];
                 # self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
@@ -972,7 +974,7 @@ class CsvMetadata():
                 self.out_metadata[i]['funding']              = self.vamps2_project_results[i]['funding']
                 # self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
                 self.out_metadata[i]['institution']			 = self.vamps2_project_results[i]['institution']
-                # self.out_metadata[i]['lane']				 = self.csv_by_header['lane'][i]
+                self.out_metadata[i]['lane']				 = '1' # default
                 self.out_metadata[i]['last_name']            = self.vamps2_project_results[i]['last_name']
                 # TODO:
                 # $combined_metadata[$num]["locked"]             = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["locked"];
@@ -985,6 +987,7 @@ class CsvMetadata():
                 # TODO:
                 # $combined_metadata[$num]["primer_suite_id"]    = get_primer_suite_id($combined_metadata[$num]["dna_region"], $combined_metadata[$num]["domain"], $db_name, $connection);
 
+                # self.out_metadata[i]['primer_suite']		 = self.get_primer_suite(domain)
                 self.out_metadata[i]['project']				 = self.vamps2_project_results[i]['project']
 
 
@@ -1014,7 +1017,9 @@ class CsvMetadata():
             except:
                 raise
 
-
+    def get_primer_suite(self, domain):
+        pass
+        # self.dna_region
 
     def make_metadata_table(self):
         logging.info("make_metadata_table")
@@ -1107,26 +1112,8 @@ class CsvMetadata():
     def new_submission(self, request):
         data_from_db = self.get_vamps2_submission_info(request.POST['projects'])
 
-        # self.get_initial_run_info_data_dict()
-        # csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
-        #
-        # platform = "".join(self.csv_by_header_uniqued['platform']).lower()
-        # self.selected_machine_short = self.machine_shortcuts_choices[platform]
-        #
-        # self.run_info_from_csv = {
-        #     'csv_rundate'         : csv_rundate,
-        #     'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s%s" % (csv_rundate, self.selected_machine_short),
-        #     'csv_platform'        : platform,
-        #     'csv_dna_region'      : "".join(self.csv_by_header_uniqued['dna_region']),
-        #     'csv_overlap'         : "".join(self.csv_by_header_uniqued['overlap']),
-        #     'csv_has_ns'          : "".join(self.csv_by_header_uniqued['rundate']),
-        #     'csv_seq_operator'    : "".join(self.csv_by_header_uniqued['op_seq']),
-        #     'csv_insert_size'     : "".join(self.csv_by_header_uniqued['insert_size']),
-        #     'csv_read_length'     : "".join(self.csv_by_header_uniqued['read_length'])
-        # }
-        domain_dna_region = [k.split("_")[-1] for k in list(set([x['project'] for x in data_from_db]))]
-        self.domain_letter = domain_dna_region[0][0] #'A' assuming only one region and a correct project name
-        self.dna_region = domain_dna_region[0][1:] #'v4' assuming only one region and a correct project name
+        self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_from_db]]
+        self.dna_region = list(set(self.domain_dna_regions))[0][1:] #'v4' assuming only one region and a correct project name
 
         self.run_info_from_csv = { # TODO: rename everywhere
             'csv_rundate'         : "",
