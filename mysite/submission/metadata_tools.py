@@ -753,7 +753,7 @@ class CsvMetadata():
 
     def make_new_out_metadata(self):
         logging.info("make_new_out_metadata")
-        idx = 0
+        # idx = 0
         # logging.debug("self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content)))
         # logging.debug("self.csv_content[0] =  head = %s" % (self.csv_content[0]))
 
@@ -774,7 +774,7 @@ class CsvMetadata():
             if self.errors:
                 return
             self.make_metadata_out_from_csv()
-        if self.vamps2_project_results:
+        elif self.vamps2_project_results:
             self.make_metadata_out_from_project_data()
         else:
             return
@@ -1067,7 +1067,6 @@ class CsvMetadata():
         # return created
 
     def csv_file_upload(self, request):
-
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
             self.errors.append("The file %s is empty or does not exist." % csv_file)
