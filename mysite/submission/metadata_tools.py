@@ -119,6 +119,7 @@ class CsvMetadata():
         self.run_info_from_csv = {}
         self.selected_lane = ""
         self.selected_machine_short = ""
+        self.suite_domain_choices = dict(Domain.SUITE_DOMAIN_CHOICES)
         self.user_info_arr = {}
         self.vamps_submissions = {}
         
@@ -922,6 +923,7 @@ class CsvMetadata():
     def make_metadata_out_from_project_data(self):
         # TODO: test with csv if changes still work from
         # for i in range(len(self.vamps2_project_results)-1):
+        primer_suites = self.get_primer_suites()
         for i in range(len(self.vamps2_project_results)):
 
             # curr_submit_code = self.csv_by_header['submit_code'][i]
@@ -992,7 +994,7 @@ class CsvMetadata():
                 # TODO:
                 # $combined_metadata[$num]["primer_suite_id"]    = get_primer_suite_id($combined_metadata[$num]["dna_region"], $combined_metadata[$num]["domain"], $db_name, $connection);
 
-                # self.out_metadata[i]['primer_suite']		 = self.get_primer_suite(domain)
+                self.out_metadata[i]['primer_suite']		 = primer_suites[i]
                 self.out_metadata[i]['project']				 = self.vamps2_project_results[i]['project']
 
 
@@ -1022,9 +1024,21 @@ class CsvMetadata():
             except:
                 raise
 
-    def get_primer_suite(self, domain):
-        pass
+    def get_primer_suites(self):
+        # print(Domain.SUITE_DOMAIN_CHOICES)
+        primer_suites = []
+        for r in self.domain_dna_regions:
+            domain_letter = r[0]
+            dna_region = r[1:]
+            primer_suite = self.suite_domain_choices[domain_letter] + ' ' + dna_region.upper() + ' Suite'
+            primer_suites.append(primer_suite)
+        # Domain.SUITE_DOMAIN_CHOICES
+        # primer_suite =
+        # primer_suite
+        # Bacterial V4-V5 Suite
         # self.dna_region
+        # self.domain_dna_regions
+        return primer_suites
 
     def make_metadata_table(self):
         logging.info("make_metadata_table")
