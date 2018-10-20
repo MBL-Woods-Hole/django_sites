@@ -595,10 +595,10 @@ class CsvMetadata():
             writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
 
+        i = 0
         for idx, val in self.out_metadata.items():
-            # todo: DRY, use util get_lanes_domains(self, out_metadata)
-            domain_letter = self.domain_choices[val['domain']]
-            lane_domain = "%s_%s" % (val['lane'], domain_letter)
+            lane_domain = self.lanes_domains[i]
+            i = i+1
             # for h in self.HEADERS_TO_CSV:
             #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
 
@@ -1025,19 +1025,12 @@ class CsvMetadata():
                 raise
 
     def get_primer_suites(self):
-        # print(Domain.SUITE_DOMAIN_CHOICES)
         primer_suites = []
         for r in self.domain_dna_regions:
             domain_letter = r[0]
             dna_region = r[1:]
             primer_suite = self.suite_domain_choices[domain_letter] + ' ' + dna_region.upper() + ' Suite'
             primer_suites.append(primer_suite)
-        # Domain.SUITE_DOMAIN_CHOICES
-        # primer_suite =
-        # primer_suite
-        # Bacterial V4-V5 Suite
-        # self.dna_region
-        # self.domain_dna_regions
         return primer_suites
 
     def make_metadata_table(self):
@@ -1287,8 +1280,9 @@ class CsvMetadata():
 
             # *) check if csv was created
             self.check_out_csv_files()
-            
-            self.update_submission_tubes(request)
+
+            if len(self.vamps_submissions) > 0:
+                self.update_submission_tubes(request)
             
         self.new_rundate, self.new_rundate_created = self.insert_run(request)
         logging.info("self.new_rundate = %s, self.new_rundate_created = %s" % (self.new_rundate, self.new_rundate_created))
