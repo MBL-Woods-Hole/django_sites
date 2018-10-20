@@ -45,9 +45,13 @@ class Utils():
         return domain_choices[domain_name]
 
     def clear_session(self, request):
+        key_list = list(request.session.keys())
         try:
-            for key in list(request.session):
+            for key in key_list:
                 del request.session[key]
+                # continue
+            # for key in list(request.session):
+            #     del request.session[key]
         except KeyError:
             pass
 
@@ -56,7 +60,7 @@ class Utils():
     def get_lanes_domains(self, out_metadata):
         domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         lanes_domains = []
-            
+
         for idx, val in out_metadata.items():
             domain_letter = domain_choices[val['domain']]
             lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
