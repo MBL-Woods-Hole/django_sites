@@ -31,9 +31,6 @@ class ChooseProjectForm(forms.Form):
     # project_query = Project.cache_all_method.all().order_by('-project_id')
     projects = forms.ModelChoiceField(queryset = projects_query, empty_label = None, label='Project')
 
-    print("PPP projects from forms.FileUploadForm")
-    print(projects)
-
 class CsvRunInfoUploadForm(forms.Form):
     csv_rundate = forms.DateField(label = 'Run date', input_formats = ['%Y%m%d'])
     csv_path_to_raw_data = forms.CharField(label = 'Path to raw data', max_length = 128, widget = forms.TextInput(

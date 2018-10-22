@@ -48,6 +48,9 @@ def upload_metadata(request):
     elif 'submit_run_info' in request.POST:
         context = submit_run_info_n_edit_metadata_n_make_table(request)
 
+    elif 'submit_run_info_and_get_csv' in request.POST:
+        context = submit_run_info_and_get_csv(request)
+
     elif 'choose_project' in request.POST:
         context = choose_project(request)
 
@@ -67,6 +70,9 @@ def choose_project(request):
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued}
 
     # return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
+
+def submit_run_info_and_get_csv(request):
+    pass
 
 def upload_file_n_make_new_metadata(request):
     utils = Utils()
@@ -123,9 +129,6 @@ def edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(reque
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': csv_handler.files_created}
 
 def initial_form():
-    logging.debug("HHH")
-    logging.debug("555 file_upload_form")
-
     file_upload_form = FileUploadForm()
     choose_project_form = ChooseProjectForm()
 

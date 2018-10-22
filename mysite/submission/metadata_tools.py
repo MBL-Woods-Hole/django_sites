@@ -1290,7 +1290,31 @@ class CsvMetadata():
         
     def insert_run(self, request):
         return Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
-    
+
+    def create_vamps2_submission_csv(self, request):
+        # def write_out_metadata_to_csv(self, my_post_dict, request):
+        logging.info("create_vamps2_submission_csv")
+
+        writers = {}
+        for lane_domain in self.metadata_csv_file_names.keys():
+            # writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'), self.HEADERS_TO_CSV)
+            writers[lane_domain] = csv.DictWriter(
+                open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'),
+                self.HEADERS_TO_CSV)
+            writers[lane_domain].writeheader()
+
+        i = 0
+        for idx, val in self.out_metadata.items():
+            lane_domain = self.lanes_domains[i]
+            i = i + 1
+            # for h in self.HEADERS_TO_CSV:
+            #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
+
+            to_write = {h: val[h] for h in self.HEADERS_TO_CSV}  # primer_suite err
+
+            writers[lane_domain].writerow(to_write)
+
+
     def update_submission_tubes(self, request):
         try:
             self.out_metadata = request.session['out_metadata']
