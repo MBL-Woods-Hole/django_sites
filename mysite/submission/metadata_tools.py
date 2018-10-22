@@ -1209,6 +1209,9 @@ class CsvMetadata():
         self.edit_out_metadata(request)
         request.session['out_metadata'] = self.out_metadata
 
+        if request.session['create_vamps2_submission_csv']:
+            self.create_vamps2_submission_csv(request)
+
         self.make_metadata_table()
 
         # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
@@ -1295,9 +1298,11 @@ class CsvMetadata():
         # def write_out_metadata_to_csv(self, my_post_dict, request):
         logging.info("create_vamps2_submission_csv")
 
+        out_metadata = request.session['out_metadata']
+        run_info_data = request.POST
+
         writers = {}
         for lane_domain in self.metadata_csv_file_names.keys():
-            # writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'), self.HEADERS_TO_CSV)
             writers[lane_domain] = csv.DictWriter(
                 open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'),
                 self.HEADERS_TO_CSV)
