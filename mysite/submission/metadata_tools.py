@@ -538,19 +538,18 @@ class CsvMetadata():
 
     def get_selected_variables(self, request_post):
         # change from form if needed
-        # machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
-
-        if 'submit_run_info' in request_post:
+        # if 'submit_run_info' in request_post:
+        try:
             self.selected_machine       = request_post.get('csv_platform', False)
-            # logging.debug("self.selected_machine in request_post= %s" % (self.selected_machine))
             self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
             self.selected_rundate       = request_post.get('csv_rundate', False)
             self.selected_dna_region    = request_post.get('csv_dna_region', False)
             self.selected_overlap       = request_post.get('csv_overlap', False)
-        else:
+        except:
             self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
             self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
             self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
+            raise
 
     def create_path_to_csv(self):
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
@@ -1301,24 +1300,36 @@ class CsvMetadata():
         out_metadata = request.session['out_metadata']
         run_info_data = request.POST
 
-        writers = {}
-        for lane_domain in self.metadata_csv_file_names.keys():
-            writers[lane_domain] = csv.DictWriter(
-                open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'),
-                self.HEADERS_TO_CSV)
-            writers[lane_domain].writeheader()
+        data_owner = "".join(list(set([value1['data_owner'] for key1, value1 in out_metadata.items()])))
+        project = "".join(list(set([value1['project'] for key1, value1 in out_metadata.items()])))
 
-        i = 0
+        project_author = data_owner + "_" + project
+        complete_file_name = "Metadata_upload_%s.csv" % (project_author)
+        file_path = os.path.join(os.path.expanduser('~'), 'Documents', complete_file_name)
+
+        writers = {}
+        writers[project_author] = csv.DictWriter(open(file_path, 'w'), self.HEADERS_TO_CSV)
+        writers[project_author].writeheader()
+
+        # i = 0
         for idx, val in self.out_metadata.items():
-            lane_domain = self.lanes_domains[i]
-            i = i + 1
+            # lane_domain = self.lanes_domains[i]
+            # i = i + 1
             # for h in self.HEADERS_TO_CSV:
             #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
 
-            to_write = {h: val[h] for h in self.HEADERS_TO_CSV}  # primer_suite err
+            to_write = defaultdict(lambda: '')
+            # to_write = {h: val[h] for h in self.HEADERS_TO_CSV}
+            for h in self.HEADERS_TO_CSV:
+                try:
+                    to_write[h] = val[h]
+                except KeyError:
+                    to_write[h] = ''
+                except:
+                    raise
+            writers[project_author].writerow(to_write)
 
-            writers[lane_domain].writerow(to_write)
-
+                # {h: val[h] for h in self.HEADERS_TO_CSV}  # primer_suite err
 
     def update_submission_tubes(self, request):
         try:
