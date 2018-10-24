@@ -120,6 +120,9 @@ def submit_run_info_n_edit_metadata_n_make_table(request):
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
     else:
         context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
+
+    context['files_created'] = request.session['files_created']
+
     return context
             
 def edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request):

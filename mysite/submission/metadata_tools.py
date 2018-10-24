@@ -1210,6 +1210,7 @@ class CsvMetadata():
 
         if request.session['create_vamps2_submission_csv']:
             self.create_vamps2_submission_csv(request)
+            request.session['files_created'] = self.files_created
 
         self.make_metadata_table()
 
@@ -1328,6 +1329,9 @@ class CsvMetadata():
                 except:
                     raise
             writers[project_author].writerow(to_write)
+
+        self.check_out_csv_files()
+
 
                 # {h: val[h] for h in self.HEADERS_TO_CSV}  # primer_suite err
 
