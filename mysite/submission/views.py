@@ -75,7 +75,7 @@ def submit_run_info_and_get_csv(request):
     # csv_handler = CsvMetadata(request)
 
     request.session['create_vamps2_submission_csv'] = True
-    submit_run_info_n_edit_metadata_n_make_table(request)
+    return submit_run_info_n_edit_metadata_n_make_table(request)
     # csv_handler.create_vamps2_submission_csv(request)
 
 

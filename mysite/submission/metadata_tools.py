@@ -1306,7 +1306,7 @@ class CsvMetadata():
         project_author = data_owner + "_" + project
         complete_file_name = "Metadata_upload_%s.csv" % (project_author)
         file_path = os.path.join(os.path.expanduser('~'), 'Documents', complete_file_name)
-
+        self.metadata_csv_file_names[project_author] = file_path
         writers = {}
         writers[project_author] = csv.DictWriter(open(file_path, 'w'), self.HEADERS_TO_CSV)
         writers[project_author].writeheader()
@@ -1319,7 +1319,7 @@ class CsvMetadata():
             #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
 
             to_write = defaultdict(lambda: '')
-            # to_write = {h: val[h] for h in self.HEADERS_TO_CSV}
+            # TODO: add filename to self.metadata_csv_file_names:        for lane_domain, file_name in self.metadata_csv_file_names.items():
             for h in self.HEADERS_TO_CSV:
                 try:
                     to_write[h] = val[h]
