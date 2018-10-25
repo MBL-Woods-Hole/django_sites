@@ -540,15 +540,16 @@ class CsvMetadata():
         # change from form if needed
         # if 'submit_run_info' in request_post:
         try:
-            self.selected_machine       = request_post.get('csv_platform', False)
-            self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
-            self.selected_rundate       = request_post.get('csv_rundate', False)
+            self.selected_machine       = request_post.get('csv_platform', False) or  " ".join(self.csv_by_header_uniqued['platform']).lower()
+            self.selected_machine_short = self.selected_machine_short or self.machine_shortcuts_choices[self.selected_machine]
+            self.selected_rundate       = request_post.get('csv_rundate', False) or " ".join(self.csv_by_header_uniqued['rundate']).lower()
             self.selected_dna_region    = request_post.get('csv_dna_region', False)
             self.selected_overlap       = request_post.get('csv_overlap', False)
+        # except KeyError:
+            # self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
+            # self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
+            # self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
         except:
-            self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
-            self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
-            self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
             raise
 
     def create_path_to_csv(self):
@@ -1071,8 +1072,6 @@ class CsvMetadata():
             self.errors.append("The file %s is empty or does not exist." % csv_file)
             return ("", 'no_file')
 
-            # render(request, 'submission/upload_metadata.html', {'errors': self.errors, 'errors_size': len(self.errors) })
-
         has_empty_cells = self.import_from_file(csv_file)
 
         if has_empty_cells:                
@@ -1295,7 +1294,6 @@ class CsvMetadata():
         return Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
 
     def create_vamps2_submission_csv(self, request):
-        # def write_out_metadata_to_csv(self, my_post_dict, request):
         logging.info("create_vamps2_submission_csv")
 
         out_metadata = request.session['out_metadata']
@@ -1312,15 +1310,8 @@ class CsvMetadata():
         writers[project_author] = csv.DictWriter(open(file_path, 'w'), self.HEADERS_TO_CSV)
         writers[project_author].writeheader()
 
-        # i = 0
         for idx, val in self.out_metadata.items():
-            # lane_domain = self.lanes_domains[i]
-            # i = i + 1
-            # for h in self.HEADERS_TO_CSV:
-            #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
-
             to_write = defaultdict(lambda: '')
-            # TODO: add filename to self.metadata_csv_file_names:        for lane_domain, file_name in self.metadata_csv_file_names.items():
             for h in self.HEADERS_TO_CSV:
                 try:
                     to_write[h] = val[h]
@@ -1331,9 +1322,6 @@ class CsvMetadata():
             writers[project_author].writerow(to_write)
 
         self.check_out_csv_files()
-
-
-                # {h: val[h] for h in self.HEADERS_TO_CSV}  # primer_suite err
 
     def update_submission_tubes(self, request):
         try:
