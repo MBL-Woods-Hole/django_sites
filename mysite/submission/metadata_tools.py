@@ -99,6 +99,7 @@ class CsvMetadata():
         self.csv_by_header_uniqued = defaultdict(list)
         self.csv_content = []
         self.csv_headers = []
+        self.vamps2_csv = False
         self.csvfile = ""
         self.dirs = Dirs()
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
@@ -162,12 +163,45 @@ class CsvMetadata():
             'env_sample_source_id': {'field': 'env_sample_source_id', 'required': True},
         }
 
+        self.HEADERS_FROM_vamps2_CSV = {
+            'adaptor'            : {'field': 'adaptor', 'required': True},
+            'amp_operator'       : {'field': 'amp_operator', 'required': True},
+            'barcode'            : {'field': 'barcode', 'required': False},
+            'barcode_index'      : {'field': 'barcode_index', 'required': False},
+            'data_owner'         : {'field': 'data_owner', 'required': True},
+            'dataset'            : {'field': 'dataset', 'required': True},
+            'dataset_description': {'field': 'dataset_description', 'required': False},
+            'dna_region'         : {'field': 'dna_region', 'required': True},
+            'email'              : {'field': 'email', 'required': True},
+            'env_source_name'    : {'field': 'env_source_name', 'required': True},
+            'first_name'         : {'field': 'first_name', 'required': True},
+            'funding'            : {'field': 'funding', 'required': True},
+            'insert_size'        : {'field': 'insert_size', 'required': True},
+            'institution'        : {'field': 'institution', 'required': True},
+            'lane'               : {'field': 'lane', 'required': True},
+            'last_name'          : {'field': 'last_name', 'required': True},
+            'overlap'            : {'field': 'overlap', 'required': True},
+            'platform'           : {'field': 'platform', 'required': True},
+            'primer_suite'       : {'field': 'primer_suite', 'required': True},
+            'project'            : {'field': 'project', 'required': True},
+            'project_description': {'field': 'project_description', 'required': True},
+            'project_title'      : {'field': 'project_title', 'required': True},
+            'read_length'        : {'field': 'read_length', 'required': True},
+            'run'                : {'field': 'run', 'required': True},
+            'run_key'            : {'field': 'run_key', 'required': False},
+            'seq_operator'       : {'field': 'seq_operator', 'required': True},
+            'tubelabel'          : {'field': 'tubelabel', 'required': False},
+        }
         self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_source_name', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
         self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
 
         self.required_headers = [header_name for header_name, values in
                                  self.HEADERS_FROM_CSV.items() if values['required']]
+
+        self.required_headers_vamps2 = [header_name for header_name, values in
+                                 self.HEADERS_FROM_vamps2_CSV.items() if values['required']]
+
         # logging.debug("self.required_headers = %s" % self.required_headers)
 
     def no_data_message(self):
@@ -263,11 +297,16 @@ class CsvMetadata():
 
     def get_initial_run_info_data_dict(self):
         logging.info("get_initial_run_info_data_dict")
-        
-        try:
-            csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
 
-            
+        if self.vamps2_csv:
+            csv_rundate = "".join(self.csv_by_header_uniqued['run'])
+            self.run_info_from_csv['csv_seq_operator'] = ""
+        else:
+            csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
+            self.run_info_from_csv['csv_seq_operator'] = "".join(self.csv_by_header_uniqued['op_seq'])
+
+
+        try:
             platform = "".join(self.csv_by_header_uniqued['platform']).lower()
             self.selected_machine_short = self.machine_shortcuts_choices[platform]
             
@@ -277,8 +316,7 @@ class CsvMetadata():
                 'csv_platform':	        platform,
                 'csv_dna_region':	    "".join(self.csv_by_header_uniqued['dna_region']),
                 'csv_overlap':		    "".join(self.csv_by_header_uniqued['overlap']),
-                'csv_has_ns':		    "".join(self.csv_by_header_uniqued['rundate']),
-                'csv_seq_operator':	    "".join(self.csv_by_header_uniqued['op_seq']),
+                # 'csv_has_ns':		    "".join(self.csv_by_header_uniqued['rundate']),
                 'csv_insert_size':	    "".join(self.csv_by_header_uniqued['insert_size']),
                 'csv_read_length':	    "".join(self.csv_by_header_uniqued['read_length'])
             }
@@ -291,51 +329,24 @@ class CsvMetadata():
         except:
             raise
 
-      # def parce_csv(self):
-      #     for y_index, row in enumerate(self.reader):
-      #         # logging.debug("parce_csv row")
-      #         # logging.debug(row)
-      #
-      #         self.csv_content.append(row)
-      #         if y_index == 0:
-      #             self.csv_headers = [header_name.lower() for header_name in row if header_name]
-      #             continue
-      #     return self.csv_headers, self.csv_content
-
     def parce_csv(self):
-      # for r in self.reader:
-      #     print("PPP parce_csv row")
-      #     print(r)
-          # read().decode('utf-8')
-      # self.csv_headers = [header_name.lower() for header_name in self.reader.fieldnames if header_name]
       self.csv_content = [row for row in self.reader]
       self.csv_headers = [header_name.lower() for header_name in self.csv_content[0]]
-      # for row in self.reader:
-      #     self.csv_content.append(row)
-
-
-      # for y_index, row in enumerate(self.reader):
-      #     print("parce_csv row")
-      #     print(row)
-      #
-      #     self.csv_content.append(row)
-      #     if y_index == 0:
-      #         self.csv_headers = [header_name.lower() for header_name in row if header_name]
-      #         continue
       return self.csv_headers, self.csv_content
 
     def check_headers_presence(self):
-      missing_headers = set(self.required_headers) - set([r.lower() for r in self.csv_headers])
-      # logging.debug("self.csv_headers = " )
-      # logging.debug(self.csv_headers)
-      if missing_headers:
-          missing_headers_str = ', '.join(missing_headers)
-          self.errors.append('Missing headers: %s' % (missing_headers_str))
-          # logging.debug("self.errors 3")
-          # logging.debug(self.errors)
-          # raise ValidationError(u'Missing headers: %s' % (missing_headers_str))
-          return False
-      return True
+        missing_headers = set()
+        if 'submit_code' in self.csv_headers:
+            missing_headers = set(self.required_headers) - set([r.lower() for r in self.csv_headers])
+        else:
+            missing_headers = set(self.required_headers_vamps2) - set([r.lower() for r in self.csv_headers])
+            self.vamps2_csv = True
+
+        if missing_headers:
+            missing_headers_str = ', '.join(missing_headers)
+            self.errors.append('Missing headers: %s' % (missing_headers_str))
+            return False
+        return True
 
     def check_req_info_presence(self):
         empty_cells_interim = []
@@ -542,10 +553,12 @@ class CsvMetadata():
         try:
             self.selected_machine       = request_post.get('csv_platform', False) or  " ".join(self.csv_by_header_uniqued['platform']).lower()
             self.selected_machine_short = self.selected_machine_short or self.machine_shortcuts_choices[self.selected_machine]
-            self.selected_rundate       = request_post.get('csv_rundate', False) or " ".join(self.csv_by_header_uniqued['rundate']).lower()
-            self.selected_dna_region    = request_post.get('csv_dna_region', False)
-            self.selected_overlap       = request_post.get('csv_overlap', False)
-        # except KeyError:
+            self.selected_rundate       = request_post.get('csv_rundate', False) or " ".join(self.csv_by_header_uniqued['run']).lower()
+            self.selected_dna_region    = request_post.get('csv_dna_region', False) or " ".join(self.csv_by_header_uniqued['dna_region']).lower()
+            self.selected_overlap       = request_post.get('csv_overlap', False) or " ".join(self.csv_by_header_uniqued['overlap']).lower()
+        except KeyError:
+            logging.debug("self.csv_by_header_uniqued")
+            pass
             # self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
             # self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
             # self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
@@ -919,6 +932,27 @@ class CsvMetadata():
             # self.out_metadata[i]['tube_label']     = self.csv_by_header['tube_label'][i]
             # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
 
+    def get_domain_per_row(self, info_list_len):
+        domain_per_row = []
+        for i in range(info_list_len):
+            try:
+                # TODO - method, use here and in write_out_metadata_to_csv?
+                # projects = self.csv_by_header['project']
+                self.domain_dna_regions = [k.split("_")[-1] for k in self.csv_by_header['project']]
+
+                domain_letter = self.domain_dna_regions[i][0]
+                for d, letter in self.domain_choices.items():
+                    if letter == domain_letter:
+                        domain = d
+                        break
+                domain_per_row.append(domain)
+            except IndexError:
+                pass
+            except:
+                raise
+        return
+
+
 
     def make_metadata_out_from_project_data(self):
         # TODO: test with csv if changes still work from
@@ -1097,10 +1131,13 @@ class CsvMetadata():
         # request.session['lanes_domains'] = self.get_lanes_domains()
         # del request.session['lanes_domains']
 
-        self.get_vamps_submission_info()
+        if not self.vamps2_csv:
+            self.get_vamps_submission_info()
 
         self.get_csv_by_header()
 
+        info_list_len = len(self.csv_by_header['dataset'])
+        domains_per_row = self.get_domain_per_row(info_list_len)
         self.get_adaptor_from_csv_content()
 
         self.make_new_out_metadata()
@@ -1108,8 +1145,6 @@ class CsvMetadata():
             return (metadata_run_info_form, has_empty_cells)
 
         request.session['out_metadata'] = self.out_metadata
-
-        # 
 
         # utils.is_local(request)
         # HOSTNAME = request.get_host()
@@ -1138,17 +1173,6 @@ class CsvMetadata():
 
         request.session['run_info_from_csv'] = self.run_info_from_csv
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-            # CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-
-        # # TODO: move to one method in metadata_tools, call from here as create info and create csv
-        # request.session['lanes_domains'] = self.get_lanes_domains()
-        # del request.session['lanes_domains']
-
-        # self.get_vamps_submission_info()
-        #
-        # self.get_csv_by_header()
-        #
-        # self.get_adaptor_from_csv_content()
 
         self.make_new_out_metadata()
         if self.errors:
