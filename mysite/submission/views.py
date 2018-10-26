@@ -69,15 +69,9 @@ def choose_project(request):
 
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued}
 
-    # return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
-
 def submit_run_info_and_get_csv(request):
-    # csv_handler = CsvMetadata(request)
-
     request.session['create_vamps2_submission_csv'] = True
     return submit_run_info_n_edit_metadata_n_make_table(request)
-    # csv_handler.create_vamps2_submission_csv(request)
-
 
 def upload_file_n_make_new_metadata(request):
     utils = Utils()

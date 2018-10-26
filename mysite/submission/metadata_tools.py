@@ -260,28 +260,6 @@ class CsvMetadata():
         try:
             self.csvfile.seek(0)
             self.reader = csv.reader(io.StringIO(self.csvfile.read().decode('utf-8')))
-            # self.reader = csv.DictReader(io.StringIO(self.csvfile.read().decode('utf-8')))
-
-            # open_file = codecs.EncodedFile(self.csvfile, "utf-8")
-            # open_file_part = open_file.read().decode("utf-8")
-
-            # open_file = codecs.EncodedFile(self.csvfile, "utf-8")
-            # open_file_part = open_file.read().decode("utf-8")
-            # self.csvfile.open()
-            # self.reader = csv.reader(codecs.EncodedFile(self.csvfile, "utf-8"), delimiter=',', dialect=dialect)
-            # param_file = self.csvfile.read()
-            # self.reader = csv.reader(open_file, delimiter=',', dialect=dialect)
-
-            # self.reader = csv.reader(codecs.iterdecode(self.csvfile, 'utf-8'), delimiter=',', dialect=dialect)
-            # for line in self.reader:
-            #     print("LLL LINE")  # do something with line
-            #     print(line)  # do something with line
-
-            # ifile = open(self.csvfile, "r")
-            # self.reader = csv.reader(ifile)
-            # for row in self.reader:
-            #     print(row)
-
 
         except csv.Error as e:
             self.errors.append('%s is not a valid CSV file: %s' % (self.csvfile, e))
@@ -305,7 +283,6 @@ class CsvMetadata():
         else:
             csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
             self.run_info_from_csv['csv_seq_operator'] = "".join(self.csv_by_header_uniqued['op_seq'])
-
 
         try:
             platform = "".join(self.csv_by_header_uniqued['platform']).lower()
@@ -366,13 +343,6 @@ class CsvMetadata():
         pp = pprint.PrettyPrinter(indent=4)
         
         res_dict = {}
-        # print "111 connections"
-        # for k, v in connections.items():
-        #   pp.pprint("k = %s, v = %s") % (k,v)
-        #
-        # print "222 connection"
-        # print connection.values()
-        
         cursor = connections['vamps'].cursor()
         # cursor = connection.cursor()
         cursor.execute(query)
@@ -405,9 +375,6 @@ class CsvMetadata():
     def get_vamps2_submission_info(self, project_id = ""):
         db_name = "vamps2"
         try:
-            # query_subm = """
-            # SELECT * FROM project WHERE project_id = %s;
-            # """ % (project_id)
             query_subm = """select username as data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title as project_title, tubelabel
             from dataset join project using(project_id) join user on(owner_user_id = user_id)
             where project_id = %s""" % (project_id)
@@ -426,24 +393,14 @@ class CsvMetadata():
     def get_vamps_submission_info(self):
         db_name = self.db_prefix + "vamps"
         
-        # out_file_name = "temp_subm_info"
         try:
             for submit_code in self.csv_by_header_uniqued['submit_code']:
-                # query_subm = """SELECT subm.*, auth.user, auth.passwd, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.date_added
-                #     FROM %s.vamps_submissions AS subm
-                #     JOIN %s.vamps_auth AS auth
-                #       ON (auth.id = subm.vamps_auth_id)
-                #     WHERE submit_code = \"%s\"""" % (db_name, db_name, submit_code)
-
                 query_subm = """
                 SELECT subm.*, auth.username, auth.encrypted_password, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.current_sign_in_at, auth.last_sign_in_at
                     FROM %s.vamps_submissions AS subm
                     JOIN vamps2.user AS auth
                       USING(user_id)
                     WHERE submit_code = \"%s\"""" % (db_name, submit_code)
-                # print("QQQ query_subm")
-                # print(query_subm)
-
 
                 self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
         except KeyError as e:
@@ -482,10 +439,6 @@ class CsvMetadata():
 
     def get_adaptors_full(self, adaptor, dna_region, domain):
         db_name = self.db_prefix + "env454"
-        # self.adaptor_ref
-        # links = IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
-        # logging.debug(links.filter(Q(illumina_adaptor_id__illumina_adaptor = "A04") | Q(illumina_adaptor_id__illumina_adaptor = "A08")))
-
         key = "_".join([adaptor, dna_region, domain])
         mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
 
@@ -532,24 +485,7 @@ class CsvMetadata():
                     self.errors.append("Please add contact information for %s to env454." % vamps_user_id)
                 except:
                     raise
-
-                # .filter(vamps_name = vamps_user_id)
-
-                # logging.debug("CCC contacts = %s" % contacts)
-
-                # for row in contacts:
                 self.user_info_arr[submit_code] = model_to_dict(contacts)
-
-                # self.user_info_arr.append({submit_code: (model_to_dict(row)) for row in contacts})
-
-            # logging.debug("self.user_info_arr = %s" % self.user_info_arr)
-        # except KeyError as e:
-        #     self.cause = e.args[0]
-        #     print "self.cause SSS"
-        #     print self.cause
-        #
-        #     self.errors.append(self.no_data_message())
-        #     self.errors.append(" Or the vamps_submission table has no such submit_code.")
         except:
             raise
 
@@ -605,12 +541,11 @@ class CsvMetadata():
             self.dirs.chmod_wg(full_ini_name)
 
 
-    def write_out_metadata_to_csv(self, my_post_dict, request):
+    def write_out_metadata_to_csv(self):
         logging.info("write_out_metadata_to_csv")
 
         writers = {}
         for lane_domain in self.metadata_csv_file_names.keys():
-            # writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'ab'), self.HEADERS_TO_CSV)
             writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
 
@@ -658,9 +593,7 @@ class CsvMetadata():
         # logging.debug("FROM edit_out_metadata: request.session['out_metadata']")
         # logging.debug(request.session['out_metadata'])
 
-
         for i, v in self.out_metadata.items():
-            # logging.debug("i = %s" % i)
             self.out_metadata[i]['dna_region']		    = request.POST.get('csv_dna_region', False)
             self.out_metadata[i]['has_ns']			    = request.POST.get('csv_has_ns', False)
             self.out_metadata[i]['insert_size']		    = request.POST.get('csv_insert_size', False)
@@ -699,7 +632,6 @@ class CsvMetadata():
                 self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
                 # if (request.session['run_info_form_post']['csv_has_ns'] == 'yes'):
                 #     nnnn = "NNNN"
-                # self.out_metadata_table['rows'][x]['run_key']       = nnnn + self.adaptors_full[key][1].illumina_run_key
                 self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
                 self.out_metadata_table['rows'][x]['env_source_name'] = env_source_name
                 self.out_metadata_table['rows'][x]['env_sample_source_id'] = env_source_name
@@ -804,9 +736,6 @@ class CsvMetadata():
         for i in range(len(self.csv_content)-1):
 
             curr_submit_code = self.csv_by_header['submit_code'][i]
-            # logging.debug("self.user_info_arr[curr_submit_code] = ")
-            # logging.debug(self.user_info_arr[curr_submit_code])
-
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
             domain     = self.csv_by_header['domain'][i]
@@ -815,7 +744,6 @@ class CsvMetadata():
 
             key = "_".join([adaptor, dna_region, domain])
 
-            # logging.debug(i)
             self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
             self.out_metadata[i]['amp_operator']		 = self.csv_by_header['op_amp'][i]
             self.out_metadata[i]['barcode']				 = self.csv_by_header['barcode'][i]
@@ -948,25 +876,6 @@ class CsvMetadata():
                     break
             self.domains_per_row.append(domain)
 
-        # for i in range(info_list_len):
-        #     try:
-        #         # TODO - method, use in write_out_metadata_to_csv?
-        #         self.domain_dna_regions = [k.split("_")[-1] for k in self.csv_by_header['project']]
-        #
-        #         domain_letter = self.domain_dna_regions[i][0]
-        #         for d, letter in self.domain_choices.items():
-        #             if letter == domain_letter:
-        #                 domain = d
-        #                 break
-        #         self.domains_per_row.append(domain)
-        #     except IndexError:
-        #         raise
-        #     except:
-        #         raise
-        # return
-
-
-
     def make_metadata_out_from_project_data(self):
         # TODO: test with csv if changes still work from
         primer_suites = self.get_primer_suites()
@@ -974,13 +883,6 @@ class CsvMetadata():
         self.get_domain_per_row(info_list_len)
         for i in range(info_list_len):
             try:
-                # TODO - test method, use here and in write_out_metadata_to_csv?
-
-                # domain_letter = self.domain_dna_regions[i][0]
-                # for d, letter in self.domain_choices.items():
-                #     if letter == domain_letter:
-                #         domain = d
-                #         break
                 self.out_metadata[i]['contact_name']         = self.vamps2_project_results[i]['first_name'] + ' ' + self.vamps2_project_results[i]['last_name']
                 self.out_metadata[i]['data_owner']           = self.vamps2_project_results[i]['data_owner']
 
@@ -1138,19 +1040,6 @@ class CsvMetadata():
     def submit_new_project(self, request):
         # logging.debug("EEE: request.POST = %s" % request.POST)
 
-        # request.session['run_info_from_csv'] = self.run_info_from_csv
-        # logging.debug("request.session['run_info_from_csv'] 111 = ")
-        # logging.debug(request.session['run_info_from_csv'])
-
-        # try:
-        #     metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-        # except KeyError as e:
-        #     metadata_run_info_form = CsvRunInfoUploadForm()
-        #     logging.debug("request.session['run_info_from_csv'] does not exist")
-        # except:
-        #     raise
-
-
         metadata_new_project_form = AddProjectForm(request.POST)
 
         if metadata_new_project_form.is_valid():        
@@ -1257,7 +1146,7 @@ class CsvMetadata():
 
             #*) metadata csv files
             self.make_out_metadata_csv_file_names()
-            self.write_out_metadata_to_csv(my_post_dict, request)
+            self.write_out_metadata_to_csv()
 
             # *) check if csv was created
             self.check_out_csv_files()
@@ -1277,7 +1166,7 @@ class CsvMetadata():
         logging.info("create_vamps2_submission_csv")
 
         out_metadata = request.session['out_metadata']
-        run_info_data = request.POST
+        # run_info_data = request.POST
 
         data_owner = "".join(list(set([value1['data_owner'] for key1, value1 in out_metadata.items()])))
         project = "".join(list(set([value1['project'] for key1, value1 in out_metadata.items()])))
