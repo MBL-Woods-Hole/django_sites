@@ -104,6 +104,7 @@ class CsvMetadata():
         self.dirs = Dirs()
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         self.domain_dna_regions = []
+        self.domains_per_row = []
         self.dna_region = ""
         self.empty_cells = []
         self.errors = []
@@ -466,7 +467,12 @@ class CsvMetadata():
             # logging.debug("+" * 9)
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
-            domain     = self.csv_by_header['domain'][i]
+            try:
+                domain     = self.csv_by_header['domain'][i]
+            except IndexError:
+                domain = self.domains_per_row[i]
+            except:
+                raise
 
             self.get_adaptors_full(adaptor, dna_region, domain)
 
@@ -933,7 +939,6 @@ class CsvMetadata():
             # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
 
     def get_domain_per_row(self, info_list_len):
-        domain_per_row = []
         for i in range(info_list_len):
             try:
                 # TODO - method, use here and in write_out_metadata_to_csv?
@@ -945,9 +950,9 @@ class CsvMetadata():
                     if letter == domain_letter:
                         domain = d
                         break
-                domain_per_row.append(domain)
+                self.domains_per_row.append(domain)
             except IndexError:
-                pass
+                raise
             except:
                 raise
         return
@@ -956,15 +961,8 @@ class CsvMetadata():
 
     def make_metadata_out_from_project_data(self):
         # TODO: test with csv if changes still work from
-        # for i in range(len(self.vamps2_project_results)-1):
         primer_suites = self.get_primer_suites()
         for i in range(len(self.vamps2_project_results)):
-
-            # curr_submit_code = self.csv_by_header['submit_code'][i]
-            # # logging.debug("self.user_info_arr[curr_submit_code] = ")
-            # # logging.debug(self.user_info_arr[curr_submit_code])
-            #
-            # adaptor    = self.csv_by_header['adaptor'][i]
             try:
                 # TODO - method, use here and in write_out_metadata_to_csv?
                 domain_letter = self.domain_dna_regions[i][0]
@@ -973,65 +971,23 @@ class CsvMetadata():
                         domain = d
                         break
 
-                # self.get_adaptors_full(adaptor, dna_region, domain)
 
-                # key = "_".join([adaptor, dna_region, domain])
-
-                # logging.debug(i)
-                # self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
-                # self.out_metadata[i]['amp_operator']		 = self.csv_by_header['op_amp'][i]
-                # self.out_metadata[i]['barcode']				 = self.csv_by_header['barcode'][i]
-                # self.out_metadata[i]['barcode_index']		 = self.csv_by_header['barcode_index'][i]
-                # try:
-                #     if (self.out_metadata[i]['barcode_index'] == ""):
-                #         self.out_metadata[i]['barcode_index'] = self.adaptors_full[key][0].illumina_index
-                # except KeyError:
-                #     self.out_metadata[i]['barcode_index'] = ""
-                # except:
-                #     raise
-                # <option value="36">Nicole Webster</option>
                 self.out_metadata[i]['contact_name']         = self.vamps2_project_results[i]['first_name'] + ' ' + self.vamps2_project_results[i]['last_name']
                 self.out_metadata[i]['data_owner']           = self.vamps2_project_results[i]['data_owner']
 
                 self.out_metadata[i]['dataset']				 = self.vamps2_project_results[i]['dataset']
                 self.out_metadata[i]['dataset_description']	 = self.vamps2_project_results[i]['dataset_description']
-                # TODO:
-                # $combined_metadata[$num]["dataset_id"]         = get_id($combined_metadata[$num], "dataset", $db_name, $connection);
-                # TODO:
-                # $combined_metadata[$num]["date_initial"]       = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["date_initial"];
-                # TODO:
-                # $combined_metadata[$num]["date_updated"]       = date("Y-m-d");
-
                 self.out_metadata[i]['dna_region']			 = self.dna_region
-                # TODO:
-                # $combined_metadata[$num]["dna_region_id"]      = get_id($session["run_info"], "dna_region_0", $db_name, $connection);
-
                 # TODO: make dropdown menu, camelize, choose
                 self.out_metadata[i]['domain']			     = domain
                 self.out_metadata[i]['email']                = self.vamps2_project_results[i]['email']
-                # self.out_metadata[i]["env_sample_source_id"] = self.csv_by_header['env_sample_source_id'][i];
-                # self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
                 self.out_metadata[i]['first_name']           = self.vamps2_project_results[i]['first_name']
                 self.out_metadata[i]['funding']              = self.vamps2_project_results[i]['funding']
-                # self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
                 self.out_metadata[i]['institution']			 = self.vamps2_project_results[i]['institution']
                 self.out_metadata[i]['lane']				 = '1' # default
                 self.out_metadata[i]['last_name']            = self.vamps2_project_results[i]['last_name']
-                # TODO:
-                # $combined_metadata[$num]["locked"]             = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["locked"];
-                # $combined_metadata[$num]["num_of_tubes"]       = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["num_of_tubes"];
-                # self.out_metadata[i]['nnnn']                 = self.csv_by_header['lane'][i]
-                # $combined_metadata[$num]["op_empcr"]           = $csv_metadata_row["op_empcr"];
-
-                # self.out_metadata[i]['overlap']				 = self.csv_by_header['overlap'][i]
-                # self.out_metadata[i]['primer_suite']		 = self.csv_by_header['primer_suite'][i]
-                # TODO:
-                # $combined_metadata[$num]["primer_suite_id"]    = get_primer_suite_id($combined_metadata[$num]["dna_region"], $combined_metadata[$num]["domain"], $db_name, $connection);
-
                 self.out_metadata[i]['primer_suite']		 = primer_suites[i]
                 self.out_metadata[i]['project']				 = self.vamps2_project_results[i]['project']
-
-
                 self.out_metadata[i]['project_description']	 = self.vamps2_project_results[i]['project_description']
                 try:
                     self.out_metadata[i]['project_title']		= self.vamps2_project_results[i]['project_title']
@@ -1039,19 +995,7 @@ class CsvMetadata():
                     self.out_metadata[i]['project_title']       = ""
                 except:
                     raise
-
-                # self.out_metadata[i]['read_length']			 = self.csv_by_header['read_length'][i]
-
                 # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-                # try:
-                #     self.out_metadata[i]['run_key'] = self.adaptors_full[key][1].illumina_run_key
-                # except KeyError:
-                #     self.out_metadata[i]['run_key']                = ""
-                # except:
-                #     raise
-
-                # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-                # self.out_metadata[i]['seq_operator']       = self.csv_by_header['seq_operator'][i]
                 self.out_metadata[i]['tubelabel']			 = self.vamps2_project_results[i]['tubelabel']
             except IndexError:
                 pass
@@ -1137,7 +1081,7 @@ class CsvMetadata():
         self.get_csv_by_header()
 
         info_list_len = len(self.csv_by_header['dataset'])
-        domains_per_row = self.get_domain_per_row(info_list_len)
+        self.get_domain_per_row(info_list_len)
         self.get_adaptor_from_csv_content()
 
         self.make_new_out_metadata()
