@@ -939,39 +939,48 @@ class CsvMetadata():
             # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
 
     def get_domain_per_row(self, info_list_len):
-        for i in range(info_list_len):
-            try:
-                # TODO - method, use here and in write_out_metadata_to_csv?
-                # projects = self.csv_by_header['project']
-                self.domain_dna_regions = [k.split("_")[-1] for k in self.csv_by_header['project']]
+        for r in self.domain_dna_regions:
+            domain_letter = r[0]
+            # dna_region = r[1:]
+            for d, letter in self.domain_choices.items():
+                if letter == domain_letter:
+                    domain = d
+                    break
+            self.domains_per_row.append(domain)
 
-                domain_letter = self.domain_dna_regions[i][0]
-                for d, letter in self.domain_choices.items():
-                    if letter == domain_letter:
-                        domain = d
-                        break
-                self.domains_per_row.append(domain)
-            except IndexError:
-                raise
-            except:
-                raise
-        return
+        # for i in range(info_list_len):
+        #     try:
+        #         # TODO - method, use in write_out_metadata_to_csv?
+        #         self.domain_dna_regions = [k.split("_")[-1] for k in self.csv_by_header['project']]
+        #
+        #         domain_letter = self.domain_dna_regions[i][0]
+        #         for d, letter in self.domain_choices.items():
+        #             if letter == domain_letter:
+        #                 domain = d
+        #                 break
+        #         self.domains_per_row.append(domain)
+        #     except IndexError:
+        #         raise
+        #     except:
+        #         raise
+        # return
 
 
 
     def make_metadata_out_from_project_data(self):
         # TODO: test with csv if changes still work from
         primer_suites = self.get_primer_suites()
-        for i in range(len(self.vamps2_project_results)):
+        info_list_len = len(self.vamps2_project_results)
+        self.get_domain_per_row(info_list_len)
+        for i in range(info_list_len):
             try:
-                # TODO - method, use here and in write_out_metadata_to_csv?
-                domain_letter = self.domain_dna_regions[i][0]
-                for d, letter in self.domain_choices.items():
-                    if letter == domain_letter:
-                        domain = d
-                        break
+                # TODO - test method, use here and in write_out_metadata_to_csv?
 
-
+                # domain_letter = self.domain_dna_regions[i][0]
+                # for d, letter in self.domain_choices.items():
+                #     if letter == domain_letter:
+                #         domain = d
+                #         break
                 self.out_metadata[i]['contact_name']         = self.vamps2_project_results[i]['first_name'] + ' ' + self.vamps2_project_results[i]['last_name']
                 self.out_metadata[i]['data_owner']           = self.vamps2_project_results[i]['data_owner']
 
@@ -979,7 +988,7 @@ class CsvMetadata():
                 self.out_metadata[i]['dataset_description']	 = self.vamps2_project_results[i]['dataset_description']
                 self.out_metadata[i]['dna_region']			 = self.dna_region
                 # TODO: make dropdown menu, camelize, choose
-                self.out_metadata[i]['domain']			     = domain
+                self.out_metadata[i]['domain']			     = self.domains_per_row[i]
                 self.out_metadata[i]['email']                = self.vamps2_project_results[i]['email']
                 self.out_metadata[i]['first_name']           = self.vamps2_project_results[i]['first_name']
                 self.out_metadata[i]['funding']              = self.vamps2_project_results[i]['funding']
@@ -1175,9 +1184,12 @@ class CsvMetadata():
         self.edit_out_metadata(request)
         request.session['out_metadata'] = self.out_metadata
 
-        if request.session['create_vamps2_submission_csv']:
+        if (
+                'create_vamps2_submission_csv' in request.session.keys() and
+                request.session['create_vamps2_submission_csv']
+        ):
             self.create_vamps2_submission_csv(request)
-            request.session['files_created'] = self.files_created
+        request.session['files_created'] = self.files_created
 
         self.make_metadata_table()
 
@@ -1237,7 +1249,7 @@ class CsvMetadata():
         # *) validation
         formset = MetadataOutCsvFormSet(my_post_dict)
 
-        if len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0:
+        if (len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0):
 
             #*) ini files
             self.create_ini_names()
