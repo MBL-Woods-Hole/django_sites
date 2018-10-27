@@ -125,6 +125,7 @@ class CsvMetadata():
         self.suite_domain_choices = dict(Domain.SUITE_DOMAIN_CHOICES)
         self.user_info_arr = {}
         self.vamps_submissions = {}
+        self.vamps2_project_results = {}
         
         self.HEADERS_FROM_CSV = {
             'id': {'field': 'id', 'required': True},
@@ -267,7 +268,7 @@ class CsvMetadata():
             raise
 
     def get_reader(self, dialect):
-        import io
+        # import io
         try:
             self.csvfile.seek(0)
             self.reader = csv.reader(io.StringIO(self.csvfile.read().decode('utf-8')))
@@ -391,6 +392,7 @@ class CsvMetadata():
             where project_id = %s""" % (project_id)
             self.vamps2_project_results = self.run_query_to_dict_vamps2(query_subm)
 
+            # TODO: check all return self
             return self.vamps2_project_results
         except KeyError as e:
             self.cause = e.args[0]
@@ -471,7 +473,6 @@ class CsvMetadata():
              user_name_by_submit_code = sublist[user_name_idx]
              break
       return user_name_by_submit_code
-
 
     def get_user_info(self):
         db_name = self.db_prefix + "env454"
@@ -698,11 +699,21 @@ class CsvMetadata():
 
         return my_post_dict
 
+    def check_user(self):
+        try:
+            contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
+        except Contact.DoesNotExist as e:
+            # self.cause = e.args[0]
+            self.errors.append("Please add contact information for %s to env454." % vamps_user_id)
+        except:
+            raise
+        self.user_info_arr[submit_code] = model_to_dict(contacts)
+
     def check_projects(self):
       missing_projects = []
       for i in range(len(self.csv_content)-1):
         try:
-          csv_project = self.csv_by_header['project_name'][i]
+          csv_project = self.csv_by_header['project_name'][i] or self.csv_by_header['project'][i]
           db_project = Project.objects.get(project=csv_project)
         except Project.DoesNotExist as e:
           missing_projects.append(csv_project)
@@ -730,14 +741,17 @@ class CsvMetadata():
         # {'A08_v4v5_bacteria': (<IlluminaIndex: ACTTGA>, <IlluminaRunKey: TACGC>)}
         # logging.debug(self.adaptors_full['A08_v4v5_bacteria'][0].illumina_index)
 
-        if self.vamps_submissions:
-            self.get_user_info()
+        if self.vamps2_project_results:
+                self.make_metadata_out_from_project_data()
+        elif self.csv_content:
+            if (not self.vamps2_csv):
+                self.get_user_info()
+            else:
+                self.check_user()
             self.check_projects()
             if self.errors:
                 return
             self.make_metadata_out_from_csv()
-        elif self.vamps2_project_results:
-            self.make_metadata_out_from_project_data()
         else:
             return
 
@@ -1003,6 +1017,7 @@ class CsvMetadata():
         self.get_csv_by_header()
 
         info_list_len = len(self.csv_by_header['dataset'])
+        self.get_domain_dna_regions(self.dict_reader)
         self.get_domain_per_row(info_list_len)
         self.get_adaptor_from_csv_content()
 
@@ -1019,10 +1034,14 @@ class CsvMetadata():
 
         return (metadata_run_info_form, has_empty_cells)
 
+    def get_domain_dna_regions(self, data_dict):
+        self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_dict]]
+
     def new_submission(self, request):
         data_from_db = self.get_vamps2_submission_info(request.POST['projects'])
 
-        self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_from_db]]
+        # self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_from_db]]
+        self.get_domain_dna_regions(data_from_db)
         self.dna_region = list(set(self.domain_dna_regions))[0][1:] #'v4' assuming only one region and a correct project name
 
         self.run_info_from_csv = { # TODO: rename everywhere
