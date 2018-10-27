@@ -218,7 +218,8 @@ class CsvMetadata():
 
         self.get_dict_reader()
         self.get_reader(dialect)
-        self.csv_headers, self.csv_content = self.parce_csv()
+        # self.csv_headers, self.csv_content =
+        self.parce_csv()
 
         # self.csvfile.seek(0)
         # self.reader.seek(0)
@@ -322,7 +323,7 @@ class CsvMetadata():
     def parce_csv(self):
       self.csv_content = [row for row in self.reader]
       self.csv_headers = [header_name.lower() for header_name in self.csv_content[0]]
-      return self.csv_headers, self.csv_content
+      # return self.csv_headers, self.csv_content
 
     def check_headers_presence(self):
         missing_headers = set()
@@ -745,20 +746,32 @@ class CsvMetadata():
         # {'A08_v4v5_bacteria': (<IlluminaIndex: ACTTGA>, <IlluminaRunKey: TACGC>)}
         # logging.debug(self.adaptors_full['A08_v4v5_bacteria'][0].illumina_index)
 
-        if self.vamps2_project_results:
-                self.make_metadata_out_from_project_data(self.vamps2_project_results)
-        elif self.csv_content:
-            if (not self.vamps2_csv):
-                self.get_user_info()
-            else:
-                self.check_user()
-            self.check_projects()
-            if self.errors:
-                return
-            self.make_metadata_out_from_project_data(self.dict_reader)
+        if (not self.vamps2_csv):
+            self.get_user_info()
+        else:
+            self.check_user()
+
+        if (not self.vamps2_csv):
             self.make_metadata_out_from_csv()
         else:
-            return
+
+            if self.vamps2_project_results:
+                self.make_metadata_out_from_project_data(self.vamps2_project_results)
+            else:
+                self.make_metadata_out_from_project_data(self.dict_reader)
+
+        # elif self.csv_content:
+        #     if (not self.vamps2_csv):
+        #         self.get_user_info()
+        #     else:
+        #         self.check_user()
+        #     self.check_projects()
+        #     if self.errors:
+        #         return
+        #     self.make_metadata_out_from_project_data(self.dict_reader)
+        #     self.make_metadata_out_from_csv()
+        # else:
+        #     return
 
         # logging.debug("self.out_metadata = %s" % self.out_metadata)
 
@@ -1040,7 +1053,12 @@ class CsvMetadata():
         return (metadata_run_info_form, has_empty_cells)
 
     def get_domain_dna_regions(self, data_dict):
-        self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_dict]]
+        try:
+            self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_dict]]
+        except KeyError:
+            self.domain_dna_regions = [k.split("_")[-1] for k in [x['project_name'] for x in data_dict]]
+        except:
+            raise
 
     def new_submission(self, request):
         data_from_db = self.get_vamps2_submission_info(request.POST['projects'])
