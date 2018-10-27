@@ -701,28 +701,32 @@ class CsvMetadata():
 
     def check_user(self):
         try:
-            contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
+            data_owner = "".join(self.csv_by_header_uniqued['data_owner'])
+            contacts = Contact.cache_all_method.get(vamps_name = data_owner)
         except Contact.DoesNotExist as e:
-            # self.cause = e.args[0]
-            self.errors.append("Please add contact information for %s to env454." % vamps_user_id)
+            self.errors.append("Please add contact information for %s to env454." % data_owner)
         except:
             raise
-        self.user_info_arr[submit_code] = model_to_dict(contacts)
+        # self.user_info_arr[submit_code] = model_to_dict(contacts)
 
     def check_projects(self):
-      missing_projects = []
-      for i in range(len(self.csv_content)-1):
-        try:
-          csv_project = self.csv_by_header['project_name'][i] or self.csv_by_header['project'][i]
-          db_project = Project.objects.get(project=csv_project)
-        except Project.DoesNotExist as e:
-          missing_projects.append(csv_project)
-        except:
-          raise
+        missing_projects = []
+        for i in range(len(self.csv_content)-1):
+            if self.csv_by_header['project_name']:
+                csv_project = self.csv_by_header['project_name'][i]
+            elif self.csv_by_header['project']:
+                csv_project = self.csv_by_header['project'][i]
 
-      missing_projects_list = ", ".join(list(set(missing_projects)))
-      if len(missing_projects_list) > 0:
-        self.errors.append("Please add project information for %s to env454." % missing_projects_list)
+            try:
+                Project.objects.get(project = csv_project)
+            except Project.DoesNotExist as e:
+                missing_projects.append(csv_project)
+            except:
+                raise
+
+            missing_projects_list = ", ".join(list(set(missing_projects)))
+            if len(missing_projects_list) > 0:
+                self.errors.append("Please add project information for %s to env454." % missing_projects_list)
 
     def make_new_out_metadata(self):
         logging.info("make_new_out_metadata")
@@ -751,6 +755,7 @@ class CsvMetadata():
             self.check_projects()
             if self.errors:
                 return
+            self.make_metadata_out_from_project_data()
             self.make_metadata_out_from_csv()
         else:
             return
