@@ -17,6 +17,7 @@ import csv
 from .model_choices import Overlap, Machine, Domain
 from .models_l_env454 import *
 from .models_l_vamps import VampsSubmissionsTubes
+import io
 import os, sys
 import stat
 import time
@@ -214,6 +215,7 @@ class CsvMetadata():
         self.csvfile = csvfile
         dialect = self.get_dialect()
 
+        self.get_dict_reader()
         self.get_reader(dialect)
         self.csv_headers, self.csv_content = self.parce_csv()
 
@@ -254,6 +256,15 @@ class CsvMetadata():
               return dialect
             else:
               logging.warning("WARNING, file %s is empty (size = %s), check it's path" % (self.csvfile.name, self.csvfile.size))
+
+    def get_dict_reader(self):
+        try:
+            self.csvfile.seek(0)
+            self.dict_reader = list(csv.DictReader(io.StringIO(self.csvfile.read().decode('utf-8'))))
+        except csv.Error as e:
+            self.errors.append('%s is not a valid CSV file: %s' % (self.csvfile, e))
+        except:
+            raise
 
     def get_reader(self, dialect):
         import io
