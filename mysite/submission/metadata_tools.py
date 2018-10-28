@@ -749,11 +749,11 @@ class CsvMetadata():
             self.get_user_info()
         else:
             self.check_user()
+        self.check_projects()
 
         if (not self.vamps2_csv):
             self.make_metadata_out_from_csv()
         else:
-
             if self.vamps2_project_results:
                 self.make_metadata_out_from_project_data(self.vamps2_project_results)
             else:
@@ -924,7 +924,7 @@ class CsvMetadata():
         info_list_len = len(vamps2_dict)
         self.get_domain_per_row(info_list_len)
         for i in range(info_list_len):
-            try:
+            try: # dump the whole vamps2_dict to out_metadata, then add if key is different
                 self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
                 self.out_metadata[i]['data_owner']           = vamps2_dict[i]['data_owner']
 
