@@ -746,31 +746,12 @@ class CsvMetadata():
         # logging.debug(self.adaptors_full['A08_v4v5_bacteria'][0].illumina_index)
 
         if (not self.vamps2_csv):
-            self.get_user_info()
-        else:
-            self.check_user()
-        self.check_projects()
-
-        if (not self.vamps2_csv):
             self.make_metadata_out_from_csv()
         else:
             if self.vamps2_project_results:
                 self.make_metadata_out_from_project_data(self.vamps2_project_results)
             else:
                 self.make_metadata_out_from_project_data(self.dict_reader)
-
-        # elif self.csv_content:
-        #     if (not self.vamps2_csv):
-        #         self.get_user_info()
-        #     else:
-        #         self.check_user()
-        #     self.check_projects()
-        #     if self.errors:
-        #         return
-        #     self.make_metadata_out_from_project_data(self.dict_reader)
-        #     self.make_metadata_out_from_csv()
-        # else:
-        #     return
 
         # logging.debug("self.out_metadata = %s" % self.out_metadata)
 
@@ -923,33 +904,35 @@ class CsvMetadata():
         primer_suites = self.get_primer_suites()
         info_list_len = len(vamps2_dict)
         self.get_domain_per_row(info_list_len)
+
         for i in range(info_list_len):
+            self.out_metadata[i] = vamps2_dict[i]
+
             try: # dump the whole vamps2_dict to out_metadata, then add if key is different
                 self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
-                self.out_metadata[i]['data_owner']           = vamps2_dict[i]['data_owner']
-
-                self.out_metadata[i]['dataset']				 = vamps2_dict[i]['dataset']
-                self.out_metadata[i]['dataset_description']	 = vamps2_dict[i]['dataset_description']
+                # self.out_metadata[i]['data_owner']           = vamps2_dict[i]['data_owner']
+                # self.out_metadata[i]['dataset']				 = vamps2_dict[i]['dataset']
+                # self.out_metadata[i]['dataset_description']	 = vamps2_dict[i]['dataset_description']
                 self.out_metadata[i]['dna_region']			 = self.dna_region
                 # TODO: make dropdown menu, camelize, choose
                 self.out_metadata[i]['domain']			     = self.domains_per_row[i]
-                self.out_metadata[i]['email']                = vamps2_dict[i]['email']
-                self.out_metadata[i]['first_name']           = vamps2_dict[i]['first_name']
-                self.out_metadata[i]['funding']              = vamps2_dict[i]['funding']
-                self.out_metadata[i]['institution']			 = vamps2_dict[i]['institution']
+                # self.out_metadata[i]['email']                = vamps2_dict[i]['email']
+                # self.out_metadata[i]['first_name']           = vamps2_dict[i]['first_name']
+                # self.out_metadata[i]['funding']              = vamps2_dict[i]['funding']
+                # self.out_metadata[i]['institution']			 = vamps2_dict[i]['institution']
                 self.out_metadata[i]['lane']				 = '1' # default
-                self.out_metadata[i]['last_name']            = vamps2_dict[i]['last_name']
+                # self.out_metadata[i]['last_name']            = vamps2_dict[i]['last_name']
                 self.out_metadata[i]['primer_suite']		 = primer_suites[i]
-                self.out_metadata[i]['project']				 = vamps2_dict[i]['project']
-                self.out_metadata[i]['project_description']	 = vamps2_dict[i]['project_description']
-                try:
-                    self.out_metadata[i]['project_title']		= vamps2_dict[i]['project_title']
-                except KeyError:
-                    self.out_metadata[i]['project_title']       = ""
-                except:
-                    raise
+                # self.out_metadata[i]['project']				 = vamps2_dict[i]['project']
+                # self.out_metadata[i]['project_description']	 = vamps2_dict[i]['project_description']
+                # try:
+                #     self.out_metadata[i]['project_title']		= vamps2_dict[i]['project_title']
+                # except KeyError:
+                #     self.out_metadata[i]['project_title']       = ""
+                # except:
+                #     raise
                 # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-                self.out_metadata[i]['tubelabel']			 = vamps2_dict[i]['tubelabel']
+                # self.out_metadata[i]['tubelabel']			 = vamps2_dict[i]['tubelabel']
             except IndexError:
                 pass
             except:
@@ -1037,6 +1020,12 @@ class CsvMetadata():
         self.get_domain_dna_regions(self.dict_reader)
         self.get_domain_per_row(info_list_len)
         self.get_adaptor_from_csv_content()
+
+        if self.vamps2_csv:
+            self.check_user()
+        else:
+            self.get_user_info()
+        self.check_projects()
 
         self.make_new_out_metadata()
         if self.errors:
