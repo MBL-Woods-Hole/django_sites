@@ -728,7 +728,16 @@ class CsvMetadata():
             if len(missing_projects_list) > 0:
                 self.errors.append("Please add project information for %s to env454." % missing_projects_list)
 
-    # def make_new_out_metadata(self):
+    def make_new_out_metadata(self, request):
+        if request.FILES:
+            if (not self.vamps2_csv):
+                self.make_metadata_out_from_csv()
+            else:
+                self.make_metadata_out_from_project_data(self.dict_reader)
+        else:
+            if self.vamps2_project_results:
+              self.make_metadata_out_from_project_data(self.vamps2_project_results)
+
     #     logging.info("make_new_out_metadata")
     #     # idx = 0
     #     # logging.debug("self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content)))
@@ -1027,7 +1036,7 @@ class CsvMetadata():
             self.get_user_info()
         self.check_projects()
 
-        self.make_new_out_metadata()
+        self.make_new_out_metadata(request)
         if self.errors:
             return (metadata_run_info_form, has_empty_cells)
 
@@ -1071,16 +1080,7 @@ class CsvMetadata():
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
         # TODO: clean up!
-        if request.FILES:
-            if (not self.vamps2_csv):
-                self.make_metadata_out_from_csv()
-            else:
-                self.make_metadata_out_from_project_data(self.dict_reader)
-        else:
-            if self.vamps2_project_results:
-              self.make_metadata_out_from_project_data(self.vamps2_project_results)
-
-        # self.make_new_out_metadata()
+        self.make_new_out_metadata(request)
         if self.errors:
             return (metadata_run_info_form)
 
