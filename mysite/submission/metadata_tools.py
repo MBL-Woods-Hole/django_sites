@@ -728,30 +728,30 @@ class CsvMetadata():
             if len(missing_projects_list) > 0:
                 self.errors.append("Please add project information for %s to env454." % missing_projects_list)
 
-    def make_new_out_metadata(self):
-        logging.info("make_new_out_metadata")
-        # idx = 0
-        # logging.debug("self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content)))
-        # logging.debug("self.csv_content[0] =  head = %s" % (self.csv_content[0]))
-
-        # logging.debug(" &&&&&&& list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))")
-        # a = list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))
-        # logging.debug(a)
-        # ['barcode_index', 'lane', 'dna_region', 'read_length', 'env_sample_source_id', 'barcode', 'overlap', 'dataset_description', 'adaptor', 'primer_suite', 'insert_size']
-
-        # logging.debug("self.csv_by_header = %s" % self.csv_by_header)
-
-        # logging.debug("UUU self.adaptors_full = %s" % self.adaptors_full)
-        # {'A08_v4v5_bacteria': (<IlluminaIndex: ACTTGA>, <IlluminaRunKey: TACGC>)}
-        # logging.debug(self.adaptors_full['A08_v4v5_bacteria'][0].illumina_index)
-
-        if (not self.vamps2_csv):
-            self.make_metadata_out_from_csv()
-        else:
-            if self.vamps2_project_results:
-                self.make_metadata_out_from_project_data(self.vamps2_project_results)
-            else:
-                self.make_metadata_out_from_project_data(self.dict_reader)
+    # def make_new_out_metadata(self):
+    #     logging.info("make_new_out_metadata")
+    #     # idx = 0
+    #     # logging.debug("self.csv_content = %s, len(self.csv_content) = %s" % (self.csv_content, len(self.csv_content)))
+    #     # logging.debug("self.csv_content[0] =  head = %s" % (self.csv_content[0]))
+    #
+    #     # logging.debug(" &&&&&&& list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))")
+    #     # a = list(set(self.csv_content[0]) & set(self.HEADERS_TO_CSV))
+    #     # logging.debug(a)
+    #     # ['barcode_index', 'lane', 'dna_region', 'read_length', 'env_sample_source_id', 'barcode', 'overlap', 'dataset_description', 'adaptor', 'primer_suite', 'insert_size']
+    #
+    #     # logging.debug("self.csv_by_header = %s" % self.csv_by_header)
+    #
+    #     # logging.debug("UUU self.adaptors_full = %s" % self.adaptors_full)
+    #     # {'A08_v4v5_bacteria': (<IlluminaIndex: ACTTGA>, <IlluminaRunKey: TACGC>)}
+    #     # logging.debug(self.adaptors_full['A08_v4v5_bacteria'][0].illumina_index)
+    #
+    #     if (not self.vamps2_csv):
+    #         self.make_metadata_out_from_csv()
+    #     else:
+    #         if self.vamps2_project_results:
+    #             self.make_metadata_out_from_project_data(self.vamps2_project_results)
+    #         else:
+    #             self.make_metadata_out_from_project_data(self.dict_reader)
 
         # logging.debug("self.out_metadata = %s" % self.out_metadata)
 
@@ -1070,7 +1070,17 @@ class CsvMetadata():
         request.session['run_info_from_csv'] = self.run_info_from_csv
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
-        self.make_new_out_metadata()
+        # TODO: clean up!
+        if request.FILES:
+            if (not self.vamps2_csv):
+                self.make_metadata_out_from_csv()
+            else:
+                self.make_metadata_out_from_project_data(self.dict_reader)
+        else:
+            if self.vamps2_project_results:
+              self.make_metadata_out_from_project_data(self.vamps2_project_results)
+
+        # self.make_new_out_metadata()
         if self.errors:
             return (metadata_run_info_form)
 
