@@ -729,6 +729,8 @@ class CsvMetadata():
                 self.errors.append("Please add project information for %s to env454." % missing_projects_list)
 
     def make_new_out_metadata(self, request):
+        logging.info("make_new_out_metadata")
+
         if request.FILES:
             if (not self.vamps2_csv):
                 self.make_metadata_out_from_csv()
