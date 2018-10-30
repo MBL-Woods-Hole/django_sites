@@ -53,8 +53,7 @@
  {% endif %}
 
  {% if file_upload_form %}
-
- {% block file_upload_form %}
+   {% block file_upload_form %}
 
   <div class="grid_12 form">
    <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
@@ -68,7 +67,7 @@
 
   <div class="clear"></div>
 
- {% endblock %}
+   {% endblock %}
  {% endif %}
 
  {% if choose_project_form %}
@@ -90,7 +89,6 @@
   <div class="clear"></div>
   {% endblock %}
  {% endif %}
-
 
  {% if metadata_run_info_form %}
    {% block upload_metadata_run_info_form %}
