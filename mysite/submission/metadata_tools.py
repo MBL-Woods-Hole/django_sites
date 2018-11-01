@@ -199,6 +199,9 @@ class CsvMetadata():
 
         self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
 
+        self.all_headers = set(self.HEADERS_TO_CSV + self.HEADERS_TO_EDIT_METADATA + list(self.HEADERS_FROM_vamps2_CSV.keys()) + list(self.HEADERS_FROM_CSV.keys()))
+        # {'platform', 'barcode', 'tubelabel', 'project_description', 'project', 'domain', 'id', 'tube_number', 'runkey', 'dataset', 'project_name', 'op_empcr', 'adaptor', 'run_key', 'date_initial', 'insert_size', 'on_vamps', 'pool', 'concentration', 'data_owner', 'seq_operator', 'institution', 'sample_received', 'enzyme', 'project_title', 'email', 'env_source_name', 'duplicate', 'barcode_index', 'read_length', 'primer_suite', 'quant_method', 'trim_distal', 'env_sample_source_id', 'user', 'first_name', 'run', 'submit_code', 'dataset_name', 'direction', 'tube_label', 'rundate', 'date_updated', 'last_name', 'amp_operator', 'dna_region', 'op_seq', 'op_amp', 'funding', 'lane', 'overlap', 'dataset_description', 'contact_name'}
+
         self.required_headers = [header_name for header_name, values in
                                  self.HEADERS_FROM_CSV.items() if values['required']]
 
@@ -206,6 +209,9 @@ class CsvMetadata():
                                  self.HEADERS_FROM_vamps2_CSV.items() if values['required']]
 
         # logging.debug("self.required_headers = %s" % self.required_headers)
+
+    def make_an_empty_dict_for_all_headers(self):
+        return {key: "" for key in self.all_headers}
 
     def no_data_message(self):
         return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
@@ -917,7 +923,8 @@ class CsvMetadata():
         self.get_domain_per_row(info_list_len)
 
         for i in range(info_list_len):
-            self.out_metadata[i] = vamps2_dict[i]
+            self.out_metadata[i] = self.make_an_empty_dict_for_all_headers()
+            self.out_metadata[i].update(vamps2_dict[i])
 
             try: # dump the whole vamps2_dict to out_metadata, then add if key is different
                 self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
