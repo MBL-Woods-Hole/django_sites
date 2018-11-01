@@ -245,7 +245,7 @@ class CsvMetadata():
             open_file = codecs.EncodedFile(self.csvfile, "utf-8")
             open_file_part = open_file.read(1024).decode("utf-8")
             # dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024), delimiters=',')
-            dialect = csv.Sniffer().sniff(open_file_part, delimiters=',')
+            dialect = csv.Sniffer().sniff(open_file_part) #, delimiters=','
         except csv.Error as e:
             logging.warning("Warning for %s: %s' % (self.csvfile, e)")
             pass
@@ -290,8 +290,12 @@ class CsvMetadata():
             self.csv_by_header[row[0]] = row[1:]
 
     def get_csv_by_header_uniqued(self):
-        self.csv_by_header_uniqued = ""
-        self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
+        self.csv_by_header_uniqued = self.make_an_empty_dict_for_all_headers()
+        temp_d_from_csv = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
+        self.csv_by_header_uniqued.update(temp_d_from_csv)
+
+        # self.csv_by_header_uniqued = ""
+        # self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
 
     def get_initial_run_info_data_dict(self):
         logging.info("get_initial_run_info_data_dict")
