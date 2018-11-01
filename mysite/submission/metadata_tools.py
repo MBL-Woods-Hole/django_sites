@@ -286,8 +286,11 @@ class CsvMetadata():
             raise
 
     def get_csv_by_header(self):
+        temp_d_from_csv = {}
         for row in zip(*self.csv_content):
-            self.csv_by_header[row[0]] = row[1:]
+            temp_d_from_csv[row[0]] = row[1:]
+        self.csv_by_header = self.make_an_empty_dict_for_all_headers()
+        self.csv_by_header.update(temp_d_from_csv)
 
     def get_csv_by_header_uniqued(self):
         self.csv_by_header_uniqued = self.make_an_empty_dict_for_all_headers()
