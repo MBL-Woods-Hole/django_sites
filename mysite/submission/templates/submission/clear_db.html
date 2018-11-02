@@ -5,11 +5,11 @@
 <br/>
 
 <div class = "copy_command">
-mysql -h {{ run_data.db_host }} {{ run_data.find_db_name }} -e 'DELETE from {{ table_names.pdr }} USING {{ table_names.pdr }} JOIN run_info_ill using({{ table_names.run_info_join }}) {{ table_names.join_pr }} JOIN run using(run_id) JOIN primer_suite using(primer_suite_id) WHERE run = "{{ run_data.find_rundate }}" AND lane = "{{ run_data.find_lane }}" AND primer_suite = "{{ run_data.primer_suite }}";'
+mysql -h {{ run_data.db_host }} {{ run_data.find_db_name }} -e 'DELETE from {{ table_names.pdr }} USING {{ table_names.pdr }} JOIN run_info_ill using({{ table_names.run_info_join }}) {{ table_names.join_pr }} JOIN run using(run_id) JOIN primer_suite using(primer_suite_id) WHERE run = "{{ run_data.find_rundate }}" AND lane = "{{ run_data.find_lane }}" {{ and_primer_suite }};'
 </div>
 
 <div class = "copy_command">
-mysql -h {{ run_data.db_host }} {{ run_data.find_db_name }} -e 'DELETE FROM run_info_ill USING run_info_ill {{ table_names.join_pr }} JOIN run using(run_id) JOIN primer_suite using(primer_suite_id) WHERE run = "{{ run_data.find_rundate }}" AND lane = "{{ run_data.find_lane }}" AND primer_suite = "{{ run_data.primer_suite }}";'
+mysql -h {{ run_data.db_host }} {{ run_data.find_db_name }} -e 'DELETE FROM run_info_ill USING run_info_ill {{ table_names.join_pr }} JOIN run using(run_id) JOIN primer_suite using(primer_suite_id) WHERE run = "{{ run_data.find_rundate }}" AND lane = "{{ run_data.find_lane }}" {{ and_primer_suite }};'
 </div>
 
 {% if run_data.find_db_name == "env454" %}

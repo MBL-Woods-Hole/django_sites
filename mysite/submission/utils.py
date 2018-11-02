@@ -131,6 +131,10 @@ class Run():
         except:
             raise
 
+    def get_current_primer_suite(self, find_domain):
+        suite_domain = self.utils.get_domain_name(find_domain)
+        return self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
+
     def get_run(self, request):
         logging.info("Running get_run from utils")
         error_message = ""
@@ -150,8 +154,10 @@ class Run():
                 self.run_data['find_db_name']      = form.cleaned_data['find_db_name']
                 self.run_data['db_host']      = self.db_info[self.run_data['find_db_name']]
 
-                suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
-                primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
+                # suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
+                # primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
+
+                primer_suite = self.get_current_primer_suite(form.cleaned_data['find_domain'])
 
                 if (primer_suite[0]):
                     self.run_data['primer_suite'] = primer_suite[1]
@@ -173,6 +179,9 @@ class Run():
 
                 init_run_data = self.run_data.copy()
                 init_run_data.update({'find_rundate': rundate_id})
+                # if not self.run_data['primer_suite']:
+                #     curr_primer_suite = self.get_current_primer_suite(self.run_data['find_domain'])
+
                 form = RunForm(initial = init_run_data)        
             except KeyError:
                 form = RunForm()
@@ -197,8 +206,9 @@ class Run():
         self.run_data['find_lane']         = random_lane_domain[0]
         self.run_data['full_machine_name'] = request.session['run_info']['selected_machine']
         self.run_data['perfect_overlap']   = self.utils.get_overlap(request.session['run_info']['selected_machine_short'])
-        suite_domain                  = self.utils.get_domain_name(self.run_data['find_domain'])
-        primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
+        # suite_domain                  = self.utils.get_domain_name(self.run_data['find_domain'])
+        # primer_suite = self.get_primer_suites(self.run_data['find_rundate'], self.run_data['find_lane'], suite_domain)
+        primer_suite = self.get_current_primer_suite(self.run_data['find_domain'])
         self.run_data['find_db_name'] = request.session['run_info']['find_db_name']
         self.run_data['db_host'] = self.db_info[self.run_data['find_db_name']]
 
