@@ -935,29 +935,11 @@ class CsvMetadata():
 
             try: # dump the whole vamps2_dict to out_metadata, then add if key is different
                 self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
-                # self.out_metadata[i]['data_owner']           = vamps2_dict[i]['data_owner']
-                # self.out_metadata[i]['dataset']				 = vamps2_dict[i]['dataset']
-                # self.out_metadata[i]['dataset_description']	 = vamps2_dict[i]['dataset_description']
                 self.out_metadata[i]['dna_region']			 = self.dna_region
-                # TODO: make dropdown menu, camelize, choose
                 self.out_metadata[i]['domain']			     = self.domains_per_row[i]
-                # self.out_metadata[i]['email']                = vamps2_dict[i]['email']
-                # self.out_metadata[i]['first_name']           = vamps2_dict[i]['first_name']
-                # self.out_metadata[i]['funding']              = vamps2_dict[i]['funding']
-                # self.out_metadata[i]['institution']			 = vamps2_dict[i]['institution']
                 self.out_metadata[i]['lane']				 = '1' # default
-                # self.out_metadata[i]['last_name']            = vamps2_dict[i]['last_name']
                 self.out_metadata[i]['primer_suite']		 = primer_suites[i]
-                # self.out_metadata[i]['project']				 = vamps2_dict[i]['project']
-                # self.out_metadata[i]['project_description']	 = vamps2_dict[i]['project_description']
-                # try:
-                #     self.out_metadata[i]['project_title']		= vamps2_dict[i]['project_title']
-                # except KeyError:
-                #     self.out_metadata[i]['project_title']       = ""
-                # except:
-                #     raise
                 # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-                # self.out_metadata[i]['tubelabel']			 = vamps2_dict[i]['tubelabel']
             except IndexError:
                 pass
             except:
