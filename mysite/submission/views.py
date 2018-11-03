@@ -313,13 +313,14 @@ def clear_db(request):
 
     empty_page = False
     and_primer_suite = ''
-    try: #TODO: simplify!
-        and_primer_suite = ' AND primer_suite = "%s"' % (run_data['primer_suite'])
-    except KeyError:
+    # TODO: simplify!
+    try:
         if not (run_data['find_rundate'] and run_data['find_lane']):
             empty_page = True
-        pass
-
+        elif run_data['primer_suite']:
+            and_primer_suite = ' AND primer_suite = "%s"' % (run_data['primer_suite'])
+    except KeyError:
+        raise
     except:
         raise
 
