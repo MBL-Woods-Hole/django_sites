@@ -311,12 +311,32 @@ def clear_db(request):
     except:
         raise
 
-    if run_data['primer_suite']:
+    empty_page = False
+    and_primer_suite = ''
+    try: #TODO: simplify!
         and_primer_suite = ' AND primer_suite = "%s"' % (run_data['primer_suite'])
-    else:
-        and_primer_suite = ''
+    except KeyError:
+        if not (run_data['find_rundate'] and run_data['find_lane']):
+            empty_page = True
+        pass
 
-    return render(request, 'submission/clear_db.html', {'form': form, 'run_data': run_data, 'header': 'Remove old data from db', 'table_names': curr_table_names, 'error_message': error_message, 'and_primer_suite': and_primer_suite})
+    except:
+        raise
+
+
+    # try:
+    #     and_primer_suite = ' AND primer_suite = "%s"' % (run_data['primer_suite'])
+    # except KeyError:
+    #     and_primer_suite = ''
+    # except:
+    #     raise
+
+        # if run_data['primer_suite']:
+        #     and_primer_suite = ' AND primer_suite = "%s"' % (run_data['primer_suite'])
+        # else:
+        #     and_primer_suite = ''
+
+    return render(request, 'submission/clear_db.html', {'form': form, 'run_data': run_data, 'header': 'Remove old data from db', 'table_names': curr_table_names, 'error_message': error_message, 'and_primer_suite': and_primer_suite, 'empty_page': empty_page})
 
 def uniqueing(request):
     run_utils = Run()

@@ -703,7 +703,8 @@ class CsvMetadata():
             # logging.debug("SSS3 self.out_metadata_table['rows'][x]['run_key']")
             # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
             my_post_dict['form-'+str(x)+'-barcode_index'] = self.out_metadata_table['rows'][x]['barcode_index']
-            if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
+            if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') \
+                    and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
                 nnnn = "NNNN"
             my_post_dict['form-'+str(x)+'-run_key']       = nnnn + self.out_metadata_table['rows'][x]['run_key']
 
@@ -964,7 +965,7 @@ class CsvMetadata():
 
         # logging.debug("OOO self.out_metadata_table = %s" % self.out_metadata_table)
 
-        for r_num, v in self.out_metadata.items():
+        for r_num, v in self.out_metadata.items(): #create with all possible headers instead? What fields to show?
             for header in self.HEADERS_TO_EDIT_METADATA:
                 try:
                     self.out_metadata_table['rows'][int(r_num)][header] = (self.out_metadata[r_num][header])
