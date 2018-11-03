@@ -144,14 +144,15 @@ class Run():
             # logging.info("request.POST = ")
             # print request.POST
             if form.is_valid():
+                self.run_data.update(form.cleaned_data)
                 self.run_data['find_rundate'] = form.cleaned_data['find_rundate'].run
-                self.run_data['find_machine'] = form.cleaned_data['find_machine']
-                self.run_data['find_domain']  = form.cleaned_data['find_domain']
-                self.run_data['find_lane']    = form.cleaned_data['find_lane']
+                # self.run_data['find_machine'] = form.cleaned_data['find_machine']
+                # self.run_data['find_domain']  = form.cleaned_data['find_domain']
+                # self.run_data['find_lane']    = form.cleaned_data['find_lane']
                 self.run_data['full_machine_name'] = self.utils.get_full_macine_name(form.cleaned_data['find_machine'])
                 self.run_data['perfect_overlap']   = self.utils.get_overlap(form.cleaned_data['find_machine'])
                 self.run_data['rundate_dir']       = self.calculate_rundate_dir(self.run_data['find_rundate'])
-                self.run_data['find_db_name']      = form.cleaned_data['find_db_name']
+                # self.run_data['find_db_name']      = form.cleaned_data['find_db_name']
                 self.run_data['db_host']      = self.db_info[self.run_data['find_db_name']]
 
                 # suite_domain                  = self.utils.get_domain_name(form.cleaned_data['find_domain'])
@@ -164,7 +165,8 @@ class Run():
                 else:
                     error_message = primer_suite[1]
                     self.run_data['primer_suite'] = ""
-                
+
+                del request.session['run_form_data']
                 request.session['run_form_data'] = self.run_data
                
         else:    
