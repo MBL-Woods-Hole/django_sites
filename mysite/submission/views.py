@@ -320,7 +320,7 @@ def clear_db(request):
         elif run_data['primer_suite']:
             and_primer_suite = ' AND primer_suite = "%s"' % (run_data['primer_suite'])
     except KeyError:
-        raise
+        empty_page = True
     except:
         raise
 
