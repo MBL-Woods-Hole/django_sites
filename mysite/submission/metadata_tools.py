@@ -132,7 +132,7 @@ class CsvMetadata():
             'submit_code': {'field': 'submit_code', 'required': True},
             'user': {'field': 'user', 'required': True},
             'tube_number': {'field': 'tube_number', 'required': True},
-            'tube_label': {'field': 'tube_label', 'required': False},
+            'tubelabel': {'field': 'tubelabel', 'required': False},
             'dataset_description': {'field': 'dataset_description', 'required': False},
             'duplicate': {'field': 'duplicate', 'required': False},
             'domain': {'field': 'domain', 'required': True},
@@ -193,14 +193,14 @@ class CsvMetadata():
             'run'                : {'field': 'run', 'required': True},
             'run_key'            : {'field': 'run_key', 'required': False},
             'seq_operator'       : {'field': 'seq_operator', 'required': True},
-            'tube_label'          : {'field': 'tube_label', 'required': False},
+            'tubelabel'          : {'field': 'tubelabel', 'required': False},
         }
-        self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_source_name', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tube_label']
+        self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_source_name', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
-        self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tube_label', 'barcode', 'amp_operator']
+        self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
 
         self.all_headers = set(self.HEADERS_TO_CSV + self.HEADERS_TO_EDIT_METADATA + list(self.HEADERS_FROM_vamps2_CSV.keys()) + list(self.HEADERS_FROM_CSV.keys()))
-        # {'platform', 'barcode', 'tube_label', 'project_description', 'project', 'domain', 'id', 'tube_number', 'runkey', 'dataset', 'project_name', 'op_empcr', 'adaptor', 'run_key', 'date_initial', 'insert_size', 'on_vamps', 'pool', 'concentration', 'data_owner', 'seq_operator', 'institution', 'sample_received', 'enzyme', 'project_title', 'email', 'env_source_name', 'duplicate', 'barcode_index', 'read_length', 'primer_suite', 'quant_method', 'trim_distal', 'env_sample_source_id', 'user', 'first_name', 'run', 'submit_code', 'dataset_name', 'direction', 'tube_label', 'rundate', 'date_updated', 'last_name', 'amp_operator', 'dna_region', 'op_seq', 'op_amp', 'funding', 'lane', 'overlap', 'dataset_description', 'contact_name'}
+        # {'platform', 'barcode', 'tubelabel', 'project_description', 'project', 'domain', 'id', 'tube_number', 'runkey', 'dataset', 'project_name', 'op_empcr', 'adaptor', 'run_key', 'date_initial', 'insert_size', 'on_vamps', 'pool', 'concentration', 'data_owner', 'seq_operator', 'institution', 'sample_received', 'enzyme', 'project_title', 'email', 'env_source_name', 'duplicate', 'barcode_index', 'read_length', 'primer_suite', 'quant_method', 'trim_distal', 'env_sample_source_id', 'user', 'first_name', 'run', 'submit_code', 'dataset_name', 'direction', 'tubelabel', 'rundate', 'date_updated', 'last_name', 'amp_operator', 'dna_region', 'op_seq', 'op_amp', 'funding', 'lane', 'overlap', 'dataset_description', 'contact_name'}
 
         self.required_headers = [header_name for header_name, values in
                                  self.HEADERS_FROM_CSV.items() if values['required']]
@@ -400,7 +400,7 @@ class CsvMetadata():
     def get_vamps2_submission_info(self, project_id = ""):
         db_name = "vamps2"
         try:
-            query_subm = """select username as data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title as project_title, tube_label
+            query_subm = """select username as data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title as project_title, tubelabel
             from dataset join project using(project_id) join user on(owner_user_id = user_id)
             where project_id = %s""" % (project_id)
             self.vamps2_project_results = self.run_query_to_dict_vamps2(query_subm)
@@ -875,7 +875,7 @@ class CsvMetadata():
 
             # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
             # self.out_metadata[i]['seq_operator']       = self.csv_by_header['seq_operator'][i]
-            self.out_metadata[i]['tube_label']			 = self.csv_by_header['tube_label'][i]
+            self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tubelabel'][i]
             """
             for VampsSubmissions and VampsSubmissionsTubes:
             """
@@ -911,7 +911,7 @@ class CsvMetadata():
             # self.out_metadata[i]['temp_project']   = self.csv_by_header['temp_project'][i]
             # self.out_metadata[i]['title']          = self.csv_by_header['title'][i]
             # self.out_metadata[i]['trim_distal']    = self.csv_by_header['trim_distal'][i]
-            # self.out_metadata[i]['tube_label']     = self.csv_by_header['tube_label'][i]
+            # self.out_metadata[i]['tubelabel']     = self.csv_by_header['tubelabel'][i]
             # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
 
     def get_domain_per_row(self, info_list_len):
