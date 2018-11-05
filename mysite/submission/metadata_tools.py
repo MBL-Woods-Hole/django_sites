@@ -874,8 +874,14 @@ class CsvMetadata():
             #     self.out_metadata[i]['run_key'] = self.adaptors_full[key][1].illumina_run_key
 
             # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-            # self.out_metadata[i]['seq_operator']       = self.csv_by_header['seq_operator'][i]
-            self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tubelabel'][i]
+            try:
+                self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tubelabel'][i]
+                self.out_metadata[i]['tube_label']			 = self.csv_by_header['tubelabel'][i]
+            except IndexError:
+                self.out_metadata[i]['tubelabel'] = self.csv_by_header['tube_label'][i]
+                self.out_metadata[i]['tube_label'] = self.csv_by_header['tube_label'][i]
+            except:
+                raise
             """
             for VampsSubmissions and VampsSubmissionsTubes:
             """
