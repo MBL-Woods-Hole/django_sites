@@ -400,9 +400,13 @@ class CsvMetadata():
     def get_vamps2_submission_info(self, project_id = ""):
         db_name = "vamps2"
         try:
-            query_subm = """select username as data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title as project_title, tubelabel
-            from dataset join project using(project_id) join user on(owner_user_id = user_id)
-            where project_id = %s""" % (project_id)
+            # query_subm = """select username as data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title as project_title, tubelabel
+            # from dataset join project using(project_id) join user on(owner_user_id = user_id)
+            # where project_id = %s""" % (project_id)
+            query_subm = """SELECT username AS data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title AS project_title, tubelabel
+            FROM dataset JOIN project USING(project_id) JOIN user ON(owner_user_id = user_id)
+            WHERE project_id = %s AND user_project = 0""" % (project_id)
+
             self.vamps2_project_results = self.run_query_to_dict_vamps2(query_subm)
 
             # TODO: check all return self
