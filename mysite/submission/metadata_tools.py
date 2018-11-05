@@ -954,14 +954,22 @@ class CsvMetadata():
 
     def get_primer_suites(self):
         primer_suites = []
+        logging.error("EEE0 self.domain_dna_regions: %s" % self.domain_dna_regions)
+        logging.debug("DDD0 self.domain_dna_regions: %s" % self.domain_dna_regions)
+        logging.info("III0 self.domain_dna_regions: %s" % self.domain_dna_regions)
+
         for r in self.domain_dna_regions:
             domain_letter = r[0]
             dna_region = r[1:]
-            logging.error("domain_letter: %s" % domain_letter)
-            logging.error("dna_region: %s" % dna_region)
-            logging.debug("self.suite_domain_choices: %s" % self.suite_domain_choices)
-            logging.info("self.suite_domain_choices: %s" % self.suite_domain_choices)
-            logging.error("self.suite_domain_choices: %s" % self.suite_domain_choices)
+            logging.error("EEE1 domain_letter: %s" % domain_letter)
+            logging.debug("DDD1 domain_letter: %s" % domain_letter)
+            logging.info("III1 domain_letter: %s" % domain_letter)
+            logging.error("EEE2 dna_region: %s" % dna_region)
+            logging.debug("DDD2 dna_region: %s" % dna_region)
+            logging.info("III2 dna_region: %s" % dna_region)
+            logging.debug("DDD3 self.suite_domain_choices: %s" % self.suite_domain_choices)
+            logging.info("III3 self.suite_domain_choices: %s" % self.suite_domain_choices)
+            logging.error("EEE3 self.suite_domain_choices: %s" % self.suite_domain_choices)
             print("self.suite_domain_choices: %s" % self.suite_domain_choices)
             try:
                 primer_suite = self.suite_domain_choices[domain_letter] + ' ' + dna_region.upper() + ' Suite'
