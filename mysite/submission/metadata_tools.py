@@ -923,6 +923,7 @@ class CsvMetadata():
     def get_domain_per_row(self, info_list_len):
         for r in self.domain_dna_regions:
             domain_letter = r[0]
+            domain = ""
             # dna_region = r[1:]
             for d, letter in self.domain_choices.items():
                 if letter == domain_letter:
