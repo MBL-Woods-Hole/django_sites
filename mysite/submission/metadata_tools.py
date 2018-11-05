@@ -1067,6 +1067,8 @@ class CsvMetadata():
         return (metadata_run_info_form, has_empty_cells)
 
     def get_domain_dna_regions(self, data_dict):
+        print("PPP5 data_dict: %s" % data_dict)
+
         try:
             self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_dict]]
         except KeyError:
