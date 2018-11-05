@@ -957,10 +957,9 @@ class CsvMetadata():
         for r in self.domain_dna_regions:
             domain_letter = r[0]
             dna_region = r[1:]
-            logging.info("domain_letter: %s" % domain_letter)
-            logging.debug("dna_region: %s" % dna_region)
-            logging.info("dna_region: %s" % dna_region)
-            logging.info("self.suite_domain_choices: %s" % self.suite_domain_choices)
+            logging.error("domain_letter: %s" % domain_letter)
+            logging.error("dna_region: %s" % dna_region)
+            logging.error("self.suite_domain_choices: %s" % self.suite_domain_choices)
             primer_suite = self.suite_domain_choices[domain_letter] + ' ' + dna_region.upper() + ' Suite'
             primer_suites.append(primer_suite)
         return primer_suites
