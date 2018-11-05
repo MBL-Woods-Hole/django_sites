@@ -405,7 +405,7 @@ class CsvMetadata():
             # where project_id = %s""" % (project_id)
             query_subm = """SELECT username AS data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title AS project_title, tubelabel
             FROM dataset JOIN project USING(project_id) JOIN user ON(owner_user_id = user_id)
-            WHERE project_id = %s AND user_project = 0""" % (project_id)
+            WHERE project_id = %s""" % (project_id)
 
             self.vamps2_project_results = self.run_query_to_dict_vamps2(query_subm)
 

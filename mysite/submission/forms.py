@@ -27,7 +27,7 @@ class FileUploadForm(forms.Form):
     # print csv_file
 
 class ChooseProjectForm(forms.Form):
-    projects_query = ProjectVamps2.objects.using('vamps2').all().order_by('-project_id')
+    projects_query = ProjectVamps2.objects.using('vamps2').all().filter(user_project = 0).order_by('-project_id')
     # project_query = Project.cache_all_method.all().order_by('-project_id')
     projects = forms.ModelChoiceField(queryset = projects_query, empty_label = None, label='Project')
 
