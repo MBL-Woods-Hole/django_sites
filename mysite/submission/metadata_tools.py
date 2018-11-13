@@ -504,15 +504,15 @@ class CsvMetadata():
                 except:
                   raise
 
-                contacts = {}
                 try:
                     contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
+                    self.user_info_arr[submit_code] = model_to_dict(contacts)
+
                 except Contact.DoesNotExist as e:
                     # self.cause = e.args[0]
                     self.errors.add("Please add contact information for %s to env454." % vamps_user_id)
                 except:
                     raise
-                self.user_info_arr[submit_code] = model_to_dict(contacts)
         except:
             raise
 
@@ -817,9 +817,11 @@ class CsvMetadata():
                 self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
 
             except KeyError:
-                logging.error("There is no such submit code in the database: %s" % curr_submit_code)
-                self.errors.add("There is no such submit code in the database: %s" % curr_submit_code)
-                # raise
+                if not curr_submit_code:
+                    logging.error("There is no such submit code in the database: %s" % curr_submit_code)
+                    self.errors.add("There is no such submit code in the database: %s" % curr_submit_code)
+
+                # else there is no such user info
             except:
                 raise
 
@@ -1072,7 +1074,7 @@ class CsvMetadata():
         return (metadata_run_info_form, has_empty_cells)
 
     def get_domain_dna_regions(self, data_dict):
-        print("PPP5 data_dict: %s" % data_dict)
+        # print("PPP5 data_dict: %s" % data_dict)
 
         try:
             self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_dict]]
