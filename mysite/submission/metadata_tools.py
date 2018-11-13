@@ -108,7 +108,7 @@ class CsvMetadata():
         self.domains_per_row = []
         self.dna_region = ""
         self.empty_cells = []
-        self.errors = []
+        self.errors = set()
         self.files_created = []
         self.ini_names = {}
         self.lanes_domains = []
@@ -270,7 +270,7 @@ class CsvMetadata():
             self.csvfile.seek(0)
             self.dict_reader = list(csv.DictReader(io.StringIO(self.csvfile.read().decode('utf-8'))))
         except csv.Error as e:
-            self.errors.append('%s is not a valid CSV file: %s' % (self.csvfile, e))
+            self.errors.add('%s is not a valid CSV file: %s' % (self.csvfile, e))
         except:
             raise
 
@@ -281,7 +281,7 @@ class CsvMetadata():
             self.reader = csv.reader(io.StringIO(self.csvfile.read().decode('utf-8')))
 
         except csv.Error as e:
-            self.errors.append('%s is not a valid CSV file: %s' % (self.csvfile, e))
+            self.errors.add('%s is not a valid CSV file: %s' % (self.csvfile, e))
         except:
             raise
 
@@ -329,7 +329,7 @@ class CsvMetadata():
             # logging.debug(self.run_info_from_csv)
         except KeyError as e:
             self.cause = e.args[0]
-            self.errors.append(self.no_data_message())
+            self.errors.add(self.no_data_message())
         except:
             raise
 
@@ -347,7 +347,7 @@ class CsvMetadata():
 
         if missing_headers:
             missing_headers_str = ', '.join(missing_headers)
-            self.errors.append('Missing headers: %s' % (missing_headers_str))
+            self.errors.add('Missing headers: %s' % (missing_headers_str))
             return False
         return True
 
@@ -410,7 +410,7 @@ class CsvMetadata():
             return self.vamps2_project_results
         except KeyError as e:
             self.cause = e.args[0]
-            self.errors.append(self.no_data_message())
+            self.errors.add(self.no_data_message())
         except:
             raise
 
@@ -432,7 +432,7 @@ class CsvMetadata():
                 self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
         except KeyError as e:
             self.cause = e.args[0]
-            self.errors.append(self.no_data_message())
+            self.errors.add(self.no_data_message())
         except:
             raise
 
@@ -499,7 +499,7 @@ class CsvMetadata():
                   vamps_user_id = self.vamps_submissions[submit_code]['username']
                 except KeyError as e:
                   user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
-                  self.errors.append("Please check if contact information for %s exists in VAMPS." % submit_code)
+                  self.errors.add("Please check if contact information for %s exists in VAMPS." % submit_code)
                   return
                 except:
                   raise
@@ -509,7 +509,7 @@ class CsvMetadata():
                     contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
                 except Contact.DoesNotExist as e:
                     # self.cause = e.args[0]
-                    self.errors.append("Please add contact information for %s to env454." % vamps_user_id)
+                    self.errors.add("Please add contact information for %s to env454." % vamps_user_id)
                 except:
                     raise
                 self.user_info_arr[submit_code] = model_to_dict(contacts)
@@ -720,7 +720,7 @@ class CsvMetadata():
             data_owner = "".join(self.csv_by_header_uniqued['data_owner'])
             contacts = Contact.cache_all_method.get(vamps_name = data_owner)
         except Contact.DoesNotExist as e:
-            self.errors.append("Please add contact information for %s to env454." % data_owner)
+            self.errors.add("Please add contact information for %s to env454." % data_owner)
         except:
             raise
         # self.user_info_arr[submit_code] = model_to_dict(contacts)
@@ -742,7 +742,7 @@ class CsvMetadata():
 
             missing_projects_list = ", ".join(list(set(missing_projects)))
             if len(missing_projects_list) > 0:
-                self.errors.append("Please add project information for %s to env454." % missing_projects_list)
+                self.errors.add("Please add project information for %s to env454." % missing_projects_list)
 
     def make_new_out_metadata(self, request):
         logging.info("make_new_out_metadata")
@@ -818,7 +818,7 @@ class CsvMetadata():
 
             except KeyError:
                 logging.error("There is no such submit code in the database: %s" % curr_submit_code)
-                self.errors.append("There is no such submit code in the database: %s" % curr_submit_code)
+                self.errors.add("There is no such submit code in the database: %s" % curr_submit_code)
                 # raise
             except:
                 raise
@@ -1014,13 +1014,13 @@ class CsvMetadata():
     def csv_file_upload(self, request):
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
-            self.errors.append("The file %s is empty or does not exist." % csv_file)
+            self.errors.add("The file %s is empty or does not exist." % csv_file)
             return ("", 'no_file')
 
         has_empty_cells = self.import_from_file(csv_file)
 
         if has_empty_cells:                
-            self.errors.append("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
+            self.errors.add("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
             return ("", 'has_empty_cells')
 
         # TODO:
