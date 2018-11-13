@@ -499,11 +499,12 @@ class CsvMetadata():
                   vamps_user_id = self.vamps_submissions[submit_code]['username']
                 except KeyError as e:
                   user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
-                  self.errors.append("Please check if contact information for %s exists in VAMPS." % user_name_by_submit_code)
+                  self.errors.append("Please check if contact information for %s exists in VAMPS." % submit_code)
                   return
                 except:
                   raise
 
+                contacts = {}
                 try:
                     contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
                 except Contact.DoesNotExist as e:
@@ -805,8 +806,23 @@ class CsvMetadata():
             except:
                 raise
             # <option value="36">Nicole Webster</option>
-            self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.user_info_arr[curr_submit_code]['last_name']
-            self.out_metadata[i]['data_owner']           = self.user_info_arr[curr_submit_code]['vamps_name']
+            try:
+                self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.user_info_arr[curr_submit_code]['last_name']
+                self.out_metadata[i]['email'] = self.user_info_arr[curr_submit_code]['email']
+                self.out_metadata[i]['data_owner']           = self.user_info_arr[curr_submit_code]['vamps_name']
+                self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
+                self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
+                self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
+                self.out_metadata[i]['last_name']            = self.user_info_arr[curr_submit_code]['last_name']
+                self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
+
+            except KeyError:
+                logging.error("There is no such submit code in the database: %s" % curr_submit_code)
+                self.errors.append("There is no such submit code in the database: %s" % curr_submit_code)
+                # raise
+            except:
+                raise
+
 
             self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
             self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
@@ -823,19 +839,10 @@ class CsvMetadata():
 
             # TODO: make dropdown menu, camelize, choose
             self.out_metadata[i]['domain']			     = self.csv_by_header['domain'][i]
-            self.out_metadata[i]['email']                = self.user_info_arr[curr_submit_code]['email']
             self.out_metadata[i]["env_sample_source_id"] = self.csv_by_header['env_sample_source_id'][i]
             self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
-            self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
-            self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
-
-            # logging.debug("self.csv_by_header['submit_code'][i] = %s" % self.csv_by_header['submit_code'][i])
-            # logging.debug("self.vamps_submissions[curr_submit_code]['institution'] = %s" % self.vamps_submissions[curr_submit_code]['institution'])
-
             self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
-            self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
             self.out_metadata[i]['lane']				 = self.csv_by_header['lane'][i]
-            self.out_metadata[i]['last_name']            = self.user_info_arr[curr_submit_code]['last_name']
             # TODO:
             # $combined_metadata[$num]["locked"]             = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["locked"];
             # $combined_metadata[$num]["num_of_tubes"]       = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["num_of_tubes"];
@@ -848,9 +855,6 @@ class CsvMetadata():
             # $combined_metadata[$num]["primer_suite_id"]    = get_primer_suite_id($combined_metadata[$num]["dna_region"], $combined_metadata[$num]["domain"], $db_name, $connection);
 
             self.out_metadata[i]['project']				 = self.csv_by_header['project_name'][i]
-
-
-            self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
             try:
                 self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['title']
             except KeyError:
