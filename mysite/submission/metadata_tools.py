@@ -97,7 +97,7 @@ class CsvMetadata():
         self.adaptors_full = {}
         self.cause = ""
         self.csv_by_header = defaultdict(list)
-        self.csv_by_header_uniqued = defaultdict(list)
+        self.csv_by_header_uniqued = defaultdict(list) # public
         self.csv_content = []
         self.csv_headers = []
         self.vamps2_csv = False
@@ -107,17 +107,17 @@ class CsvMetadata():
         self.domain_dna_regions = []
         self.domains_per_row = []
         self.dna_region = ""
-        self.empty_cells = []
-        self.errors = set()
-        self.files_created = []
+        self.empty_cells = [] # public
+        self.errors = set() # public
+        self.files_created = [] # public
         self.ini_names = {}
         self.lanes_domains = []
         self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
         self.metadata_csv_file_names = {}
-        self.new_project = ""
-        self.new_project_created = False
+        self.new_project = "" # public
+        self.new_project_created = False # public
         self.out_metadata = defaultdict(defaultdict)
-        self.out_metadata_table = defaultdict(list)
+        self.out_metadata_table = defaultdict(list) # public
         self.path_to_csv = ""
         self.run_info_from_csv = {}
         self.selected_lane = ""
@@ -1013,7 +1013,7 @@ class CsvMetadata():
 
         # return created
 
-    def csv_file_upload(self, request):
+    def csv_file_upload(self, request): # public
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
             self.errors.add("The file %s is empty or does not exist." % csv_file)
@@ -1083,7 +1083,7 @@ class CsvMetadata():
         except:
             raise
 
-    def new_submission(self, request):
+    def new_submission(self, request): # public
         data_from_db = self.get_vamps2_submission_info(request.POST['projects'])
 
         # self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_from_db]]
@@ -1114,7 +1114,7 @@ class CsvMetadata():
 
         return (metadata_run_info_form)
 
-    def submit_new_project(self, request):
+    def submit_new_project(self, request): # public
         # logging.debug("EEE: request.POST = %s" % request.POST)
 
         metadata_new_project_form = AddProjectForm(request.POST)
@@ -1132,7 +1132,7 @@ class CsvMetadata():
 
         return metadata_new_project_form
 
-    def submit_run_info(self, request):
+    def submit_run_info(self, request): # public
         self.get_selected_variables(request.POST)
         request.session['run_info'] = {}
         request.session['run_info']['selected_rundate']         = self.selected_rundate
@@ -1170,7 +1170,7 @@ class CsvMetadata():
 
         return (request, metadata_run_info_form, formset)
 
-    def create_submission_metadata_file(self, request):
+    def create_submission_metadata_file(self, request): # public
         # logging.debug("EEE: request.POST = %s" % request.POST)
 
         """

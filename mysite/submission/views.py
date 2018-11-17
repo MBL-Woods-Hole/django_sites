@@ -39,8 +39,8 @@ def upload_metadata(request):
     https://docs.djangoproject.com/en/dev/ref/forms/api/#dynamic-initial-values
     Form.errors
     """
-    utils = Utils()
-    csv_handler = CsvMetadata(request)
+    # utils = Utils()
+    # csv_handler = CsvMetadata(request)
 
     if request.method == 'POST' and request.FILES and 'file_upload' in request.POST:
         context = upload_file_n_make_new_metadata(request)
