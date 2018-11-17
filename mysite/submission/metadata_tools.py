@@ -40,6 +40,9 @@ class CsvFile():
         self.vamps2_csv = False
         self.csvfile = ""
         self.dirs = Dirs()
+        self.run_info_from_csv = {}
+        self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
+
         self.HEADERS_FROM_CSV = {
             'id': {'field': 'id', 'required': True},
             'submit_code': {'field': 'submit_code', 'required': True},
@@ -224,7 +227,6 @@ class CsvFile():
             return False
         return True
 
-
     def check_req_info_presence(self):
         empty_cells_interim = []
         for row in self.reader:
@@ -236,6 +238,103 @@ class CsvFile():
                         empty_cells_interim.append(header)
                         # logging.debug("NOOOO")
         self.empty_cells = list(set(empty_cells_interim))
+
+    def get_initial_run_info_data_dict(self):
+        logging.info("get_initial_run_info_data_dict")
+
+        if self.vamps2_csv:
+            csv_rundate = "".join(self.csv_by_header_uniqued['run'])
+            self.run_info_from_csv['csv_seq_operator'] = ""
+        else:
+            csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
+            self.run_info_from_csv['csv_seq_operator'] = "".join(self.csv_by_header_uniqued['op_seq'])
+
+        try:
+            platform = "".join(self.csv_by_header_uniqued['platform']).lower()
+            self.selected_machine_short = self.machine_shortcuts_choices[platform]
+
+            self.run_info_from_csv = {
+                'csv_rundate'         : csv_rundate,
+                'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s%s" % (
+                csv_rundate, self.selected_machine_short),
+                'csv_platform'        : platform,
+                'csv_dna_region'      : "".join(self.csv_by_header_uniqued['dna_region']),
+                'csv_overlap'         : "".join(self.csv_by_header_uniqued['overlap']),
+                # 'csv_has_ns':		    "".join(self.csv_by_header_uniqued['rundate']),
+                'csv_insert_size'     : "".join(self.csv_by_header_uniqued['insert_size']),
+                'csv_read_length'     : "".join(self.csv_by_header_uniqued['read_length'])
+            }
+
+            # logging.debug("RRR self.run_info_from_csv"
+            # logging.debug(self.run_info_from_csv)
+        except KeyError as e:
+            self.cause = e.args[0]
+            self.errors.add(self.no_data_message())
+        except:
+            raise
+
+
+    def csv_file_upload(self, request): # public. Should it be in csv_file class?
+        csv_file = request.FILES['csv_file']
+        if csv_file.size == 0:
+            self.errors.add("The file %s is empty or does not exist." % csv_file)
+            return ("", 'no_file')
+
+        # has_empty_cells = self.import_from_file(csv_file)
+        has_empty_cells = self.import_from_file(csv_file) # Should it be in csv_file class?
+
+        if has_empty_cells: # should create errors not here
+            self.errors.add("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
+            return ("", 'has_empty_cells')
+
+        # TODO:
+        # validate size and type of the file
+        # tmp_path = 'tmp/%s' % csv_file
+        # default_storage.save(tmp_path, ContentFile(csv_file.file.read()))
+        # full_tmp_path = os.path.join(settings.BASE_DIR, tmp_path)
+        # - See more at: http://blog.hayleyanderson.us/2015/07/18/validating-file-types-in-django/#sthash.Ux4hWNaD.dpuf
+        # csv_validation = Validation()
+        # csv_validation.required_cell_values_validation()
+
+        self.get_initial_run_info_data_dict()
+        self.get_selected_variables(request.POST)
+        request.session['run_info_from_csv'] = self.run_info_from_csv
+        metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+            # CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+
+        # # TODO: move to one method in metadata_tools, call from here as create info and create csv
+        # request.session['lanes_domains'] = self.get_lanes_domains()
+        # del request.session['lanes_domains']
+
+        if not self.vamps2_csv:
+            self.get_vamps_submission_info()
+
+        self.csv_file.get_csv_by_header()
+        # self.get_csv_by_header()
+
+        info_list_len = len(self.csv_by_header['dataset'])
+        self.get_domain_dna_regions(self.csv_file.dict_reader)
+        self.get_domain_per_row(info_list_len)
+        self.get_adaptor_from_csv_content()
+
+        if self.vamps2_csv:
+            self.check_user()
+        else:
+            self.get_user_info()
+        self.check_projects()
+
+        self.make_new_out_metadata(request)
+        if self.errors:
+            return (metadata_run_info_form, has_empty_cells)
+
+        request.session['out_metadata'] = self.out_metadata
+
+        # utils.is_local(request)
+        # HOSTNAME = request.get_host()
+        # if HOSTNAME.startswith("localhost"):
+        #     logging.debug("local")
+
+        return (metadata_run_info_form, has_empty_cells)
 
 
 class Metadata():
@@ -249,7 +348,6 @@ class FormData():
     """Dealing with form preparations"""
     def __init__(self, request):
         pass
-
 
 # Assuming that in each csv one rundate and one platform!
 class CsvMetadata():
@@ -315,7 +413,7 @@ class CsvMetadata():
             range = xrange
 
         self.utils = Utils()
-        self.scv_file = CsvFile(request)
+        self.csv_file = CsvFile(request)
         self.db_prefix = ""
         logging.info("self.utils.is_local(request) = %s" % self.utils.is_local(request))
         if (self.utils.is_local(request)):
@@ -348,7 +446,7 @@ class CsvMetadata():
         self.out_metadata = defaultdict(defaultdict)
         self.out_metadata_table = defaultdict(list) # public
         self.path_to_csv = ""
-        self.run_info_from_csv = {}
+        # self.run_info_from_csv = {}
         self.selected_lane = ""
         self.selected_machine_short = ""
         self.suite_domain_choices = dict(Domain.SUITE_DOMAIN_CHOICES)
@@ -529,38 +627,38 @@ class CsvMetadata():
     #     # self.csv_by_header_uniqued = ""
     #     # self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
     #
-    def get_initial_run_info_data_dict(self):
-        logging.info("get_initial_run_info_data_dict")
-
-        if self.vamps2_csv:
-            csv_rundate = "".join(self.csv_by_header_uniqued['run'])
-            self.run_info_from_csv['csv_seq_operator'] = ""
-        else:
-            csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
-            self.run_info_from_csv['csv_seq_operator'] = "".join(self.csv_by_header_uniqued['op_seq'])
-
-        try:
-            platform = "".join(self.csv_by_header_uniqued['platform']).lower()
-            self.selected_machine_short = self.machine_shortcuts_choices[platform]
-            
-            self.run_info_from_csv = {
-                'csv_rundate':          csv_rundate,
-                'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s%s" % (csv_rundate, self.selected_machine_short),
-                'csv_platform':	        platform,
-                'csv_dna_region':	    "".join(self.csv_by_header_uniqued['dna_region']),
-                'csv_overlap':		    "".join(self.csv_by_header_uniqued['overlap']),
-                # 'csv_has_ns':		    "".join(self.csv_by_header_uniqued['rundate']),
-                'csv_insert_size':	    "".join(self.csv_by_header_uniqued['insert_size']),
-                'csv_read_length':	    "".join(self.csv_by_header_uniqued['read_length'])
-            }
-
-            # logging.debug("RRR self.run_info_from_csv"
-            # logging.debug(self.run_info_from_csv)
-        except KeyError as e:
-            self.cause = e.args[0]
-            self.errors.add(self.no_data_message())
-        except:
-            raise
+    # def get_initial_run_info_data_dict(self):
+    #     logging.info("get_initial_run_info_data_dict")
+    #
+    #     if self.vamps2_csv:
+    #         csv_rundate = "".join(self.csv_by_header_uniqued['run'])
+    #         self.run_info_from_csv['csv_seq_operator'] = ""
+    #     else:
+    #         csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
+    #         self.run_info_from_csv['csv_seq_operator'] = "".join(self.csv_by_header_uniqued['op_seq'])
+    #
+    #     try:
+    #         platform = "".join(self.csv_by_header_uniqued['platform']).lower()
+    #         self.selected_machine_short = self.machine_shortcuts_choices[platform]
+    #
+    #         self.run_info_from_csv = {
+    #             'csv_rundate':          csv_rundate,
+    #             'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s%s" % (csv_rundate, self.selected_machine_short),
+    #             'csv_platform':	        platform,
+    #             'csv_dna_region':	    "".join(self.csv_by_header_uniqued['dna_region']),
+    #             'csv_overlap':		    "".join(self.csv_by_header_uniqued['overlap']),
+    #             # 'csv_has_ns':		    "".join(self.csv_by_header_uniqued['rundate']),
+    #             'csv_insert_size':	    "".join(self.csv_by_header_uniqued['insert_size']),
+    #             'csv_read_length':	    "".join(self.csv_by_header_uniqued['read_length'])
+    #         }
+    #
+    #         # logging.debug("RRR self.run_info_from_csv"
+    #         # logging.debug(self.run_info_from_csv)
+    #     except KeyError as e:
+    #         self.cause = e.args[0]
+    #         self.errors.add(self.no_data_message())
+    #     except:
+    #         raise
 
      # def parce_csv(self):
     #   self.csv_content = [row for row in self.reader]
@@ -1242,67 +1340,67 @@ class CsvMetadata():
 
         # return created
 
-    def csv_file_upload(self, request): # public. Should it be in scv_file class?
-        csv_file = request.FILES['csv_file']
-        if csv_file.size == 0:
-            self.errors.add("The file %s is empty or does not exist." % csv_file)
-            return ("", 'no_file')
-
-        # has_empty_cells = self.import_from_file(csv_file)
-        has_empty_cells = self.scv_file.import_from_file(csv_file) # Should it be in scv_file class?
-
-        if has_empty_cells: # should create errors not here
-            self.errors.add("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
-            return ("", 'has_empty_cells')
-
-        # TODO:
-        # validate size and type of the file
-        # tmp_path = 'tmp/%s' % csv_file
-        # default_storage.save(tmp_path, ContentFile(csv_file.file.read()))
-        # full_tmp_path = os.path.join(settings.BASE_DIR, tmp_path)
-        # - See more at: http://blog.hayleyanderson.us/2015/07/18/validating-file-types-in-django/#sthash.Ux4hWNaD.dpuf
-        # csv_validation = Validation()
-        # csv_validation.required_cell_values_validation()
-
-        self.get_initial_run_info_data_dict()
-        self.get_selected_variables(request.POST)
-        request.session['run_info_from_csv'] = self.run_info_from_csv
-        metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-            # CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-
-        # # TODO: move to one method in metadata_tools, call from here as create info and create csv
-        # request.session['lanes_domains'] = self.get_lanes_domains()
-        # del request.session['lanes_domains']
-
-        if not self.vamps2_csv:
-            self.get_vamps_submission_info()
-
-        self.scv_file.get_csv_by_header()
-        # self.get_csv_by_header()
-
-        info_list_len = len(self.csv_by_header['dataset'])
-        self.get_domain_dna_regions(self.scv_file.dict_reader)
-        self.get_domain_per_row(info_list_len)
-        self.get_adaptor_from_csv_content()
-
-        if self.vamps2_csv:
-            self.check_user()
-        else:
-            self.get_user_info()
-        self.check_projects()
-
-        self.make_new_out_metadata(request)
-        if self.errors:
-            return (metadata_run_info_form, has_empty_cells)
-
-        request.session['out_metadata'] = self.out_metadata
-
-        # utils.is_local(request)
-        # HOSTNAME = request.get_host()
-        # if HOSTNAME.startswith("localhost"):
-        #     logging.debug("local")
-
-        return (metadata_run_info_form, has_empty_cells)
+    # def csv_file_upload(self, request): # public. Should it be in csv_file class?
+    #     csv_file = request.FILES['csv_file']
+    #     if csv_file.size == 0:
+    #         self.errors.add("The file %s is empty or does not exist." % csv_file)
+    #         return ("", 'no_file')
+    #
+    #     # has_empty_cells = self.import_from_file(csv_file)
+    #     has_empty_cells = self.csv_file.import_from_file(csv_file) # Should it be in csv_file class?
+    #
+    #     if has_empty_cells: # should create errors not here
+    #         self.errors.add("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
+    #         return ("", 'has_empty_cells')
+    #
+    #     # TODO:
+    #     # validate size and type of the file
+    #     # tmp_path = 'tmp/%s' % csv_file
+    #     # default_storage.save(tmp_path, ContentFile(csv_file.file.read()))
+    #     # full_tmp_path = os.path.join(settings.BASE_DIR, tmp_path)
+    #     # - See more at: http://blog.hayleyanderson.us/2015/07/18/validating-file-types-in-django/#sthash.Ux4hWNaD.dpuf
+    #     # csv_validation = Validation()
+    #     # csv_validation.required_cell_values_validation()
+    #
+    #     self.get_initial_run_info_data_dict()
+    #     self.get_selected_variables(request.POST)
+    #     request.session['run_info_from_csv'] = self.run_info_from_csv
+    #     metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+    #         # CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+    #
+    #     # # TODO: move to one method in metadata_tools, call from here as create info and create csv
+    #     # request.session['lanes_domains'] = self.get_lanes_domains()
+    #     # del request.session['lanes_domains']
+    #
+    #     if not self.vamps2_csv:
+    #         self.get_vamps_submission_info()
+    #
+    #     self.csv_file.get_csv_by_header()
+    #     # self.get_csv_by_header()
+    #
+    #     info_list_len = len(self.csv_by_header['dataset'])
+    #     self.get_domain_dna_regions(self.csv_file.dict_reader)
+    #     self.get_domain_per_row(info_list_len)
+    #     self.get_adaptor_from_csv_content()
+    #
+    #     if self.vamps2_csv:
+    #         self.check_user()
+    #     else:
+    #         self.get_user_info()
+    #     self.check_projects()
+    #
+    #     self.make_new_out_metadata(request)
+    #     if self.errors:
+    #         return (metadata_run_info_form, has_empty_cells)
+    #
+    #     request.session['out_metadata'] = self.out_metadata
+    #
+    #     # utils.is_local(request)
+    #     # HOSTNAME = request.get_host()
+    #     # if HOSTNAME.startswith("localhost"):
+    #     #     logging.debug("local")
+    #
+    #     return (metadata_run_info_form, has_empty_cells)
 
     def get_domain_dna_regions(self, data_dict):
         # print("PPP5 data_dict: %s" % data_dict)

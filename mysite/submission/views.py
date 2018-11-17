@@ -20,7 +20,7 @@ from .models_l_env454 import Run as models_run
 from .forms import FileUploadForm, AddProjectForm, ChooseProjectForm
 from .utils import Run, Utils
 
-from .metadata_tools import CsvMetadata
+from .metadata_tools import CsvFile, CsvMetadata
 # , Validation
 
 def index(request):
@@ -75,7 +75,7 @@ def submit_run_info_and_get_csv(request):
 
 def upload_file_n_make_new_metadata(request):
     utils = Utils()
-    csv_handler = CsvMetadata(request)
+    csv_handler = CsvFile(request)
     
     logging.debug("HHH")
     logging.debug("111 request.method == 'POST' and request.FILES:")
