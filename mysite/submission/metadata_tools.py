@@ -32,6 +32,7 @@ class CsvFile():
     """
     def __init__(self, request):
         self.utils = Utils()
+        self.metadata = Metadata(request)
 
         self.csv_by_header = defaultdict(list)
         self.csv_by_header_uniqued = defaultdict(list) # public
@@ -273,7 +274,6 @@ class CsvFile():
         except:
             raise
 
-
     def csv_file_upload(self, request): # public. Should it be in csv_file class?
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
@@ -297,7 +297,7 @@ class CsvFile():
         # csv_validation.required_cell_values_validation()
 
         self.get_initial_run_info_data_dict()
-        self.get_selected_variables(request.POST)
+        self.metadata.get_selected_variables(request.POST)
         request.session['run_info_from_csv'] = self.run_info_from_csv
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
             # CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
@@ -309,11 +309,11 @@ class CsvFile():
         if not self.vamps2_csv:
             self.get_vamps_submission_info()
 
-        self.csv_file.get_csv_by_header()
+        self.get_csv_by_header()
         # self.get_csv_by_header()
 
         info_list_len = len(self.csv_by_header['dataset'])
-        self.get_domain_dna_regions(self.csv_file.dict_reader)
+        self.get_domain_dna_regions(self.dict_reader)
         self.get_domain_per_row(info_list_len)
         self.get_adaptor_from_csv_content()
 
@@ -343,6 +343,25 @@ class Metadata():
     """
     def __init__(self, request):
         pass
+
+    def get_selected_variables(self, request_post):
+        # change from form if needed
+        # if 'submit_run_info' in request_post:
+        try:
+            self.selected_machine       = request_post.get('csv_platform', False) or  " ".join(self.csv_by_header_uniqued['platform']).lower()
+            self.selected_machine_short = self.selected_machine_short or self.machine_shortcuts_choices[self.selected_machine]
+            self.selected_rundate       = request_post.get('csv_rundate', False) or " ".join(self.csv_by_header_uniqued['run']).lower()
+            self.selected_dna_region    = request_post.get('csv_dna_region', False) or " ".join(self.csv_by_header_uniqued['dna_region']).lower()
+            self.selected_overlap       = request_post.get('csv_overlap', False) or " ".join(self.csv_by_header_uniqued['overlap']).lower()
+        except KeyError:
+            logging.debug("self.csv_by_header_uniqued")
+            pass
+            # self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
+            # self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
+            # self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
+        except:
+            raise
+
 
 class FormData():
     """Dealing with form preparations"""
@@ -843,23 +862,23 @@ class CsvMetadata():
         except:
             raise
 
-    def get_selected_variables(self, request_post):
-        # change from form if needed
-        # if 'submit_run_info' in request_post:
-        try:
-            self.selected_machine       = request_post.get('csv_platform', False) or  " ".join(self.csv_by_header_uniqued['platform']).lower()
-            self.selected_machine_short = self.selected_machine_short or self.machine_shortcuts_choices[self.selected_machine]
-            self.selected_rundate       = request_post.get('csv_rundate', False) or " ".join(self.csv_by_header_uniqued['run']).lower()
-            self.selected_dna_region    = request_post.get('csv_dna_region', False) or " ".join(self.csv_by_header_uniqued['dna_region']).lower()
-            self.selected_overlap       = request_post.get('csv_overlap', False) or " ".join(self.csv_by_header_uniqued['overlap']).lower()
-        except KeyError:
-            logging.debug("self.csv_by_header_uniqued")
-            pass
-            # self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
-            # self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
-            # self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
-        except:
-            raise
+    # def get_selected_variables(self, request_post):
+    #     # change from form if needed
+    #     # if 'submit_run_info' in request_post:
+    #     try:
+    #         self.selected_machine       = request_post.get('csv_platform', False) or  " ".join(self.csv_by_header_uniqued['platform']).lower()
+    #         self.selected_machine_short = self.selected_machine_short or self.machine_shortcuts_choices[self.selected_machine]
+    #         self.selected_rundate       = request_post.get('csv_rundate', False) or " ".join(self.csv_by_header_uniqued['run']).lower()
+    #         self.selected_dna_region    = request_post.get('csv_dna_region', False) or " ".join(self.csv_by_header_uniqued['dna_region']).lower()
+    #         self.selected_overlap       = request_post.get('csv_overlap', False) or " ".join(self.csv_by_header_uniqued['overlap']).lower()
+    #     except KeyError:
+    #         logging.debug("self.csv_by_header_uniqued")
+    #         pass
+    #         # self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
+    #         # self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
+    #         # self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
+    #     except:
+    #         raise
 
     def create_path_to_csv(self):
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
