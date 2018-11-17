@@ -32,6 +32,9 @@ class Utils():
         else:
             return False
 
+    def make_an_empty_dict_from_set(self, my_set):
+        return {key: "" for key in my_set}
+
     def get_overlap(self, machine_name):
         overlap_choices = dict(Overlap.COMPLETE_OVERLAP_CHOICES)
         return overlap_choices[machine_name]
