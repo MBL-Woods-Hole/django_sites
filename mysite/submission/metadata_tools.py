@@ -325,13 +325,13 @@ class CsvMetadata():
         self.adaptor_ref = self.get_all_adaptors()
         self.adaptors_full = {}
         self.cause = ""
-        self.csv_by_header = defaultdict(list)
-        self.csv_by_header_uniqued = defaultdict(list) # public
-        self.csv_content = []
-        self.csv_headers = []
-        self.vamps2_csv = False
-        self.csvfile = ""
-        self.dirs = Dirs()
+        # self.csv_by_header = defaultdict(list)
+        # self.csv_by_header_uniqued = defaultdict(list) # public
+        # self.csv_content = []
+        # self.csv_headers = []
+        # self.vamps2_csv = False
+        # self.csvfile = ""
+        # self.dirs = Dirs()
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         self.domain_dna_regions = []
         self.domains_per_row = []
@@ -675,7 +675,7 @@ class CsvMetadata():
     #   total = float(t1-t0) / 60
     #   logging.debug('time: %.2f m' % total)
 
-    def get_adaptor_from_csv_content(self):
+    def get_adaptor_from_csv_content(self): # TODO: move to the csv_file class
         for i in range(len(self.csv_content)-1):
             # logging.debug("+" * 9)
             adaptor    = self.csv_by_header['adaptor'][i]
@@ -1242,14 +1242,14 @@ class CsvMetadata():
 
         # return created
 
-    def csv_file_upload(self, request): # public
+    def csv_file_upload(self, request): # public. Should it be in scv_file class?
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
             self.errors.add("The file %s is empty or does not exist." % csv_file)
             return ("", 'no_file')
 
         # has_empty_cells = self.import_from_file(csv_file)
-        has_empty_cells = self.scv_file.import_from_file(csv_file)
+        has_empty_cells = self.scv_file.import_from_file(csv_file) # Should it be in scv_file class?
 
         if has_empty_cells: # should create errors not here
             self.errors.add("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
@@ -1281,7 +1281,7 @@ class CsvMetadata():
         # self.get_csv_by_header()
 
         info_list_len = len(self.csv_by_header['dataset'])
-        self.get_domain_dna_regions(self.dict_reader)
+        self.get_domain_dna_regions(self.scv_file.dict_reader)
         self.get_domain_per_row(info_list_len)
         self.get_adaptor_from_csv_content()
 
