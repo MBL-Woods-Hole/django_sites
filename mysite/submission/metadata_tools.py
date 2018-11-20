@@ -43,6 +43,7 @@ class CsvFile():
         self.dirs = Dirs()
         self.run_info_from_csv = {}
         self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
+        self.errors = set() # public
 
         self.HEADERS_FROM_CSV = {
             'id': {'field': 'id', 'required': True},
@@ -328,10 +329,15 @@ class CsvFile():
         self.metadata.get_domain_per_row(info_list_len)
         self.get_adaptor_from_csv_content()
 
+        # TODO: DRY
         if self.vamps2_csv:
-            self.check_user()
+            self.metadata.check_user(self.csv_by_header_uniqued)
+            self.errors.update(self.metadata.errors)  # public
+
         else:
-            self.get_user_info()
+            self.metadata.get_user_info(self.csv_by_header_uniqued)
+            self.errors.update(self.metadata.errors)  # public
+
         self.check_projects()
 
         self.make_new_out_metadata(request)
@@ -358,6 +364,8 @@ class Metadata():
         self.vamps_submissions = {}
         self.selected_machine_short = ""
         self.domains_per_row = []
+        self.errors = set() # public
+        self.user_info_arr = {}
 
         self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
@@ -503,6 +511,44 @@ class Metadata():
         # t0 = self.utils.benchmark_w_return_1()
         self.adaptors_full = {key: (row.illumina_index, row.illumina_run_key) for row in mm}
         # self.utils.benchmark_w_return_2(t0)
+
+    def check_user(self, csv_by_header_uniqued):
+        try:
+            data_owner = "".join(csv_by_header_uniqued['data_owner'])
+            contacts = Contact.cache_all_method.get(vamps_name = data_owner)
+        except Contact.DoesNotExist as e:
+            self.errors.add("Please add contact information for %s to env454." % data_owner)
+        except:
+            raise
+
+    def get_user_info(self, csv_by_header_uniqued):
+        # db_name = self.db_prefix + "env454"
+
+        try:
+            # TODO: collect submit_code and vamps_user_id into a dict, run one query with "OR"
+            for submit_code in csv_by_header_uniqued['submit_code']:
+                # logging.debug("submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user']))
+                try:
+                  vamps_user_id = self.vamps_submissions[submit_code]['username']
+                except KeyError as e:
+                  user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
+                  self.errors.add("Please check if contact information for %s exists in VAMPS." % submit_code)
+                  return
+                except:
+                  raise
+
+                try:
+                    contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
+                    self.user_info_arr[submit_code] = model_to_dict(contacts)
+
+                except Contact.DoesNotExist as e:
+                    # self.cause = e.args[0]
+                    self.errors.add("Please add contact information for %s to env454." % vamps_user_id)
+                except:
+                    raise
+        except:
+            raise
+
 
 
 class FormData():
@@ -654,7 +700,7 @@ class CsvMetadata():
         # self.domains_per_row = []
         self.dna_region = ""
         self.empty_cells = [] # public
-        self.errors = set() # public
+        # self.errors = set() # public
         self.files_created = [] # public
         self.ini_names = {}
         self.lanes_domains = []
@@ -669,7 +715,7 @@ class CsvMetadata():
         self.selected_lane = ""
         # self.selected_machine_short = ""
         self.suite_domain_choices = dict(Domain.SUITE_DOMAIN_CHOICES)
-        self.user_info_arr = {}
+        # self.user_info_arr = {}
         # self.vamps_submissions = {}
         self.vamps2_project_results = {}
         
@@ -1034,33 +1080,33 @@ class CsvMetadata():
              break
       return user_name_by_submit_code
 
-    def get_user_info(self):
-        db_name = self.db_prefix + "env454"
-
-        try:
-            # TODO: collect submit_code and vamps_user_id into a dict, run one query with "OR"
-            for submit_code in self.csv_by_header_uniqued['submit_code']:
-                # logging.debug("submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user']))
-                try:
-                  vamps_user_id = self.vamps_submissions[submit_code]['username']
-                except KeyError as e:
-                  user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
-                  self.errors.add("Please check if contact information for %s exists in VAMPS." % submit_code)
-                  return
-                except:
-                  raise
-
-                try:
-                    contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
-                    self.user_info_arr[submit_code] = model_to_dict(contacts)
-
-                except Contact.DoesNotExist as e:
-                    # self.cause = e.args[0]
-                    self.errors.add("Please add contact information for %s to env454." % vamps_user_id)
-                except:
-                    raise
-        except:
-            raise
+    # def get_user_info(self):
+    #     db_name = self.db_prefix + "env454"
+    #
+    #     try:
+    #         # TODO: collect submit_code and vamps_user_id into a dict, run one query with "OR"
+    #         for submit_code in self.csv_by_header_uniqued['submit_code']:
+    #             # logging.debug("submit_code = %s, self.vamps_submissions[submit_code]['user'] = %s" % (submit_code, self.vamps_submissions[submit_code]['user']))
+    #             try:
+    #               vamps_user_id = self.vamps_submissions[submit_code]['username']
+    #             except KeyError as e:
+    #               user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
+    #               self.errors.add("Please check if contact information for %s exists in VAMPS." % submit_code)
+    #               return
+    #             except:
+    #               raise
+    #
+    #             try:
+    #                 contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
+    #                 self.user_info_arr[submit_code] = model_to_dict(contacts)
+    #
+    #             except Contact.DoesNotExist as e:
+    #                 # self.cause = e.args[0]
+    #                 self.errors.add("Please add contact information for %s to env454." % vamps_user_id)
+    #             except:
+    #                 raise
+    #     except:
+    #         raise
 
     # def get_selected_variables(self, request_post):
     #     # change from form if needed
@@ -1261,14 +1307,14 @@ class CsvMetadata():
 
         return my_post_dict
 
-    def check_user(self):
-        try:
-            data_owner = "".join(self.csv_by_header_uniqued['data_owner'])
-            contacts = Contact.cache_all_method.get(vamps_name = data_owner)
-        except Contact.DoesNotExist as e:
-            self.errors.add("Please add contact information for %s to env454." % data_owner)
-        except:
-            raise
+    # def check_user(self):
+    #     try:
+    #         data_owner = "".join(self.csv_by_header_uniqued['data_owner'])
+    #         contacts = Contact.cache_all_method.get(vamps_name = data_owner)
+    #     except Contact.DoesNotExist as e:
+    #         self.errors.add("Please add contact information for %s to env454." % data_owner)
+    #     except:
+    #         raise
         # self.user_info_arr[submit_code] = model_to_dict(contacts)
 
     def check_projects(self):
