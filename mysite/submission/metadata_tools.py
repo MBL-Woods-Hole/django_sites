@@ -271,6 +271,21 @@ class CsvFile():
         except:
             raise
 
+    def get_adaptor_from_csv_content(self): # TODO: move to the csv_file class
+        for i in range(len(self.csv_content)-1):
+            # logging.debug("+" * 9)
+            adaptor    = self.csv_by_header['adaptor'][i]
+            dna_region = self.csv_by_header['dna_region'][i]
+            try:
+                domain     = self.csv_by_header['domain'][i]
+            except IndexError:
+                domain = self.domains_per_row[i]
+            except:
+                raise
+
+            self.metadata.get_adaptors_full(adaptor, dna_region, domain)
+
+
     def csv_file_upload(self, request): # public. Split! insudes should be called from a client.
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
@@ -346,6 +361,10 @@ class Metadata():
 
         self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
+        self.adaptor_ref = self.get_all_adaptors()
+        self.adaptors_full = {}
+
+        # To MysqlUtil?
         self.db_prefix = ""
         if (self.utils.is_local(request)):
             self.db_prefix = "test_"
@@ -468,6 +487,22 @@ class Metadata():
 
             primer_suites.append(primer_suite)
         return primer_suites
+
+    def get_all_adaptors(self):
+        # db_name = self.db_prefix + "env454"
+        return IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+
+    def get_adaptors_full(self, adaptor, dna_region, domain):
+        # db_name = self.db_prefix + "env454"
+        key = "_".join([adaptor, dna_region, domain])
+        mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
+
+        # TODO: make once self.adaptors_full.update({})
+
+        # logging.debug("self.adaptors_full timing 2")
+        # t0 = self.utils.benchmark_w_return_1()
+        self.adaptors_full = {key: (row.illumina_index, row.illumina_run_key) for row in mm}
+        # self.utils.benchmark_w_return_2(t0)
 
 
 class FormData():
@@ -604,8 +639,8 @@ class CsvMetadata():
         #     self.db_prefix = "test_"
         
         self.RUN_INFO_FORM_FIELD_HEADERS = ["dna_region", "insert_size", "op_seq", "overlap", "read_length", "rundate"]
-        self.adaptor_ref = self.get_all_adaptors()
-        self.adaptors_full = {}
+        # self.adaptor_ref = self.get_all_adaptors()
+        # self.adaptors_full = {}
         self.cause = ""
         # self.csv_by_header = defaultdict(list)
         # self.csv_by_header_uniqued = defaultdict(list) # public
@@ -957,35 +992,35 @@ class CsvMetadata():
     #   total = float(t1-t0) / 60
     #   logging.debug('time: %.2f m' % total)
 
-    def get_adaptor_from_csv_content(self): # TODO: move to the csv_file class
-        for i in range(len(self.csv_content)-1):
-            # logging.debug("+" * 9)
-            adaptor    = self.csv_by_header['adaptor'][i]
-            dna_region = self.csv_by_header['dna_region'][i]
-            try:
-                domain     = self.csv_by_header['domain'][i]
-            except IndexError:
-                domain = self.domains_per_row[i]
-            except:
-                raise
+    # def get_adaptor_from_csv_content(self): # TODO: move to the csv_file class
+    #     for i in range(len(self.csv_content)-1):
+    #         # logging.debug("+" * 9)
+    #         adaptor    = self.csv_by_header['adaptor'][i]
+    #         dna_region = self.csv_by_header['dna_region'][i]
+    #         try:
+    #             domain     = self.csv_by_header['domain'][i]
+    #         except IndexError:
+    #             domain = self.domains_per_row[i]
+    #         except:
+    #             raise
+    #
+    #         self.get_adaptors_full(adaptor, dna_region, domain)
 
-            self.get_adaptors_full(adaptor, dna_region, domain)
-
-    def get_all_adaptors(self):
-        db_name = self.db_prefix + "env454"
-        return IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
-
-    def get_adaptors_full(self, adaptor, dna_region, domain):
-        db_name = self.db_prefix + "env454"
-        key = "_".join([adaptor, dna_region, domain])
-        mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
-
-        # TODO: make once self.adaptors_full.update({})
-
-        # logging.debug("self.adaptors_full timing 2")
-        # t0 = self.utils.benchmark_w_return_1()
-        self.adaptors_full = {key: (row.illumina_index, row.illumina_run_key) for row in mm}
-        # self.utils.benchmark_w_return_2(t0)
+    # def get_all_adaptors(self):
+    #     db_name = self.db_prefix + "env454"
+    #     return IlluminaAdaptorRef.cache_all_method.select_related('illumina_adaptor', 'illumina_index', 'illumina_run_key', 'dna_region')
+    #
+    # def get_adaptors_full(self, adaptor, dna_region, domain):
+    #     db_name = self.db_prefix + "env454"
+    #     key = "_".join([adaptor, dna_region, domain])
+    #     mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
+    #
+    #     # TODO: make once self.adaptors_full.update({})
+    #
+    #     # logging.debug("self.adaptors_full timing 2")
+    #     # t0 = self.utils.benchmark_w_return_1()
+    #     self.adaptors_full = {key: (row.illumina_index, row.illumina_run_key) for row in mm}
+    #     # self.utils.benchmark_w_return_2(t0)
 
 
     def get_user_name_by_submit_code(self, submit_code):
