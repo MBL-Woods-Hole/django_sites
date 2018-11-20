@@ -309,8 +309,8 @@ class CsvFile():
         self.get_csv_by_header()
 
         info_list_len = len(self.csv_by_header['dataset'])
-        self.get_domain_dna_regions(self.dict_reader)
-        self.get_domain_per_row(info_list_len)
+        self.metadata.get_domain_dna_regions(self.dict_reader)
+        self.metadata.get_domain_per_row(info_list_len)
         self.get_adaptor_from_csv_content()
 
         if self.vamps2_csv:
@@ -347,7 +347,6 @@ class Metadata():
         if (self.utils.is_local(request)):
             self.db_prefix = "test_"
 
-
     def get_selected_variables(self, request_post, csv_by_header_uniqued):
         # change from form if needed
         # if 'submit_run_info' in request_post:
@@ -380,7 +379,7 @@ class Metadata():
                       USING(user_id)
                     WHERE submit_code = \"%s\"""" % (db_name, submit_code)
 
-                self.vamps_submissions[submit_code] = self.mysql_util.run_query_to_dict(query_subm)
+                self.vamps_submissions[submit_code] = self.mysql_util.run_query_to_dict(query_subm, 'vamps')
         except KeyError as e:
             self.cause = e.args[0]
             self.errors.add(self.no_data_message())
@@ -394,7 +393,7 @@ class Metadata():
             FROM dataset JOIN project USING(project_id) JOIN user ON(owner_user_id = user_id)
             WHERE project_id = %s""" % (project_id)
 
-            self.vamps2_project_results = self.mysql_util.run_query_to_dict_vamps2(query_subm)
+            self.vamps2_project_results = self.mysql_util.run_query_to_dict(query_subm, db_name)
 
             # TODO: check all return self
             return self.vamps2_project_results
@@ -403,6 +402,70 @@ class Metadata():
             self.errors.add(self.no_data_message())
         except:
             raise
+
+    def get_domain_dna_regions(self, data_dict):
+        # print("PPP5 data_dict: %s" % data_dict)
+
+        try:
+            self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_dict]]
+        except KeyError:
+            self.domain_dna_regions = [k.split("_")[-1] for k in [x['project_name'] for x in data_dict]]
+        except:
+            raise
+
+
+    def get_domain_per_row(self, info_list_len):
+        for r in self.domain_dna_regions:
+            domain_letter = r[0]
+            domain = ""
+            # dna_region = r[1:]
+            for d, letter in self.domain_choices.items():
+                if letter == domain_letter:
+                    domain = d
+                    break
+            self.domains_per_row.append(domain)
+
+    def make_metadata_out_from_project_data(self, vamps2_dict):
+        # TODO: test with csv if changes still work from
+        primer_suites = self.get_primer_suites()
+        info_list_len = len(vamps2_dict)
+        self.get_domain_per_row(info_list_len)
+
+        for i in range(info_list_len):
+            self.out_metadata[i] = self.utils.make_an_empty_dict_from_set(self.all_headers)
+            self.out_metadata[i].update(vamps2_dict[i])
+
+            try: # dump the whole vamps2_dict to out_metadata, then add if key is different
+                self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
+                self.out_metadata[i]['dna_region']			 = self.dna_region
+                self.out_metadata[i]['domain']			     = self.domains_per_row[i]
+                self.out_metadata[i]['lane']				 = '1' # default
+                self.out_metadata[i]['primer_suite']		 = primer_suites[i]
+                # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
+            except IndexError:
+                pass
+            except:
+                raise
+
+    def get_primer_suites(self):
+        primer_suites = []
+        print("PPP0 self.domain_dna_regions: %s" % self.domain_dna_regions)
+
+        for r in self.domain_dna_regions:
+            domain_letter = r[0]
+            dna_region = r[1:]
+            print("PPP1 domain_letter: %s" % domain_letter)
+            print("PPP2 dna_region: %s" % dna_region)
+            print("PPP3 self.suite_domain_choices: %s" % self.suite_domain_choices)
+            try:
+                primer_suite = self.suite_domain_choices[domain_letter] + ' ' + dna_region.upper() + ' Suite'
+            except KeyError:
+                primer_suite = ""
+            except:
+                raise
+
+            primer_suites.append(primer_suite)
+        return primer_suites
 
 
 class FormData():
@@ -415,12 +478,12 @@ class MysqlUtil():
     def __init__(self):
         pass
 
-    def run_query_to_dict(self, query):
+    def run_query_to_dict(self, query, connection_name):
         import pprint
         pp = pprint.PrettyPrinter(indent = 4)
 
         res_dict = {}
-        cursor = connections['vamps'].cursor()
+        cursor = connections[connection_name].cursor()
         # cursor = connection.cursor()
         cursor.execute(query)
 
@@ -431,24 +494,40 @@ class MysqlUtil():
 
         return res_dict
 
+    # def run_query_to_dict(self, query):
+    #     import pprint
+    #     pp = pprint.PrettyPrinter(indent = 4)
+    #
+    #     res_dict = {}
+    #     cursor = connections['vamps'].cursor()
+    #     # cursor = connection.cursor()
+    #     cursor.execute(query)
+    #
+    #     column_names = [d[0] for d in cursor.description]
+    #
+    #     for row in cursor:
+    #         res_dict = dict(zip(column_names, row))
+    #
+    #     return res_dict
+
     # dump it to a json string
     # self.vamps_submissions = json.dumps(info)
 
-    def run_query_to_dict_vamps2(self, query):
-        import pprint
-        pp = pprint.PrettyPrinter(indent = 4)
-
-        res_arr_dict = []
-        cursor = connections['vamps2'].cursor()
-        # cursor = connection.cursor()
-        cursor.execute(query)
-
-        column_names = [d[0] for d in cursor.description]
-
-        for row in cursor:
-            res_arr_dict.append(dict(zip(column_names, row)))
-
-        return res_arr_dict
+    # def run_query_to_dict_vamps2(self, query):
+    #     import pprint
+    #     pp = pprint.PrettyPrinter(indent = 4)
+    #
+    #     res_arr_dict = []
+    #     cursor = connections['vamps2'].cursor()
+    #     # cursor = connection.cursor()
+    #     cursor.execute(query)
+    #
+    #     column_names = [d[0] for d in cursor.description]
+    #
+    #     for row in cursor:
+    #         res_arr_dict.append(dict(zip(column_names, row)))
+    #
+    #     return res_arr_dict
 
 
 # Assuming that in each csv one rundate and one platform!
@@ -1357,58 +1436,58 @@ class CsvMetadata():
             # self.out_metadata[i]['tubelabel']     = self.csv_by_header['tubelabel'][i]
             # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
 
-    def get_domain_per_row(self, info_list_len):
-        for r in self.domain_dna_regions:
-            domain_letter = r[0]
-            domain = ""
-            # dna_region = r[1:]
-            for d, letter in self.domain_choices.items():
-                if letter == domain_letter:
-                    domain = d
-                    break
-            self.domains_per_row.append(domain)
-
-    def make_metadata_out_from_project_data(self, vamps2_dict):
-        # TODO: test with csv if changes still work from
-        primer_suites = self.get_primer_suites()
-        info_list_len = len(vamps2_dict)
-        self.get_domain_per_row(info_list_len)
-
-        for i in range(info_list_len):
-            self.out_metadata[i] = self.utils.make_an_empty_dict_from_set(self.all_headers)
-            self.out_metadata[i].update(vamps2_dict[i])
-
-            try: # dump the whole vamps2_dict to out_metadata, then add if key is different
-                self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
-                self.out_metadata[i]['dna_region']			 = self.dna_region
-                self.out_metadata[i]['domain']			     = self.domains_per_row[i]
-                self.out_metadata[i]['lane']				 = '1' # default
-                self.out_metadata[i]['primer_suite']		 = primer_suites[i]
-                # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-            except IndexError:
-                pass
-            except:
-                raise
-
-    def get_primer_suites(self):
-        primer_suites = []
-        print("PPP0 self.domain_dna_regions: %s" % self.domain_dna_regions)
-
-        for r in self.domain_dna_regions:
-            domain_letter = r[0]
-            dna_region = r[1:]
-            print("PPP1 domain_letter: %s" % domain_letter)
-            print("PPP2 dna_region: %s" % dna_region)
-            print("PPP3 self.suite_domain_choices: %s" % self.suite_domain_choices)
-            try:
-                primer_suite = self.suite_domain_choices[domain_letter] + ' ' + dna_region.upper() + ' Suite'
-            except KeyError:
-                primer_suite = ""
-            except:
-                raise
-
-            primer_suites.append(primer_suite)
-        return primer_suites
+    # def get_domain_per_row(self, info_list_len):
+    #     for r in self.domain_dna_regions:
+    #         domain_letter = r[0]
+    #         domain = ""
+    #         # dna_region = r[1:]
+    #         for d, letter in self.domain_choices.items():
+    #             if letter == domain_letter:
+    #                 domain = d
+    #                 break
+    #         self.domains_per_row.append(domain)
+    #
+    # def make_metadata_out_from_project_data(self, vamps2_dict):
+    #     # TODO: test with csv if changes still work from
+    #     primer_suites = self.get_primer_suites()
+    #     info_list_len = len(vamps2_dict)
+    #     self.get_domain_per_row(info_list_len)
+    #
+    #     for i in range(info_list_len):
+    #         self.out_metadata[i] = self.utils.make_an_empty_dict_from_set(self.all_headers)
+    #         self.out_metadata[i].update(vamps2_dict[i])
+    #
+    #         try: # dump the whole vamps2_dict to out_metadata, then add if key is different
+    #             self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
+    #             self.out_metadata[i]['dna_region']			 = self.dna_region
+    #             self.out_metadata[i]['domain']			     = self.domains_per_row[i]
+    #             self.out_metadata[i]['lane']				 = '1' # default
+    #             self.out_metadata[i]['primer_suite']		 = primer_suites[i]
+    #             # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
+    #         except IndexError:
+    #             pass
+    #         except:
+    #             raise
+    #
+    # def get_primer_suites(self):
+    #     primer_suites = []
+    #     print("PPP0 self.domain_dna_regions: %s" % self.domain_dna_regions)
+    #
+    #     for r in self.domain_dna_regions:
+    #         domain_letter = r[0]
+    #         dna_region = r[1:]
+    #         print("PPP1 domain_letter: %s" % domain_letter)
+    #         print("PPP2 dna_region: %s" % dna_region)
+    #         print("PPP3 self.suite_domain_choices: %s" % self.suite_domain_choices)
+    #         try:
+    #             primer_suite = self.suite_domain_choices[domain_letter] + ' ' + dna_region.upper() + ' Suite'
+    #         except KeyError:
+    #             primer_suite = ""
+    #         except:
+    #             raise
+    #
+    #         primer_suites.append(primer_suite)
+    #     return primer_suites
 
     def make_metadata_table(self):
         logging.info("make_metadata_table")
@@ -1504,16 +1583,16 @@ class CsvMetadata():
     #     #     logging.debug("local")
     #
     #     return (metadata_run_info_form, has_empty_cells)
-
-    def get_domain_dna_regions(self, data_dict):
-        # print("PPP5 data_dict: %s" % data_dict)
-
-        try:
-            self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_dict]]
-        except KeyError:
-            self.domain_dna_regions = [k.split("_")[-1] for k in [x['project_name'] for x in data_dict]]
-        except:
-            raise
+    #
+    # def get_domain_dna_regions(self, data_dict):
+    #     # print("PPP5 data_dict: %s" % data_dict)
+    #
+    #     try:
+    #         self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_dict]]
+    #     except KeyError:
+    #         self.domain_dna_regions = [k.split("_")[-1] for k in [x['project_name'] for x in data_dict]]
+    #     except:
+    #         raise
 
     def new_submission(self, request): # public
         data_from_db = self.get_vamps2_submission_info(request.POST['projects'])
