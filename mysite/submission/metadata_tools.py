@@ -339,7 +339,6 @@ class CsvFile():
             self.errors.update(self.metadata.errors)  # public
 
         csv_projects = self.get_csv_projects()
-
         self.metadata.check_projects(csv_projects)
 
         self.make_new_out_metadata(request)
@@ -579,6 +578,19 @@ class Metadata():
         missing_projects_list = ", ".join(list(set(missing_projects)))
         if len(missing_projects_list) > 0:
             self.errors.add("Please add project information for %s to env454." % missing_projects_list)
+
+    # TODO: 1) should it be here? 2) how to simplify it (case?)?
+    def make_new_out_metadata(self, request):
+        logging.info("make_new_out_metadata")
+
+        if request.FILES:
+            if (not self.vamps2_csv):
+                self.make_metadata_out_from_csv()
+            else:
+                self.make_metadata_out_from_project_data(self.dict_reader)
+        else:
+            if self.vamps2_project_results:
+              self.make_metadata_out_from_project_data(self.vamps2_project_results)
 
 
 class FormData():
