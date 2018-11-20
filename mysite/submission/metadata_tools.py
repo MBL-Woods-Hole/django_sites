@@ -338,7 +338,9 @@ class CsvFile():
             self.metadata.get_user_info(self.csv_by_header_uniqued)
             self.errors.update(self.metadata.errors)  # public
 
-        self.check_projects()
+        csv_projects = self.get_csv_projects()
+
+        self.metadata.check_projects(csv_projects)
 
         self.make_new_out_metadata(request)
         if self.errors:
@@ -353,6 +355,14 @@ class CsvFile():
 
         return (metadata_run_info_form, has_empty_cells)
 
+    def get_csv_projects(self):
+        csv_projects = set()
+        for i in range(len(self.csv_content)-1):
+            if self.csv_by_header['project_name']:
+                csv_projects.add(self.csv_by_header['project_name'][i])
+            elif self.csv_by_header['project']:
+                csv_projects.add(self.csv_by_header['project'][i])
+        return csv_projects
 
 class Metadata():
     """
@@ -549,6 +559,26 @@ class Metadata():
         except:
             raise
 
+
+    def check_projects(self, csv_projects):
+        missing_projects = []
+        # for i in range(len(csv_content)-1):
+        #     if csv_by_header['project_name']:
+        #         csv_project = csv_by_header['project_name'][i]
+        #     elif csv_by_header['project']:
+        #         csv_project = csv_by_header['project'][i]
+
+        for csv_project in csv_projects:
+            try:
+                Project.objects.get(project = csv_project)
+            except Project.DoesNotExist as e:
+                missing_projects.append(csv_project)
+            except:
+                raise
+
+        missing_projects_list = ", ".join(list(set(missing_projects)))
+        if len(missing_projects_list) > 0:
+            self.errors.add("Please add project information for %s to env454." % missing_projects_list)
 
 
 class FormData():
@@ -1317,24 +1347,24 @@ class CsvMetadata():
     #         raise
         # self.user_info_arr[submit_code] = model_to_dict(contacts)
 
-    def check_projects(self):
-        missing_projects = []
-        for i in range(len(self.csv_content)-1):
-            if self.csv_by_header['project_name']:
-                csv_project = self.csv_by_header['project_name'][i]
-            elif self.csv_by_header['project']:
-                csv_project = self.csv_by_header['project'][i]
-
-            try:
-                Project.objects.get(project = csv_project)
-            except Project.DoesNotExist as e:
-                missing_projects.append(csv_project)
-            except:
-                raise
-
-            missing_projects_list = ", ".join(list(set(missing_projects)))
-            if len(missing_projects_list) > 0:
-                self.errors.add("Please add project information for %s to env454." % missing_projects_list)
+    # def check_projects(self):
+    #     missing_projects = []
+    #     for i in range(len(self.csv_content)-1):
+    #         if self.csv_by_header['project_name']:
+    #             csv_project = self.csv_by_header['project_name'][i]
+    #         elif self.csv_by_header['project']:
+    #             csv_project = self.csv_by_header['project'][i]
+    #
+    #         try:
+    #             Project.objects.get(project = csv_project)
+    #         except Project.DoesNotExist as e:
+    #             missing_projects.append(csv_project)
+    #         except:
+    #             raise
+    #
+    #         missing_projects_list = ", ".join(list(set(missing_projects)))
+    #         if len(missing_projects_list) > 0:
+    #             self.errors.add("Please add project information for %s to env454." % missing_projects_list)
 
     def make_new_out_metadata(self, request):
         logging.info("make_new_out_metadata")
