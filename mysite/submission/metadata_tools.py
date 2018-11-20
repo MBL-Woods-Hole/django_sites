@@ -297,7 +297,7 @@ class CsvFile():
         # csv_validation.required_cell_values_validation()
 
         self.get_initial_run_info_data_dict()
-        self.metadata.get_selected_variables(request.POST)
+        self.metadata.get_selected_variables(request.POST, self.csv_by_header_uniqued)
         request.session['run_info_from_csv'] = self.run_info_from_csv
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
             # CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
@@ -342,23 +342,25 @@ class Metadata():
     data independent of if it comes from a file, db or a form
     """
     def __init__(self, request):
-        pass
+        self.selected_machine_short = ""
+        self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
 
-    def get_selected_variables(self, request_post):
+
+    def get_selected_variables(self, request_post, csv_by_header_uniqued):
         # change from form if needed
         # if 'submit_run_info' in request_post:
         try:
-            self.selected_machine       = request_post.get('csv_platform', False) or  " ".join(self.csv_by_header_uniqued['platform']).lower()
+            self.selected_machine       = request_post.get('csv_platform', False) or  " ".join(csv_by_header_uniqued['platform']).lower()
             self.selected_machine_short = self.selected_machine_short or self.machine_shortcuts_choices[self.selected_machine]
-            self.selected_rundate       = request_post.get('csv_rundate', False) or " ".join(self.csv_by_header_uniqued['run']).lower()
-            self.selected_dna_region    = request_post.get('csv_dna_region', False) or " ".join(self.csv_by_header_uniqued['dna_region']).lower()
-            self.selected_overlap       = request_post.get('csv_overlap', False) or " ".join(self.csv_by_header_uniqued['overlap']).lower()
+            self.selected_rundate       = request_post.get('csv_rundate', False) or " ".join(csv_by_header_uniqued['run']).lower()
+            self.selected_dna_region    = request_post.get('csv_dna_region', False) or " ".join(csv_by_header_uniqued['dna_region']).lower()
+            self.selected_overlap       = request_post.get('csv_overlap', False) or " ".join(csv_by_header_uniqued['overlap']).lower()
         except KeyError:
-            logging.debug("self.csv_by_header_uniqued")
+            logging.debug("csv_by_header_uniqued")
             pass
-            # self.selected_machine = " ".join(self.csv_by_header_uniqued['platform']).lower()
+            # self.selected_machine = " ".join(csv_by_header_uniqued['platform']).lower()
             # self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
-            # self.selected_rundate = " ".join(self.csv_by_header_uniqued['rundate']).lower()
+            # self.selected_rundate = " ".join(csv_by_header_uniqued['rundate']).lower()
         except:
             raise
 
@@ -458,7 +460,7 @@ class CsvMetadata():
         self.files_created = [] # public
         self.ini_names = {}
         self.lanes_domains = []
-        self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
+        # self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
         self.metadata_csv_file_names = {}
         self.new_project = "" # public
         self.new_project_created = False # public
@@ -467,7 +469,7 @@ class CsvMetadata():
         self.path_to_csv = ""
         # self.run_info_from_csv = {}
         self.selected_lane = ""
-        self.selected_machine_short = ""
+        # self.selected_machine_short = ""
         self.suite_domain_choices = dict(Domain.SUITE_DOMAIN_CHOICES)
         self.user_info_arr = {}
         self.vamps_submissions = {}
