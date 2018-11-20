@@ -342,7 +342,10 @@ class Metadata():
         self.mysql_util = MysqlUtil()
         self.vamps_submissions = {}
         self.selected_machine_short = ""
+        self.domains_per_row = []
+
         self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
+        self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         self.db_prefix = ""
         if (self.utils.is_local(request)):
             self.db_prefix = "test_"
@@ -412,7 +415,6 @@ class Metadata():
             self.domain_dna_regions = [k.split("_")[-1] for k in [x['project_name'] for x in data_dict]]
         except:
             raise
-
 
     def get_domain_per_row(self, info_list_len):
         for r in self.domain_dna_regions:
@@ -612,9 +614,9 @@ class CsvMetadata():
         # self.vamps2_csv = False
         # self.csvfile = ""
         # self.dirs = Dirs()
-        self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
+        # self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         self.domain_dna_regions = []
-        self.domains_per_row = []
+        # self.domains_per_row = []
         self.dna_region = ""
         self.empty_cells = [] # public
         self.errors = set() # public
