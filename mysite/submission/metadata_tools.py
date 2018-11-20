@@ -207,9 +207,6 @@ class CsvFile():
         temp_d_from_csv = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
         self.csv_by_header_uniqued.update(temp_d_from_csv)
 
-        # self.csv_by_header_uniqued = ""
-        # self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
-
     def parce_csv(self):
         self.csv_content = [row for row in self.reader]
         self.csv_headers = [header_name.lower() for header_name in self.csv_content[0]]
@@ -274,7 +271,7 @@ class CsvFile():
         except:
             raise
 
-    def csv_file_upload(self, request): # public. Should it be in csv_file class?
+    def csv_file_upload(self, request): # public. Split! insudes should be called from a client.
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
             self.errors.add("The file %s is empty or does not exist." % csv_file)
@@ -307,10 +304,9 @@ class CsvFile():
         # del request.session['lanes_domains']
 
         if not self.vamps2_csv:
-            self.get_vamps_submission_info()
+            self.metadata.get_vamps_submission_info(self.csv_by_header_uniqued)
 
         self.get_csv_by_header()
-        # self.get_csv_by_header()
 
         info_list_len = len(self.csv_by_header['dataset'])
         self.get_domain_dna_regions(self.dict_reader)
@@ -342,8 +338,14 @@ class Metadata():
     data independent of if it comes from a file, db or a form
     """
     def __init__(self, request):
+        self.utils = Utils()
+        self.mysql_util = MysqlUtil()
+        self.vamps_submissions = {}
         self.selected_machine_short = ""
         self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
+        self.db_prefix = ""
+        if (self.utils.is_local(request)):
+            self.db_prefix = "test_"
 
 
     def get_selected_variables(self, request_post, csv_by_header_uniqued):
@@ -357,10 +359,48 @@ class Metadata():
             self.selected_overlap       = request_post.get('csv_overlap', False) or " ".join(csv_by_header_uniqued['overlap']).lower()
         except KeyError:
             logging.debug("csv_by_header_uniqued")
+            logging.debug(csv_by_header_uniqued)
             pass
             # self.selected_machine = " ".join(csv_by_header_uniqued['platform']).lower()
             # self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
             # self.selected_rundate = " ".join(csv_by_header_uniqued['rundate']).lower()
+        except:
+            raise
+
+    # old vamps
+    def get_vamps_submission_info(self, csv_by_header_uniqued):
+        db_name = self.db_prefix + "vamps"
+
+        try:
+            for submit_code in csv_by_header_uniqued['submit_code']:
+                query_subm = """
+                SELECT subm.*, auth.username, auth.encrypted_password, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.current_sign_in_at, auth.last_sign_in_at
+                    FROM %s.vamps_submissions AS subm
+                    JOIN vamps2.user AS auth
+                      USING(user_id)
+                    WHERE submit_code = \"%s\"""" % (db_name, submit_code)
+
+                self.vamps_submissions[submit_code] = self.mysql_util.run_query_to_dict(query_subm)
+        except KeyError as e:
+            self.cause = e.args[0]
+            self.errors.add(self.no_data_message())
+        except:
+            raise
+
+    def get_vamps2_submission_info(self, project_id = ""):
+        db_name = "vamps2"
+        try:
+            query_subm = """SELECT username AS data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title AS project_title, tubelabel
+            FROM dataset JOIN project USING(project_id) JOIN user ON(owner_user_id = user_id)
+            WHERE project_id = %s""" % (project_id)
+
+            self.vamps2_project_results = self.mysql_util.run_query_to_dict_vamps2(query_subm)
+
+            # TODO: check all return self
+            return self.vamps2_project_results
+        except KeyError as e:
+            self.cause = e.args[0]
+            self.errors.add(self.no_data_message())
         except:
             raise
 
@@ -369,6 +409,47 @@ class FormData():
     """Dealing with form preparations"""
     def __init__(self, request):
         pass
+
+
+class MysqlUtil():
+    def __init__(self):
+        pass
+
+    def run_query_to_dict(self, query):
+        import pprint
+        pp = pprint.PrettyPrinter(indent = 4)
+
+        res_dict = {}
+        cursor = connections['vamps'].cursor()
+        # cursor = connection.cursor()
+        cursor.execute(query)
+
+        column_names = [d[0] for d in cursor.description]
+
+        for row in cursor:
+            res_dict = dict(zip(column_names, row))
+
+        return res_dict
+
+    # dump it to a json string
+    # self.vamps_submissions = json.dumps(info)
+
+    def run_query_to_dict_vamps2(self, query):
+        import pprint
+        pp = pprint.PrettyPrinter(indent = 4)
+
+        res_arr_dict = []
+        cursor = connections['vamps2'].cursor()
+        # cursor = connection.cursor()
+        cursor.execute(query)
+
+        column_names = [d[0] for d in cursor.description]
+
+        for row in cursor:
+            res_arr_dict.append(dict(zip(column_names, row)))
+
+        return res_arr_dict
+
 
 # Assuming that in each csv one rundate and one platform!
 class CsvMetadata():
@@ -435,10 +516,11 @@ class CsvMetadata():
 
         self.utils = Utils()
         self.csv_file = CsvFile(request)
-        self.db_prefix = ""
         logging.info("self.utils.is_local(request) = %s" % self.utils.is_local(request))
-        if (self.utils.is_local(request)):
-            self.db_prefix = "test_"
+        # self.db_prefix = ""
+        # self.utils = Utils()
+        # if (self.utils.is_local(request)):
+        #     self.db_prefix = "test_"
         
         self.RUN_INFO_FORM_FIELD_HEADERS = ["dna_region", "insert_size", "op_seq", "overlap", "read_length", "rundate"]
         self.adaptor_ref = self.get_all_adaptors()
@@ -472,7 +554,7 @@ class CsvMetadata():
         # self.selected_machine_short = ""
         self.suite_domain_choices = dict(Domain.SUITE_DOMAIN_CHOICES)
         self.user_info_arr = {}
-        self.vamps_submissions = {}
+        # self.vamps_submissions = {}
         self.vamps2_project_results = {}
         
         # self.HEADERS_FROM_CSV = {
@@ -711,78 +793,78 @@ class CsvMetadata():
     #                     # logging.debug("NOOOO")
     #     self.empty_cells = list(set(empty_cells_interim))
 
-    def run_query_to_dict(self, query):
-        import pprint
-        pp = pprint.PrettyPrinter(indent=4)
-        
-        res_dict = {}
-        cursor = connections['vamps'].cursor()
-        # cursor = connection.cursor()
-        cursor.execute(query)
+    # def run_query_to_dict(self, query):
+    #     import pprint
+    #     pp = pprint.PrettyPrinter(indent=4)
+    #
+    #     res_dict = {}
+    #     cursor = connections['vamps'].cursor()
+    #     # cursor = connection.cursor()
+    #     cursor.execute(query)
+    #
+    #     column_names = [d[0] for d in cursor.description]
+    #
+    #     for row in cursor:
+    #       res_dict = dict(zip(column_names, row))
+    #
+    #     return res_dict
+    #   # dump it to a json string
+    #   # self.vamps_submissions = json.dumps(info)
+    #
+    # def run_query_to_dict_vamps2(self, query):
+    #     import pprint
+    #     pp = pprint.PrettyPrinter(indent = 4)
+    #
+    #     res_arr_dict = []
+    #     cursor = connections['vamps2'].cursor()
+    #     # cursor = connection.cursor()
+    #     cursor.execute(query)
+    #
+    #     column_names = [d[0] for d in cursor.description]
+    #
+    #     for row in cursor:
+    #         res_arr_dict.append(dict(zip(column_names, row)))
+    #
+    #     return res_arr_dict
 
-        column_names = [d[0] for d in cursor.description]
-
-        for row in cursor:
-          res_dict = dict(zip(column_names, row))
-
-        return res_dict
-      # dump it to a json string
-      # self.vamps_submissions = json.dumps(info)
-
-    def run_query_to_dict_vamps2(self, query):
-        import pprint
-        pp = pprint.PrettyPrinter(indent = 4)
-
-        res_arr_dict = []
-        cursor = connections['vamps2'].cursor()
-        # cursor = connection.cursor()
-        cursor.execute(query)
-
-        column_names = [d[0] for d in cursor.description]
-
-        for row in cursor:
-            res_arr_dict.append(dict(zip(column_names, row)))
-
-        return res_arr_dict
-
-    def get_vamps2_submission_info(self, project_id = ""):
-        db_name = "vamps2"
-        try:
-            query_subm = """SELECT username AS data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title AS project_title, tubelabel
-            FROM dataset JOIN project USING(project_id) JOIN user ON(owner_user_id = user_id)
-            WHERE project_id = %s""" % (project_id)
-
-            self.vamps2_project_results = self.run_query_to_dict_vamps2(query_subm)
-
-            # TODO: check all return self
-            return self.vamps2_project_results
-        except KeyError as e:
-            self.cause = e.args[0]
-            self.errors.add(self.no_data_message())
-        except:
-            raise
+    # def get_vamps2_submission_info(self, project_id = ""):
+    #     db_name = "vamps2"
+    #     try:
+    #         query_subm = """SELECT username AS data_owner, dataset, dataset_description, email, first_name, funding, institution, last_name, project, project_description, title AS project_title, tubelabel
+    #         FROM dataset JOIN project USING(project_id) JOIN user ON(owner_user_id = user_id)
+    #         WHERE project_id = %s""" % (project_id)
+    #
+    #         self.vamps2_project_results = self.mysql_util.run_query_to_dict_vamps2(query_subm)
+    #
+    #         # TODO: check all return self
+    #         return self.vamps2_project_results
+    #     except KeyError as e:
+    #         self.cause = e.args[0]
+    #         self.errors.add(self.no_data_message())
+    #     except:
+    #         raise
 
     # dump it to a json string
     # self.vamps_submissions = json.dumps(info)
 
-    def get_vamps_submission_info(self):
-        db_name = self.db_prefix + "vamps"
-        
-        try:
-            for submit_code in self.csv_by_header_uniqued['submit_code']:
-                query_subm = """
-                SELECT subm.*, auth.username, auth.encrypted_password, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.current_sign_in_at, auth.last_sign_in_at
-                    FROM %s.vamps_submissions AS subm
-                    JOIN vamps2.user AS auth
-                      USING(user_id)
-                    WHERE submit_code = \"%s\"""" % (db_name, submit_code)
-
-                self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
-        except KeyError as e:
-            self.cause = e.args[0]
-            self.errors.add(self.no_data_message())
-        except:
-            raise
+    # def get_vamps_submission_info(self):
+    #     db_name = self.db_prefix + "vamps"
+    #
+    #     try:
+    #         for submit_code in self.csv_by_header_uniqued['submit_code']:
+    #             query_subm = """
+    #             SELECT subm.*, auth.username, auth.encrypted_password, auth.first_name, auth.last_name, auth.active, auth.security_level, auth.email, auth.institution, auth.current_sign_in_at, auth.last_sign_in_at
+    #                 FROM %s.vamps_submissions AS subm
+    #                 JOIN vamps2.user AS auth
+    #                   USING(user_id)
+    #                 WHERE submit_code = \"%s\"""" % (db_name, submit_code)
+    #
+    #             self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
+    #     except KeyError as e:
+    #         self.cause = e.args[0]
+    #         self.errors.add(self.no_data_message())
+    #     except:
+    #         raise
 
     # def benchmark_w_return_1(self):
     #   logging.debug("\n")

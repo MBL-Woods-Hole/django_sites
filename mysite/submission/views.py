@@ -343,7 +343,7 @@ def uniqueing(request):
     run_utils = Run()
     run_data = {}
     form, run_data, error_message = run_utils.get_run(request)
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Uniqueing fasta files', 'is_cluster': '', 'command': 'reads_overlap/; run_unique_fa.sh; date',  'error_message': error_message })
+    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Uniqueing fasta files', 'is_cluster': '', 'command': 'reads_overlap/; run_unique_fa.sh; date', 'error_message': error_message })
 
 def check_fa_counts(request):
     from .model_choices import File_name
