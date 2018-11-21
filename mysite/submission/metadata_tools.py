@@ -673,10 +673,10 @@ class OutData():
                 self.out_metadata[i]['email'] = self.metadata.user_info_arr[curr_submit_code]['email']
                 self.out_metadata[i]['data_owner']           = self.metadata.user_info_arr[curr_submit_code]['vamps_name']
                 self.out_metadata[i]['first_name']           = self.metadata.user_info_arr[curr_submit_code]['first_name']
-                self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
-                self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
+                self.out_metadata[i]['funding']              = self.metadata.vamps_submissions[curr_submit_code]['funding']
+                self.out_metadata[i]['institution']			 = self.metadata.vamps_submissions[curr_submit_code]['institution']
                 self.out_metadata[i]['last_name']            = self.metadata.user_info_arr[curr_submit_code]['last_name']
-                self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
+                self.out_metadata[i]['project_description']	 = self.metadata.vamps_submissions[curr_submit_code]['project_description']
 
             except KeyError:
                 if not curr_submit_code:
@@ -700,10 +700,10 @@ class OutData():
             self.out_metadata[i]['primer_suite']		 = self.csv_file.csv_by_header['primer_suite'][i]
             self.out_metadata[i]['project']				 = self.csv_file.csv_by_header['project_name'][i]
             try:
-                self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['title']
+                self.out_metadata[i]['project_title']		= self.metadata.vamps_submissions[curr_submit_code]['title']
             except KeyError:
                 try:
-                    self.out_metadata[i]['project_title']       = self.vamps_submissions[curr_submit_code]['project_title']
+                    self.out_metadata[i]['project_title']       = self.metadata.vamps_submissions[curr_submit_code]['project_title']
                 except KeyError:
                     self.out_metadata[i]['project_title']       = ""
             except:
