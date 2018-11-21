@@ -33,6 +33,7 @@ class CsvFile():
     def __init__(self, request):
         self.utils = Utils()
         self.metadata = Metadata(request)
+        self.out_files = OutFiles(request)
 
         self.csv_by_header = defaultdict(list)
         self.csv_by_header_uniqued = defaultdict(list) # public
@@ -113,9 +114,7 @@ class CsvFile():
             'tubelabel'          : {'field': 'tubelabel', 'required': False},
         }
 
-        self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
-
-        self.all_headers = set(self.HEADERS_TO_CSV + self.metadata.HEADERS_TO_EDIT_METADATA + list(self.HEADERS_FROM_vamps2_CSV.keys()) + list(self.HEADERS_FROM_CSV.keys()))
+        self.all_headers = set(self.out_files.HEADERS_TO_CSV + self.metadata.HEADERS_TO_EDIT_METADATA + list(self.HEADERS_FROM_vamps2_CSV.keys()) + list(self.HEADERS_FROM_CSV.keys()))
         # {'platform', 'barcode', 'tubelabel', 'project_description', 'project', 'domain', 'id', 'tube_number', 'runkey', 'dataset', 'project_name', 'op_empcr', 'adaptor', 'run_key', 'date_initial', 'insert_size', 'on_vamps', 'pool', 'concentration', 'data_owner', 'seq_operator', 'institution', 'sample_received', 'enzyme', 'project_title', 'email', 'env_source_name', 'duplicate', 'barcode_index', 'read_length', 'primer_suite', 'quant_method', 'trim_distal', 'env_sample_source_id', 'user', 'first_name', 'run', 'submit_code', 'dataset_name', 'direction', 'tubelabel', 'rundate', 'date_updated', 'last_name', 'amp_operator', 'dna_region', 'op_seq', 'op_amp', 'funding', 'lane', 'overlap', 'dataset_description', 'contact_name'}
 
         self.required_headers = [header_name for header_name, values in
@@ -313,6 +312,8 @@ class OutFiles():
         self.files_created = []  # public
         self.dirs = Dirs()
         self.metadata = Metadata(request)
+        self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
+
 
     def create_path_to_csv(self):
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
@@ -341,7 +342,7 @@ class OutFiles():
 
         for lane_domain, ini_name in self.ini_names.items():
             ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
-                        ''' % (self.metadata.selected_rundate, lane_domain, self.metadata.selected_dna_region, path_to_raw_data, overlap_choices[self.metadataselected_overlap], self.metadata.selected_machine)
+                        ''' % (self.metadata.selected_rundate, lane_domain, self.metadata.selected_dna_region, path_to_raw_data, overlap_choices[self.metadata.selected_overlap], self.metadata.selected_machine)
             full_ini_name = os.path.join(path_to_csv, ini_name)
             ini_file = open(full_ini_name, 'w')
             ini_file.write(ini_text)
@@ -352,13 +353,14 @@ class OutFiles():
         logging.info("write_out_metadata_to_csv")
 
         writers = {}
+        self.make_out_metadata_csv_file_names()
         for lane_domain in self.metadata_csv_file_names.keys():
             writers[lane_domain] = csv.DictWriter(open(os.path.join(path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
 
         i = 0
         for idx, val in out_metadata.items():
-            lane_domain = self.metadata.lanes_domains[i]
+            lane_domain = self.metadata.get_lane_domain(val)
             i = i+1
             # for h in self.HEADERS_TO_CSV:
             #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
@@ -396,7 +398,6 @@ class Metadata():
         self.adaptor_ref = self.get_all_adaptors()
         self.adaptors_full = {}
         self.lanes_domains = []
-        # self.lanes_domains = self.get_lanes_domains(self.out_metadata)
 
         # To MysqlUtil?
         self.db_prefix = ""
@@ -414,6 +415,11 @@ class Metadata():
             lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
         # logging.debug("self.lanes_domains = %s" % self.lanes_domains)
         return lanes_domains
+
+    def get_lane_domain(self, out_metadata_entry):
+        domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
+        domain_letter = domain_choices[out_metadata_entry['domain']]
+        return "%s_%s" % (out_metadata_entry['lane'], domain_letter)
 
     def get_selected_variables(self, request_post, csv_by_header_uniqued):
         # change from form if needed
@@ -788,7 +794,7 @@ class OutData():
         logging.info("update_out_metadata")
 
         # Check for 'form-2-env_source_name' vs. 'env_sample_source_id'
-        for header in self.csv_file.HEADERS_TO_CSV:
+        for header in self.out_files.HEADERS_TO_CSV:
             for i in self.out_metadata.keys():
                 try:
                     self.out_metadata[i][header] = my_post_dict['form-' + str(i) + '-' + header]
