@@ -110,12 +110,11 @@ def submit_run_info_n_edit_metadata_n_make_table(request):
 
     errors_size = len(metadata_run_info_form.errors)
 
+    context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'files_created': request.session['files_created']}
     if errors_size > 0:
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': data_handler.csv_by_header_uniqued, 'errors': data_handler.errors, 'errors_size': errors_size }
+        context.update({'csv_by_header_uniqued': data_handler.csv_by_header_uniqued, 'errors': data_handler.errors, 'errors_size': errors_size })
     else:
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': data_handler.out_metadata_table}
-
-    context['files_created'] = request.session['files_created']
+        context.update({'metadata_out_csv_form': formset, 'out_metadata_table': data_handler.out_metadata_table})
 
     return context
             
