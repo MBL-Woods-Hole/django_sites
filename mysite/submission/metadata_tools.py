@@ -286,7 +286,6 @@ class CsvFile():
 
             self.metadata.get_adaptors_full(adaptor, dna_region, domain)
 
-
     def csv_file_upload(self, request): # public. Split! insides should be called from a client.
         csv_file = request.FILES['csv_file']
         if csv_file.size == 0:
@@ -590,6 +589,8 @@ class OutData():
     def __init__(self, request):
         self.metadata = Metadata(request)
         self.csv_file = CsvFile(request)
+        self.out_metadata = defaultdict(defaultdict)
+        self.out_metadata_table = defaultdict(list) # public
 
     def work_with_request(self, request):
         has_empty_cells = self.csv_file.csv_file_upload(request)
@@ -630,12 +631,6 @@ class OutData():
             return (metadata_run_info_form, has_empty_cells)
 
         request.session['out_metadata'] = self.out_metadata
-
-        # utils.is_local(request)
-        # HOSTNAME = request.get_host()
-        # if HOSTNAME.startswith("localhost"):
-        #     logging.debug("local")
-
         return (metadata_run_info_form, has_empty_cells)
 
     # TODO: 1) should it be here? 2) how to simplify it (case?)?
@@ -650,6 +645,96 @@ class OutData():
         else:
             if self.vamps2_project_results:
               self.make_metadata_out_from_project_data(self.vamps2_project_results)
+
+    def make_metadata_out_from_csv(self):
+        for i in range(len(self.csv_file.csv_content)-1):
+
+            curr_submit_code = self.csv_file.csv_by_header['submit_code'][i]
+            adaptor    = self.csv_file.csv_by_header['adaptor'][i]
+            dna_region = self.csv_file.csv_by_header['dna_region'][i]
+            domain     = self.csv_file.csv_by_header['domain'][i]
+
+            self.metadata.get_adaptors_full(adaptor, dna_region, domain)
+            key = "_".join([adaptor, dna_region, domain])
+
+            self.out_metadata[i]['adaptor']				 = self.csv_file.csv_by_header['adaptor'][i]
+            self.out_metadata[i]['amp_operator']		 = self.csv_file.csv_by_header['op_amp'][i]
+            self.out_metadata[i]['barcode']				 = self.csv_file.csv_by_header['barcode'][i]
+            self.out_metadata[i]['barcode_index']		 = self.csv_file.csv_by_header['barcode_index'][i]
+            try:
+                if (self.out_metadata[i]['barcode_index'] == ""):
+                    self.out_metadata[i]['barcode_index'] = self.metadata.adaptors_full[key][0].illumina_index
+            except KeyError:
+                self.out_metadata[i]['barcode_index'] = ""
+            except:
+                raise
+            try:
+                self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.user_info_arr[curr_submit_code]['last_name']
+                self.out_metadata[i]['email'] = self.user_info_arr[curr_submit_code]['email']
+                self.out_metadata[i]['data_owner']           = self.user_info_arr[curr_submit_code]['vamps_name']
+                self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
+                self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
+                self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
+                self.out_metadata[i]['last_name']            = self.user_info_arr[curr_submit_code]['last_name']
+                self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
+
+            except KeyError:
+                if not curr_submit_code:
+                    logging.error("There is no such submit code in the database: %s" % curr_submit_code)
+                    self.csv_file.errors.add("There is no such submit code in the database: %s" % curr_submit_code)
+
+                # else there is no such user info
+            except:
+                raise
+
+
+            self.out_metadata[i]['dataset']				 = self.csv_file.csv_by_header['dataset_name'][i]
+            self.out_metadata[i]['dataset_description']	 = self.csv_file.csv_by_header['dataset_description'][i]
+            self.out_metadata[i]['dna_region']			 = self.csv_file.csv_by_header['dna_region'][i]
+            self.out_metadata[i]['domain']			     = self.csv_file.csv_by_header['domain'][i]
+            self.out_metadata[i]["env_sample_source_id"] = self.csv_file.csv_by_header['env_sample_source_id'][i]
+            self.out_metadata[i]['env_source_name']      = self.csv_file.csv_by_header['env_sample_source_id'][i]
+            self.out_metadata[i]['insert_size']			 = self.csv_file.csv_by_header['insert_size'][i]
+            self.out_metadata[i]['lane']				 = self.csv_file.csv_by_header['lane'][i]
+            self.out_metadata[i]['overlap']				 = self.csv_file.csv_by_header['overlap'][i]
+            self.out_metadata[i]['primer_suite']		 = self.csv_file.csv_by_header['primer_suite'][i]
+            self.out_metadata[i]['project']				 = self.csv_file.csv_by_header['project_name'][i]
+            try:
+                self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['title']
+            except KeyError:
+                try:
+                    self.out_metadata[i]['project_title']       = self.vamps_submissions[curr_submit_code]['project_title']
+                except KeyError:
+                    self.out_metadata[i]['project_title']       = ""
+            except:
+                raise
+
+            self.out_metadata[i]['read_length']			 = self.csv_file.csv_by_header['read_length'][i]
+
+            try:
+                self.out_metadata[i]['run_key'] = self.metadata.adaptors_full[key][1].illumina_run_key
+            except KeyError:
+                self.out_metadata[i]['run_key']                = ""
+            except:
+                raise
+
+            try:
+                self.out_metadata[i]['tubelabel']			 = self.csv_file.csv_by_header['tubelabel'][i]
+                self.out_metadata[i]['tube_label']			 = self.csv_file.csv_by_header['tubelabel'][i]
+            except IndexError:
+                self.out_metadata[i]['tubelabel'] = self.csv_file.csv_by_header['tube_label'][i]
+                self.out_metadata[i]['tube_label'] = self.csv_file.csv_by_header['tube_label'][i]
+            except:
+                raise
+            """
+            for VampsSubmissions and VampsSubmissionsTubes:
+            """
+            #MIMINUM VampsSubmissionsTubes:
+            self.out_metadata[i]['direction']   = self.csv_file.csv_by_header['direction'][i]
+            self.out_metadata[i]['id']          = self.csv_file.csv_by_header['id'][i]
+            self.out_metadata[i]['op_empcr']    = self.csv_file.csv_by_header['op_empcr'][i]
+            self.out_metadata[i]['pool']        = self.csv_file.csv_by_header['pool'][i]
+            self.out_metadata[i]['submit_code'] = self.csv_file.csv_by_header['submit_code'][i]
 
 
 class MysqlUtil():
@@ -803,8 +888,8 @@ class CsvMetadata():
         self.metadata_csv_file_names = {}
         self.new_project = "" # public
         self.new_project_created = False # public
-        self.out_metadata = defaultdict(defaultdict)
-        self.out_metadata_table = defaultdict(list) # public
+        # self.out_metadata = defaultdict(defaultdict)
+        # self.out_metadata_table = defaultdict(list) # public
         self.path_to_csv = ""
         # self.run_info_from_csv = {}
         self.selected_lane = ""
@@ -1469,150 +1554,150 @@ class CsvMetadata():
 
         # logging.debug("self.out_metadata = %s" % self.out_metadata)
 
-    def make_metadata_out_from_csv(self):
-        for i in range(len(self.csv_content)-1):
-
-            curr_submit_code = self.csv_by_header['submit_code'][i]
-            adaptor    = self.csv_by_header['adaptor'][i]
-            dna_region = self.csv_by_header['dna_region'][i]
-            domain     = self.csv_by_header['domain'][i]
-
-            self.get_adaptors_full(adaptor, dna_region, domain)
-
-            key = "_".join([adaptor, dna_region, domain])
-
-            self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
-            self.out_metadata[i]['amp_operator']		 = self.csv_by_header['op_amp'][i]
-            self.out_metadata[i]['barcode']				 = self.csv_by_header['barcode'][i]
-            self.out_metadata[i]['barcode_index']		 = self.csv_by_header['barcode_index'][i]
-            try:
-                if (self.out_metadata[i]['barcode_index'] == ""):
-                    self.out_metadata[i]['barcode_index'] = self.adaptors_full[key][0].illumina_index
-            except KeyError:
-                self.out_metadata[i]['barcode_index'] = ""
-            except:
-                raise
-            # <option value="36">Nicole Webster</option>
-            try:
-                self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.user_info_arr[curr_submit_code]['last_name']
-                self.out_metadata[i]['email'] = self.user_info_arr[curr_submit_code]['email']
-                self.out_metadata[i]['data_owner']           = self.user_info_arr[curr_submit_code]['vamps_name']
-                self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
-                self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
-                self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
-                self.out_metadata[i]['last_name']            = self.user_info_arr[curr_submit_code]['last_name']
-                self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
-
-            except KeyError:
-                if not curr_submit_code:
-                    logging.error("There is no such submit code in the database: %s" % curr_submit_code)
-                    self.errors.add("There is no such submit code in the database: %s" % curr_submit_code)
-
-                # else there is no such user info
-            except:
-                raise
-
-
-            self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
-            self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
-            # TODO:
-            # $combined_metadata[$num]["dataset_id"]         = get_id($combined_metadata[$num], "dataset", $db_name, $connection);
-            # TODO:
-            # $combined_metadata[$num]["date_initial"]       = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["date_initial"];
-            # TODO:
-            # $combined_metadata[$num]["date_updated"]       = date("Y-m-d");
-
-            self.out_metadata[i]['dna_region']			 = self.csv_by_header['dna_region'][i]
-            # TODO:
-            # $combined_metadata[$num]["dna_region_id"]      = get_id($session["run_info"], "dna_region_0", $db_name, $connection);
-
-            # TODO: make dropdown menu, camelize, choose
-            self.out_metadata[i]['domain']			     = self.csv_by_header['domain'][i]
-            self.out_metadata[i]["env_sample_source_id"] = self.csv_by_header['env_sample_source_id'][i]
-            self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
-            self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
-            self.out_metadata[i]['lane']				 = self.csv_by_header['lane'][i]
-            # TODO:
-            # $combined_metadata[$num]["locked"]             = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["locked"];
-            # $combined_metadata[$num]["num_of_tubes"]       = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["num_of_tubes"];
-            # self.out_metadata[i]['nnnn']                 = self.csv_by_header['lane'][i]
-            # $combined_metadata[$num]["op_empcr"]           = $csv_metadata_row["op_empcr"];
-
-            self.out_metadata[i]['overlap']				 = self.csv_by_header['overlap'][i]
-            self.out_metadata[i]['primer_suite']		 = self.csv_by_header['primer_suite'][i]
-            # TODO:
-            # $combined_metadata[$num]["primer_suite_id"]    = get_primer_suite_id($combined_metadata[$num]["dna_region"], $combined_metadata[$num]["domain"], $db_name, $connection);
-
-            self.out_metadata[i]['project']				 = self.csv_by_header['project_name'][i]
-            try:
-                self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['title']
-            except KeyError:
-                try:
-                    self.out_metadata[i]['project_title']       = self.vamps_submissions[curr_submit_code]['project_title']
-                except KeyError:
-                    self.out_metadata[i]['project_title']       = ""
-            except:
-                raise
-
-            self.out_metadata[i]['read_length']			 = self.csv_by_header['read_length'][i]
-
-            # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-            try:
-                self.out_metadata[i]['run_key'] = self.adaptors_full[key][1].illumina_run_key
-            except KeyError:
-                self.out_metadata[i]['run_key']                = ""
-            except:
-                raise
-
-            # if (self.csv_by_header['run_key'][i] == ""):
-            #     self.out_metadata[i]['run_key'] = self.adaptors_full[key][1].illumina_run_key
-
-            # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-            try:
-                self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tubelabel'][i]
-                self.out_metadata[i]['tube_label']			 = self.csv_by_header['tubelabel'][i]
-            except IndexError:
-                self.out_metadata[i]['tubelabel'] = self.csv_by_header['tube_label'][i]
-                self.out_metadata[i]['tube_label'] = self.csv_by_header['tube_label'][i]
-            except:
-                raise
-            """
-            for VampsSubmissions and VampsSubmissionsTubes:
-            """
-            #MIMINUM VampsSubmissionsTubes:
-            self.out_metadata[i]['direction']   = self.csv_by_header['direction'][i]
-            self.out_metadata[i]['id']          = self.csv_by_header['id'][i]
-            self.out_metadata[i]['op_empcr']    = self.csv_by_header['op_empcr'][i]
-            self.out_metadata[i]['pool']        = self.csv_by_header['pool'][i]
-            self.out_metadata[i]['submit_code'] = self.csv_by_header['submit_code'][i]
-
-            # ALL VampsSubmissionsTubes:
-            # self.out_metadata[i]['concentration']  = self.csv_by_header['concentration'][i]
-            # self.out_metadata[i]['dataset_name']      = self.csv_by_header['dataset_name'][i]
-            # self.out_metadata[i]['direction']      = self.csv_by_header['direction'][i]
-            # self.out_metadata[i]['duplicate']      = self.csv_by_header['duplicate'][i]
-            # self.out_metadata[i]['env_sample_source'] = self.csv_by_header['env_sample_source'][i]
-            # self.out_metadata[i]['enzyme']         = self.csv_by_header['enzyme'][i]
-            # self.out_metadata[i]['locked']          = self.csv_by_header['locked'][i]
-            # self.out_metadata[i]['managed']        = self.csv_by_header['managed'][i]
-            # self.out_metadata[i]['num_of_tubes']   = self.csv_by_header['num_of_tubes'][i]
-            # self.out_metadata[i]['on_vamps']       = self.csv_by_header['on_vamps'][i]
-            # self.out_metadata[i]['op_amp']         = self.csv_by_header['op_amp'][i]
-            # self.out_metadata[i]['op_empcr']        = self.csv_by_header['op_empcr'][i]
-            # self.out_metadata[i]['op_seq']         = self.csv_by_header['op_seq'][i]
-            # self.out_metadata[i]['platform']       = self.csv_by_header['platform'][i]
-            # self.out_metadata[i]['pool']            = self.csv_by_header['pool'][i]
-            # self.out_metadata[i]['project_name']   = self.csv_by_header['project_name'][i]
-            # self.out_metadata[i]['quant_method']    = self.csv_by_header['quant_method'][i]
-            # self.out_metadata[i]['rundate']        = self.csv_by_header['rundate'][i]
-            # self.out_metadata[i]['runkey']          = self.csv_by_header['runkey'][i]
-            # self.out_metadata[i]['sample_received'] = self.csv_by_header['sample_received'][i]
-            # self.out_metadata[i]['submit_code']    = self.csv_by_header['submit_code'][i]
-            # self.out_metadata[i]['temp_project']   = self.csv_by_header['temp_project'][i]
-            # self.out_metadata[i]['title']          = self.csv_by_header['title'][i]
-            # self.out_metadata[i]['trim_distal']    = self.csv_by_header['trim_distal'][i]
-            # self.out_metadata[i]['tubelabel']     = self.csv_by_header['tubelabel'][i]
-            # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
+    # def make_metadata_out_from_csv(self):
+    #     for i in range(len(self.csv_content)-1):
+    #
+    #         curr_submit_code = self.csv_by_header['submit_code'][i]
+    #         adaptor    = self.csv_by_header['adaptor'][i]
+    #         dna_region = self.csv_by_header['dna_region'][i]
+    #         domain     = self.csv_by_header['domain'][i]
+    #
+    #         self.get_adaptors_full(adaptor, dna_region, domain)
+    #
+    #         key = "_".join([adaptor, dna_region, domain])
+    #
+    #         self.out_metadata[i]['adaptor']				 = self.csv_by_header['adaptor'][i]
+    #         self.out_metadata[i]['amp_operator']		 = self.csv_by_header['op_amp'][i]
+    #         self.out_metadata[i]['barcode']				 = self.csv_by_header['barcode'][i]
+    #         self.out_metadata[i]['barcode_index']		 = self.csv_by_header['barcode_index'][i]
+    #         try:
+    #             if (self.out_metadata[i]['barcode_index'] == ""):
+    #                 self.out_metadata[i]['barcode_index'] = self.adaptors_full[key][0].illumina_index
+    #         except KeyError:
+    #             self.out_metadata[i]['barcode_index'] = ""
+    #         except:
+    #             raise
+    #         # <option value="36">Nicole Webster</option>
+    #         try:
+    #             self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.user_info_arr[curr_submit_code]['last_name']
+    #             self.out_metadata[i]['email'] = self.user_info_arr[curr_submit_code]['email']
+    #             self.out_metadata[i]['data_owner']           = self.user_info_arr[curr_submit_code]['vamps_name']
+    #             self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
+    #             self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
+    #             self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
+    #             self.out_metadata[i]['last_name']            = self.user_info_arr[curr_submit_code]['last_name']
+    #             self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
+    #
+    #         except KeyError:
+    #             if not curr_submit_code:
+    #                 logging.error("There is no such submit code in the database: %s" % curr_submit_code)
+    #                 self.errors.add("There is no such submit code in the database: %s" % curr_submit_code)
+    #
+    #             # else there is no such user info
+    #         except:
+    #             raise
+    #
+    #
+    #         self.out_metadata[i]['dataset']				 = self.csv_by_header['dataset_name'][i]
+    #         self.out_metadata[i]['dataset_description']	 = self.csv_by_header['dataset_description'][i]
+    #         # TODO:
+    #         # $combined_metadata[$num]["dataset_id"]         = get_id($combined_metadata[$num], "dataset", $db_name, $connection);
+    #         # TODO:
+    #         # $combined_metadata[$num]["date_initial"]       = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["date_initial"];
+    #         # TODO:
+    #         # $combined_metadata[$num]["date_updated"]       = date("Y-m-d");
+    #
+    #         self.out_metadata[i]['dna_region']			 = self.csv_by_header['dna_region'][i]
+    #         # TODO:
+    #         # $combined_metadata[$num]["dna_region_id"]      = get_id($session["run_info"], "dna_region_0", $db_name, $connection);
+    #
+    #         # TODO: make dropdown menu, camelize, choose
+    #         self.out_metadata[i]['domain']			     = self.csv_by_header['domain'][i]
+    #         self.out_metadata[i]["env_sample_source_id"] = self.csv_by_header['env_sample_source_id'][i]
+    #         self.out_metadata[i]['env_source_name']      = self.csv_by_header['env_sample_source_id'][i]
+    #         self.out_metadata[i]['insert_size']			 = self.csv_by_header['insert_size'][i]
+    #         self.out_metadata[i]['lane']				 = self.csv_by_header['lane'][i]
+    #         # TODO:
+    #         # $combined_metadata[$num]["locked"]             = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["locked"];
+    #         # $combined_metadata[$num]["num_of_tubes"]       = $session["vamps_submissions_arr"][$csv_metadata_row["submit_code"]]["num_of_tubes"];
+    #         # self.out_metadata[i]['nnnn']                 = self.csv_by_header['lane'][i]
+    #         # $combined_metadata[$num]["op_empcr"]           = $csv_metadata_row["op_empcr"];
+    #
+    #         self.out_metadata[i]['overlap']				 = self.csv_by_header['overlap'][i]
+    #         self.out_metadata[i]['primer_suite']		 = self.csv_by_header['primer_suite'][i]
+    #         # TODO:
+    #         # $combined_metadata[$num]["primer_suite_id"]    = get_primer_suite_id($combined_metadata[$num]["dna_region"], $combined_metadata[$num]["domain"], $db_name, $connection);
+    #
+    #         self.out_metadata[i]['project']				 = self.csv_by_header['project_name'][i]
+    #         try:
+    #             self.out_metadata[i]['project_title']		= self.vamps_submissions[curr_submit_code]['title']
+    #         except KeyError:
+    #             try:
+    #                 self.out_metadata[i]['project_title']       = self.vamps_submissions[curr_submit_code]['project_title']
+    #             except KeyError:
+    #                 self.out_metadata[i]['project_title']       = ""
+    #         except:
+    #             raise
+    #
+    #         self.out_metadata[i]['read_length']			 = self.csv_by_header['read_length'][i]
+    #
+    #         # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
+    #         try:
+    #             self.out_metadata[i]['run_key'] = self.adaptors_full[key][1].illumina_run_key
+    #         except KeyError:
+    #             self.out_metadata[i]['run_key']                = ""
+    #         except:
+    #             raise
+    #
+    #         # if (self.csv_by_header['run_key'][i] == ""):
+    #         #     self.out_metadata[i]['run_key'] = self.adaptors_full[key][1].illumina_run_key
+    #
+    #         # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
+    #         try:
+    #             self.out_metadata[i]['tubelabel']			 = self.csv_by_header['tubelabel'][i]
+    #             self.out_metadata[i]['tube_label']			 = self.csv_by_header['tubelabel'][i]
+    #         except IndexError:
+    #             self.out_metadata[i]['tubelabel'] = self.csv_by_header['tube_label'][i]
+    #             self.out_metadata[i]['tube_label'] = self.csv_by_header['tube_label'][i]
+    #         except:
+    #             raise
+    #         """
+    #         for VampsSubmissions and VampsSubmissionsTubes:
+    #         """
+    #         #MIMINUM VampsSubmissionsTubes:
+    #         self.out_metadata[i]['direction']   = self.csv_by_header['direction'][i]
+    #         self.out_metadata[i]['id']          = self.csv_by_header['id'][i]
+    #         self.out_metadata[i]['op_empcr']    = self.csv_by_header['op_empcr'][i]
+    #         self.out_metadata[i]['pool']        = self.csv_by_header['pool'][i]
+    #         self.out_metadata[i]['submit_code'] = self.csv_by_header['submit_code'][i]
+    #
+    #         # ALL VampsSubmissionsTubes:
+    #         # self.out_metadata[i]['concentration']  = self.csv_by_header['concentration'][i]
+    #         # self.out_metadata[i]['dataset_name']      = self.csv_by_header['dataset_name'][i]
+    #         # self.out_metadata[i]['direction']      = self.csv_by_header['direction'][i]
+    #         # self.out_metadata[i]['duplicate']      = self.csv_by_header['duplicate'][i]
+    #         # self.out_metadata[i]['env_sample_source'] = self.csv_by_header['env_sample_source'][i]
+    #         # self.out_metadata[i]['enzyme']         = self.csv_by_header['enzyme'][i]
+    #         # self.out_metadata[i]['locked']          = self.csv_by_header['locked'][i]
+    #         # self.out_metadata[i]['managed']        = self.csv_by_header['managed'][i]
+    #         # self.out_metadata[i]['num_of_tubes']   = self.csv_by_header['num_of_tubes'][i]
+    #         # self.out_metadata[i]['on_vamps']       = self.csv_by_header['on_vamps'][i]
+    #         # self.out_metadata[i]['op_amp']         = self.csv_by_header['op_amp'][i]
+    #         # self.out_metadata[i]['op_empcr']        = self.csv_by_header['op_empcr'][i]
+    #         # self.out_metadata[i]['op_seq']         = self.csv_by_header['op_seq'][i]
+    #         # self.out_metadata[i]['platform']       = self.csv_by_header['platform'][i]
+    #         # self.out_metadata[i]['pool']            = self.csv_by_header['pool'][i]
+    #         # self.out_metadata[i]['project_name']   = self.csv_by_header['project_name'][i]
+    #         # self.out_metadata[i]['quant_method']    = self.csv_by_header['quant_method'][i]
+    #         # self.out_metadata[i]['rundate']        = self.csv_by_header['rundate'][i]
+    #         # self.out_metadata[i]['runkey']          = self.csv_by_header['runkey'][i]
+    #         # self.out_metadata[i]['sample_received'] = self.csv_by_header['sample_received'][i]
+    #         # self.out_metadata[i]['submit_code']    = self.csv_by_header['submit_code'][i]
+    #         # self.out_metadata[i]['temp_project']   = self.csv_by_header['temp_project'][i]
+    #         # self.out_metadata[i]['title']          = self.csv_by_header['title'][i]
+    #         # self.out_metadata[i]['trim_distal']    = self.csv_by_header['trim_distal'][i]
+    #         # self.out_metadata[i]['tubelabel']     = self.csv_by_header['tubelabel'][i]
+    #         # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
 
     # def get_domain_per_row(self, info_list_len):
     #     for r in self.domain_dna_regions:
