@@ -40,7 +40,6 @@ class CsvFile():
         self.csv_headers = []
         self.vamps2_csv = False
         self.csvfile = ""
-        self.dirs = Dirs()
         self.run_info_from_csv = {}
         self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
         self.errors = set() # public
@@ -115,9 +114,7 @@ class CsvFile():
         }
         self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
-        self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
-
-        self.all_headers = set(self.HEADERS_TO_CSV + self.HEADERS_TO_EDIT_METADATA + list(self.HEADERS_FROM_vamps2_CSV.keys()) + list(self.HEADERS_FROM_CSV.keys()))
+        self.all_headers = set(self.HEADERS_TO_CSV + self.metadata.HEADERS_TO_EDIT_METADATA + list(self.HEADERS_FROM_vamps2_CSV.keys()) + list(self.HEADERS_FROM_CSV.keys()))
         # {'platform', 'barcode', 'tubelabel', 'project_description', 'project', 'domain', 'id', 'tube_number', 'runkey', 'dataset', 'project_name', 'op_empcr', 'adaptor', 'run_key', 'date_initial', 'insert_size', 'on_vamps', 'pool', 'concentration', 'data_owner', 'seq_operator', 'institution', 'sample_received', 'enzyme', 'project_title', 'email', 'env_source_name', 'duplicate', 'barcode_index', 'read_length', 'primer_suite', 'quant_method', 'trim_distal', 'env_sample_source_id', 'user', 'first_name', 'run', 'submit_code', 'dataset_name', 'direction', 'tubelabel', 'rundate', 'date_updated', 'last_name', 'amp_operator', 'dna_region', 'op_seq', 'op_amp', 'funding', 'lane', 'overlap', 'dataset_description', 'contact_name'}
 
         self.required_headers = [header_name for header_name, values in
@@ -307,20 +304,14 @@ class CsvFile():
                 csv_projects.add(self.csv_by_header['project'][i])
         return csv_projects
 
-    def check_out_csv_files(self):
-        for lane_domain, file_name in self.metadata_csv_file_names.items():
-            if os.path.isfile(os.path.join(self.path_to_csv, file_name)):
-                curr_file = os.path.join(self.path_to_csv, file_name)
-                self.files_created.append(curr_file)
-                self.dirs.chmod_wg(curr_file)
-
 
 class OutFiles():
     # out files
     def __init__(self, request):
-        self.files_created = []  # public
         self.metadata_csv_file_names = {}
         self.path_to_csv = ""
+        self.files_created = []  # public
+        self.dirs = Dirs()
 
     def create_path_to_csv(self):
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
@@ -355,7 +346,6 @@ class OutFiles():
             ini_file.close()
             self.dirs.chmod_wg(full_ini_name)
 
-
     def write_out_metadata_to_csv(self):
         logging.info("write_out_metadata_to_csv")
 
@@ -374,6 +364,14 @@ class OutFiles():
             to_write = {h: val[h] for h in self.HEADERS_TO_CSV} #primer_suite err
 
             writers[lane_domain].writerow(to_write)
+
+    def check_out_csv_files(self):
+        for lane_domain, file_name in self.metadata_csv_file_names.items():
+            if os.path.isfile(os.path.join(self.path_to_csv, file_name)):
+                curr_file = os.path.join(self.path_to_csv, file_name)
+                self.files_created.append(curr_file)
+                self.dirs.chmod_wg(curr_file)
+
 
 
 class Metadata():
@@ -398,6 +396,8 @@ class Metadata():
         self.db_prefix = ""
         if (self.utils.is_local(request)):
             self.db_prefix = "test_"
+
+        self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
 
     def get_selected_variables(self, request_post, csv_by_header_uniqued):
         # change from form if needed
@@ -571,7 +571,6 @@ class Metadata():
         except:
             raise
 
-
     def check_projects(self, csv_projects):
         missing_projects = []
         # for i in range(len(csv_content)-1):
@@ -593,49 +592,49 @@ class Metadata():
             self.errors.add("Please add project information for %s to env454." % missing_projects_list)
 
 
-class FormData():
-    """Dealing with form preparations"""
-    def __init__(self, request):
-        self.metadata = Metadata(request)
-        self.csv_file = CsvFile(request)
-
-    # def submit_run_info(self, request): # public TODO: split!
-    #     self.metadata.get_selected_variables(request.POST)
-    #     request.session['run_info'] = {}
-    #     request.session['run_info']['selected_rundate']         = self.selected_rundate
-    #     request.session['run_info']['selected_machine_short']   = self.selected_machine_short
-    #     request.session['run_info']['selected_machine']         = self.selected_machine
-    #     request.session['run_info']['selected_dna_region']      = self.selected_dna_region
-    #     request.session['run_info']['selected_overlap']         = self.selected_overlap
-    #
-    #     self.out_data.edit_out_metadata(request)
-    #     request.session['out_metadata'] = self.out_data.out_metadata
-    #
-    #     if (
-    #             'create_vamps2_submission_csv' in request.session.keys() and
-    #             request.session['create_vamps2_submission_csv']
-    #     ):
-    #         self.create_vamps2_submission_csv(request)
-    #     request.session['files_created'] = self.files_created
-    #
-    #     self.make_metadata_table()
-    #
-    #     metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-    #     request.session['run_info_form_post'] = request.POST
-    #
-    #     MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
-    #     formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
-    #
-    #     request.session['out_metadata_table'] = self.out_metadata_table
-    #
-    #     return (request, metadata_run_info_form, formset)
+# class FormData():
+#     """Dealing with form preparations"""
+#     def __init__(self, request):
+#         self.metadata = Metadata(request)
+#         self.csv_file = CsvFile(request)
+#
+#     # def submit_run_info(self, request): # public TODO: split!
+#     #     self.metadata.get_selected_variables(request.POST)
+#     #     request.session['run_info'] = {}
+#     #     request.session['run_info']['selected_rundate']         = self.selected_rundate
+#     #     request.session['run_info']['selected_machine_short']   = self.selected_machine_short
+#     #     request.session['run_info']['selected_machine']         = self.selected_machine
+#     #     request.session['run_info']['selected_dna_region']      = self.selected_dna_region
+#     #     request.session['run_info']['selected_overlap']         = self.selected_overlap
+#     #
+#     #     self.out_data.edit_out_metadata(request)
+#     #     request.session['out_metadata'] = self.out_data.out_metadata
+#     #
+#     #     if (
+#     #             'create_vamps2_submission_csv' in request.session.keys() and
+#     #             request.session['create_vamps2_submission_csv']
+#     #     ):
+#     #         self.create_vamps2_submission_csv(request)
+#     #     request.session['files_created'] = self.files_created
+#     #
+#     #     self.make_metadata_table()
+#     #
+#     #     metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
+#     #     request.session['run_info_form_post'] = request.POST
+#     #
+#     #     MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
+#     #     formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
+#     #
+#     #     request.session['out_metadata_table'] = self.out_metadata_table
+#     #
+#     #     return (request, metadata_run_info_form, formset)
 
 
 class OutData():
     def __init__(self, request):
         self.metadata = Metadata(request)
         self.csv_file = CsvFile(request)
-        self.form_data = FormData(request)
+        self.out_files = OutFiles(request)
         self.out_metadata = defaultdict(defaultdict)
         self.out_metadata_table = defaultdict(list) # public
         self.errors = set() # public
@@ -810,6 +809,26 @@ class OutData():
             self.out_metadata[i]['run']				    = self.request.POST.get('csv_rundate', False)
             self.out_metadata[i]['seq_operator']		= self.request.POST.get('csv_seq_operator', False)
 
+    def make_metadata_table(self):
+        logging.info("make_metadata_table")
+
+        self.out_metadata_table['headers'] = self.metadata.HEADERS_TO_EDIT_METADATA
+
+        for i in range(len(self.out_metadata.keys())):
+            self.out_metadata_table['rows'].append({})
+
+        # logging.debug("OOO self.out_metadata_table = %s" % self.out_metadata_table)
+
+        for r_num, v in self.out_metadata.items(): #create with all possible headers instead? What fields to show?
+            for header in self.metadata.HEADERS_TO_EDIT_METADATA:
+                try:
+                    self.out_metadata_table['rows'][int(r_num)][header] = (self.out_metadata[r_num][header])
+                except KeyError as e:
+                    logging.warning("KeyError, e = %s" % e)
+                    self.out_metadata_table['rows'][int(r_num)][header] = ""
+                except:
+                    raise
+
     def fill_out_request_session_run_info(self):
         self.metadata.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
         self.request.session['run_info'] = {}
@@ -828,13 +847,13 @@ class OutData():
             self.create_vamps2_submission_csv(self.request)
 
         self.edit_out_metadata()
-        self.request.session['out_metadata'] = self.out_data.out_metadata
-        self.request.session['files_created'] = self.files_created
+        self.request.session['out_metadata'] = self.out_metadata
+        self.out_files.check_out_csv_files()
+        self.request.session['files_created'] = self.out_files.files_created #doesn't belong here
         self.request.session['run_info_form_post'] = self.request.POST
-        self.request.session['out_metadata_table'] = self.out_metadata_table
+        self.request.session['out_metadata_table'] = self.out_metadata_table #doesn't belong here
 
-
-        self.make_metadata_table()
+        self.make_metadata_table() #doesn't belong here
 
         metadata_run_info_form = CsvRunInfoUploadForm(self.request.POST)
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
@@ -1858,27 +1877,27 @@ class CsvMetadata():
     #         primer_suites.append(primer_suite)
     #     return primer_suites
 
-    def make_metadata_table(self):
-        logging.info("make_metadata_table")
-
-        self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
-
-        for i in range(len(self.out_metadata.keys())):
-            self.out_metadata_table['rows'].append({})
-
-        # logging.debug("OOO self.out_metadata_table = %s" % self.out_metadata_table)
-
-        for r_num, v in self.out_metadata.items(): #create with all possible headers instead? What fields to show?
-            for header in self.HEADERS_TO_EDIT_METADATA:
-                try:
-                    self.out_metadata_table['rows'][int(r_num)][header] = (self.out_metadata[r_num][header])
-                except KeyError as e:
-                    logging.warning("KeyError, e = %s" % e)
-                    self.out_metadata_table['rows'][int(r_num)][header] = ""
-                except:
-                    raise
-
-        # logging.debug("self.out_metadata_table BBB = %s" % self.out_metadata_table)
+    # def make_metadata_table(self):
+    #     logging.info("make_metadata_table")
+    #
+    #     self.out_metadata_table['headers'] = self.HEADERS_TO_EDIT_METADATA
+    #
+    #     for i in range(len(self.out_metadata.keys())):
+    #         self.out_metadata_table['rows'].append({})
+    #
+    #     # logging.debug("OOO self.out_metadata_table = %s" % self.out_metadata_table)
+    #
+    #     for r_num, v in self.out_metadata.items(): #create with all possible headers instead? What fields to show?
+    #         for header in self.HEADERS_TO_EDIT_METADATA:
+    #             try:
+    #                 self.out_metadata_table['rows'][int(r_num)][header] = (self.out_metadata[r_num][header])
+    #             except KeyError as e:
+    #                 logging.warning("KeyError, e = %s" % e)
+    #                 self.out_metadata_table['rows'][int(r_num)][header] = ""
+    #             except:
+    #                 raise
+    #
+    #     # logging.debug("self.out_metadata_table BBB = %s" % self.out_metadata_table)
 
     def insert_project(self, request_post):
         project_name = request_post['project_0'] + "_" + request_post['project_1'] + "_" + request_post['project_2'] + request_post['project_3']
@@ -2011,7 +2030,6 @@ class CsvMetadata():
             self.new_project, self.new_project_created = self.insert_project(request.POST)
 
         return metadata_new_project_form
-
 
     def create_submission_metadata_file(self, request): # public
         # logging.debug("EEE: request.POST = %s" % request.POST)
