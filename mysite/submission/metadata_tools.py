@@ -112,6 +112,7 @@ class CsvFile():
             'seq_operator'       : {'field': 'seq_operator', 'required': True},
             'tubelabel'          : {'field': 'tubelabel', 'required': False},
         }
+
         self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
         self.all_headers = set(self.HEADERS_TO_CSV + self.metadata.HEADERS_TO_EDIT_METADATA + list(self.HEADERS_FROM_vamps2_CSV.keys()) + list(self.HEADERS_FROM_CSV.keys()))
@@ -309,21 +310,22 @@ class OutFiles():
     # out files
     def __init__(self, request):
         self.metadata_csv_file_names = {}
-        self.path_to_csv = ""
         self.files_created = []  # public
         self.dirs = Dirs()
+        self.metadata = Metadata(request)
 
     def create_path_to_csv(self):
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
         # logging.debug("self.selected_machine from create_path_to_csv = %s" % (self.selected_machine))
 
-        self.path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.selected_machine + "_info", self.selected_rundate)
-        logging.debug("self.path_to_csv")
-        logging.debug(self.path_to_csv)
-        new_dir = self.dirs.check_and_make_dir(self.path_to_csv)
+        path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.metadata.selected_machine + "_info", self.metadata.selected_rundate)
+        logging.debug("path_to_csv")
+        logging.debug(path_to_csv)
+        new_dir = self.dirs.check_and_make_dir(path_to_csv)
+        return path_to_csv
 
     def create_out_file_names(self, pattern):
-        return {lane_domain: pattern % (self.selected_rundate, self.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains}
+        return {lane_domain: pattern % (self.metadata.selected_rundate, self.metadata.selected_machine_short, lane_domain) for lane_domain in self.metadata.lanes_domains} #create in Metadata
 
     def create_ini_names(self):
         self.ini_names = self.create_out_file_names("%s_%s_%s_run_info.ini")
@@ -333,30 +335,30 @@ class OutFiles():
         # NEW: metadata_20151111_hs_1_A.csv
         self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv")
 
-    def write_ini(self):
-        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.selected_rundate, self.selected_machine_short)
+    def write_ini(self, path_to_csv):
+        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.metadata.selected_rundate, self.metadata.selected_machine_short)
         overlap_choices = dict(Overlap.OVERLAP_CHOICES)
 
         for lane_domain, ini_name in self.ini_names.items():
             ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
-                        ''' % (self.selected_rundate, lane_domain, self.selected_dna_region, path_to_raw_data, overlap_choices[self.selected_overlap], self.selected_machine)
-            full_ini_name = os.path.join(self.path_to_csv, ini_name)
+                        ''' % (self.metadata.selected_rundate, lane_domain, self.metadata.selected_dna_region, path_to_raw_data, overlap_choices[self.metadataselected_overlap], self.metadata.selected_machine)
+            full_ini_name = os.path.join(path_to_csv, ini_name)
             ini_file = open(full_ini_name, 'w')
             ini_file.write(ini_text)
             ini_file.close()
             self.dirs.chmod_wg(full_ini_name)
 
-    def write_out_metadata_to_csv(self):
+    def write_out_metadata_to_csv(self, path_to_csv, out_metadata):
         logging.info("write_out_metadata_to_csv")
 
         writers = {}
         for lane_domain in self.metadata_csv_file_names.keys():
-            writers[lane_domain] = csv.DictWriter(open(os.path.join(self.path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
+            writers[lane_domain] = csv.DictWriter(open(os.path.join(path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
 
         i = 0
-        for idx, val in self.out_metadata.items():
-            lane_domain = self.lanes_domains[i]
+        for idx, val in out_metadata.items():
+            lane_domain = self.metadata.lanes_domains[i]
             i = i+1
             # for h in self.HEADERS_TO_CSV:
             #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
@@ -365,10 +367,12 @@ class OutFiles():
 
             writers[lane_domain].writerow(to_write)
 
-    def check_out_csv_files(self):
+    def check_out_csv_files(self, path_to_csv = None):
+        if not path_to_csv:
+            path_to_csv = self.create_path_to_csv()
         for lane_domain, file_name in self.metadata_csv_file_names.items():
-            if os.path.isfile(os.path.join(self.path_to_csv, file_name)):
-                curr_file = os.path.join(self.path_to_csv, file_name)
+            if os.path.isfile(os.path.join(path_to_csv, file_name)):
+                curr_file = os.path.join(path_to_csv, file_name)
                 self.files_created.append(curr_file)
                 self.dirs.chmod_wg(curr_file)
 
@@ -382,14 +386,16 @@ class Metadata():
         self.mysql_util = MysqlUtil()
         self.vamps_submissions = {}
         self.selected_machine_short = ""
+        self.selected_machine = ""
+        self.selected_rundate = ""
         self.domains_per_row = []
         self.errors = set() # public
         self.user_info_arr = {}
-
         self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         self.adaptor_ref = self.get_all_adaptors()
         self.adaptors_full = {}
+        self.lanes_domains = []
 
         # To MysqlUtil?
         self.db_prefix = ""
@@ -596,6 +602,8 @@ class OutData():
         self.metadata = Metadata(request)
         self.csv_file = CsvFile(request)
         self.out_files = OutFiles(request)
+        self.utils = Utils()
+
         self.out_metadata = defaultdict(defaultdict)
         self.out_metadata_table = defaultdict(list) # public
         self.errors = set() # public
@@ -770,23 +778,16 @@ class OutData():
             self.out_metadata[i]['run']				    = self.request.POST.get('csv_rundate', False)
             self.out_metadata[i]['seq_operator']		= self.request.POST.get('csv_seq_operator', False)
 
-    def make_metadata_table(self):
-        logging.info("make_metadata_table")
+    def update_out_metadata(self, my_post_dict):
+        logging.info("update_out_metadata")
 
-        self.out_metadata_table['headers'] = self.metadata.HEADERS_TO_EDIT_METADATA
-
-        for i in range(len(self.out_metadata.keys())):
-            self.out_metadata_table['rows'].append({})
-
-        # logging.debug("OOO self.out_metadata_table = %s" % self.out_metadata_table)
-
-        for r_num, v in self.out_metadata.items(): #create with all possible headers instead? What fields to show?
-            for header in self.metadata.HEADERS_TO_EDIT_METADATA:
+        # Check for 'form-2-env_source_name' vs. 'env_sample_source_id'
+        for header in self.csv_file.HEADERS_TO_CSV:
+            for i in self.out_metadata.keys():
                 try:
-                    self.out_metadata_table['rows'][int(r_num)][header] = (self.out_metadata[r_num][header])
-                except KeyError as e:
-                    logging.warning("KeyError, e = %s" % e)
-                    self.out_metadata_table['rows'][int(r_num)][header] = ""
+                    self.out_metadata[i][header] = my_post_dict['form-' + str(i) + '-' + header]
+                except MultiValueDictKeyError as e:
+                    pass
                 except:
                     raise
 
@@ -822,7 +823,27 @@ class OutData():
         formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
 
         return (self.request, metadata_run_info_form, formset)
-    
+
+    def make_metadata_table(self):
+        logging.info("make_metadata_table")
+
+        self.out_metadata_table['headers'] = self.metadata.HEADERS_TO_EDIT_METADATA
+
+        for i in range(len(self.out_metadata.keys())):
+            self.out_metadata_table['rows'].append({})
+
+        # logging.debug("OOO self.out_metadata_table = %s" % self.out_metadata_table)
+
+        for r_num, v in self.out_metadata.items(): #create with all possible headers instead? What fields to show?
+            for header in self.metadata.HEADERS_TO_EDIT_METADATA:
+                try:
+                    self.out_metadata_table['rows'][int(r_num)][header] = (self.out_metadata[r_num][header])
+                except KeyError as e:
+                    logging.warning("KeyError, e = %s" % e)
+                    self.out_metadata_table['rows'][int(r_num)][header] = ""
+                except:
+                    raise
+
     def edit_out_metadata_table(self):
         logging.info("edit_out_metadata_table")
 
@@ -856,6 +877,26 @@ class OutData():
                 self.out_metadata_table['rows'][x]['env_sample_source_id'] = 0
             except:
                 raise
+
+    def add_out_metadata_table_to_out_metadata(self):
+        logging.info("add_out_metadata_table_to_out_metadata")
+
+        nnnn = ""
+        # TODO: benchmark
+        for x in range(0, len(self.request.session['out_metadata_table']['rows'])):
+            # logging.debug("SSS1 self.out_metadata_table['rows'][x]['run_key']")
+            # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
+            for header in self.metadata.HEADERS_TO_EDIT_METADATA:
+                if (self.out_metadata_table['rows'][x][header] != self.request.POST['form-'+str(x)+'-' + header]):
+                    self.out_metadata_table['rows'][x][header] = self.request.POST['form-'+str(x)+'-' + header]
+
+            # TODO: DRY
+            if (self.request.session['run_info_form_post']['csv_has_ns'] == 'yes') and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
+                nnnn = "NNNN"
+            self.out_metadata_table['rows'][x]['run_key'] = nnnn + self.request.POST['form-'+str(x)+'-' + 'run_key']
+
+            # logging.debug("SSS2 self.out_metadata_table['rows'][x]['run_key']")
+            # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
 
     def edit_post_metadata_table(self):
         logging.info("edit_post_metadata_table")
@@ -914,8 +955,9 @@ class OutData():
         self.selected_overlap = self.request.session['run_info']['selected_overlap']
 
         # *) ini and csv machine_info/run dir
-        self.lanes_domains = self.utils.get_lanes_domains(self.out_metadata)
-        self.create_path_to_csv()
+        self.metadata.lanes_domains = self.utils.get_lanes_domains(self.out_metadata) #move to Metadata?
+        # TODO: from here move to OutFiles
+        path_to_csv = self.out_files.create_path_to_csv()
 
         # *) validation
         formset = MetadataOutCsvFormSet(my_post_dict)
@@ -923,15 +965,15 @@ class OutData():
         if (len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0):
 
             # *) ini files
-            self.create_ini_names()
-            self.write_ini()
+            self.out_files.create_ini_names()
+            self.out_files.write_ini(path_to_csv)
 
             # *) metadata csv files
-            self.make_out_metadata_csv_file_names()
-            self.write_out_metadata_to_csv()
+            self.out_files.make_out_metadata_csv_file_names()
+            self.out_files.write_out_metadata_to_csv(path_to_csv, self.out_metadata)
 
             # *) check if csv was created
-            self.check_out_csv_files()
+            self.out_files.check_out_csv_files(path_to_csv)
 
             if len(self.vamps_submissions) > 0:
                 self.update_submission_tubes(self.request)
@@ -962,41 +1004,6 @@ class MysqlUtil():
             res_dict = dict(zip(column_names, row))
 
         return res_dict
-
-    # def run_query_to_dict(self, query):
-    #     import pprint
-    #     pp = pprint.PrettyPrinter(indent = 4)
-    #
-    #     res_dict = {}
-    #     cursor = connections['vamps'].cursor()
-    #     # cursor = connection.cursor()
-    #     cursor.execute(query)
-    #
-    #     column_names = [d[0] for d in cursor.description]
-    #
-    #     for row in cursor:
-    #         res_dict = dict(zip(column_names, row))
-    #
-    #     return res_dict
-
-    # dump it to a json string
-    # self.vamps_submissions = json.dumps(info)
-
-    # def run_query_to_dict_vamps2(self, query):
-    #     import pprint
-    #     pp = pprint.PrettyPrinter(indent = 4)
-    #
-    #     res_arr_dict = []
-    #     cursor = connections['vamps2'].cursor()
-    #     # cursor = connection.cursor()
-    #     cursor.execute(query)
-    #
-    #     column_names = [d[0] for d in cursor.description]
-    #
-    #     for row in cursor:
-    #         res_arr_dict.append(dict(zip(column_names, row)))
-    #
-    #     return res_arr_dict
 
 
 # Assuming that in each csv one rundate and one platform!
@@ -1089,7 +1096,7 @@ class CsvMetadata():
         # self.errors = set() # public
         # self.files_created = [] # public
         self.ini_names = {}
-        self.lanes_domains = []
+        # self.lanes_domains = []
         # self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
         # self.metadata_csv_file_names = {}
         self.new_project = "" # public
@@ -1572,45 +1579,45 @@ class CsvMetadata():
     #             self.files_created.append(curr_file)
     #             self.dirs.chmod_wg(curr_file)
 
-    def update_out_metadata(self, my_post_dict, request):
-        logging.info("update_out_metadata")
-
-        # Check for 'form-2-env_source_name' vs.  'env_sample_source_id'
-        for header in self.HEADERS_TO_CSV:
-            for i in self.out_metadata.keys():
-                try:
-                    self.out_metadata[i][header] = my_post_dict['form-' + str(i) + '-' + header]
-                except MultiValueDictKeyError as e:
-                    pass
-                except:
-                    raise
-
-    def edit_out_metadata(self, request):
-        logging.info("edit_out_metadata")
-
-        try:
-            self.out_metadata = request.session['out_metadata']
-        except KeyError:
-            request.session['out_metadata'] = self.out_metadata
-        except:
-            raise
-
-        # logging.debug("FROM edit_out_metadata: request.session['out_metadata']")
-        # logging.debug(request.session['out_metadata'])
-
-        for i, v in self.out_metadata.items():
-            self.out_metadata[i]['dna_region']		    = request.POST.get('csv_dna_region', False)
-            self.out_metadata[i]['has_ns']			    = request.POST.get('csv_has_ns', False)
-            self.out_metadata[i]['insert_size']		    = request.POST.get('csv_insert_size', False)
-            self.out_metadata[i]['overlap']			    = request.POST.get('csv_overlap', False)
-            self.out_metadata[i]['path_to_raw_data']	= request.POST.get('csv_path_to_raw_data', False)
-            self.out_metadata[i]['platform']			= request.POST.get('csv_platform', False)
-            self.out_metadata[i]['read_length']			= request.POST.get('csv_read_length', False)
-            self.out_metadata[i]['run']				    = request.POST.get('csv_rundate', False)
-            self.out_metadata[i]['seq_operator']		= request.POST.get('csv_seq_operator', False)
-
-            # TODO:
-            # ? 'overlap': 'hs_complete' now!
+    # def update_out_metadata(self, my_post_dict, request):
+    #     logging.info("update_out_metadata")
+    #
+    #     # Check for 'form-2-env_source_name' vs.  'env_sample_source_id'
+    #     for header in self.HEADERS_TO_CSV:
+    #         for i in self.out_metadata.keys():
+    #             try:
+    #                 self.out_metadata[i][header] = my_post_dict['form-' + str(i) + '-' + header]
+    #             except MultiValueDictKeyError as e:
+    #                 pass
+    #             except:
+    #                 raise
+    #
+    # def edit_out_metadata(self, request):
+    #     logging.info("edit_out_metadata")
+    #
+    #     try:
+    #         self.out_metadata = request.session['out_metadata']
+    #     except KeyError:
+    #         request.session['out_metadata'] = self.out_metadata
+    #     except:
+    #         raise
+    #
+    #     # logging.debug("FROM edit_out_metadata: request.session['out_metadata']")
+    #     # logging.debug(request.session['out_metadata'])
+    #
+    #     for i, v in self.out_metadata.items():
+    #         self.out_metadata[i]['dna_region']		    = request.POST.get('csv_dna_region', False)
+    #         self.out_metadata[i]['has_ns']			    = request.POST.get('csv_has_ns', False)
+    #         self.out_metadata[i]['insert_size']		    = request.POST.get('csv_insert_size', False)
+    #         self.out_metadata[i]['overlap']			    = request.POST.get('csv_overlap', False)
+    #         self.out_metadata[i]['path_to_raw_data']	= request.POST.get('csv_path_to_raw_data', False)
+    #         self.out_metadata[i]['platform']			= request.POST.get('csv_platform', False)
+    #         self.out_metadata[i]['read_length']			= request.POST.get('csv_read_length', False)
+    #         self.out_metadata[i]['run']				    = request.POST.get('csv_rundate', False)
+    #         self.out_metadata[i]['seq_operator']		= request.POST.get('csv_seq_operator', False)
+    #
+    #         # TODO:
+    #         # ? 'overlap': 'hs_complete' now!
 
         # logging.debug("self.out_metadata = %s" % self.out_metadata)
 
@@ -1649,24 +1656,24 @@ class CsvMetadata():
     #         except:
     #             raise
 
-    def add_out_metadata_table_to_out_metadata(self, request):
-        logging.info("add_out_metadata_table_to_out_metadata")
-
-        nnnn = ""
-        # TODO: benchmark
-        for x in range(0, len(request.session['out_metadata_table']['rows'])):
-            # logging.debug("SSS1 self.out_metadata_table['rows'][x]['run_key']")
-            # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
-            for header in self.HEADERS_TO_EDIT_METADATA:
-                if (self.out_metadata_table['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
-                    self.out_metadata_table['rows'][x][header] = request.POST['form-'+str(x)+'-' + header]
-
-            if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
-                nnnn = "NNNN"
-            self.out_metadata_table['rows'][x]['run_key'] = nnnn + request.POST['form-'+str(x)+'-' + 'run_key']
-
-            # logging.debug("SSS2 self.out_metadata_table['rows'][x]['run_key']")
-            # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
+    # def add_out_metadata_table_to_out_metadata(self, request):
+    #     logging.info("add_out_metadata_table_to_out_metadata")
+    #
+    #     nnnn = ""
+    #     # TODO: benchmark
+    #     for x in range(0, len(request.session['out_metadata_table']['rows'])):
+    #         # logging.debug("SSS1 self.out_metadata_table['rows'][x]['run_key']")
+    #         # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
+    #         for header in self.HEADERS_TO_EDIT_METADATA:
+    #             if (self.out_metadata_table['rows'][x][header] != request.POST['form-'+str(x)+'-' + header]):
+    #                 self.out_metadata_table['rows'][x][header] = request.POST['form-'+str(x)+'-' + header]
+    #
+    #         if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
+    #             nnnn = "NNNN"
+    #         self.out_metadata_table['rows'][x]['run_key'] = nnnn + request.POST['form-'+str(x)+'-' + 'run_key']
+    #
+    #         # logging.debug("SSS2 self.out_metadata_table['rows'][x]['run_key']")
+    #         # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
 
 
     # def edit_post_metadata_table(self, request):
