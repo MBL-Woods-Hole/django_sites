@@ -669,13 +669,13 @@ class OutData():
             except:
                 raise
             try:
-                self.out_metadata[i]['contact_name']         = self.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.user_info_arr[curr_submit_code]['last_name']
-                self.out_metadata[i]['email'] = self.user_info_arr[curr_submit_code]['email']
-                self.out_metadata[i]['data_owner']           = self.user_info_arr[curr_submit_code]['vamps_name']
-                self.out_metadata[i]['first_name']           = self.user_info_arr[curr_submit_code]['first_name']
+                self.out_metadata[i]['contact_name']         = self.metadata.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.metadata.user_info_arr[curr_submit_code]['last_name']
+                self.out_metadata[i]['email'] = self.metadata.user_info_arr[curr_submit_code]['email']
+                self.out_metadata[i]['data_owner']           = self.metadata.user_info_arr[curr_submit_code]['vamps_name']
+                self.out_metadata[i]['first_name']           = self.metadata.user_info_arr[curr_submit_code]['first_name']
                 self.out_metadata[i]['funding']                = self.vamps_submissions[curr_submit_code]['funding']
                 self.out_metadata[i]['institution']			 = self.vamps_submissions[curr_submit_code]['institution']
-                self.out_metadata[i]['last_name']            = self.user_info_arr[curr_submit_code]['last_name']
+                self.out_metadata[i]['last_name']            = self.metadata.user_info_arr[curr_submit_code]['last_name']
                 self.out_metadata[i]['project_description']	 = self.vamps_submissions[curr_submit_code]['project_description']
 
             except KeyError:
