@@ -308,10 +308,11 @@ class CsvFile():
 class OutFiles():
     # out files
     def __init__(self, request):
+        self.metadata = Metadata(request)
         self.metadata_csv_file_names = {}
         self.files_created = []  # public
         self.dirs = Dirs()
-        self.metadata = Metadata(request)
+        self.lanes_domains = []
         self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
 
@@ -325,16 +326,18 @@ class OutFiles():
         new_dir = self.dirs.check_and_make_dir(path_to_csv)
         return path_to_csv
 
-    def create_out_file_names(self, pattern):
-        return {lane_domain: pattern % (self.metadata.selected_rundate, self.metadata.selected_machine_short, lane_domain) for lane_domain in self.metadata.lanes_domains} #create in Metadata
+    def create_out_file_names(self, pattern, out_metadata):
+        self.lanes_domains = self.metadata.get_lanes_domains(out_metadata)
 
-    def create_ini_names(self):
-        self.ini_names = self.create_out_file_names("%s_%s_%s_run_info.ini")
+        return {lane_domain: pattern % (self.metadata.selected_rundate, self.metadata.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains} #create in Metadata
 
-    def make_out_metadata_csv_file_names(self):
+    def create_ini_names(self, out_metadata):
+        self.ini_names = self.create_out_file_names("%s_%s_%s_run_info.ini", out_metadata)
+
+    def make_out_metadata_csv_file_names(self, out_metadata):
         # OLD: metadata_20160803_1_B.csv
         # NEW: metadata_20151111_hs_1_A.csv
-        self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv")
+        self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv", out_metadata)
 
     def write_ini(self, path_to_csv):
         path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.metadata.selected_rundate, self.metadata.selected_machine_short)
@@ -353,7 +356,7 @@ class OutFiles():
         logging.info("write_out_metadata_to_csv")
 
         writers = {}
-        self.make_out_metadata_csv_file_names()
+        self.make_out_metadata_csv_file_names(out_metadata)
         for lane_domain in self.metadata_csv_file_names.keys():
             writers[lane_domain] = csv.DictWriter(open(os.path.join(path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
@@ -397,7 +400,6 @@ class Metadata():
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         self.adaptor_ref = self.get_all_adaptors()
         self.adaptors_full = {}
-        self.lanes_domains = []
 
         # To MysqlUtil?
         self.db_prefix = ""
@@ -416,6 +418,7 @@ class Metadata():
         # logging.debug("self.lanes_domains = %s" % self.lanes_domains)
         return lanes_domains
 
+    # TODO combine with previous
     def get_lane_domain(self, out_metadata_entry):
         domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         domain_letter = domain_choices[out_metadata_entry['domain']]
@@ -977,7 +980,7 @@ class OutData():
         if (len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0):
 
             # *) ini files
-            self.out_files.create_ini_names()
+            self.out_files.create_ini_names(self.out_metadata)
             self.out_files.write_ini(path_to_csv)
 
             # *) metadata csv files
