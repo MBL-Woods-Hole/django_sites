@@ -120,15 +120,16 @@ def submit_run_info_n_edit_metadata_n_make_table(request):
     return context
             
 def edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request):
-    csv_handler = CsvMetadata(request)
+    out_data = OutData(request)
+
     logging.debug("HHH")
     logging.debug("444 create_submission_metadata_file in request.POST")
 
-    request, metadata_run_info_form, formset = csv_handler.create_submission_metadata_file(request)
+    request, metadata_run_info_form, formset = out_data.create_submission_metadata_file()
 
     errors_size = formset.total_error_count()
 
-    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': csv_handler.files_created}
+    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': out_data.files_created}
 
 def initial_form():
     file_upload_form = FileUploadForm()

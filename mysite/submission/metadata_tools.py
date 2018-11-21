@@ -373,7 +373,6 @@ class OutFiles():
                 self.dirs.chmod_wg(curr_file)
 
 
-
 class Metadata():
     """
     data independent of if it comes from a file, db or a form
@@ -592,44 +591,6 @@ class Metadata():
             self.errors.add("Please add project information for %s to env454." % missing_projects_list)
 
 
-# class FormData():
-#     """Dealing with form preparations"""
-#     def __init__(self, request):
-#         self.metadata = Metadata(request)
-#         self.csv_file = CsvFile(request)
-#
-#     # def submit_run_info(self, request): # public TODO: split!
-#     #     self.metadata.get_selected_variables(request.POST)
-#     #     request.session['run_info'] = {}
-#     #     request.session['run_info']['selected_rundate']         = self.selected_rundate
-#     #     request.session['run_info']['selected_machine_short']   = self.selected_machine_short
-#     #     request.session['run_info']['selected_machine']         = self.selected_machine
-#     #     request.session['run_info']['selected_dna_region']      = self.selected_dna_region
-#     #     request.session['run_info']['selected_overlap']         = self.selected_overlap
-#     #
-#     #     self.out_data.edit_out_metadata(request)
-#     #     request.session['out_metadata'] = self.out_data.out_metadata
-#     #
-#     #     if (
-#     #             'create_vamps2_submission_csv' in request.session.keys() and
-#     #             request.session['create_vamps2_submission_csv']
-#     #     ):
-#     #         self.create_vamps2_submission_csv(request)
-#     #     request.session['files_created'] = self.files_created
-#     #
-#     #     self.make_metadata_table()
-#     #
-#     #     metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-#     #     request.session['run_info_form_post'] = request.POST
-#     #
-#     #     MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
-#     #     formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
-#     #
-#     #     request.session['out_metadata_table'] = self.out_metadata_table
-#     #
-#     #     return (request, metadata_run_info_form, formset)
-
-
 class OutData():
     def __init__(self, request):
         self.metadata = Metadata(request)
@@ -838,6 +799,7 @@ class OutData():
         self.request.session['run_info']['selected_dna_region']      = self.metadata.selected_dna_region
         self.request.session['run_info']['selected_overlap']         = self.metadata.selected_overlap
 
+    # TODO: rename or join
     def make_metadata_run_info_form(self):
         self.fill_out_request_session_run_info()
         if (
@@ -858,6 +820,125 @@ class OutData():
         metadata_run_info_form = CsvRunInfoUploadForm(self.request.POST)
         MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
         formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
+
+        return (self.request, metadata_run_info_form, formset)
+    
+    def edit_out_metadata_table(self):
+        logging.info("edit_out_metadata_table")
+
+        self.out_metadata_table = self.request.session['out_metadata_table']
+
+        # logging.debug("OOO self.request.session['run_info_form_post']['csv_has_ns']")
+        # logging.debug(self.request.session['run_info_form_post']['csv_has_ns'])
+
+        for x in range(0, len(self.out_metadata_table['rows'])):
+            adaptor    = self.request.POST['form-'+str(x)+'-adaptor']
+            dna_region = self.request.session['run_info_form_post']['csv_dna_region']
+            domain     = self.request.POST['form-'+str(x)+'-domain']
+            env_source_name = self.request.POST['form-' + str(x) + '-env_source_name']
+
+            key = "_".join([adaptor, dna_region, domain])
+
+            self.metadata.get_adaptors_full(adaptor, dna_region, domain)
+
+            try:
+                self.out_metadata_table['rows'][x]['barcode_index'] = self.metadata.adaptors_full[key][0].illumina_index
+                # if (self.request.session['run_info_form_post']['csv_has_ns'] == 'yes'):
+                #     nnnn = "NNNN"
+                self.out_metadata_table['rows'][x]['run_key']       = self.metadata.adaptors_full[key][1].illumina_run_key
+                self.out_metadata_table['rows'][x]['env_source_name'] = env_source_name
+                self.out_metadata_table['rows'][x]['env_sample_source_id'] = env_source_name
+
+            except KeyError:
+                self.out_metadata_table['rows'][x]['barcode_index'] = ""
+                self.out_metadata_table['rows'][x]['run_key']       = ""
+                self.out_metadata_table['rows'][x]['env_source_name'] = 0
+                self.out_metadata_table['rows'][x]['env_sample_source_id'] = 0
+            except:
+                raise
+
+    def edit_post_metadata_table(self):
+        logging.info("edit_post_metadata_table")
+
+        my_post_dict = self.request.POST.copy()
+        my_post_dict['form-TOTAL_FORMS']   = len(self.request.session['out_metadata'].keys())
+        my_post_dict['form-INITIAL_FORMS'] = len(self.request.session['out_metadata'].keys())
+        my_post_dict['form-MAX_NUM_FORMS'] = len(self.request.session['out_metadata_table'].keys())
+
+        # TODO: move out
+        nnnn = ""
+        for x in range(0, len(self.request.session['out_metadata_table']['rows'])):
+            my_post_dict['form-'+str(x)+'-barcode_index'] = self.out_metadata_table['rows'][x]['barcode_index']
+            if (self.request.session['run_info_form_post']['csv_has_ns'] == 'yes') \
+                    and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
+                nnnn = "NNNN"
+            my_post_dict['form-'+str(x)+'-run_key']       = nnnn + self.out_metadata_table['rows'][x]['run_key']
+        return my_post_dict
+
+    def create_submission_metadata_file(self):  # public
+        # logging.debug("EEE: self.request.POST = %s" % self.request.POST)
+
+        """
+        *) metadata table to show and edit
+        *) metadata out edit
+        *) ini and csv machine_info/run dir
+        *) ini files
+        *) metadata csv files
+        """
+
+        # *) metadata table to show and edit
+        self.edit_out_metadata_table()
+        metadata_run_info_form = CsvRunInfoUploadForm(self.request.session['run_info_form_post'])
+
+        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm)
+
+        my_post_dict = self.edit_post_metadata_table()
+
+        self.add_out_metadata_table_to_out_metadata()
+
+        # *) metadata out edit
+        self.out_metadata = self.request.session['out_metadata']
+        self.update_out_metadata(my_post_dict)
+
+        # adaptor    = self.csv_by_header['adaptor'][i]
+        # dna_region = self.csv_by_header['dna_region'][i]
+        # domain     = self.csv_by_header['domain'][i]
+        #
+        # self.get_adaptors_full(adaptor, dna_region, domain)
+
+        # ----
+        self.selected_rundate = self.request.session['run_info']['selected_rundate']
+        self.selected_machine_short = self.request.session['run_info']['selected_machine_short']
+        self.selected_machine = self.request.session['run_info']['selected_machine']
+        self.selected_dna_region = self.request.session['run_info']['selected_dna_region']
+        self.selected_overlap = self.request.session['run_info']['selected_overlap']
+
+        # *) ini and csv machine_info/run dir
+        self.lanes_domains = self.utils.get_lanes_domains(self.out_metadata)
+        self.create_path_to_csv()
+
+        # *) validation
+        formset = MetadataOutCsvFormSet(my_post_dict)
+
+        if (len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0):
+
+            # *) ini files
+            self.create_ini_names()
+            self.write_ini()
+
+            # *) metadata csv files
+            self.make_out_metadata_csv_file_names()
+            self.write_out_metadata_to_csv()
+
+            # *) check if csv was created
+            self.check_out_csv_files()
+
+            if len(self.vamps_submissions) > 0:
+                self.update_submission_tubes(self.request)
+
+        self.new_rundate, self.new_rundate_created = self.insert_run(self.request)
+        logging.info(
+            "self.new_rundate = %s, self.new_rundate_created = %s" % (self.new_rundate, self.new_rundate_created))
 
         return (self.request, metadata_run_info_form, formset)
 
@@ -1533,40 +1614,40 @@ class CsvMetadata():
 
         # logging.debug("self.out_metadata = %s" % self.out_metadata)
 
-    def edit_out_metadata_table(self, request):
-        logging.info("edit_out_metadata_table")
-
-        self.out_metadata_table = request.session['out_metadata_table']
-
-        # logging.debug("OOO request.session['run_info_form_post']['csv_has_ns']")
-        # logging.debug(request.session['run_info_form_post']['csv_has_ns'])
-
-        for x in range(0, len(self.out_metadata_table['rows'])):
-            adaptor    = request.POST['form-'+str(x)+'-adaptor']
-            dna_region = request.session['run_info_form_post']['csv_dna_region']
-            domain     = request.POST['form-'+str(x)+'-domain']
-            env_source_name = request.POST['form-' + str(x) + '-env_source_name']
-
-            key = "_".join([adaptor, dna_region, domain])
-
-            self.get_adaptors_full(adaptor, dna_region, domain)
-            # nnnn = ""
-
-            try:
-                self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
-                # if (request.session['run_info_form_post']['csv_has_ns'] == 'yes'):
-                #     nnnn = "NNNN"
-                self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
-                self.out_metadata_table['rows'][x]['env_source_name'] = env_source_name
-                self.out_metadata_table['rows'][x]['env_sample_source_id'] = env_source_name
-
-            except KeyError:
-                self.out_metadata_table['rows'][x]['barcode_index'] = ""
-                self.out_metadata_table['rows'][x]['run_key']       = ""
-                self.out_metadata_table['rows'][x]['env_source_name'] = 0
-                self.out_metadata_table['rows'][x]['env_sample_source_id'] = 0
-            except:
-                raise
+    # def edit_out_metadata_table(self, request):
+    #     logging.info("edit_out_metadata_table")
+    # 
+    #     self.out_metadata_table = request.session['out_metadata_table']
+    # 
+    #     # logging.debug("OOO request.session['run_info_form_post']['csv_has_ns']")
+    #     # logging.debug(request.session['run_info_form_post']['csv_has_ns'])
+    # 
+    #     for x in range(0, len(self.out_metadata_table['rows'])):
+    #         adaptor    = request.POST['form-'+str(x)+'-adaptor']
+    #         dna_region = request.session['run_info_form_post']['csv_dna_region']
+    #         domain     = request.POST['form-'+str(x)+'-domain']
+    #         env_source_name = request.POST['form-' + str(x) + '-env_source_name']
+    # 
+    #         key = "_".join([adaptor, dna_region, domain])
+    # 
+    #         self.get_adaptors_full(adaptor, dna_region, domain)
+    #         # nnnn = ""
+    # 
+    #         try:
+    #             self.out_metadata_table['rows'][x]['barcode_index'] = self.adaptors_full[key][0].illumina_index
+    #             # if (request.session['run_info_form_post']['csv_has_ns'] == 'yes'):
+    #             #     nnnn = "NNNN"
+    #             self.out_metadata_table['rows'][x]['run_key']       = self.adaptors_full[key][1].illumina_run_key
+    #             self.out_metadata_table['rows'][x]['env_source_name'] = env_source_name
+    #             self.out_metadata_table['rows'][x]['env_sample_source_id'] = env_source_name
+    # 
+    #         except KeyError:
+    #             self.out_metadata_table['rows'][x]['barcode_index'] = ""
+    #             self.out_metadata_table['rows'][x]['run_key']       = ""
+    #             self.out_metadata_table['rows'][x]['env_source_name'] = 0
+    #             self.out_metadata_table['rows'][x]['env_sample_source_id'] = 0
+    #         except:
+    #             raise
 
     def add_out_metadata_table_to_out_metadata(self, request):
         logging.info("add_out_metadata_table_to_out_metadata")
@@ -1588,29 +1669,29 @@ class CsvMetadata():
             # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
 
 
-    def edit_post_metadata_table(self, request):
-        logging.info("edit_post_metadata_table")
-
-        my_post_dict = request.POST.copy()
-        my_post_dict['form-TOTAL_FORMS']   = len(request.session['out_metadata'].keys())
-        my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
-        my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
-
-
-        nnnn = ""
-        for x in range(0, len(request.session['out_metadata_table']['rows'])):
-            # logging.debug("SSS3 self.out_metadata_table['rows'][x]['run_key']")
-            # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
-            my_post_dict['form-'+str(x)+'-barcode_index'] = self.out_metadata_table['rows'][x]['barcode_index']
-            if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') \
-                    and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
-                nnnn = "NNNN"
-            my_post_dict['form-'+str(x)+'-run_key']       = nnnn + self.out_metadata_table['rows'][x]['run_key']
-
-            # logging.debug("SSS4 self.out_metadata_table['rows'][x]['run_key']")
-            # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
-
-        return my_post_dict
+    # def edit_post_metadata_table(self, request):
+    #     logging.info("edit_post_metadata_table")
+    #
+    #     my_post_dict = request.POST.copy()
+    #     my_post_dict['form-TOTAL_FORMS']   = len(request.session['out_metadata'].keys())
+    #     my_post_dict['form-INITIAL_FORMS'] = len(request.session['out_metadata'].keys())
+    #     my_post_dict['form-MAX_NUM_FORMS'] = len(request.session['out_metadata_table'].keys())
+    #
+    #
+    #     nnnn = ""
+    #     for x in range(0, len(request.session['out_metadata_table']['rows'])):
+    #         # logging.debug("SSS3 self.out_metadata_table['rows'][x]['run_key']")
+    #         # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
+    #         my_post_dict['form-'+str(x)+'-barcode_index'] = self.out_metadata_table['rows'][x]['barcode_index']
+    #         if (request.session['run_info_form_post']['csv_has_ns'] == 'yes') \
+    #                 and not self.out_metadata_table['rows'][x]['run_key'].startswith("NNNN"):
+    #             nnnn = "NNNN"
+    #         my_post_dict['form-'+str(x)+'-run_key']       = nnnn + self.out_metadata_table['rows'][x]['run_key']
+    #
+    #         # logging.debug("SSS4 self.out_metadata_table['rows'][x]['run_key']")
+    #         # logging.debug(self.out_metadata_table['rows'][x]['run_key'])
+    #
+    #     return my_post_dict
 
     # def check_user(self):
     #     try:
@@ -2031,71 +2112,71 @@ class CsvMetadata():
 
         return metadata_new_project_form
 
-    def create_submission_metadata_file(self, request): # public
-        # logging.debug("EEE: request.POST = %s" % request.POST)
-
-        """
-        *) metadata table to show and edit
-        *) metadata out edit
-        *) ini and csv machine_info/run dir
-        *) ini files
-        *) metadata csv files
-        """
-
-        #*) metadata table to show and edit
-        self.edit_out_metadata_table(request)
-        metadata_run_info_form = CsvRunInfoUploadForm(request.session['run_info_form_post'])
-
-        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm)
-
-        my_post_dict = self.edit_post_metadata_table(request)
-
-        self.add_out_metadata_table_to_out_metadata(request)
-
-        #*) metadata out edit
-        self.out_metadata = request.session['out_metadata']
-        self.update_out_metadata(my_post_dict, request)
-
-        # adaptor    = self.csv_by_header['adaptor'][i]
-        # dna_region = self.csv_by_header['dna_region'][i]
-        # domain     = self.csv_by_header['domain'][i]
-        #
-        # self.get_adaptors_full(adaptor, dna_region, domain)
-
-        # ----
-        self.selected_rundate       = request.session['run_info']['selected_rundate']
-        self.selected_machine_short = request.session['run_info']['selected_machine_short']
-        self.selected_machine       = request.session['run_info']['selected_machine']
-        self.selected_dna_region    = request.session['run_info']['selected_dna_region']
-        self.selected_overlap       = request.session['run_info']['selected_overlap']
-
-        #*) ini and csv machine_info/run dir
-        self.lanes_domains = self.utils.get_lanes_domains(self.out_metadata)
-        self.create_path_to_csv()
-
-        # *) validation
-        formset = MetadataOutCsvFormSet(my_post_dict)
-
-        if (len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0):
-
-            #*) ini files
-            self.create_ini_names()
-            self.write_ini()
-
-            #*) metadata csv files
-            self.make_out_metadata_csv_file_names()
-            self.write_out_metadata_to_csv()
-
-            # *) check if csv was created
-            self.check_out_csv_files()
-
-            if len(self.vamps_submissions) > 0:
-                self.update_submission_tubes(request)
-            
-        self.new_rundate, self.new_rundate_created = self.insert_run(request)
-        logging.info("self.new_rundate = %s, self.new_rundate_created = %s" % (self.new_rundate, self.new_rundate_created))
-        
-        return (request, metadata_run_info_form, formset)
+    # def create_submission_metadata_file(self, request): # public
+    #     # logging.debug("EEE: request.POST = %s" % request.POST)
+    #
+    #     """
+    #     *) metadata table to show and edit
+    #     *) metadata out edit
+    #     *) ini and csv machine_info/run dir
+    #     *) ini files
+    #     *) metadata csv files
+    #     """
+    #
+    #     #*) metadata table to show and edit
+    #     self.edit_out_metadata_table(request)
+    #     metadata_run_info_form = CsvRunInfoUploadForm(request.session['run_info_form_post'])
+    #
+    #     MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm)
+    #
+    #     my_post_dict = self.edit_post_metadata_table(request)
+    #
+    #     self.add_out_metadata_table_to_out_metadata(request)
+    #
+    #     #*) metadata out edit
+    #     self.out_metadata = request.session['out_metadata']
+    #     self.update_out_metadata(my_post_dict, request)
+    #
+    #     # adaptor    = self.csv_by_header['adaptor'][i]
+    #     # dna_region = self.csv_by_header['dna_region'][i]
+    #     # domain     = self.csv_by_header['domain'][i]
+    #     #
+    #     # self.get_adaptors_full(adaptor, dna_region, domain)
+    #
+    #     # ----
+    #     self.selected_rundate       = request.session['run_info']['selected_rundate']
+    #     self.selected_machine_short = request.session['run_info']['selected_machine_short']
+    #     self.selected_machine       = request.session['run_info']['selected_machine']
+    #     self.selected_dna_region    = request.session['run_info']['selected_dna_region']
+    #     self.selected_overlap       = request.session['run_info']['selected_overlap']
+    #
+    #     #*) ini and csv machine_info/run dir
+    #     self.lanes_domains = self.utils.get_lanes_domains(self.out_metadata)
+    #     self.create_path_to_csv()
+    #
+    #     # *) validation
+    #     formset = MetadataOutCsvFormSet(my_post_dict)
+    #
+    #     if (len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0):
+    #
+    #         #*) ini files
+    #         self.create_ini_names()
+    #         self.write_ini()
+    #
+    #         #*) metadata csv files
+    #         self.make_out_metadata_csv_file_names()
+    #         self.write_out_metadata_to_csv()
+    #
+    #         # *) check if csv was created
+    #         self.check_out_csv_files()
+    #
+    #         if len(self.vamps_submissions) > 0:
+    #             self.update_submission_tubes(request)
+    #
+    #     self.new_rundate, self.new_rundate_created = self.insert_run(request)
+    #     logging.info("self.new_rundate = %s, self.new_rundate_created = %s" % (self.new_rundate, self.new_rundate_created))
+    #
+    #     return (request, metadata_run_info_form, formset)
         
     def insert_run(self, request):
         return Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
