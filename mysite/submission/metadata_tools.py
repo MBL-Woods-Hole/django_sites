@@ -598,9 +598,8 @@ class FormData():
     def __init__(self, request):
         self.metadata = Metadata(request)
         self.csv_file = CsvFile(request)
-        self.out_data = OutData(request)
 
-    def submit_run_info(self, request): # public
+    def submit_run_info(self, request): # public TODO: split!
         self.metadata.get_selected_variables(request.POST)
         request.session['run_info'] = {}
         request.session['run_info']['selected_rundate']         = self.selected_rundate
@@ -636,10 +635,12 @@ class OutData():
     def __init__(self, request):
         self.metadata = Metadata(request)
         self.csv_file = CsvFile(request)
+        self.form_data = FormData(request)
         self.out_metadata = defaultdict(defaultdict)
         self.out_metadata_table = defaultdict(list) # public
         self.errors = set() # public
 
+    # TODO: what's a difference with make_metadata_run_info_form?
     def work_with_request(self, request):
         has_empty_cells = self.csv_file.csv_file_upload(request)
         self.csv_file.get_initial_run_info_data_dict()
@@ -684,7 +685,7 @@ class OutData():
 
         return (metadata_run_info_form, has_empty_cells)
 
-    # TODO: 1) should it be here? 2) how to simplify it (case?)?
+    # TODO: 2) how to simplify it (case?)?
     def make_new_out_metadata(self, request):
         logging.info("make_new_out_metadata")
 
@@ -807,6 +808,9 @@ class OutData():
             self.out_metadata[i]['read_length']			= request.POST.get('csv_read_length', False)
             self.out_metadata[i]['run']				    = request.POST.get('csv_rundate', False)
             self.out_metadata[i]['seq_operator']		= request.POST.get('csv_seq_operator', False)
+
+    def make_metadata_run_info_form(self):
+        self.form_data.submit_run_info()
 
 
 class MysqlUtil():

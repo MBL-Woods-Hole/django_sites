@@ -101,19 +101,19 @@ def upload_file_n_make_new_metadata(request):
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size }
     
 def submit_run_info_n_edit_metadata_n_make_table(request):
-    csv_handler = CsvMetadata(request)
+    data_handler = OutData(request)
     
     logging.debug("HHH")
     logging.debug("333 submit_run_info in request.POST")
 
-    request, metadata_run_info_form, formset = csv_handler.submit_run_info(request)
+    request, metadata_run_info_form, formset = data_handler.make_metadata_run_info_form(request)
 
     errors_size = len(metadata_run_info_form.errors)
 
     if errors_size > 0:
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued, 'errors': csv_handler.errors, 'errors_size': errors_size }
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': data_handler.csv_by_header_uniqued, 'errors': data_handler.errors, 'errors_size': errors_size }
     else:
-        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': csv_handler.out_metadata_table}
+        context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': data_handler.out_metadata_table}
 
     context['files_created'] = request.session['files_created']
 
