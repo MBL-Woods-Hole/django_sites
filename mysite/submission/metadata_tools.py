@@ -396,6 +396,7 @@ class Metadata():
         self.adaptor_ref = self.get_all_adaptors()
         self.adaptors_full = {}
         self.lanes_domains = []
+        # self.lanes_domains = self.get_lanes_domains(self.out_metadata)
 
         # To MysqlUtil?
         self.db_prefix = ""
@@ -403,6 +404,16 @@ class Metadata():
             self.db_prefix = "test_"
 
         self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
+
+    def get_lanes_domains(self, out_metadata):
+        domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
+        lanes_domains = []
+
+        for idx, val in out_metadata.items():
+            domain_letter = domain_choices[val['domain']]
+            lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
+        # logging.debug("self.lanes_domains = %s" % self.lanes_domains)
+        return lanes_domains
 
     def get_selected_variables(self, request_post, csv_by_header_uniqued):
         # change from form if needed
@@ -616,11 +627,6 @@ class OutData():
         self.metadata.get_selected_variables(request.POST, self.csv_file.csv_by_header_uniqued)
         request.session['run_info_from_csv'] = self.csv_file.run_info_from_csv
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-            # CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-
-        # # TODO: move to one method in metadata_tools, call from here as create info and create csv
-        # request.session['lanes_domains'] = self.get_lanes_domains()
-        # del request.session['lanes_domains']
 
         if not self.csv_file.vamps2_csv:
             self.metadata.get_vamps_submission_info(self.csv_file.csv_by_header_uniqued)
@@ -955,7 +961,7 @@ class OutData():
         self.selected_overlap = self.request.session['run_info']['selected_overlap']
 
         # *) ini and csv machine_info/run dir
-        self.metadata.lanes_domains = self.utils.get_lanes_domains(self.out_metadata) #move to Metadata?
+        self.metadata.lanes_domains = self.metadata.get_lanes_domains(self.out_metadata) #move to Metadata?
         # TODO: from here move to OutFiles
         path_to_csv = self.out_files.create_path_to_csv()
 

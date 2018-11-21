@@ -60,15 +60,15 @@ class Utils():
 
             
     # TODO: combine with metadata_utils, DRY!
-    def get_lanes_domains(self, out_metadata):
-        domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
-        lanes_domains = []
-
-        for idx, val in out_metadata.items():
-            domain_letter = domain_choices[val['domain']]
-            lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
-        # logging.debug("self.lanes_domains = %s" % self.lanes_domains)
-        return lanes_domains
+    # def get_lanes_domains(self, out_metadata):
+    #     domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
+    #     lanes_domains = []
+    #
+    #     for idx, val in out_metadata.items():
+    #         domain_letter = domain_choices[val['domain']]
+    #         lanes_domains.append("%s_%s" % (val['lane'], domain_letter))
+    #     # logging.debug("self.lanes_domains = %s" % self.lanes_domains)
+    #     return lanes_domains
 
 
 
