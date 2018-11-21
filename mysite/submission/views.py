@@ -106,7 +106,7 @@ def submit_run_info_n_edit_metadata_n_make_table(request):
     logging.debug("HHH")
     logging.debug("333 submit_run_info in request.POST")
 
-    request, metadata_run_info_form, formset = data_handler.make_metadata_run_info_form(request)
+    request, metadata_run_info_form, formset = data_handler.make_metadata_run_info_form()
 
     errors_size = len(metadata_run_info_form.errors)
 

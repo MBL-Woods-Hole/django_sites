@@ -599,36 +599,36 @@ class FormData():
         self.metadata = Metadata(request)
         self.csv_file = CsvFile(request)
 
-    def submit_run_info(self, request): # public TODO: split!
-        self.metadata.get_selected_variables(request.POST)
-        request.session['run_info'] = {}
-        request.session['run_info']['selected_rundate']         = self.selected_rundate
-        request.session['run_info']['selected_machine_short']   = self.selected_machine_short
-        request.session['run_info']['selected_machine']         = self.selected_machine
-        request.session['run_info']['selected_dna_region']      = self.selected_dna_region
-        request.session['run_info']['selected_overlap']         = self.selected_overlap
-
-        self.out_data.edit_out_metadata(request)
-        request.session['out_metadata'] = self.out_data.out_metadata
-
-        if (
-                'create_vamps2_submission_csv' in request.session.keys() and
-                request.session['create_vamps2_submission_csv']
-        ):
-            self.create_vamps2_submission_csv(request)
-        request.session['files_created'] = self.files_created
-
-        self.make_metadata_table()
-
-        metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-        request.session['run_info_form_post'] = request.POST
-
-        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
-        formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
-
-        request.session['out_metadata_table'] = self.out_metadata_table
-
-        return (request, metadata_run_info_form, formset)
+    # def submit_run_info(self, request): # public TODO: split!
+    #     self.metadata.get_selected_variables(request.POST)
+    #     request.session['run_info'] = {}
+    #     request.session['run_info']['selected_rundate']         = self.selected_rundate
+    #     request.session['run_info']['selected_machine_short']   = self.selected_machine_short
+    #     request.session['run_info']['selected_machine']         = self.selected_machine
+    #     request.session['run_info']['selected_dna_region']      = self.selected_dna_region
+    #     request.session['run_info']['selected_overlap']         = self.selected_overlap
+    #
+    #     self.out_data.edit_out_metadata(request)
+    #     request.session['out_metadata'] = self.out_data.out_metadata
+    #
+    #     if (
+    #             'create_vamps2_submission_csv' in request.session.keys() and
+    #             request.session['create_vamps2_submission_csv']
+    #     ):
+    #         self.create_vamps2_submission_csv(request)
+    #     request.session['files_created'] = self.files_created
+    #
+    #     self.make_metadata_table()
+    #
+    #     metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
+    #     request.session['run_info_form_post'] = request.POST
+    #
+    #     MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
+    #     formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
+    #
+    #     request.session['out_metadata_table'] = self.out_metadata_table
+    #
+    #     return (request, metadata_run_info_form, formset)
 
 
 class OutData():
@@ -639,6 +639,7 @@ class OutData():
         self.out_metadata = defaultdict(defaultdict)
         self.out_metadata_table = defaultdict(list) # public
         self.errors = set() # public
+        self.request = request
 
     # TODO: what's a difference with make_metadata_run_info_form?
     def work_with_request(self, request):
@@ -788,29 +789,58 @@ class OutData():
             self.out_metadata[i]['pool']        = self.csv_file.csv_by_header['pool'][i]
             self.out_metadata[i]['submit_code'] = self.csv_file.csv_by_header['submit_code'][i]
 
-    def edit_out_metadata(self, request):
+    def edit_out_metadata(self):
         logging.info("edit_out_metadata")
 
         try:
-            self.out_metadata = request.session['out_metadata']
+            self.out_metadata = self.request.session['out_metadata']
         except KeyError:
-            request.session['out_metadata'] = self.out_metadata
+            self.request.session['out_metadata'] = self.out_metadata
         except:
             raise
 
         for i, v in self.out_metadata.items():
-            self.out_metadata[i]['dna_region']		    = request.POST.get('csv_dna_region', False)
-            self.out_metadata[i]['has_ns']			    = request.POST.get('csv_has_ns', False)
-            self.out_metadata[i]['insert_size']		    = request.POST.get('csv_insert_size', False)
-            self.out_metadata[i]['overlap']			    = request.POST.get('csv_overlap', False)
-            self.out_metadata[i]['path_to_raw_data']	= request.POST.get('csv_path_to_raw_data', False)
-            self.out_metadata[i]['platform']			= request.POST.get('csv_platform', False)
-            self.out_metadata[i]['read_length']			= request.POST.get('csv_read_length', False)
-            self.out_metadata[i]['run']				    = request.POST.get('csv_rundate', False)
-            self.out_metadata[i]['seq_operator']		= request.POST.get('csv_seq_operator', False)
+            self.out_metadata[i]['dna_region']		    = self.request.POST.get('csv_dna_region', False)
+            self.out_metadata[i]['has_ns']			    = self.request.POST.get('csv_has_ns', False)
+            self.out_metadata[i]['insert_size']		    = self.request.POST.get('csv_insert_size', False)
+            self.out_metadata[i]['overlap']			    = self.request.POST.get('csv_overlap', False)
+            self.out_metadata[i]['path_to_raw_data']	= self.request.POST.get('csv_path_to_raw_data', False)
+            self.out_metadata[i]['platform']			= self.request.POST.get('csv_platform', False)
+            self.out_metadata[i]['read_length']			= self.request.POST.get('csv_read_length', False)
+            self.out_metadata[i]['run']				    = self.request.POST.get('csv_rundate', False)
+            self.out_metadata[i]['seq_operator']		= self.request.POST.get('csv_seq_operator', False)
+
+    def fill_out_request_session_run_info(self):
+        self.metadata.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
+        self.request.session['run_info'] = {}
+        self.request.session['run_info']['selected_rundate']         = self.metadata.selected_rundate
+        self.request.session['run_info']['selected_machine_short']   = self.metadata.selected_machine_short
+        self.request.session['run_info']['selected_machine']         = self.metadata.selected_machine
+        self.request.session['run_info']['selected_dna_region']      = self.metadata.selected_dna_region
+        self.request.session['run_info']['selected_overlap']         = self.metadata.selected_overlap
 
     def make_metadata_run_info_form(self):
-        self.form_data.submit_run_info()
+        self.fill_out_request_session_run_info()
+        if (
+                'create_vamps2_submission_csv' in self.request.session.keys() and
+                self.request.session['create_vamps2_submission_csv']
+        ):
+            self.create_vamps2_submission_csv(self.request)
+
+        self.edit_out_metadata()
+        self.request.session['out_metadata'] = self.out_data.out_metadata
+        self.request.session['files_created'] = self.files_created
+        self.request.session['run_info_form_post'] = self.request.POST
+        self.request.session['out_metadata_table'] = self.out_metadata_table
+
+
+        self.make_metadata_table()
+
+        metadata_run_info_form = CsvRunInfoUploadForm(self.request.POST)
+        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
+        formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
+
+        return (self.request, metadata_run_info_form, formset)
 
 
 class MysqlUtil():
@@ -1982,43 +2012,6 @@ class CsvMetadata():
 
         return metadata_new_project_form
 
-    # def submit_run_info(self, request): # public
-    #     self.get_selected_variables(request.POST)
-    #     request.session['run_info'] = {}
-    #     request.session['run_info']['selected_rundate']         = self.selected_rundate
-    #     request.session['run_info']['selected_machine_short']   = self.selected_machine_short
-    #     request.session['run_info']['selected_machine']         = self.selected_machine
-    #     request.session['run_info']['selected_dna_region']      = self.selected_dna_region
-    #     request.session['run_info']['selected_overlap']         = self.selected_overlap
-    #
-    #     # logging.debug("RRR request.POST from submit_run_info")
-    #     # logging.debug(request.POST)
-    #
-    #         # self.out_metadata[i]['nnnn']                 = self.csv_by_header['lane'][i]
-    #
-    #     #*) metadata table to show and edit
-    #     self.edit_out_metadata(request)
-    #     request.session['out_metadata'] = self.out_metadata
-    #
-    #     if (
-    #             'create_vamps2_submission_csv' in request.session.keys() and
-    #             request.session['create_vamps2_submission_csv']
-    #     ):
-    #         self.create_vamps2_submission_csv(request)
-    #     request.session['files_created'] = self.files_created
-    #
-    #     self.make_metadata_table()
-    #
-    #     # metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
-    #     metadata_run_info_form = CsvRunInfoUploadForm(request.POST)
-    #     request.session['run_info_form_post'] = request.POST
-    #
-    #     MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
-    #     formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
-    #
-    #     request.session['out_metadata_table'] = self.out_metadata_table
-    #
-    #     return (request, metadata_run_info_form, formset)
 
     def create_submission_metadata_file(self, request): # public
         # logging.debug("EEE: request.POST = %s" % request.POST)
