@@ -591,6 +591,7 @@ class OutData():
         self.csv_file = CsvFile(request)
         self.out_metadata = defaultdict(defaultdict)
         self.out_metadata_table = defaultdict(list) # public
+        self.errors = set() # public
 
     def work_with_request(self, request):
         has_empty_cells = self.csv_file.csv_file_upload(request)
@@ -627,10 +628,13 @@ class OutData():
         self.metadata.check_projects(csv_projects)
 
         self.make_new_out_metadata(request)
-        if self.csv_file.errors:
-            return (metadata_run_info_form, has_empty_cells)
+        self.errors.update(self.csv_file.errors)
 
-        request.session['out_metadata'] = self.out_metadata
+        self.csv_by_header_uniqued = self.csv_file.csv_by_header_uniqued
+        # TODO DRY
+        if ( not self.errors ):
+            request.session['out_metadata'] = self.out_metadata
+
         return (metadata_run_info_form, has_empty_cells)
 
     # TODO: 1) should it be here? 2) how to simplify it (case?)?
