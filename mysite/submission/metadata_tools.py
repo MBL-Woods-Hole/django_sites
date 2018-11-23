@@ -1035,11 +1035,18 @@ class OutData():
         # self.get_adaptors_full(adaptor, dna_region, domain)
 
         # ----
-        self.selected_rundate = self.request.session['run_info']['selected_rundate']
-        self.selected_machine_short = self.request.session['run_info']['selected_machine_short']
-        self.selected_machine = self.request.session['run_info']['selected_machine']
-        self.selected_dna_region = self.request.session['run_info']['selected_dna_region']
-        self.selected_overlap = self.request.session['run_info']['selected_overlap']
+        self.selected_data = {
+            "selected_rundate"      : self.request.session['run_info']['selected_rundate'],
+            "selected_machine_short": self.request.session['run_info']['selected_machine_short'],
+            "selected_machine"      : self.request.session['run_info']['selected_machine'],
+            "selected_dna_region"   : self.request.session['run_info']['selected_dna_region'],
+            "selected_overlap"      : self.request.session['run_info']['selected_overlap']
+        }
+        # self.selected_rundate = self.request.session['run_info']['selected_rundate']
+        # self.selected_machine_short = self.request.session['run_info']['selected_machine_short']
+        # self.selected_machine = self.request.session['run_info']['selected_machine']
+        # self.selected_dna_region = self.request.session['run_info']['selected_dna_region']
+        # self.selected_overlap = self.request.session['run_info']['selected_overlap']
 
         # *) ini and csv machine_info/run dir
         self.metadata.lanes_domains = self.metadata.get_lanes_domains(self.out_metadata) #move to Metadata?
@@ -1091,7 +1098,4 @@ class MysqlUtil():
             res_dict = dict(zip(column_names, row))
 
         return res_dict
-
-
-
 
