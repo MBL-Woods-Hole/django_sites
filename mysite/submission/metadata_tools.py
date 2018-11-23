@@ -309,6 +309,7 @@ class OutFiles():
     # out files
     def __init__(self, request):
         self.metadata = Metadata(request)
+        self.request = request
         self.metadata_csv_file_names = {}
         self.files_created = []  # public
         self.dirs = Dirs()
