@@ -20,7 +20,7 @@ from .models_l_env454 import Run as models_run
 from .forms import FileUploadForm, AddProjectForm, ChooseProjectForm
 from .utils import Run, Utils
 
-from .metadata_tools import CsvFile, CsvMetadata, OutData
+from .metadata_tools import CsvFile, OutData
 # , Validation
 
 def index(request):

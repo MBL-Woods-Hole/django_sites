@@ -316,8 +316,9 @@ class SelectedVals():
         }
 
     def get_selected_machine_short(self, platform):
-        self.selected_machine_short = self.machine_shortcuts_choices[platform]
-        return self.selected_machine_short
+        selected_machine_short = self.machine_shortcuts_choices[platform]
+        self.selected_data["selected_machine_short"] = selected_machine_short
+        return selected_machine_short
 
     def create_path_to_csv(self):
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
@@ -346,15 +347,18 @@ class SelectedVals():
             ini_file.close()
             self.dirs.chmod_wg(full_ini_name)
 
-    def fill_out_request_session_run_info(self):
-        # self.selected_data = self.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
+    def fill_out_request_session_run_info(self, selected_data):
+        self.selected_data = selected_data
 
-        self.request.session['run_info'] = {}
-        self.request.session['run_info']['selected_rundate']         = self.selected_data["selected_rundate"]
-        self.request.session['run_info']['selected_machine_short']   = self.selected_data["selected_machine_short"]
-        self.request.session['run_info']['selected_machine']         = self.selected_data["selected_machine"]
-        self.request.session['run_info']['selected_dna_region']      = self.selected_data["selected_dna_region"]
-        self.request.session['run_info']['selected_overlap']         = self.selected_data["selected_overlap"]
+        current_run_info = {}
+        current_run_info['selected_rundate'] = self.selected_data["selected_rundate"]
+        current_run_info['selected_machine_short'] = self.selected_data["selected_machine_short"]
+        current_run_info['selected_machine'] = self.selected_data["selected_machine"]
+        current_run_info['selected_dna_region'] = self.selected_data["selected_dna_region"]
+        current_run_info['selected_overlap'] = self.selected_data["selected_overlap"]
+
+        return current_run_info
+
 
     def get_selected_variables(self, request_post, csv_by_header_uniqued):
         # change from form if needed
@@ -889,7 +893,10 @@ class OutData():
 
     # TODO: rename or join
     def make_metadata_run_info_form(self):
-        self.fill_out_request_session_run_info()
+
+        selected_data = self.selected_data.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
+        self.request.session['run_info'] = self.selected_vals.fill_out_request_session_run_info(selected_data)
+
         if (
                 'create_vamps2_submission_csv' in self.request.session.keys() and
                 self.request.session['create_vamps2_submission_csv']
