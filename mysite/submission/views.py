@@ -75,14 +75,16 @@ def submit_run_info_and_get_csv(request):
 
 def upload_file_n_make_new_metadata(request):
     utils = Utils()
+    utils.clear_session(request)
+
     out_data = OutData(request)
     
     logging.debug("HHH")
     logging.debug("111 request.method == 'POST' and request.FILES:")
-    utils.clear_session(request)
 
-    metadata_run_info_form, has_file_errors = out_data.work_with_request(request)
+    metadata_run_info_form, has_file_errors = out_data.work_with_request()
 
+    # move "ifs" to OutData both
     if has_file_errors == 'no_file':
         errors_size = len(out_data.errors)
         context = {'header': 'Upload metadata', 'errors': out_data.errors, 'errors_size': errors_size}
@@ -98,7 +100,7 @@ def upload_file_n_make_new_metadata(request):
 
     errors_size = len(out_data.errors)
 
-    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size }
+    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size }
     
 def submit_run_info_n_edit_metadata_n_make_table(request):
     data_handler = OutData(request)

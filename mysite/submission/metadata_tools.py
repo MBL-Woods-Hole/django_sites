@@ -30,11 +30,11 @@ class CsvFile():
     2) old (from vamps)
     3) manual
     """
-    def __init__(self, metadata_obj):
+    def __init__(self, metadata_obj, out_files_obj, selected_vals_obj):
         self.utils = Utils()
         self.metadata = metadata_obj
-        # self.out_files = OutFiles(request)
-        # self.selected_vals = SelectedVals(request)
+        self.out_files = out_files_obj
+        self.selected_vals = selected_vals_obj
 
         self.csv_by_header = defaultdict(list)
         self.csv_by_header_uniqued = defaultdict(list) # public
@@ -266,7 +266,7 @@ class CsvFile():
         except:
             raise
 
-    def get_adaptor_from_csv_content(self): # TODO: move to the csv_file class
+    def get_adaptor_from_csv_content(self):
         for i in range(len(self.csv_content)-1):
             # logging.debug("+" * 9)
             adaptor    = self.csv_by_header['adaptor'][i]
@@ -274,7 +274,7 @@ class CsvFile():
             try:
                 domain     = self.csv_by_header['domain'][i]
             except IndexError:
-                domain = self.domains_per_row[i]
+                domain = self.metadata.domains_per_row[i]
             except:
                 raise
 
@@ -690,9 +690,9 @@ class Metadata():
 class OutData():
     def __init__(self, request):
         self.metadata = Metadata(request)
-        self.csv_file = CsvFile(self.metadata)
         self.out_files = OutFiles(request)
         self.selected_vals = SelectedVals(request)
+        self.csv_file = CsvFile(self.metadata, self.out_files, self.selected_vals)
         self.utils = Utils()
 
         self.out_metadata = defaultdict(defaultdict)
@@ -702,12 +702,13 @@ class OutData():
         self.request = request
 
     # TODO: what's a difference with make_metadata_run_info_form?
-    def work_with_request(self, request): #TODO: rename
-        has_empty_cells = self.csv_file.csv_file_upload(request)
+    def work_with_request(self): #TODO: rename and/or split. Upload and parse file, get_initial run info, get current selected data, fill out request.session run info, makes metadata_run_info_form, get_vamps_submission_info, makes csv_by_header, get_domain_dna_regions, get_domain_per_row, get_adaptor_from_csv_content, check_user or get_user_info, get_csv_projects, check_projects, make_new_out_metadata, collect errors, populate request.session['csv_by_header_uniqued'], populate request.session['out_metadata']
+
+        has_empty_cells = self.csv_file.csv_file_upload(self.request)
         self.csv_file.get_initial_run_info_data_dict()
-        self.current_selected_data = self.selected_vals.get_selected_variables(request.POST, self.csv_file.csv_by_header_uniqued)
-        request.session['run_info_from_csv'] = self.csv_file.run_info_from_csv
-        metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
+        self.current_selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
+        self.request.session['run_info_from_csv'] = self.csv_file.run_info_from_csv
+        metadata_run_info_form = CsvRunInfoUploadForm(initial = self.request.session['run_info_from_csv'])
 
         if not self.csv_file.vamps2_csv:
             self.metadata.get_vamps_submission_info(self.csv_file.csv_by_header_uniqued)
@@ -731,21 +732,48 @@ class OutData():
         csv_projects = self.csv_file.get_csv_projects()
         self.metadata.check_projects(csv_projects)
 
-        self.make_new_out_metadata(request)
+        self.make_new_out_metadata()
         self.errors.update(self.csv_file.errors)
 
-        self.csv_by_header_uniqued = self.csv_file.csv_by_header_uniqued
+        self.request.session['csv_by_header_uniqued'] = self.csv_file.csv_by_header_uniqued
         # TODO DRY
         if ( not self.errors ):
-            request.session['out_metadata'] = self.out_metadata
+            self.request.session['out_metadata'] = self.out_metadata
 
         return (metadata_run_info_form, has_empty_cells)
 
+    # TODO: rename or join
+    def make_metadata_run_info_form(self):
+
+        selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.request.session['csv_by_header_uniqued'])
+        self.request.session['run_info'] = self.selected_vals.fill_out_request_session_run_info(selected_data)
+
+        if (
+                'create_vamps2_submission_csv' in self.request.session.keys() and
+                self.request.session['create_vamps2_submission_csv']
+        ):
+            self.create_vamps2_submission_csv(self.request)
+
+        self.edit_out_metadata()
+        self.request.session['out_metadata'] = self.out_metadata
+        self.out_files.check_out_csv_files()
+        self.request.session['files_created'] = self.out_files.files_created #doesn't belong here
+        self.request.session['run_info_form_post'] = self.request.POST
+        self.request.session['out_metadata_table'] = self.out_metadata_table #doesn't belong here
+
+        self.make_metadata_table() #doesn't belong here
+
+        metadata_run_info_form = CsvRunInfoUploadForm(self.request.POST)
+        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
+        formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
+
+        return (self.request, metadata_run_info_form, formset)
+
     # TODO: 2) how to simplify it (case?)?
-    def make_new_out_metadata(self, request):
+    def make_new_out_metadata(self):
         logging.info("make_new_out_metadata")
 
-        if request.FILES:
+        if self.request.FILES:
             if (not self.csv_file.vamps2_csv):
                 self.make_metadata_out_from_csv()
             else:
@@ -794,7 +822,6 @@ class OutData():
                 # else there is no such user info
             except:
                 raise
-
 
             self.out_metadata[i]['dataset']				 = self.csv_file.csv_by_header['dataset_name'][i]
             self.out_metadata[i]['dataset_description']	 = self.csv_file.csv_by_header['dataset_description'][i]
@@ -886,33 +913,6 @@ class OutData():
     #     self.request.session['run_info']['selected_machine']         = self.metadata.selected_machine
     #     self.request.session['run_info']['selected_dna_region']      = self.metadata.selected_dna_region
     #     self.request.session['run_info']['selected_overlap']         = self.metadata.selected_overlap
-
-    # TODO: rename or join
-    def make_metadata_run_info_form(self):
-
-        selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
-        self.request.session['run_info'] = self.selected_vals.fill_out_request_session_run_info(selected_data)
-
-        if (
-                'create_vamps2_submission_csv' in self.request.session.keys() and
-                self.request.session['create_vamps2_submission_csv']
-        ):
-            self.create_vamps2_submission_csv(self.request)
-
-        self.edit_out_metadata()
-        self.request.session['out_metadata'] = self.out_metadata
-        self.out_files.check_out_csv_files()
-        self.request.session['files_created'] = self.out_files.files_created #doesn't belong here
-        self.request.session['run_info_form_post'] = self.request.POST
-        self.request.session['out_metadata_table'] = self.out_metadata_table #doesn't belong here
-
-        self.make_metadata_table() #doesn't belong here
-
-        metadata_run_info_form = CsvRunInfoUploadForm(self.request.POST)
-        MetadataOutCsvFormSet = formset_factory(MetadataOutCsvForm, max_num = len(self.out_metadata_table['rows']))
-        formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
-
-        return (self.request, metadata_run_info_form, formset)
 
     def make_metadata_table(self):
         logging.info("make_metadata_table")
