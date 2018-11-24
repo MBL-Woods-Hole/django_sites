@@ -30,18 +30,18 @@ class CsvFile():
     2) old (from vamps)
     3) manual
     """
-    def __init__(self, request):
+    def __init__(self, metadata_obj):
         self.utils = Utils()
-        self.metadata = Metadata(request)
-        self.out_files = OutFiles(request)
-        self.selected_vals = SelectedVals(request)
+        self.metadata = metadata_obj
+        # self.out_files = OutFiles(request)
+        # self.selected_vals = SelectedVals(request)
 
         self.csv_by_header = defaultdict(list)
         self.csv_by_header_uniqued = defaultdict(list) # public
         self.csv_content = []
         self.csv_headers = []
         self.vamps2_csv = False
-        self.csvfile = ""
+        self.csv_file_in = ""
         self.run_info_from_csv = {}
         self.errors = set() # public
 
@@ -114,6 +114,7 @@ class CsvFile():
             'tubelabel'          : {'field': 'tubelabel', 'required': False},
         }
 
+
         self.all_headers = set(self.out_files.HEADERS_TO_CSV + self.metadata.HEADERS_TO_EDIT_METADATA + list(self.HEADERS_FROM_vamps2_CSV.keys()) + list(self.HEADERS_FROM_CSV.keys()))
         # {'platform', 'barcode', 'tubelabel', 'project_description', 'project', 'domain', 'id', 'tube_number', 'runkey', 'dataset', 'project_name', 'op_empcr', 'adaptor', 'run_key', 'date_initial', 'insert_size', 'on_vamps', 'pool', 'concentration', 'data_owner', 'seq_operator', 'institution', 'sample_received', 'enzyme', 'project_title', 'email', 'env_source_name', 'duplicate', 'barcode_index', 'read_length', 'primer_suite', 'quant_method', 'trim_distal', 'env_sample_source_id', 'user', 'first_name', 'run', 'submit_code', 'dataset_name', 'direction', 'tubelabel', 'rundate', 'date_updated', 'last_name', 'amp_operator', 'dna_region', 'op_seq', 'op_amp', 'funding', 'lane', 'overlap', 'dataset_description', 'contact_name'}
 
@@ -123,20 +124,16 @@ class CsvFile():
         self.required_headers_vamps2 = [header_name for header_name, values in
                                  self.HEADERS_FROM_vamps2_CSV.items() if values['required']]
 
-    def import_from_file(self, csvfile):
+    def import_from_file(self, csv_file_in):
         logging.info("import_from_file")
 
-        self.csvfile = csvfile
+        self.csv_file_in = csv_file_in
         dialect = self.get_dialect()
 
         self.get_dict_reader()
         self.get_reader(dialect)
         # self.csv_headers, self.csv_content =
         self.parce_csv()
-
-        # self.csvfile.seek(0)
-        # self.reader.seek(0)
-        # next(self.reader)
 
         self.check_headers_presence()
         self.check_req_info_presence()
@@ -149,19 +146,19 @@ class CsvFile():
 
     def get_dialect(self):
         try:
-            open_file = codecs.EncodedFile(self.csvfile, "utf-8")
+            open_file = codecs.EncodedFile(self.csv_file_in, "utf-8")
             open_file_part = open_file.read(1024).decode("utf-8")
-            # dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csvfile, "utf-8").read(1024), delimiters=',')
+            # dialect = csv.Sniffer().sniff(codecs.EncodedFile(self.csv_file_in, "utf-8").read(1024), delimiters=',')
             dialect = csv.Sniffer().sniff(open_file_part)  # , delimiters=','
         except csv.Error as e:
-            logging.warning("Warning for %s: %s' % (self.csvfile, e)")
+            logging.warning("Warning for %s: %s' % (self.csv_file_in, e)")
             pass
-            # self.errors.append('Warning for %s: %s' % (self.csvfile, e))
+            # self.errors.append('Warning for %s: %s' % (self.csv_file_in, e))
         except:
             raise
         else:
             if dialect:
-                self.csvfile.seek(0)
+                self.csv_file_in.seek(0)
                 logging.info("dialect.delimiter")
                 logging.info(dialect.delimiter)
                 # logging.info(dir(dialect))
@@ -171,25 +168,25 @@ class CsvFile():
                 return dialect
             else:
                 logging.warning("WARNING, file %s is empty (size = %s), check it's path" % (
-                self.csvfile.name, self.csvfile.size))
+                self.csv_file_in.name, self.csv_file_in.size))
 
     def get_dict_reader(self):
         try:
-            self.csvfile.seek(0)
-            self.dict_reader = list(csv.DictReader(io.StringIO(self.csvfile.read().decode('utf-8'))))
+            self.csv_file_in.seek(0)
+            self.dict_reader = list(csv.DictReader(io.StringIO(self.csv_file_in.read().decode('utf-8'))))
         except csv.Error as e:
-            self.errors.add('%s is not a valid CSV file: %s' % (self.csvfile, e))
+            self.errors.add('%s is not a valid CSV file: %s' % (self.csv_file_in, e))
         except:
             raise
 
     def get_reader(self, dialect):
         # import io
         try:
-            self.csvfile.seek(0)
-            self.reader = csv.reader(io.StringIO(self.csvfile.read().decode('utf-8')))
+            self.csv_file_in.seek(0)
+            self.reader = csv.reader(io.StringIO(self.csv_file_in.read().decode('utf-8')))
 
         except csv.Error as e:
-            self.errors.add('%s is not a valid CSV file: %s' % (self.csvfile, e))
+            self.errors.add('%s is not a valid CSV file: %s' % (self.csv_file_in, e))
         except:
             raise
 
@@ -284,12 +281,12 @@ class CsvFile():
             self.metadata.get_adaptors_full(adaptor, dna_region, domain)
 
     def csv_file_upload(self, request):
-        csv_file = request.FILES['csv_file']
-        if csv_file.size == 0:
-            self.errors.add("The file %s is empty or does not exist." % csv_file)
+        csv_file_in = request.FILES['csv_file']
+        if csv_file_in.size == 0:
+            self.errors.add("The file %s is empty or does not exist." % csv_file_in)
             return ('no_file')
 
-        has_empty_cells = self.import_from_file(csv_file)
+        has_empty_cells = self.import_from_file(csv_file_in)
 
         if has_empty_cells: # should create errors not here
             self.errors.add("The following csv fields should not be empty: %s" % ", ".join(self.empty_cells))
@@ -307,7 +304,7 @@ class CsvFile():
 class SelectedVals():
     def __init__(self, request):
         self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
-        self.selected_data = {
+        self.current_selected_data = {
             "selected_dna_region"   : "",
             "selected_machine"      : "",
             "selected_machine_short": "",
@@ -317,13 +314,13 @@ class SelectedVals():
 
     def get_selected_machine_short(self, platform):
         selected_machine_short = self.machine_shortcuts_choices[platform]
-        self.selected_data["selected_machine_short"] = selected_machine_short
+        self.current_selected_data["selected_machine_short"] = selected_machine_short
         return selected_machine_short
 
     def create_path_to_csv(self):
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
 
-        path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.selected_data["selected_machine"] + "_info", self.selected_data["selected_rundate"])
+        path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.current_selected_data["selected_machine"] + "_info", self.current_selected_data["selected_rundate"])
         logging.debug("path_to_csv")
         logging.debug(path_to_csv)
         new_dir = self.dirs.check_and_make_dir(path_to_csv)
@@ -332,15 +329,15 @@ class SelectedVals():
     def create_out_file_names(self, pattern, out_metadata):
         self.lanes_domains = self.get_lanes_domains(out_metadata)
 
-        return {lane_domain: pattern % (self.selected_data["selected_rundate"], self.selected_data["selected_machine_short"], lane_domain) for lane_domain in self.lanes_domains} #create in Metadata
+        return {lane_domain: pattern % (self.current_selected_data["selected_rundate"], self.current_selected_data["selected_machine_short"], lane_domain) for lane_domain in self.lanes_domains} #create in Metadata
 
     def write_ini(self, path_to_csv):
-        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.selected_data["selected_rundate"], self.selected_data["selected_machine_short"])
+        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.current_selected_data["selected_rundate"], self.current_selected_data["selected_machine_short"])
         overlap_choices = dict(Overlap.OVERLAP_CHOICES)
 
         for lane_domain, ini_name in self.ini_names.items():
             ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
-                        ''' % (self.selected_data["selected_rundate"], lane_domain, self.selected_data["selected_dna_region"], path_to_raw_data, overlap_choices[self.selected_data["selected_overlap"]], self.selected_data["selected_machine"])
+                        ''' % (self.current_selected_data["selected_rundate"], lane_domain, self.current_selected_data["selected_dna_region"], path_to_raw_data, overlap_choices[self.current_selected_data["selected_overlap"]], self.current_selected_data["selected_machine"])
             full_ini_name = os.path.join(path_to_csv, ini_name)
             ini_file = open(full_ini_name, 'w')
             ini_file.write(ini_text)
@@ -348,27 +345,26 @@ class SelectedVals():
             self.dirs.chmod_wg(full_ini_name)
 
     def fill_out_request_session_run_info(self, selected_data):
-        self.selected_data = selected_data
+        self.current_selected_data = selected_data
 
         current_run_info = {}
-        current_run_info['selected_rundate'] = self.selected_data["selected_rundate"]
-        current_run_info['selected_machine_short'] = self.selected_data["selected_machine_short"]
-        current_run_info['selected_machine'] = self.selected_data["selected_machine"]
-        current_run_info['selected_dna_region'] = self.selected_data["selected_dna_region"]
-        current_run_info['selected_overlap'] = self.selected_data["selected_overlap"]
+        current_run_info['selected_rundate'] = self.current_selected_data["selected_rundate"]
+        current_run_info['selected_machine_short'] = self.current_selected_data["selected_machine_short"]
+        current_run_info['selected_machine'] = self.current_selected_data["selected_machine"]
+        current_run_info['selected_dna_region'] = self.current_selected_data["selected_dna_region"]
+        current_run_info['selected_overlap'] = self.current_selected_data["selected_overlap"]
 
         return current_run_info
-
 
     def get_selected_variables(self, request_post, csv_by_header_uniqued):
         # change from form if needed
         # if 'submit_run_info' in request_post:
         try:
-            self.selected_data["selected_machine"]       = request_post.get('csv_platform', False) or  " ".join(csv_by_header_uniqued['platform']).lower()
-            self.selected_data["selected_machine_short"] = self.selected_data["selected_machine_short"] or self.machine_shortcuts_choices[self.selected_data["selected_machine"]]
-            self.selected_data["selected_rundate"]       = request_post.get('csv_rundate', False) or " ".join(csv_by_header_uniqued['run']).lower()
-            self.selected_data["selected_dna_region"]    = request_post.get('csv_dna_region', False) or " ".join(csv_by_header_uniqued['dna_region']).lower()
-            self.selected_data["selected_overlap"]       = request_post.get('csv_overlap', False) or " ".join(csv_by_header_uniqued['overlap']).lower()
+            self.current_selected_data["selected_machine"]       = request_post.get('csv_platform', False) or  " ".join(csv_by_header_uniqued['platform']).lower()
+            self.current_selected_data["selected_machine_short"] = self.current_selected_data["selected_machine_short"] or self.machine_shortcuts_choices[self.current_selected_data["selected_machine"]]
+            self.current_selected_data["selected_rundate"]       = request_post.get('csv_rundate', False) or " ".join(csv_by_header_uniqued['run']).lower()
+            self.current_selected_data["selected_dna_region"]    = request_post.get('csv_dna_region', False) or " ".join(csv_by_header_uniqued['dna_region']).lower()
+            self.current_selected_data["selected_overlap"]       = request_post.get('csv_overlap', False) or " ".join(csv_by_header_uniqued['overlap']).lower()
         except KeyError:
             logging.debug("csv_by_header_uniqued")
             logging.debug(csv_by_header_uniqued)
@@ -379,8 +375,8 @@ class SelectedVals():
 class OutFiles():
     # out files
     def __init__(self, request):
-        self.metadata = Metadata(request)
-        self.selected_vals = SelectedVals(request)
+        # self.metadata = Metadata(request)
+        # self.selected_vals = SelectedVals(request)
 
         self.request = request
         self.metadata_csv_file_names = {}
@@ -694,22 +690,22 @@ class Metadata():
 class OutData():
     def __init__(self, request):
         self.metadata = Metadata(request)
-        self.csv_file = CsvFile(request)
+        self.csv_file = CsvFile(self.metadata)
         self.out_files = OutFiles(request)
         self.selected_vals = SelectedVals(request)
         self.utils = Utils()
 
         self.out_metadata = defaultdict(defaultdict)
         self.out_metadata_table = defaultdict(list) # public
-        self.selected_data = {}
+        self.current_selected_data = {}
         self.errors = set() # public
         self.request = request
 
     # TODO: what's a difference with make_metadata_run_info_form?
-    def work_with_request(self, request):
+    def work_with_request(self, request): #TODO: rename
         has_empty_cells = self.csv_file.csv_file_upload(request)
         self.csv_file.get_initial_run_info_data_dict()
-        self.selected_data = self.selected_vals.get_selected_variables(request.POST, self.csv_file.csv_by_header_uniqued)
+        self.current_selected_data = self.selected_vals.get_selected_variables(request.POST, self.csv_file.csv_by_header_uniqued)
         request.session['run_info_from_csv'] = self.csv_file.run_info_from_csv
         metadata_run_info_form = CsvRunInfoUploadForm(initial=request.session['run_info_from_csv'])
 
@@ -894,7 +890,7 @@ class OutData():
     # TODO: rename or join
     def make_metadata_run_info_form(self):
 
-        selected_data = self.selected_data.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
+        selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
         self.request.session['run_info'] = self.selected_vals.fill_out_request_session_run_info(selected_data)
 
         if (
@@ -1042,7 +1038,7 @@ class OutData():
         # self.get_adaptors_full(adaptor, dna_region, domain)
 
         # ----
-        self.selected_data = {
+        self.current_selected_data = {
             "selected_rundate"      : self.request.session['run_info']['selected_rundate'],
             "selected_machine_short": self.request.session['run_info']['selected_machine_short'],
             "selected_machine"      : self.request.session['run_info']['selected_machine'],
