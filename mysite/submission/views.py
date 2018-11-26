@@ -63,7 +63,7 @@ def upload_metadata(request):
 
 def choose_project(request):
     utils = Utils()
-    csv_handler = CsvMetadata(request)
+    csv_handler = CsvMetadata(request) #TODO: change
 
     metadata_run_info_form = csv_handler.new_submission(request)
 
