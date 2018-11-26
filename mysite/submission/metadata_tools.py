@@ -318,14 +318,6 @@ class SelectedVals():
         self.current_selected_data["selected_machine_short"] = selected_machine_short
         return selected_machine_short
 
-    def create_path_to_csv(self):
-        # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
-
-        path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.current_selected_data["selected_machine"] + "_info", self.current_selected_data["selected_rundate"])
-        logging.debug("path_to_csv")
-        logging.debug(path_to_csv)
-        new_dir = self.dirs.check_and_make_dir(path_to_csv)
-        return path_to_csv
 
     def create_out_file_names(self, pattern, out_metadata):
         self.lanes_domains = self.get_lanes_domains(out_metadata)
@@ -380,8 +372,8 @@ class SelectedVals():
 
     def get_selected_val(self, request, metadata_names_arr):
         for metadata_name in metadata_names_arr:
-            if metadata_name == 'csv_plarform':
-                print(metadata_name)
+            # if metadata_name == 'csv_plarform':
+            #     print(metadata_name)
             selected_val = request.POST.get(metadata_name, False)
                 # self.get_selected_val(run_info_dict, metadata_name)
             if (not selected_val):
@@ -477,13 +469,21 @@ class OutFiles():
             writers[lane_domain].writerow(to_write)
 
     def check_out_csv_files(self, path_to_csv = None):
-        if not path_to_csv:
-            path_to_csv = self.create_path_to_csv()
         for lane_domain, file_name in self.metadata_csv_file_names.items():
             if os.path.isfile(os.path.join(path_to_csv, file_name)):
                 curr_file = os.path.join(path_to_csv, file_name)
                 self.files_created.append(curr_file)
                 self.dirs.chmod_wg(curr_file)
+
+    def create_path_to_csv(self, selected_data):
+        # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
+
+        path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, selected_data["selected_machine"] + "_info", selected_data["selected_rundate"])
+        logging.debug("path_to_csv")
+        logging.debug(path_to_csv)
+        new_dir = self.dirs.check_and_make_dir(path_to_csv)
+        return path_to_csv
+
 
 
 class Metadata():
@@ -515,9 +515,9 @@ class Metadata():
         self.METADATA_NAMES = {}
         self.METADATA_NAMES['selected_machine'] = ['csv_platform', 'platform']
         self.METADATA_NAMES['selected_machine_short'] = ['selected_machine_short', '']
-        self.METADATA_NAMES['selected_machine'] = ['csv_rundate', 'run']
-        self.METADATA_NAMES['selected_machine'] = ['csv_dna_region', 'dna_region']
-        self.METADATA_NAMES['selected_machine'] = ['csv_overlap', 'overlap']
+        self.METADATA_NAMES['selected_rundate'] = ['csv_rundate', 'run']
+        self.METADATA_NAMES['selected_dna_region'] = ['csv_dna_region', 'dna_region']
+        self.METADATA_NAMES['selected_overlap'] = ['csv_overlap', 'overlap']
 
 
     def get_lanes_domains(self, out_metadata):
@@ -801,7 +801,9 @@ class OutData():
 
         self.edit_out_metadata()
         self.request.session['out_metadata'] = self.out_metadata
-        self.out_files.check_out_csv_files()
+        if (not path_to_csv):
+            path_to_csv = self.out_files.create_path_to_csv(selected_data)
+        self.out_files.check_out_csv_files(path_to_csv)
         self.request.session['files_created'] = self.out_files.files_created #doesn't belong here
         self.request.session['run_info_form_post'] = self.request.POST
         self.request.session['out_metadata_table'] = self.out_metadata_table #doesn't belong here
@@ -1099,7 +1101,7 @@ class OutData():
         # *) ini and csv machine_info/run dir
         self.metadata.lanes_domains = self.metadata.get_lanes_domains(self.out_metadata) #move to Metadata?
         # TODO: from here move to OutFiles
-        path_to_csv = self.out_files.create_path_to_csv()
+        path_to_csv = self.out_files.create_path_to_csv(selected_data)
 
         # *) validation
         formset = MetadataOutCsvFormSet(my_post_dict)
