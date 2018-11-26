@@ -302,8 +302,9 @@ class CsvFile():
         return csv_projects
 
 class SelectedVals():
-    def __init__(self, request):
+    def __init__(self, request, METADATA_NAMES):
         self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
+        self.METADATA_NAMES = METADATA_NAMES
         self.current_selected_data = {
             "selected_dna_region"   : "",
             "selected_machine"      : "",
@@ -358,46 +359,50 @@ class SelectedVals():
 
     def get_selected_variables(self, request):
         # change from form if needed
-        csv_run_info_dict = {}
-        if 'run_info_from_csv' in request.session.keys():
-            csv_run_info_dict = request.session
-        elif 'submit_run_info' in request.POST.keys():
-            csv_run_info_dict = request.POST
 
-        # if 'submit_run_info' in request_post:
-        try:
-            # csv_by_header_uniqued = request.session['csv_by_header_uniqued']
-            out_metadata = request.session['out_metadata']
-        except:
-            out_metadata = defaultdict(int)
+        for selected_name, metadata_names_arr in self.METADATA_NAMES.items():
+            self.current_selected_data[selected_name] = self.get_selected_val(request, metadata_names_arr)
 
-        try:
-            # TODO: split into "get_selected_machine" etc. and use everywhere
-            # self.current_selected_data["selected_machine"]       = csv_run_info_dict.get('csv_platform', False) or  " ".join(out_metadata['platform']).lower()
-            self.current_selected_data["selected_machine"] = self.get_selected_machine(request)
-            self.current_selected_data["selected_machine_short"] = self.current_selected_data["selected_machine_short"] or self.machine_shortcuts_choices[self.current_selected_data["selected_machine"]]
-            self.current_selected_data["selected_rundate"]       = csv_run_info_dict.get('csv_rundate', False) or " ".join(out_metadata['run']).lower()
-            self.current_selected_data["selected_dna_region"]    = csv_run_info_dict.get('csv_dna_region', False) or " ".join(out_metadata['dna_region']).lower()
-            self.current_selected_data["selected_overlap"]       = csv_run_info_dict.get('csv_overlap', False) or " ".join(out_metadata['overlap']).lower()
-        except KeyError:
-            logging.debug("out_metadata")
-            logging.debug(out_metadata)
-            pass
-        except:
-            raise
+        # csv_run_info_dict = {}
+        # if 'run_info_from_csv' in request.session.keys():
+        #     csv_run_info_dict = request.session
+        # elif 'submit_run_info' in request.POST.keys():
+        #     csv_run_info_dict = request.POST
+        #
+        # # if 'submit_run_info' in request_post:
+        # try:
+        #     # csv_by_header_uniqued = request.session['csv_by_header_uniqued']
+        #     out_metadata = request.session['out_metadata']
+        # except:
+        #     out_metadata = defaultdict(int)
 
-    def get_selected_machine(self, request):
-        run_info_dict = request.POST
-        selected_val = run_info_dict.get('csv_platform', False)
-        if (not selected_val):
-            selected_val = run_info_dict.get('platform', False)
-        if (not selected_val):
-            run_info_dict = request.session
-            selected_val = run_info_dict.get('csv_platform', False)
+        # try:
+        #     # TODO: split into "get_selected_machine" etc. and use everywhere
+        #     # self.current_selected_data["selected_machine"]       = csv_run_info_dict.get('csv_platform', False) or  " ".join(out_metadata['platform']).lower()
+        #     self.current_selected_data["selected_machine"] = self.get_selected_machine(request)
+        #     self.current_selected_data["selected_machine_short"] = self.current_selected_data["selected_machine_short"] or self.machine_shortcuts_choices[self.current_selected_data["selected_machine"]]
+        #     self.current_selected_data["selected_rundate"]       = csv_run_info_dict.get('csv_rundate', False) or " ".join(out_metadata['run']).lower()
+        #     self.current_selected_data["selected_dna_region"]    = csv_run_info_dict.get('csv_dna_region', False) or " ".join(out_metadata['dna_region']).lower()
+        #     self.current_selected_data["selected_overlap"]       = csv_run_info_dict.get('csv_overlap', False) or " ".join(out_metadata['overlap']).lower()
+        # except KeyError:
+        #     logging.debug("out_metadata")
+        #     logging.debug(out_metadata)
+        #     pass
+        # except:
+        #     raise
+
+    def get_selected_val(self, request, metadata_names_arr):
+        for metadata_name in metadata_names_arr:
+            selected_val = request.POST.get(metadata_name, False)
+                # self.get_selected_val(run_info_dict, metadata_name)
             if (not selected_val):
-                selected_val = run_info_dict.get('platform', False)
+                selected_val = request.session.get(metadata_name, False)
+            else:
+                return selected_val.lower()
+        # return selected_val
 
-        return selected_val.lower()
+    # def get_selected_val(self, run_info_dict, metadata_name):
+    #     return run_info_dict.get(metadata_name, False)
 
     # def get_selected_machine_short(self, run_info_dict):
     #
@@ -751,13 +756,13 @@ class OutData():
     def __init__(self, request):
         self.metadata = Metadata(request)
         self.out_files = OutFiles(request)
-        self.selected_vals = SelectedVals(request)
+        self.selected_vals = SelectedVals(request, self.metadata.METADATA_NAMES)
         self.csv_file = CsvFile(self.metadata, self.out_files, self.selected_vals)
         self.utils = Utils()
 
-        self.out_metadata = defaultdict(int)
+        self.out_metadata = defaultdict()
         self.out_metadata_table = defaultdict(list) # public
-        self.current_selected_data = {}
+        self.current_selected_data = defaultdict()
         self.errors = set() # public
         self.request = request
 
