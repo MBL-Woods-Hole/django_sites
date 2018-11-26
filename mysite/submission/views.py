@@ -34,6 +34,7 @@ def help(request):
     return render(request, 'submission/help.html', {'header': 'Help and tips'})
 
 def upload_metadata(request):
+    out_data = OutData(request)
     # error_message = ""
     """TODO:
     https://docs.djangoproject.com/en/dev/ref/forms/api/#dynamic-initial-values
@@ -43,29 +44,29 @@ def upload_metadata(request):
     # csv_handler = CsvMetadata(request)
 
     if request.method == 'POST' and request.FILES and 'file_upload' in request.POST:
-        context = upload_file_n_make_new_metadata(request)
+        context = upload_file_n_make_new_metadata(request, out_data)
 
     elif 'submit_run_info' in request.POST:
-        context = submit_run_info_n_edit_metadata_n_make_table(request)
+        context = submit_run_info_n_edit_metadata_n_make_table(request, out_data)
 
     elif 'submit_run_info_and_get_csv' in request.POST:
         context = submit_run_info_and_get_csv(request)
 
     elif 'choose_project' in request.POST:
-        context = choose_project(request)
+        context = choose_project(request, out_data)
 
     elif 'create_submission_metadata_file' in request.POST:
-        context = edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request)
+        context = edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request, out_data)
     else:
         context = initial_form()
 
     return render(request, 'submission/upload_metadata.html', context)
 
-def choose_project(request):
+def choose_project(request, out_data):
     utils = Utils()
-    csv_handler = CsvMetadata(request) #TODO: change
+    # csv_handler = CsvMetadata(request) #TODO: change
 
-    metadata_run_info_form = csv_handler.new_submission(request)
+    metadata_run_info_form = out_data.new_submission(request)
 
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued}
 
@@ -73,11 +74,11 @@ def submit_run_info_and_get_csv(request):
     request.session['create_vamps2_submission_csv'] = True
     return submit_run_info_n_edit_metadata_n_make_table(request)
 
-def upload_file_n_make_new_metadata(request):
+def upload_file_n_make_new_metadata(request, out_data):
     utils = Utils()
     utils.clear_session(request)
 
-    out_data = OutData(request)
+    # out_data = OutData(request)
     
     logging.debug("HHH")
     logging.debug("111 request.method == 'POST' and request.FILES:")
@@ -102,26 +103,26 @@ def upload_file_n_make_new_metadata(request):
 
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size }
     
-def submit_run_info_n_edit_metadata_n_make_table(request):
-    data_handler = OutData(request)
+def submit_run_info_n_edit_metadata_n_make_table(request, out_data):
+    # out_data = OutData(request)
     
     logging.debug("HHH")
     logging.debug("333 submit_run_info in request.POST")
 
-    request, metadata_run_info_form, formset = data_handler.make_metadata_run_info_form()
+    request, metadata_run_info_form, formset = out_data.make_metadata_run_info_form()
 
     errors_size = len(metadata_run_info_form.errors)
 
     context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'files_created': request.session['files_created']}
     if errors_size > 0:
-        context.update({'csv_by_header_uniqued': data_handler.csv_by_header_uniqued, 'errors': data_handler.errors, 'errors_size': errors_size })
+        context.update({'csv_by_header_uniqued': out_data.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size })
     else:
-        context.update({'metadata_out_csv_form': formset, 'out_metadata_table': data_handler.out_metadata_table})
+        context.update({'metadata_out_csv_form': formset, 'out_metadata_table': out_data.out_metadata_table})
 
     return context
             
-def edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request):
-    out_data = OutData(request)
+def edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request, out_data):
+    # out_data = OutData(request)
 
     logging.debug("HHH")
     logging.debug("444 create_submission_metadata_file in request.POST")
