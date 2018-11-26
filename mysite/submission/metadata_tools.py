@@ -530,6 +530,14 @@ class Metadata():
 
         self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
 
+        self.METADATA_NAMES = {}
+        self.METADATA_NAMES['selected_machine'] = ['csv_platform', 'platform']
+        self.METADATA_NAMES['selected_machine_short'] = ['selected_machine_short', '']
+        self.METADATA_NAMES['selected_machine'] = ['csv_rundate', 'run']
+        self.METADATA_NAMES['selected_machine'] = ['csv_dna_region', 'dna_region']
+        self.METADATA_NAMES['selected_machine'] = ['csv_overlap', 'overlap']
+
+
     def get_lanes_domains(self, out_metadata):
         domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         lanes_domains = []
