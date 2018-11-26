@@ -760,7 +760,7 @@ class OutData():
         self.csv_file = CsvFile(self.metadata, self.out_files, self.selected_vals)
         self.utils = Utils()
 
-        self.out_metadata = defaultdict()
+        self.out_metadata = defaultdict(lambda: defaultdict(lambda: 0))
         self.out_metadata_table = defaultdict(list) # public
         self.current_selected_data = defaultdict()
         self.errors = set() # public
