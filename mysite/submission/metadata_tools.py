@@ -356,21 +356,43 @@ class SelectedVals():
 
         return current_run_info
 
-    def get_selected_variables(self, request_post, csv_by_header_uniqued):
+    def get_selected_variables(self, request):
         # change from form if needed
         # if 'submit_run_info' in request_post:
         try:
-            self.current_selected_data["selected_machine"]       = request_post.get('csv_platform', False) or  " ".join(csv_by_header_uniqued['platform']).lower()
+            # csv_by_header_uniqued = request.session['csv_by_header_uniqued']
+            out_metadata = request.session['out_metadata']
+        except:
+            out_metadata = defaultdict()
+        try:
+            self.current_selected_data["selected_machine"]       = request.POST.get('csv_platform', False) or  " ".join(out_metadata['platform']).lower()
             self.current_selected_data["selected_machine_short"] = self.current_selected_data["selected_machine_short"] or self.machine_shortcuts_choices[self.current_selected_data["selected_machine"]]
-            self.current_selected_data["selected_rundate"]       = request_post.get('csv_rundate', False) or " ".join(csv_by_header_uniqued['run']).lower()
-            self.current_selected_data["selected_dna_region"]    = request_post.get('csv_dna_region', False) or " ".join(csv_by_header_uniqued['dna_region']).lower()
-            self.current_selected_data["selected_overlap"]       = request_post.get('csv_overlap', False) or " ".join(csv_by_header_uniqued['overlap']).lower()
+            self.current_selected_data["selected_rundate"]       = request.POST.get('csv_rundate', False) or " ".join(out_metadata['run']).lower()
+            self.current_selected_data["selected_dna_region"]    = request.POST.get('csv_dna_region', False) or " ".join(out_metadata['dna_region']).lower()
+            self.current_selected_data["selected_overlap"]       = request.POST.get('csv_overlap', False) or " ".join(out_metadata['overlap']).lower()
         except KeyError:
-            logging.debug("csv_by_header_uniqued")
-            logging.debug(csv_by_header_uniqued)
+            logging.debug("out_metadata")
+            logging.debug(out_metadata)
             pass
         except:
             raise
+
+
+    # def get_selected_variables(self, request_post, csv_by_header_uniqued):
+    #     # change from form if needed
+    #     # if 'submit_run_info' in request_post:
+    #     try:
+    #         self.current_selected_data["selected_machine"]       = request_post.get('csv_platform', False) or  " ".join(csv_by_header_uniqued['platform']).lower()
+    #         self.current_selected_data["selected_machine_short"] = self.current_selected_data["selected_machine_short"] or self.machine_shortcuts_choices[self.current_selected_data["selected_machine"]]
+    #         self.current_selected_data["selected_rundate"]       = request_post.get('csv_rundate', False) or " ".join(csv_by_header_uniqued['run']).lower()
+    #         self.current_selected_data["selected_dna_region"]    = request_post.get('csv_dna_region', False) or " ".join(csv_by_header_uniqued['dna_region']).lower()
+    #         self.current_selected_data["selected_overlap"]       = request_post.get('csv_overlap', False) or " ".join(csv_by_header_uniqued['overlap']).lower()
+    #     except KeyError:
+    #         logging.debug("csv_by_header_uniqued")
+    #         logging.debug(csv_by_header_uniqued)
+    #         pass
+    #     except:
+    #         raise
 
 class OutFiles():
     # out files
@@ -706,7 +728,9 @@ class OutData():
 
         has_empty_cells = self.csv_file.csv_file_upload(self.request)
         self.csv_file.get_initial_run_info_data_dict()
-        self.current_selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
+        self.current_selected_data = self.selected_vals.get_selected_variables(self.request)
+
+        # self.current_selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
         self.request.session['run_info_from_csv'] = self.csv_file.run_info_from_csv
         metadata_run_info_form = CsvRunInfoUploadForm(initial = self.request.session['run_info_from_csv'])
 
@@ -745,7 +769,8 @@ class OutData():
     # TODO: rename or join
     def make_metadata_run_info_form(self):
 
-        selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.request.session['csv_by_header_uniqued'])
+        # selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.request.session['csv_by_header_uniqued'])
+        selected_data = self.selected_vals.get_selected_variables(self.request)
         self.request.session['run_info'] = self.selected_vals.fill_out_request_session_run_info(selected_data)
 
         if (
