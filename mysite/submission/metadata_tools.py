@@ -346,7 +346,8 @@ class SelectedVals():
             self.dirs.chmod_wg(full_ini_name)
 
     def fill_out_request_session_run_info(self, selected_data):
-        self.current_selected_data = selected_data
+        if selected_data:
+            self.current_selected_data = selected_data
 
         current_run_info = {}
         current_run_info['selected_rundate'] = self.current_selected_data["selected_rundate"]
@@ -359,58 +360,34 @@ class SelectedVals():
 
     def get_selected_variables(self, request):
         # change from form if needed
+        current_selected_data = self.current_selected_data
+        selected_machine_short = self.current_selected_data["selected_machine_short"]
 
         for selected_name, metadata_names_arr in self.METADATA_NAMES.items():
-            self.current_selected_data[selected_name] = self.get_selected_val(request, metadata_names_arr)
+            current_selected_data[selected_name] = self.get_selected_val(request, metadata_names_arr)
 
-        # csv_run_info_dict = {}
-        # if 'run_info_from_csv' in request.session.keys():
-        #     csv_run_info_dict = request.session
-        # elif 'submit_run_info' in request.POST.keys():
-        #     csv_run_info_dict = request.POST
-        #
-        # # if 'submit_run_info' in request_post:
-        # try:
-        #     # csv_by_header_uniqued = request.session['csv_by_header_uniqued']
-        #     out_metadata = request.session['out_metadata']
-        # except:
-        #     out_metadata = defaultdict(int)
+        try:
+            current_selected_data["selected_machine_short"] = selected_machine_short or self.machine_shortcuts_choices[current_selected_data["selected_machine"]] #            platform = "".join(self.csv_by_header_uniqued['platform']).lower()    # selected_machine_short = self.selected_vals.get_selected_machine_short(platform)
+        except KeyError:
+            pass
+        except:
+            raise
 
-        # try:
-        #     # TODO: split into "get_selected_machine" etc. and use everywhere
-        #     # self.current_selected_data["selected_machine"]       = csv_run_info_dict.get('csv_platform', False) or  " ".join(out_metadata['platform']).lower()
-        #     self.current_selected_data["selected_machine"] = self.get_selected_machine(request)
-        #     self.current_selected_data["selected_machine_short"] = self.current_selected_data["selected_machine_short"] or self.machine_shortcuts_choices[self.current_selected_data["selected_machine"]]
-        #     self.current_selected_data["selected_rundate"]       = csv_run_info_dict.get('csv_rundate', False) or " ".join(out_metadata['run']).lower()
-        #     self.current_selected_data["selected_dna_region"]    = csv_run_info_dict.get('csv_dna_region', False) or " ".join(out_metadata['dna_region']).lower()
-        #     self.current_selected_data["selected_overlap"]       = csv_run_info_dict.get('csv_overlap', False) or " ".join(out_metadata['overlap']).lower()
-        # except KeyError:
-        #     logging.debug("out_metadata")
-        #     logging.debug(out_metadata)
-        #     pass
-        # except:
-        #     raise
+        if current_selected_data:
+            self.current_selected_data = current_selected_data
+
+        return self.current_selected_data
 
     def get_selected_val(self, request, metadata_names_arr):
         for metadata_name in metadata_names_arr:
+            if metadata_name == 'csv_plarform':
+                print(metadata_name)
             selected_val = request.POST.get(metadata_name, False)
                 # self.get_selected_val(run_info_dict, metadata_name)
             if (not selected_val):
                 selected_val = request.session.get(metadata_name, False)
             else:
                 return selected_val.lower()
-        # return selected_val
-
-    # def get_selected_val(self, run_info_dict, metadata_name):
-    #     return run_info_dict.get(metadata_name, False)
-
-    # def get_selected_machine_short(self, run_info_dict):
-    #
-    # def get_selected_rundate(self, run_info_dict):
-    #
-    # def get_selected_dna_region(self, run_info_dict):
-    #
-    # def get_selected_overlap(self, run_info_dict):
 
 
     # def get_selected_variables(self, request_post, csv_by_header_uniqued):
@@ -802,7 +779,7 @@ class OutData():
         self.make_new_out_metadata()
         self.errors.update(self.csv_file.errors)
 
-        self.request.session['csv_by_header_uniqued'] = self.csv_file.csv_by_header_uniqued
+        # self.request.session['csv_by_header_uniqued'] = self.csv_file.csv_by_header_uniqued
         # TODO DRY
         if ( not self.errors ):
             self.request.session['out_metadata'] = self.out_metadata
