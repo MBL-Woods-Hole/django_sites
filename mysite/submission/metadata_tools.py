@@ -318,12 +318,6 @@ class SelectedVals():
         self.current_selected_data["selected_machine_short"] = selected_machine_short
         return selected_machine_short
 
-
-    def create_out_file_names(self, pattern, out_metadata):
-        self.lanes_domains = self.get_lanes_domains(out_metadata)
-
-        return {lane_domain: pattern % (self.current_selected_data["selected_rundate"], self.current_selected_data["selected_machine_short"], lane_domain) for lane_domain in self.lanes_domains} #create in Metadata
-
     def write_ini(self, path_to_csv):
         path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.current_selected_data["selected_rundate"], self.current_selected_data["selected_machine_short"])
         overlap_choices = dict(Overlap.OVERLAP_CHOICES)
@@ -401,9 +395,6 @@ class SelectedVals():
 class OutFiles():
     # out files
     def __init__(self, request):
-        # self.metadata = Metadata(request)
-        # self.selected_vals = SelectedVals(request)
-
         self.request = request
         self.metadata_csv_file_names = {}
         self.files_created = []  # public
@@ -411,48 +402,24 @@ class OutFiles():
         self.lanes_domains = []
         self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
+    def create_ini_names(self, out_metadata, metadata_obj):
+        self.ini_names = self.create_out_file_names("%s_%s_%s_run_info.ini", out_metadata, metadata_obj)
 
-    # def create_path_to_csv(self):
-    #     # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
-    #     # logging.debug("self.selected_machine from create_path_to_csv = %s" % (self.selected_machine))
-    #
-    #     path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.metadata.selected_machine + "_info", self.metadata.selected_rundate)
-    #     logging.debug("path_to_csv")
-    #     logging.debug(path_to_csv)
-    #     new_dir = self.dirs.check_and_make_dir(path_to_csv)
-    #     return path_to_csv
+    def create_out_file_names(self, pattern, out_metadata, metadata_obj):
+        self.lanes_domains = metadata_obj.get_lanes_domains(out_metadata)
 
-    # def create_out_file_names(self, pattern, out_metadata):
-    #     self.lanes_domains = self.metadata.get_lanes_domains(out_metadata)
-    #
-    #     return {lane_domain: pattern % (self.metadata.selected_rundate, self.metadata.selected_machine_short, lane_domain) for lane_domain in self.lanes_domains} #create in Metadata
+        return {lane_domain: pattern % (self.current_selected_data["selected_rundate"], self.current_selected_data["selected_machine_short"], lane_domain) for lane_domain in self.lanes_domains} #create in Metadata
 
-    def create_ini_names(self, out_metadata):
-        self.ini_names = self.create_out_file_names("%s_%s_%s_run_info.ini", out_metadata)
-
-    def make_out_metadata_csv_file_names(self, out_metadata):
+    def create_out_metadata_csv_file_names(self, out_metadata, metadata_obj):
         # OLD: metadata_20160803_1_B.csv
         # NEW: metadata_20151111_hs_1_A.csv
-        self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv", out_metadata)
+        self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv", out_metadata, metadata_obj)
 
-    # def write_ini(self, path_to_csv):
-    #     path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.metadata.selected_rundate, self.metadata.selected_machine_short)
-    #     overlap_choices = dict(Overlap.OVERLAP_CHOICES)
-    #
-    #     for lane_domain, ini_name in self.ini_names.items():
-    #         ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
-    #                     ''' % (self.metadata.selected_rundate, lane_domain, self.metadata.selected_dna_region, path_to_raw_data, overlap_choices[self.metadata.selected_overlap], self.metadata.selected_machine)
-    #         full_ini_name = os.path.join(path_to_csv, ini_name)
-    #         ini_file = open(full_ini_name, 'w')
-    #         ini_file.write(ini_text)
-    #         ini_file.close()
-    #         self.dirs.chmod_wg(full_ini_name)
-
-    def write_out_metadata_to_csv(self, path_to_csv, out_metadata):
+    def write_out_metadata_to_csv(self, path_to_csv, out_metadata, metadata_obj):
         logging.info("write_out_metadata_to_csv")
 
         writers = {}
-        self.make_out_metadata_csv_file_names(out_metadata)
+        self.create_out_metadata_csv_file_names(out_metadata, metadata_obj)
         for lane_domain in self.metadata_csv_file_names.keys():
             writers[lane_domain] = csv.DictWriter(open(os.path.join(path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
@@ -858,6 +825,7 @@ class OutData():
             except:
                 raise
             try:
+                # TODO: change as get_selected
                 self.out_metadata[i]['contact_name']         = self.metadata.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.metadata.user_info_arr[curr_submit_code]['last_name']
                 self.out_metadata[i]['email'] = self.metadata.user_info_arr[curr_submit_code]['email']
                 self.out_metadata[i]['data_owner']           = self.metadata.user_info_arr[curr_submit_code]['vamps_name']
@@ -876,6 +844,7 @@ class OutData():
             except:
                 raise
 
+            # TODO: change as get_selected
             self.out_metadata[i]['dataset']				 = self.csv_file.csv_by_header['dataset_name'][i]
             self.out_metadata[i]['dataset_description']	 = self.csv_file.csv_by_header['dataset_description'][i]
             self.out_metadata[i]['dna_region']			 = self.csv_file.csv_by_header['dna_region'][i]
@@ -957,15 +926,6 @@ class OutData():
                     pass
                 except:
                     raise
-
-    # def fill_out_request_session_run_info(self):
-    #     self.metadata.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
-    #     self.request.session['run_info'] = {}
-    #     self.request.session['run_info']['selected_rundate']         = self.metadata.selected_rundate
-    #     self.request.session['run_info']['selected_machine_short']   = self.metadata.selected_machine_short
-    #     self.request.session['run_info']['selected_machine']         = self.metadata.selected_machine
-    #     self.request.session['run_info']['selected_dna_region']      = self.metadata.selected_dna_region
-    #     self.request.session['run_info']['selected_overlap']         = self.metadata.selected_overlap
 
     def make_metadata_table(self):
         logging.info("make_metadata_table")
@@ -1090,7 +1050,7 @@ class OutData():
         #
         # self.get_adaptors_full(adaptor, dna_region, domain)
 
-        # ----
+        #TODO: change as get_selected (for name get...)
         self.current_selected_data = {
             "selected_rundate"      : self.request.session['run_info']['selected_rundate'],
             "selected_machine_short": self.request.session['run_info']['selected_machine_short'],
@@ -1098,16 +1058,11 @@ class OutData():
             "selected_dna_region"   : self.request.session['run_info']['selected_dna_region'],
             "selected_overlap"      : self.request.session['run_info']['selected_overlap']
         }
-        # self.selected_rundate = self.request.session['run_info']['selected_rundate']
-        # self.selected_machine_short = self.request.session['run_info']['selected_machine_short']
-        # self.selected_machine = self.request.session['run_info']['selected_machine']
-        # self.selected_dna_region = self.request.session['run_info']['selected_dna_region']
-        # self.selected_overlap = self.request.session['run_info']['selected_overlap']
 
         # *) ini and csv machine_info/run dir
         self.metadata.lanes_domains = self.metadata.get_lanes_domains(self.out_metadata) #move to Metadata?
         # TODO: from here move to OutFiles
-        path_to_csv = self.out_files.create_path_to_csv(selected_data)
+        path_to_csv = self.out_files.create_path_to_csv(self.current_selected_data)
 
         # *) validation
         formset = MetadataOutCsvFormSet(my_post_dict)
@@ -1115,12 +1070,12 @@ class OutData():
         if (len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0):
 
             # *) ini files
-            self.out_files.create_ini_names(self.out_metadata)
+            self.out_files.create_ini_names(self.out_metadata, self.metadata)
             self.out_files.write_ini(path_to_csv)
 
             # *) metadata csv files
-            self.out_files.make_out_metadata_csv_file_names()
-            self.out_files.write_out_metadata_to_csv(path_to_csv, self.out_metadata)
+            self.out_files.create_out_metadata_csv_file_names(self.out_metadata, self.metadata)
+            self.out_files.write_out_metadata_to_csv(path_to_csv, self.out_metadata, self.metadata)
 
             # *) check if csv was created
             self.out_files.check_out_csv_files(path_to_csv)
