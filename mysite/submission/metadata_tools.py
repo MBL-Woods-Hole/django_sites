@@ -801,8 +801,14 @@ class OutData():
 
         self.edit_out_metadata()
         self.request.session['out_metadata'] = self.out_metadata
-        if (not path_to_csv):
-            path_to_csv = self.out_files.create_path_to_csv(selected_data)
+        # try:
+        #     path_to_csv
+        # except NameError:
+        #     path_to_csv = self.out_files.create_path_to_csv(selected_data)
+        # except:
+        #     raise
+        #
+        path_to_csv = self.out_files.create_path_to_csv(selected_data)
         self.out_files.check_out_csv_files(path_to_csv)
         self.request.session['files_created'] = self.out_files.files_created #doesn't belong here
         self.request.session['run_info_form_post'] = self.request.POST
