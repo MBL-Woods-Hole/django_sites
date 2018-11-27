@@ -468,6 +468,8 @@ class Metadata():
         if (self.utils.is_local(request)):
             self.db_prefix = "test_"
 
+        self.suite_domain_choices = dict(Domain.SUITE_DOMAIN_CHOICES)
+
         self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
 
         self.METADATA_NAMES = {}
@@ -621,28 +623,6 @@ class Metadata():
                     domain = d
                     break
             self.domains_per_row.append(domain)
-
-    def make_metadata_out_from_project_data(self, vamps2_dict):
-        # TODO: test with csv if changes still work from
-        primer_suites = self.get_primer_suites()
-        info_list_len = len(vamps2_dict)
-        self.get_domain_per_row(info_list_len)
-
-        for i in range(info_list_len):
-            self.out_metadata[i] = self.utils.make_an_empty_dict_from_set(self.all_headers)
-            self.out_metadata[i].update(vamps2_dict[i])
-
-            try: # dump the whole vamps2_dict to out_metadata, then add if key is different
-                self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
-                self.out_metadata[i]['dna_region']			 = self.dna_region
-                self.out_metadata[i]['domain']			     = self.domains_per_row[i]
-                self.out_metadata[i]['lane']				 = '1' # default
-                self.out_metadata[i]['primer_suite']		 = primer_suites[i]
-                # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
-            except IndexError:
-                pass
-            except:
-                raise
 
     def get_primer_suites(self):
         primer_suites = []
@@ -837,6 +817,29 @@ class OutData():
         else:
             if self.vamps2_project_results:
               self.make_metadata_out_from_project_data(self.vamps2_project_results)
+
+    def make_metadata_out_from_project_data(self, vamps2_dict):
+        # TODO: test with csv if changes still work from
+        primer_suites = self.metadata.get_primer_suites()
+        info_list_len = len(vamps2_dict)
+        self.metadata.get_domain_per_row(info_list_len)
+
+        for i in range(info_list_len):
+            # dump the whole vamps2_dict to out_metadata, then add if key is different
+            self.out_metadata[i] = self.utils.make_an_empty_dict_from_set(self.csv_file.all_headers)
+            self.out_metadata[i].update(vamps2_dict[i])
+
+            try:
+                self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
+                self.out_metadata[i]['dna_region']			 = vamps2_dict[i]['dna_region'] or self.request.session['run_info_from_csv']['csv_dna_region']
+                self.out_metadata[i]['domain']			     = self.metadata.domains_per_row[i]
+                self.out_metadata[i]['lane']				 = '1' # default
+                self.out_metadata[i]['primer_suite']		 = primer_suites[i]
+                # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
+            except IndexError:
+                pass
+            except:
+                raise
 
     def make_metadata_out_from_csv(self):
         for i in range(len(self.csv_file.csv_content)-1):
