@@ -381,14 +381,14 @@ class SelectedVals():
 
 class OutFiles():
     # out files
-    def __init__(self, request, metadata_obj, out_files_obj):
+    def __init__(self, request, metadata_obj, selected_vals_obj):
         self.request = request
         self.metadata_obj = metadata_obj
-        self.out_files_obj = out_files_obj
+        self.selected_vals_obj = selected_vals_obj
         try:
             self.current_selected_data = self.request.session['run_info']
         except KeyError:
-            self.current_selected_data = self.out_files_obj.current_selected_data
+            self.current_selected_data = self.selected_vals_obj.current_selected_data
         except:
             raise
 
@@ -415,7 +415,8 @@ class OutFiles():
         logging.info("write_out_metadata_to_csv")
 
         writers = {}
-        self.create_out_metadata_csv_file_names(out_metadata)
+        if (len(self.metadata_csv_file_names.keys()) == 0):
+            self.create_out_metadata_csv_file_names(out_metadata)
         for lane_domain in self.metadata_csv_file_names.keys():
             writers[lane_domain] = csv.DictWriter(open(os.path.join(path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
@@ -469,13 +470,9 @@ class Metadata():
         self.utils = Utils()
         self.mysql_util = MysqlUtil()
         self.vamps_submissions = {}
-        # self.selected_machine_short = ""
-        # self.selected_machine = ""
-        # self.selected_rundate = ""
         self.domains_per_row = []
         self.errors = set() # public
         self.user_info_arr = {}
-        # self.machine_shortcuts_choices = dict(Machine.MACHINE_SHORTCUTS_CHOICES)
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         self.adaptor_ref = self.get_all_adaptors()
         self.adaptors_full = {}
@@ -511,25 +508,6 @@ class Metadata():
         domain_letter = domain_choices[out_metadata_entry['domain']]
         return "%s_%s" % (out_metadata_entry['lane'], domain_letter)
 
-    # def get_selected_variables(self, request_post, csv_by_header_uniqued):
-    #     # change from form if needed
-    #     # if 'submit_run_info' in request_post:
-    #     try:
-    #         self.selected_machine       = request_post.get('csv_platform', False) or  " ".join(csv_by_header_uniqued['platform']).lower()
-    #         self.selected_machine_short = self.selected_machine_short or self.machine_shortcuts_choices[self.selected_machine]
-    #         self.selected_rundate       = request_post.get('csv_rundate', False) or " ".join(csv_by_header_uniqued['run']).lower()
-    #         self.selected_dna_region    = request_post.get('csv_dna_region', False) or " ".join(csv_by_header_uniqued['dna_region']).lower()
-    #         self.selected_overlap       = request_post.get('csv_overlap', False) or " ".join(csv_by_header_uniqued['overlap']).lower()
-    #     except KeyError:
-    #         logging.debug("csv_by_header_uniqued")
-    #         logging.debug(csv_by_header_uniqued)
-    #         pass
-    #         # self.selected_machine = " ".join(csv_by_header_uniqued['platform']).lower()
-    #         # self.selected_machine_short = self.machine_shortcuts_choices[self.selected_machine]
-    #         # self.selected_rundate = " ".join(csv_by_header_uniqued['rundate']).lower()
-    #     except:
-    #         raise
-
     # old vamps
     def get_vamps_submission_info(self, csv_by_header_uniqued):
         db_name = self.db_prefix + "vamps"
@@ -549,6 +527,76 @@ class Metadata():
             self.errors.add(self.no_data_message())
         except:
             raise
+
+    def update_submission_tubes(self, request):
+        try:
+            self.out_metadata = request.session['out_metadata']
+            # logging.debug("self.out_metadata = ")
+            # logging.debug(self.out_metadata)
+        except:
+            raise
+
+        overlap_choices = dict(Overlap.OVERLAP_CHOICES)
+
+        for i in self.out_metadata.keys():
+            barcode = self.out_metadata[i]['barcode']
+            direction = self.out_metadata[i]['direction']
+            env_sample_source_id = self.out_metadata[i]['env_sample_source_id']
+            id = self.out_metadata[i]['id']
+            insert_size = int(self.out_metadata[i]['insert_size'])
+            lane = self.out_metadata[i]['lane']
+            op_amp = self.out_metadata[i]['amp_operator']
+            op_empcr = self.out_metadata[i]['op_empcr']
+            op_seq = request.session['run_info_form_post']['csv_seq_operator']
+            overlap = overlap_choices[self.out_metadata[i]['overlap']]
+            platform = request.session['run_info']['selected_machine']
+            pool = self.out_metadata[i]['pool']
+            project_name = self.out_metadata[i]['project']
+            read_length = self.out_metadata[i]['read_length']
+            rundate = request.session['run_info']['selected_rundate']
+            submit_code = self.out_metadata[i]['submit_code']
+
+            updated = VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
+                barcode = barcode,
+                direction = direction,
+                insert_size = insert_size,
+                lane = lane,
+                op_amp = op_amp,
+                op_empcr = op_empcr,
+                op_seq = op_seq,
+                overlap = overlap,
+                platform = platform,
+                pool = pool,
+                project_name = project_name,
+                read_length = read_length,
+                rundate = rundate,
+                date_updated = datetime.now()
+            )
+            """
+            empty on vamps:
+            barcode
+            direction
+            enzyme
+            lane
+            on_vamps
+            op_amp
+            op_empcr
+            op_seq
+            platform
+            pool
+            rundate
+            sample_received
+
+            """
+            logging.info("VampsSubmissionsTubes updated = %s" % (updated))
+
+            # print "UUU updated = "
+            # print updated
+
+    def insert_run(self, request):
+        return Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
+
+    # vamps2
 
     def get_vamps2_submission_info(self, project_id = ""):
         db_name = "vamps2"
@@ -776,13 +824,6 @@ class OutData():
 
         self.edit_out_metadata()
         self.request.session['out_metadata'] = self.out_metadata
-        # try:
-        #     path_to_csv
-        # except NameError:
-        #     path_to_csv = self.out_files.create_path_to_csv(selected_data)
-        # except:
-        #     raise
-        #
         path_to_csv = self.out_files.create_path_to_csv(selected_data)
         self.out_files.check_out_csv_files(path_to_csv)
         self.request.session['files_created'] = self.out_files.files_created #doesn't belong here
@@ -1028,7 +1069,7 @@ class OutData():
         return my_post_dict
 
     def create_submission_metadata_file(self):  # public
-        # logging.debug("EEE: self.request.POST = %s" % self.request.POST)
+        # TODO: split and simplify
 
         """
         *) metadata table to show and edit
@@ -1069,7 +1110,7 @@ class OutData():
 
         # *) ini and csv machine_info/run dir
         self.metadata.lanes_domains = self.metadata.get_lanes_domains(self.out_metadata) #move to Metadata?
-        # TODO: from here move to OutFiles
+        #
         path_to_csv = self.out_files.create_path_to_csv(self.current_selected_data)
 
         # *) validation
@@ -1078,20 +1119,20 @@ class OutData():
         if (len(metadata_run_info_form.errors) == 0 and formset.total_error_count() == 0):
 
             # *) ini files
-            self.out_files.create_ini_names(self.out_metadata, self.metadata)
+            self.out_files.create_ini_names(self.out_metadata)
             self.out_files.write_ini(path_to_csv)
 
             # *) metadata csv files
-            self.out_files.create_out_metadata_csv_file_names(self.out_metadata, self.metadata)
-            self.out_files.write_out_metadata_to_csv(path_to_csv, self.out_metadata, self.metadata)
+            self.out_files.create_out_metadata_csv_file_names(self.out_metadata)
+            self.out_files.write_out_metadata_to_csv(path_to_csv, self.out_metadata)
 
             # *) check if csv was created
             self.out_files.check_out_csv_files(path_to_csv)
 
-            if len(self.vamps_submissions) > 0:
-                self.update_submission_tubes(self.request)
+            if len(self.metadata.vamps_submissions) > 0:
+                self.metadata.update_submission_tubes(self.request)
 
-        self.new_rundate, self.new_rundate_created = self.insert_run(self.request)
+        self.new_rundate, self.new_rundate_created = self.metadata.insert_run(self.request)
         logging.info(
             "self.new_rundate = %s, self.new_rundate_created = %s" % (self.new_rundate, self.new_rundate_created))
 
