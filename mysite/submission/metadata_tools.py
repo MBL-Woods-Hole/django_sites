@@ -394,8 +394,16 @@ class SelectedVals():
 
 class OutFiles():
     # out files
-    def __init__(self, request):
+    def __init__(self, request, out_files_obj):
         self.request = request
+        self.out_files_obj = out_files_obj
+        try:
+            self.current_selected_data = self.request.session['run_info']
+        except KeyError:
+            self.current_selected_data = self.out_files_obj.current_selected_data
+        except:
+            raise
+
         self.metadata_csv_file_names = {}
         self.files_created = []  # public
         self.dirs = Dirs()
@@ -699,8 +707,8 @@ class Metadata():
 class OutData():
     def __init__(self, request):
         self.metadata = Metadata(request)
-        self.out_files = OutFiles(request)
         self.selected_vals = SelectedVals(request, self.metadata.METADATA_NAMES)
+        self.out_files = OutFiles(request, self.selected_vals)
         self.csv_file = CsvFile(self.metadata, self.out_files, self.selected_vals)
         self.utils = Utils()
 
