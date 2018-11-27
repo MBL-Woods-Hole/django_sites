@@ -363,22 +363,6 @@ class SelectedVals():
                 return selected_val.lower()
 
 
-    # def get_selected_variables(self, request_post, csv_by_header_uniqued):
-    #     # change from form if needed
-    #     # if 'submit_run_info' in request_post:
-    #     try:
-    #         self.current_selected_data["selected_machine"]       = request_post.get('csv_platform', False) or  " ".join(csv_by_header_uniqued['platform']).lower()
-    #         self.current_selected_data["selected_machine_short"] = self.current_selected_data["selected_machine_short"] or self.machine_shortcuts_choices[self.current_selected_data["selected_machine"]]
-    #         self.current_selected_data["selected_rundate"]       = request_post.get('csv_rundate', False) or " ".join(csv_by_header_uniqued['run']).lower()
-    #         self.current_selected_data["selected_dna_region"]    = request_post.get('csv_dna_region', False) or " ".join(csv_by_header_uniqued['dna_region']).lower()
-    #         self.current_selected_data["selected_overlap"]       = request_post.get('csv_overlap', False) or " ".join(csv_by_header_uniqued['overlap']).lower()
-    #     except KeyError:
-    #         logging.debug("csv_by_header_uniqued")
-    #         logging.debug(csv_by_header_uniqued)
-    #         pass
-    #     except:
-    #         raise
-
 class OutFiles():
     # out files
     def __init__(self, request, metadata_obj, selected_vals_obj):
@@ -393,7 +377,6 @@ class OutFiles():
             raise
 
         self.metadata_csv_file_names = {}
-        self.files_created = []  # public
         self.dirs = Dirs()
         self.lanes_domains = []
         self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
@@ -433,11 +416,14 @@ class OutFiles():
             writers[lane_domain].writerow(to_write)
 
     def check_out_csv_files(self, path_to_csv = None):
+        files_created = []
         for lane_domain, file_name in self.metadata_csv_file_names.items():
             if os.path.isfile(os.path.join(path_to_csv, file_name)):
                 curr_file = os.path.join(path_to_csv, file_name)
-                self.files_created.append(curr_file)
+                files_created.append(curr_file)
                 self.dirs.chmod_wg(curr_file)
+        return files_created
+
 
     def create_path_to_csv(self, selected_data): #change to use self.current_selected_data
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
@@ -765,6 +751,7 @@ class OutData():
         self.current_selected_data = defaultdict()
         self.errors = set() # public
         self.request = request
+        self.files_created = []  # public
 
     # TODO: what's a difference with make_metadata_run_info_form?
     def work_with_request(self): #TODO: rename and/or split. Upload and parse file, get_initial run info, get current selected data, fill out request.session run info, makes metadata_run_info_form, get_vamps_submission_info, makes csv_by_header, get_domain_dna_regions, get_domain_per_row, get_adaptor_from_csv_content, check_user or get_user_info, get_csv_projects, check_projects, make_new_out_metadata, collect errors, populate request.session['csv_by_header_uniqued'], populate request.session['out_metadata']
@@ -826,7 +813,7 @@ class OutData():
         self.request.session['out_metadata'] = self.out_metadata
         path_to_csv = self.out_files.create_path_to_csv(selected_data)
         self.out_files.check_out_csv_files(path_to_csv)
-        self.request.session['files_created'] = self.out_files.files_created #doesn't belong here
+        self.request.session['files_created'] = self.files_created
         self.request.session['run_info_form_post'] = self.request.POST
         self.request.session['out_metadata_table'] = self.out_metadata_table #doesn't belong here
 
@@ -1127,7 +1114,7 @@ class OutData():
             self.out_files.write_out_metadata_to_csv(path_to_csv, self.out_metadata)
 
             # *) check if csv was created
-            self.out_files.check_out_csv_files(path_to_csv)
+            self.files_created = self.out_files.check_out_csv_files(path_to_csv)
 
             if len(self.metadata.vamps_submissions) > 0:
                 self.metadata.update_submission_tubes(self.request)

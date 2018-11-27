@@ -122,7 +122,6 @@ def submit_run_info_n_edit_metadata_n_make_table(request, out_data):
     return context
             
 def edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request, out_data):
-    # out_data = OutData(request)
 
     logging.debug("HHH")
     logging.debug("444 create_submission_metadata_file in request.POST")
