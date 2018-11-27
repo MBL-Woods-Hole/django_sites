@@ -318,19 +318,6 @@ class SelectedVals():
         self.current_selected_data["selected_machine_short"] = selected_machine_short
         return selected_machine_short
 
-    def write_ini(self, path_to_csv):
-        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.current_selected_data["selected_rundate"], self.current_selected_data["selected_machine_short"])
-        overlap_choices = dict(Overlap.OVERLAP_CHOICES)
-
-        for lane_domain, ini_name in self.ini_names.items():
-            ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
-                        ''' % (self.current_selected_data["selected_rundate"], lane_domain, self.current_selected_data["selected_dna_region"], path_to_raw_data, overlap_choices[self.current_selected_data["selected_overlap"]], self.current_selected_data["selected_machine"])
-            full_ini_name = os.path.join(path_to_csv, ini_name)
-            ini_file = open(full_ini_name, 'w')
-            ini_file.write(ini_text)
-            ini_file.close()
-            self.dirs.chmod_wg(full_ini_name)
-
     def fill_out_request_session_run_info(self, selected_data):
         if selected_data:
             self.current_selected_data = selected_data
@@ -394,8 +381,9 @@ class SelectedVals():
 
 class OutFiles():
     # out files
-    def __init__(self, request, out_files_obj):
+    def __init__(self, request, metadata_obj, out_files_obj):
         self.request = request
+        self.metadata_obj = metadata_obj
         self.out_files_obj = out_files_obj
         try:
             self.current_selected_data = self.request.session['run_info']
@@ -410,31 +398,31 @@ class OutFiles():
         self.lanes_domains = []
         self.HEADERS_TO_CSV = ['adaptor', 'amp_operator', 'barcode', 'barcode_index', 'data_owner', 'dataset', 'dataset_description', 'dna_region', 'email', 'env_sample_source_id', 'first_name', 'funding', 'insert_size', 'institution', 'lane', 'last_name', 'overlap', 'platform', 'primer_suite', 'project', 'project_description', 'project_title', 'read_length', 'run', 'run_key', 'seq_operator', 'tubelabel']
 
-    def create_ini_names(self, out_metadata, metadata_obj):
-        self.ini_names = self.create_out_file_names("%s_%s_%s_run_info.ini", out_metadata, metadata_obj)
+    def create_ini_names(self, out_metadata):
+        self.ini_names = self.create_out_file_names("%s_%s_%s_run_info.ini", out_metadata)
 
-    def create_out_file_names(self, pattern, out_metadata, metadata_obj):
-        self.lanes_domains = metadata_obj.get_lanes_domains(out_metadata)
+    def create_out_file_names(self, pattern, out_metadata):
+        self.lanes_domains = self.metadata_obj.get_lanes_domains(out_metadata)
 
         return {lane_domain: pattern % (self.current_selected_data["selected_rundate"], self.current_selected_data["selected_machine_short"], lane_domain) for lane_domain in self.lanes_domains} #create in Metadata
 
-    def create_out_metadata_csv_file_names(self, out_metadata, metadata_obj):
+    def create_out_metadata_csv_file_names(self, out_metadata):
         # OLD: metadata_20160803_1_B.csv
         # NEW: metadata_20151111_hs_1_A.csv
-        self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv", out_metadata, metadata_obj)
+        self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv", out_metadata)
 
-    def write_out_metadata_to_csv(self, path_to_csv, out_metadata, metadata_obj):
+    def write_out_metadata_to_csv(self, path_to_csv, out_metadata):
         logging.info("write_out_metadata_to_csv")
 
         writers = {}
-        self.create_out_metadata_csv_file_names(out_metadata, metadata_obj)
+        self.create_out_metadata_csv_file_names(out_metadata)
         for lane_domain in self.metadata_csv_file_names.keys():
             writers[lane_domain] = csv.DictWriter(open(os.path.join(path_to_csv, self.metadata_csv_file_names[lane_domain]), 'w'), self.HEADERS_TO_CSV)
             writers[lane_domain].writeheader()
 
         i = 0
         for idx, val in out_metadata.items():
-            lane_domain = self.metadata.get_lane_domain(val)
+            lane_domain = self.metadata_obj.get_lane_domain(val)
             i = i+1
             # for h in self.HEADERS_TO_CSV:
             #     logging.debug("TTT idx = %s, val = %s, h = %s, val[h] = %s" % (idx, val, h, val[h]))
@@ -450,7 +438,7 @@ class OutFiles():
                 self.files_created.append(curr_file)
                 self.dirs.chmod_wg(curr_file)
 
-    def create_path_to_csv(self, selected_data):
+    def create_path_to_csv(self, selected_data): #change to use self.current_selected_data
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
 
         path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, selected_data["selected_machine"] + "_info", selected_data["selected_rundate"])
@@ -459,6 +447,18 @@ class OutFiles():
         new_dir = self.dirs.check_and_make_dir(path_to_csv)
         return path_to_csv
 
+    def write_ini(self, path_to_csv):
+        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.current_selected_data["selected_rundate"], self.current_selected_data["selected_machine_short"])
+        overlap_choices = dict(Overlap.OVERLAP_CHOICES)
+
+        for lane_domain, ini_name in self.ini_names.items():
+            ini_text = '''{"rundate":"%s","lane_domain":"%s","dna_region":"%s","path_to_raw_data":"%s","overlap":"%s","machine":"%s"}
+                        ''' % (self.current_selected_data["selected_rundate"], lane_domain, self.current_selected_data["selected_dna_region"], path_to_raw_data, overlap_choices[self.current_selected_data["selected_overlap"]], self.current_selected_data["selected_machine"])
+            full_ini_name = os.path.join(path_to_csv, ini_name)
+            ini_file = open(full_ini_name, 'w')
+            ini_file.write(ini_text)
+            ini_file.close()
+            self.dirs.chmod_wg(full_ini_name)
 
 
 class Metadata():
@@ -708,7 +708,7 @@ class OutData():
     def __init__(self, request):
         self.metadata = Metadata(request)
         self.selected_vals = SelectedVals(request, self.metadata.METADATA_NAMES)
-        self.out_files = OutFiles(request, self.selected_vals)
+        self.out_files = OutFiles(request, self.metadata, self.selected_vals)
         self.csv_file = CsvFile(self.metadata, self.out_files, self.selected_vals)
         self.utils = Utils()
 
