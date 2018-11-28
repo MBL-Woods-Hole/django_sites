@@ -613,7 +613,7 @@ class Metadata():
         except:
             raise
 
-    def get_domain_per_row(self, info_list_len):
+    def get_domain_per_row(self):
         for r in self.domain_dna_regions:
             domain_letter = r[0]
             domain = ""
@@ -749,9 +749,9 @@ class OutData():
 
         self.csv_file.get_csv_by_header()
 
-        info_list_len = len(self.csv_file.csv_by_header['dataset'])
+        # info_list_len = len(self.csv_file.csv_by_header['dataset'])
         self.metadata.get_domain_dna_regions(self.csv_file.dict_reader)
-        self.metadata.get_domain_per_row(info_list_len)
+        self.metadata.get_domain_per_row()
         self.csv_file.get_adaptor_from_csv_content()
 
         # TODO: DRY
@@ -807,9 +807,6 @@ class OutData():
 
     def make_metadata_out_from_vamps2_submission(self):  # public
         data_from_db = self.metadata.get_vamps2_submission_info(self.request.POST['projects'])
-        # self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_from_db]]
-
-        # self.metadata.get_domain_dna_regions(self.csv_file.dict_reader)
         self.metadata.get_domain_dna_regions(data_from_db)
         dna_region = list(set(self.metadata.domain_dna_regions))[0][
                           1:]  # 'v4' assuming only one region and a correct project name
@@ -844,14 +841,14 @@ class OutData():
             else:
                 self.make_metadata_out_from_project_data(self.csv_file.dict_reader)
         else:
-            if self.vamps2_project_results:
-              self.make_metadata_out_from_project_data(self.vamps2_project_results)
+            if self.metadata.vamps2_project_results:
+              self.make_metadata_out_from_project_data(self.metadata.vamps2_project_results)
 
     def make_metadata_out_from_project_data(self, vamps2_dict):
         # TODO: test with csv if changes still work from
         primer_suites = self.metadata.get_primer_suites()
         info_list_len = len(vamps2_dict)
-        self.metadata.get_domain_per_row(info_list_len)
+        self.metadata.get_domain_per_row()
 
         for i in range(info_list_len):
             # dump the whole vamps2_dict to out_metadata, then add if key is different
