@@ -324,12 +324,6 @@ class SelectedVals():
 
         current_run_info = {}
         current_run_info.update(self.current_selected_data)
-        # current_run_info['selected_rundate'] = self.current_selected_data["selected_rundate"]
-        # current_run_info['selected_machine_short'] = self.current_selected_data["selected_machine_short"]
-        # current_run_info['selected_machine'] = self.current_selected_data["selected_machine"]
-        # current_run_info['selected_dna_region'] = self.current_selected_data["selected_dna_region"]
-        # current_run_info['selected_overlap'] = self.current_selected_data["selected_overlap"]
-
         return current_run_info
 
     def get_selected_variables(self, request):
