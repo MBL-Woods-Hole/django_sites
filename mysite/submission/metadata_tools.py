@@ -856,8 +856,14 @@ class OutData():
             self.out_metadata[i].update(vamps2_dict[i])
 
             try:
+                self.out_metadata[i]['dna_region']			 = vamps2_dict[i]['dna_region']
+            except KeyError:
+                self.request.session['run_info_from_csv']['csv_dna_region']
+            except:
+                raise
+
+            try:
                 self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
-                self.out_metadata[i]['dna_region']			 = vamps2_dict[i]['dna_region'] or self.request.session['run_info_from_csv']['csv_dna_region']
                 self.out_metadata[i]['domain']			     = self.metadata.domains_per_row[i]
                 self.out_metadata[i]['lane']				 = '1' # default
                 self.out_metadata[i]['primer_suite']		 = primer_suites[i]
