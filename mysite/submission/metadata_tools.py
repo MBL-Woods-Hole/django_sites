@@ -786,8 +786,11 @@ class OutData():
 
         self.edit_out_metadata()
         self.request.session['out_metadata'] = self.out_metadata
+        self.out_files.metadata_csv_file_names
+        created_files = self.out_files.metadata_csv_file_names
         path_to_csv = self.out_files.create_path_to_csv(selected_data)
         self.out_files.check_out_csv_files(path_to_csv)
+        self.files_created.append(created_files)
         self.request.session['files_created'] = self.files_created
         self.request.session['run_info_form_post'] = self.request.POST
         self.request.session['out_metadata_table'] = self.out_metadata_table #doesn't belong here
@@ -1167,18 +1170,10 @@ class OutData():
         writers = {}
         writers[project_author] = csv.DictWriter(open(file_path, 'w'), self.out_files.HEADERS_TO_CSV)
         writers[project_author].writeheader()
-        for idx, val in self.out_metadata.items():
-            to_write = defaultdict(lambda: '')
-            for h in self.out_files.HEADERS_TO_CSV:
-                try:
-                    to_write[h] = val[h]
-                except KeyError:
-                    to_write[h] = ''
-                except:
-                    raise
+        for idx, val in out_metadata.items():
+            to_write = {h: val[h] for h in self.out_files.HEADERS_TO_CSV}  # primer_suite err
             writers[project_author].writerow(to_write)
         self.out_files.check_out_csv_files(file_path)
-
 
 
 class MysqlUtil():
