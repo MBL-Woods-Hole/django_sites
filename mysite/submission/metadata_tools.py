@@ -323,11 +323,12 @@ class SelectedVals():
             self.current_selected_data = selected_data
 
         current_run_info = {}
-        current_run_info['selected_rundate'] = self.current_selected_data["selected_rundate"]
-        current_run_info['selected_machine_short'] = self.current_selected_data["selected_machine_short"]
-        current_run_info['selected_machine'] = self.current_selected_data["selected_machine"]
-        current_run_info['selected_dna_region'] = self.current_selected_data["selected_dna_region"]
-        current_run_info['selected_overlap'] = self.current_selected_data["selected_overlap"]
+        current_run_info.update(self.current_selected_data)
+        # current_run_info['selected_rundate'] = self.current_selected_data["selected_rundate"]
+        # current_run_info['selected_machine_short'] = self.current_selected_data["selected_machine_short"]
+        # current_run_info['selected_machine'] = self.current_selected_data["selected_machine"]
+        # current_run_info['selected_dna_region'] = self.current_selected_data["selected_dna_region"]
+        # current_run_info['selected_overlap'] = self.current_selected_data["selected_overlap"]
 
         return current_run_info
 
@@ -1159,6 +1160,30 @@ class OutData():
             "self.new_rundate = %s, self.new_rundate_created = %s" % (self.new_rundate, self.new_rundate_created))
 
         return (self.request, metadata_run_info_form, formset)
+
+    def create_vamps2_submission_csv(self, request):
+        logging.info("create_vamps2_submission_csv")
+        out_metadata = request.session['out_metadata']
+        data_owner = "".join(list(set([value1['data_owner'] for key1, value1 in out_metadata.items()])))
+        project = "".join(list(set([value1['project'] for key1, value1 in out_metadata.items()])))
+        project_author = data_owner + "_" + project
+        complete_file_name = "Metadata_upload_%s.csv" % (project_author)
+        file_path = os.path.join(os.path.expanduser('~'), 'Documents', complete_file_name)
+        self.metadata_csv_file_names[project_author] = file_path
+        writers = {}
+        writers[project_author] = csv.DictWriter(open(file_path, 'w'), self.out_files.HEADERS_TO_CSV)
+        writers[project_author].writeheader()
+        for idx, val in self.out_metadata.items():
+            to_write = defaultdict(lambda: '')
+            for h in self.out_files.HEADERS_TO_CSV:
+                try:
+                    to_write[h] = val[h]
+                except KeyError:
+                    to_write[h] = ''
+                except:
+                    raise
+            writers[project_author].writerow(to_write)
+        self.out_files.check_out_csv_files(file_path)
 
 
 

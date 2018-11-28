@@ -50,7 +50,7 @@ def upload_metadata(request):
         context = submit_run_info_n_edit_metadata_n_make_table(request, out_data)
 
     elif 'submit_run_info_and_get_csv' in request.POST:
-        context = submit_run_info_and_get_csv(request)
+        context = submit_run_info_and_get_csv(request, out_data)
 
     elif 'choose_project' in request.POST:
         context = choose_project(request, out_data)
@@ -71,9 +71,9 @@ def choose_project(request, out_data):
     print(out_data.csv_file.csv_by_header_uniqued) #{}
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued}
 
-def submit_run_info_and_get_csv(request):
+def submit_run_info_and_get_csv(request, out_data):
     request.session['create_vamps2_submission_csv'] = True
-    return submit_run_info_n_edit_metadata_n_make_table(request)
+    return submit_run_info_n_edit_metadata_n_make_table(request, out_data)
 
 def upload_file_n_make_new_metadata(request, out_data):
     utils = Utils()
