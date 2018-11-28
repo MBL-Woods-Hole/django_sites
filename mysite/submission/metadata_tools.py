@@ -419,7 +419,6 @@ class OutFiles():
                 self.dirs.chmod_wg(curr_file)
         return files_created
 
-
     def create_path_to_csv(self, selected_data): #change to use self.current_selected_data
         # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
 
@@ -441,6 +440,12 @@ class OutFiles():
             ini_file.write(ini_text)
             ini_file.close()
             self.dirs.chmod_wg(full_ini_name)
+
+    def create_writers_with_headers(self, key_name, file_path):
+        writers = {}
+        writers[key_name] = csv.DictWriter(open(file_path, 'w'), self.HEADERS_TO_CSV)
+        writers[key_name].writeheader()
+        return writers
 
 
 class Metadata():
@@ -782,15 +787,17 @@ class OutData():
                 'create_vamps2_submission_csv' in self.request.session.keys() and
                 self.request.session['create_vamps2_submission_csv']
         ):
-            self.create_vamps2_submission_csv(self.request)
+            self.files_created = self.create_vamps2_submission_csv(self.request)
 
         self.edit_out_metadata()
         self.request.session['out_metadata'] = self.out_metadata
         self.out_files.metadata_csv_file_names
-        created_files = self.out_files.metadata_csv_file_names
+        # created_files = self.out_files.metadata_csv_file_names
         path_to_csv = self.out_files.create_path_to_csv(selected_data)
         self.out_files.check_out_csv_files(path_to_csv)
-        self.files_created.append(created_files)
+        # self.files_created.append(created_files)
+        # TODO: change : {'miamiU03_MUA_AAAA_Bv4v5': '/Users/ashipunova/Documents/Metadata_upload_miamiU03_MUA_AAAA_Bv4v5.csv'} was created
+
         self.request.session['files_created'] = self.files_created
         self.request.session['run_info_form_post'] = self.request.POST
         self.request.session['out_metadata_table'] = self.out_metadata_table #doesn't belong here
@@ -1168,12 +1175,14 @@ class OutData():
         file_path = os.path.join(os.path.expanduser('~'), 'Documents', complete_file_name)
         self.out_files.metadata_csv_file_names[project_author] = file_path
         writers = {}
-        writers[project_author] = csv.DictWriter(open(file_path, 'w'), self.out_files.HEADERS_TO_CSV)
-        writers[project_author].writeheader()
+        # writers[project_author] = csv.DictWriter(open(file_path, 'w'), self.out_files.HEADERS_TO_CSV)
+        # writers[project_author].writeheader()
+        writers.update(self.out_files.create_writers_with_headers(project_author, file_path))
+
         for idx, val in out_metadata.items():
             to_write = {h: val[h] for h in self.out_files.HEADERS_TO_CSV}  # primer_suite err
             writers[project_author].writerow(to_write)
-        self.out_files.check_out_csv_files(file_path)
+        return self.out_files.check_out_csv_files(file_path)
 
 
 class MysqlUtil():

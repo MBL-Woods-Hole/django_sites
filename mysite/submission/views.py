@@ -67,8 +67,6 @@ def choose_project(request, out_data):
 
     metadata_run_info_form = out_data.make_metadata_out_from_vamps2_submission()
 
-    print("QQQ4 out_data.csv_file.csv_by_header_uniqued")
-    print(out_data.csv_file.csv_by_header_uniqued) #{}
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued}
 
 def submit_run_info_and_get_csv(request, out_data):
