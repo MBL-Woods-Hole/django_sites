@@ -20,7 +20,7 @@ from .models_l_env454 import Run as models_run
 from .forms import FileUploadForm, AddProjectForm, ChooseProjectForm
 from .utils import Run, Utils
 
-from .metadata_tools import CsvFile, OutData
+from .metadata_tools import OutData
 # , Validation
 
 def index(request):
@@ -64,11 +64,14 @@ def upload_metadata(request):
 
 def choose_project(request, out_data):
     utils = Utils()
-    # csv_handler = CsvMetadata(request) #TODO: change
 
-    metadata_run_info_form = out_data.new_submission(request)
+    metadata_run_info_form = out_data.make_metadata_out_from_vamps2_submission()
 
-    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_handler.csv_by_header_uniqued}
+    print("QQQ4 out_data.csv_file.csv_by_header_uniqued")
+    print(out_data.csv_file.csv_by_header_uniqued)
+    print("QQQ5 out_data.csv_by_header_uniqued")
+    print(out_data.csv_by_header_uniqued)
+    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_by_header_uniqued}
 
 def submit_run_info_and_get_csv(request):
     request.session['create_vamps2_submission_csv'] = True
@@ -83,7 +86,7 @@ def upload_file_n_make_new_metadata(request, out_data):
     logging.debug("HHH")
     logging.debug("111 request.method == 'POST' and request.FILES:")
 
-    metadata_run_info_form, has_file_errors = out_data.work_with_request()
+    metadata_run_info_form, has_file_errors = out_data.make_metadata_out_from_old_file()
 
     # move "ifs" to OutData both
     if has_file_errors == 'no_file':
@@ -101,6 +104,10 @@ def upload_file_n_make_new_metadata(request, out_data):
 
     errors_size = len(out_data.errors)
 
+    print("QQQ0 out_data.csv_by_header_uniqued")
+    print(out_data.csv_by_header_uniqued)
+    print("QQQ1 out_data.csv_file.csv_by_header_uniqued")
+    print(out_data.csv_file.csv_by_header_uniqued)
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size }
     
 def submit_run_info_n_edit_metadata_n_make_table(request, out_data):
@@ -109,12 +116,17 @@ def submit_run_info_n_edit_metadata_n_make_table(request, out_data):
     logging.debug("HHH")
     logging.debug("333 submit_run_info in request.POST")
 
-    request, metadata_run_info_form, formset = out_data.make_metadata_run_info_form()
+    request, metadata_run_info_form, formset = out_data.make_metadata_out_from_run_info_form()
 
     errors_size = len(metadata_run_info_form.errors)
 
     context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'files_created': request.session['files_created']}
     if errors_size > 0:
+        print("QQQ2 out_data.csv_by_header_uniqued")
+        print(out_data.csv_by_header_uniqued)
+        print("QQQ3 out_data.csv_file.csv_by_header_uniqued")
+        print(out_data.csv_file.csv_by_header_uniqued)
+
         context.update({'csv_by_header_uniqued': out_data.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size })
     else:
         context.update({'metadata_out_csv_form': formset, 'out_metadata_table': out_data.out_metadata_table})
@@ -138,20 +150,20 @@ def initial_form():
 
     return {'file_upload_form': file_upload_form, 'choose_project_form': choose_project_form, 'header': 'Upload metadata', 'formset': {}}
         
-def add_project(request):
-    csv_handler = CsvMetadata(request)
+def add_project(request, out_data): # TODO: test 
+    # csv_handler = CsvMetadata(request)
 
     if request.method == 'POST':
         # elif 'submit_new_project' in request.POST:
         logging.debug("HHH")
         logging.debug("222 submit_new_project in request.POST")
 
-        metadata_new_project_form = csv_handler.submit_new_project(request)
+        metadata_new_project_form = out_data.submit_new_project(request)
 
-        context = {'header': 'Add New Project', 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': csv_handler.new_project, 'new_project_created': csv_handler.new_project_created}    
+        context = {'header': 'Add New Project', 'errors': out_data.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': out_data.new_project, 'new_project_created': out_data.new_project_created}    
     else:
         metadata_new_project_form = AddProjectForm()
-        context = {'header': 'Add New Project', 'errors': csv_handler.errors, 'metadata_new_project_form': metadata_new_project_form}
+        context = {'header': 'Add New Project', 'errors': out_data.errors, 'metadata_new_project_form': metadata_new_project_form}
     return render(request, 'submission/add_project.html', context)
 
 # def my_view(request):

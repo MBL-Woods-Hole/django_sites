@@ -457,6 +457,7 @@ class Metadata():
         self.mysql_util = MysqlUtil()
         self.vamps_submissions = {}
         self.domains_per_row = []
+        self.domain_dna_regions = []
         self.errors = set() # public
         self.user_info_arr = {}
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
@@ -478,7 +479,6 @@ class Metadata():
         self.METADATA_NAMES['selected_rundate'] = ['csv_rundate', 'run']
         self.METADATA_NAMES['selected_dna_region'] = ['csv_dna_region', 'dna_region']
         self.METADATA_NAMES['selected_overlap'] = ['csv_overlap', 'overlap']
-
 
     def get_lanes_domains(self, out_metadata):
         domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
@@ -734,7 +734,7 @@ class OutData():
         self.files_created = []  # public
 
     # TODO: what's a difference with make_metadata_run_info_form?
-    def work_with_request(self): #TODO: rename and/or split. Upload and parse file, get_initial run info, get current selected data, fill out request.session run info, makes metadata_run_info_form, get_vamps_submission_info, makes csv_by_header, get_domain_dna_regions, get_domain_per_row, get_adaptor_from_csv_content, check_user or get_user_info, get_csv_projects, check_projects, make_new_out_metadata, collect errors, populate request.session['csv_by_header_uniqued'], populate request.session['out_metadata']
+    def make_metadata_out_from_old_file(self): #TODO: rename and/or split. Upload and parse file, get_initial run info, get current selected data, fill out request.session run info, makes metadata_run_info_form, get_vamps_submission_info, makes csv_by_header, get_domain_dna_regions, get_domain_per_row, get_adaptor_from_csv_content, check_user or get_user_info, get_csv_projects, check_projects, make_new_out_metadata, collect errors, populate request.session['csv_by_header_uniqued'], populate request.session['out_metadata']
 
         has_empty_cells = self.csv_file.csv_file_upload(self.request)
         self.csv_file.get_initial_run_info_data_dict()
@@ -777,7 +777,7 @@ class OutData():
         return (metadata_run_info_form, has_empty_cells)
 
     # TODO: rename or join
-    def make_metadata_run_info_form(self):
+    def make_metadata_out_from_run_info_form(self):
 
         # selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.request.session['csv_by_header_uniqued'])
         selected_data = self.selected_vals.get_selected_variables(self.request)
@@ -804,6 +804,35 @@ class OutData():
         formset = MetadataOutCsvFormSet(initial=self.out_metadata_table['rows'])
 
         return (self.request, metadata_run_info_form, formset)
+
+    def make_metadata_out_from_vamps2_submission(self):  # public
+        data_from_db = self.metadata.get_vamps2_submission_info(self.request.POST['projects'])
+        # self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_from_db]]
+
+        # self.metadata.get_domain_dna_regions(self.csv_file.dict_reader)
+        self.metadata.get_domain_dna_regions(data_from_db)
+        dna_region = list(set(self.metadata.domain_dna_regions))[0][
+                          1:]  # 'v4' assuming only one region and a correct project name
+        current_run_info = {
+            'csv_rundate': "",
+            'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/",
+            'csv_platform': "",
+            'csv_dna_region': dna_region,
+            'csv_overlap': "",
+            'csv_has_ns': "",
+            'csv_seq_operator': "",
+            'csv_insert_size': "",
+            'csv_read_length': ""
+        }
+        self.request.session['run_info_from_csv'] = current_run_info
+
+        metadata_run_info_form = CsvRunInfoUploadForm(initial=self.request.session['run_info_from_csv'])
+        # TODO: clean up!
+        self.make_new_out_metadata()
+        if self.errors:
+            return (metadata_run_info_form)
+        self.request.session['out_metadata'] = self.out_metadata
+        return (metadata_run_info_form)
 
     # TODO: 2) how to simplify it (case?)?
     def make_new_out_metadata(self):
@@ -1129,6 +1158,7 @@ class OutData():
         return (self.request, metadata_run_info_form, formset)
 
 
+
 class MysqlUtil():
     def __init__(self):
         pass
@@ -1137,6 +1167,7 @@ class MysqlUtil():
         import pprint
         pp = pprint.PrettyPrinter(indent = 4)
 
+        res_arr_of_dict = []
         res_dict = {}
         cursor = connections[connection_name].cursor()
         # cursor = connection.cursor()
@@ -1146,6 +1177,7 @@ class MysqlUtil():
 
         for row in cursor:
             res_dict = dict(zip(column_names, row))
+            res_arr_of_dict.append(res_dict)
 
-        return res_dict
+        return res_arr_of_dict
 
