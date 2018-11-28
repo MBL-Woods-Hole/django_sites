@@ -975,7 +975,7 @@ class OutData():
         except:
             raise
 
-        for i, v in self.out_metadata.items():
+        for i, v in self.out_metadata.items(): #TODO: re-write
             self.out_metadata[i]['dna_region']		    = self.request.POST.get('csv_dna_region', False)
             self.out_metadata[i]['has_ns']			    = self.request.POST.get('csv_has_ns', False)
             self.out_metadata[i]['insert_size']		    = self.request.POST.get('csv_insert_size', False)
@@ -1169,7 +1169,7 @@ class OutData():
         project_author = data_owner + "_" + project
         complete_file_name = "Metadata_upload_%s.csv" % (project_author)
         file_path = os.path.join(os.path.expanduser('~'), 'Documents', complete_file_name)
-        self.metadata_csv_file_names[project_author] = file_path
+        self.out_files.metadata_csv_file_names[project_author] = file_path
         writers = {}
         writers[project_author] = csv.DictWriter(open(file_path, 'w'), self.out_files.HEADERS_TO_CSV)
         writers[project_author].writeheader()
