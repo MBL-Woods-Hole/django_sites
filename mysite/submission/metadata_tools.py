@@ -631,9 +631,6 @@ class Metadata():
         for r in self.domain_dna_regions:
             domain_letter = r[0]
             dna_region = r[1:]
-            # print("PPP1 domain_letter: %s" % domain_letter)
-            # print("PPP2 dna_region: %s" % dna_region)
-            # print("PPP3 self.suite_domain_choices: %s" % self.suite_domain_choices)
             try:
                 primer_suite = self.suite_domain_choices[domain_letter] + ' ' + dna_region.upper() + ' Suite'
             except KeyError:
@@ -1175,8 +1172,6 @@ class OutData():
         file_path = os.path.join(os.path.expanduser('~'), 'Documents', complete_file_name)
         self.out_files.metadata_csv_file_names[project_author] = file_path
         writers = {}
-        # writers[project_author] = csv.DictWriter(open(file_path, 'w'), self.out_files.HEADERS_TO_CSV)
-        # writers[project_author].writeheader()
         writers.update(self.out_files.create_writers_with_headers(project_author, file_path))
 
         for idx, val in out_metadata.items():

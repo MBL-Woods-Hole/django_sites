@@ -100,10 +100,6 @@ def upload_file_n_make_new_metadata(request, out_data):
 
     errors_size = len(out_data.errors)
 
-    print("QQQ0 out_data.csv_by_header_uniqued")
-    print(out_data.csv_by_header_uniqued)
-    print("QQQ1 out_data.csv_file.csv_by_header_uniqued")
-    print(out_data.csv_file.csv_by_header_uniqued)
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size }
     
 def submit_run_info_n_edit_metadata_n_make_table(request, out_data):
