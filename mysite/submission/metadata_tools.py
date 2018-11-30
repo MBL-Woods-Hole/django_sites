@@ -614,6 +614,7 @@ class Metadata():
                 project = data_dict.get('project_name', False)
                 if project:
                     self.domain_dna_regions.append(project.split("_")[-1])
+        return self.domain_dna_regions
 
     def get_domain_per_row(self):
         for r in self.domain_dna_regions:
@@ -811,9 +812,8 @@ class OutData():
 
     def make_metadata_out_from_vamps2_submission(self):  # public
         data_from_db = self.metadata.get_vamps2_submission_info(self.request.POST['projects'])
-        self.metadata.get_domain_dna_regions([data_from_db])
-        dna_region = list(set(self.metadata.domain_dna_regions))[0][
-                          1:]  # 'v4' assuming only one region and a correct project name
+        domain_dna_regions = self.metadata.get_domain_dna_regions([data_from_db])
+        dna_region = list(set(domain_dna_regions))[0][1:]  # 'v4' assuming only one region and a correct project name
         current_run_info = {
             'csv_rundate': "",
             'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/",
@@ -851,26 +851,20 @@ class OutData():
     def make_metadata_out_from_project_data(self, vamps2_dict):
         # TODO: test with csv if changes still work from
         primer_suites = self.metadata.get_primer_suites()
-        info_list_len = len(vamps2_dict)
+        vamps2_dict_arr = [vamps2_dict]
+        info_list_len = len(vamps2_dict_arr)
         self.metadata.get_domain_per_row()
 
         for i in range(info_list_len):
             # dump the whole vamps2_dict to out_metadata, then add if key is different
             self.out_metadata[i] = self.utils.make_an_empty_dict_from_set(self.csv_file.all_headers)
-            self.out_metadata[i].update(vamps2_dict[i])
-
+            self.out_metadata[i].update(vamps2_dict_arr[i])
+            self.out_metadata[i]['dna_region'] = self.request.session['run_info_from_csv']['csv_dna_region']
             try:
-                self.out_metadata[i]['dna_region']			 = vamps2_dict[i]['dna_region']
-            except KeyError:
-                self.request.session['run_info_from_csv']['csv_dna_region']
-            except:
-                raise
-
-            try:
-                self.out_metadata[i]['contact_name']         = vamps2_dict[i]['first_name'] + ' ' + vamps2_dict[i]['last_name']
-                self.out_metadata[i]['domain']			     = self.metadata.domains_per_row[i]
-                self.out_metadata[i]['lane']				 = '1' # default
-                self.out_metadata[i]['primer_suite']		 = primer_suites[i]
+                self.out_metadata[i]['contact_name'] = vamps2_dict_arr[i].get('first_name', False) + ' ' + vamps2_dict_arr[i].get('last_name', False)
+                self.out_metadata[i]['domain']       = self.metadata.domains_per_row[i]
+                self.out_metadata[i]['lane']         = '1' # default
+                self.out_metadata[i]['primer_suite'] = primer_suites[i]
                 # TODO: get from session["run_info"]["seq_operator"] (run_info upload)
             except IndexError:
                 pass
