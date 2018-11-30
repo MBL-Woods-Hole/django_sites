@@ -114,11 +114,6 @@ def submit_run_info_n_edit_metadata_n_make_table(request, out_data):
 
     context = {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'files_created': request.session['files_created']}
     if errors_size > 0:
-        print("QQQ2 out_data.csv_by_header_uniqued")
-        print(out_data.csv_by_header_uniqued)
-        print("QQQ3 out_data.csv_file.csv_by_header_uniqued")
-        print(out_data.csv_file.csv_by_header_uniqued)
-
         context.update({'csv_by_header_uniqued': out_data.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size })
     else:
         context.update({'metadata_out_csv_form': formset, 'out_metadata_table': out_data.out_metadata_table})

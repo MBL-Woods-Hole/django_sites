@@ -455,7 +455,7 @@ class Metadata():
     def __init__(self, request):
         self.utils = Utils()
         self.mysql_util = MysqlUtil()
-        self.vamps_submissions = {}
+        self.vamps_submissions = defaultdict(lambda: defaultdict(lambda: 0))
         self.domains_per_row = []
         self.domain_dna_regions = []
         self.errors = set() # public
@@ -603,15 +603,17 @@ class Metadata():
         except:
             raise
 
-    def get_domain_dna_regions(self, data_dict):
+    def get_domain_dna_regions(self, data_arr_dict):
         # print("PPP5 data_dict: %s" % data_dict)
 
-        try:
-            self.domain_dna_regions = [k.split("_")[-1] for k in [x['project'] for x in data_dict]]
-        except KeyError:
-            self.domain_dna_regions = [k.split("_")[-1] for k in [x['project_name'] for x in data_dict]]
-        except:
-            raise
+        for data_dict in data_arr_dict:
+            project = data_dict.get('project', False)
+            if project:
+                self.domain_dna_regions.append(project.split("_")[-1])
+            else:
+                project = data_dict.get('project_name', False)
+                if project:
+                    self.domain_dna_regions.append(project.split("_")[-1])
 
     def get_domain_per_row(self):
         for r in self.domain_dna_regions:
@@ -809,7 +811,7 @@ class OutData():
 
     def make_metadata_out_from_vamps2_submission(self):  # public
         data_from_db = self.metadata.get_vamps2_submission_info(self.request.POST['projects'])
-        self.metadata.get_domain_dna_regions(data_from_db)
+        self.metadata.get_domain_dna_regions([data_from_db])
         dna_region = list(set(self.metadata.domain_dna_regions))[0][
                           1:]  # 'v4' assuming only one region and a correct project name
         current_run_info = {
@@ -1117,20 +1119,15 @@ class OutData():
         self.out_metadata = self.request.session['out_metadata']
         self.update_out_metadata(my_post_dict)
 
-        # adaptor    = self.csv_by_header['adaptor'][i]
-        # dna_region = self.csv_by_header['dna_region'][i]
-        # domain     = self.csv_by_header['domain'][i]
-        #
-        # self.get_adaptors_full(adaptor, dna_region, domain)
-
         #TODO: change as get_selected (for name get...)
-        self.current_selected_data = {
-            "selected_rundate"      : self.request.session['run_info']['selected_rundate'],
-            "selected_machine_short": self.request.session['run_info']['selected_machine_short'],
-            "selected_machine"      : self.request.session['run_info']['selected_machine'],
-            "selected_dna_region"   : self.request.session['run_info']['selected_dna_region'],
-            "selected_overlap"      : self.request.session['run_info']['selected_overlap']
-        }
+        self.current_selected_data.update(self.request.session['run_info'])
+        # self.current_selected_data = {
+        #     "selected_rundate"      : self.request.session['run_info']['selected_rundate'],
+        #     "selected_machine_short": self.request.session['run_info']['selected_machine_short'],
+        #     "selected_machine"      : self.request.session['run_info']['selected_machine'],
+        #     "selected_dna_region"   : self.request.session['run_info']['selected_dna_region'],
+        #     "selected_overlap"      : self.request.session['run_info']['selected_overlap']
+        # }
 
         # *) ini and csv machine_info/run dir
         self.metadata.lanes_domains = self.metadata.get_lanes_domains(self.out_metadata) #move to Metadata?
@@ -1185,11 +1182,12 @@ class MysqlUtil():
         pass
 
     def run_query_to_dict(self, query, connection_name):
-        import pprint
-        pp = pprint.PrettyPrinter(indent = 4)
+        # import pprint
+        # pp = pprint.PrettyPrinter(indent = 4)
 
-        res_arr_of_dict = []
-        res_dict = {}
+        # res_arr_of_dict = []
+        res_dict = defaultdict(lambda: defaultdict(lambda: 0))
+
         cursor = connections[connection_name].cursor()
         # cursor = connection.cursor()
         cursor.execute(query)
@@ -1197,8 +1195,8 @@ class MysqlUtil():
         column_names = [d[0] for d in cursor.description]
 
         for row in cursor:
-            res_dict = dict(zip(column_names, row))
-            res_arr_of_dict.append(res_dict)
+            d = dict(zip(column_names, row))
+            res_dict.update(d)
 
-        return res_arr_of_dict
+        return res_dict
 
