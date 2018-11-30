@@ -812,7 +812,7 @@ class OutData():
 
     def make_metadata_out_from_vamps2_submission(self):  # public
         data_from_db = self.metadata.get_vamps2_submission_info(self.request.POST['projects'])
-        domain_dna_regions = self.metadata.get_domain_dna_regions([data_from_db])
+        domain_dna_regions = self.metadata.get_domain_dna_regions(data_from_db)
         dna_region = list(set(domain_dna_regions))[0][1:]  # 'v4' assuming only one region and a correct project name
         current_run_info = {
             'csv_rundate': "",
@@ -851,17 +851,16 @@ class OutData():
     def make_metadata_out_from_project_data(self, vamps2_dict):
         # TODO: test with csv if changes still work from
         primer_suites = self.metadata.get_primer_suites()
-        vamps2_dict_arr = [vamps2_dict]
-        info_list_len = len(vamps2_dict_arr)
         self.metadata.get_domain_per_row()
+        info_list_len = len(vamps2_dict)
 
         for i in range(info_list_len):
             # dump the whole vamps2_dict to out_metadata, then add if key is different
             self.out_metadata[i] = self.utils.make_an_empty_dict_from_set(self.csv_file.all_headers)
-            self.out_metadata[i].update(vamps2_dict_arr[i])
+            self.out_metadata[i].update(vamps2_dict[i])
             self.out_metadata[i]['dna_region'] = self.request.session['run_info_from_csv']['csv_dna_region']
             try:
-                self.out_metadata[i]['contact_name'] = vamps2_dict_arr[i].get('first_name', False) + ' ' + vamps2_dict_arr[i].get('last_name', False)
+                self.out_metadata[i]['contact_name'] = vamps2_dict[i].get('first_name', False) + ' ' + vamps2_dict[i].get('last_name', False)
                 self.out_metadata[i]['domain']       = self.metadata.domains_per_row[i]
                 self.out_metadata[i]['lane']         = '1' # default
                 self.out_metadata[i]['primer_suite'] = primer_suites[i]
@@ -1179,8 +1178,8 @@ class MysqlUtil():
         # import pprint
         # pp = pprint.PrettyPrinter(indent = 4)
 
-        # res_arr_of_dict = []
-        res_dict = defaultdict(lambda: defaultdict(lambda: 0))
+        res_arr_of_dict = []
+        # res_dict = defaultdict(lambda: defaultdict(lambda: 0))
 
         cursor = connections[connection_name].cursor()
         # cursor = connection.cursor()
@@ -1190,7 +1189,7 @@ class MysqlUtil():
 
         for row in cursor:
             d = dict(zip(column_names, row))
-            res_dict.update(d)
+            res_arr_of_dict.append(d)
 
-        return res_dict
+        return res_arr_of_dict
 
