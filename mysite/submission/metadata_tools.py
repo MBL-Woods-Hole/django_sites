@@ -463,10 +463,11 @@ class Metadata():
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         self.adaptor_ref = self.get_all_adaptors()
         self.adaptors_full = {}
+        self.request = request
 
         # To MysqlUtil?
         self.db_prefix = ""
-        if (self.utils.is_local(request)):
+        if (self.utils.is_local(self.request)):
             self.db_prefix = "test_"
 
         self.suite_domain_choices = dict(Domain.SUITE_DOMAIN_CHOICES)
@@ -516,9 +517,9 @@ class Metadata():
         except:
             raise
 
-    def update_submission_tubes(self, request):
+    def update_submission_tubes(self):
         try:
-            self.out_metadata = request.session['out_metadata']
+            self.out_metadata = self.request.session['out_metadata']
             # logging.debug("self.out_metadata = ")
             # logging.debug(self.out_metadata)
         except:
@@ -535,13 +536,13 @@ class Metadata():
             lane = self.out_metadata[i]['lane']
             op_amp = self.out_metadata[i]['amp_operator']
             op_empcr = self.out_metadata[i]['op_empcr']
-            op_seq = request.session['run_info_form_post']['csv_seq_operator']
+            op_seq = self.request.session['run_info_form_post']['csv_seq_operator']
             overlap = overlap_choices[self.out_metadata[i]['overlap']]
-            platform = request.session['run_info']['selected_machine']
+            platform = self.request.session['run_info']['selected_machine']
             pool = self.out_metadata[i]['pool']
             project_name = self.out_metadata[i]['project']
             read_length = self.out_metadata[i]['read_length']
-            rundate = request.session['run_info']['selected_rundate']
+            rundate = self.request.session['run_info']['selected_rundate']
             submit_code = self.out_metadata[i]['submit_code']
 
             updated = VampsSubmissionsTubes.objects.filter(id = id, submit_code = submit_code).update(
@@ -581,8 +582,8 @@ class Metadata():
             # print "UUU updated = "
             # print updated
 
-    def insert_run(self, request):
-        return Run.objects.get_or_create(run=request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=request.session['run_info']['selected_machine'])
+    def insert_run(self):
+        return Run.objects.get_or_create(run=self.request.session['run_info']['selected_rundate'], run_prefix='illumin', platform=self.request.session['run_info']['selected_machine'])
 
     # vamps2
 
@@ -679,9 +680,16 @@ class Metadata():
                 try:
                   vamps_user_id = self.vamps_submissions[submit_code]['username']
                 except KeyError as e:
-                  user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
+                  # user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
                   self.errors.add("Please check if contact information for %s exists in VAMPS." % submit_code)
                   return
+                except TypeError:
+                    usernames = set()
+                    for entry in self.vamps_submissions[submit_code]:
+                        username = entry.get('username', False)
+                        usernames.add(username)
+                    vamps_user_id = "".join(list(usernames))
+                    # user_name_by_submit_code = self.get_user_name_by_submit_code(submit_code)
                 except:
                   raise
 
@@ -697,13 +705,18 @@ class Metadata():
         except:
             raise
 
+    def get_user_name_by_submit_code(self, submit_code):
+        submit_code_idx = self.csv_content[0].index("submit_code")
+        user_name_idx   = self.csv_content[0].index("user")
+        user_name_by_submit_code = ""
+        for sublist in self.csv_content:
+            if sublist[submit_code_idx] == submit_code:
+                user_name_by_submit_code = sublist[user_name_idx]
+                break
+        return user_name_by_submit_code
+
     def check_projects(self, csv_projects):
         missing_projects = []
-        # for i in range(len(csv_content)-1):
-        #     if csv_by_header['project_name']:
-        #         csv_project = csv_by_header['project_name'][i]
-        #     elif csv_by_header['project']:
-        #         csv_project = csv_by_header['project'][i]
 
         for csv_project in csv_projects:
             try:
