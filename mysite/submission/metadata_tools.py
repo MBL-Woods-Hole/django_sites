@@ -1,7 +1,8 @@
 from __future__ import unicode_literals
 from .forms import RunForm, FileUploadForm, CsvRunInfoUploadForm, MetadataOutCsvForm, AddProjectForm
 from .utils import Utils, Dirs
-from collections import defaultdict
+import collections
+# from collections import defaultdict
 from datetime import datetime
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -36,8 +37,8 @@ class CsvFile():
         self.out_files = out_files_obj
         self.selected_vals = selected_vals_obj
 
-        self.csv_by_header = defaultdict(list)
-        self.csv_by_header_uniqued = defaultdict(list) # public
+        self.csv_by_header = collections.defaultdict(list)
+        self.csv_by_header_uniqued = collections.defaultdict(list) # public
         self.csv_content = []
         self.csv_headers = []
         self.vamps2_csv = False
@@ -455,7 +456,7 @@ class Metadata():
     def __init__(self, request):
         self.utils = Utils()
         self.mysql_util = MysqlUtil()
-        self.vamps_submissions = defaultdict(lambda: defaultdict(lambda: 0))
+        self.vamps_submissions = collections.defaultdict(lambda: collections.defaultdict(lambda: 0))
         self.domains_per_row = []
         self.domain_dna_regions = []
         self.errors = set() # public
@@ -739,9 +740,9 @@ class OutData():
         self.csv_file = CsvFile(self.metadata, self.out_files, self.selected_vals)
         self.utils = Utils()
 
-        self.out_metadata = defaultdict(lambda: defaultdict(lambda: 0)) # TODO: Why create from scratch each time?
-        self.out_metadata_table = defaultdict(list) # public
-        self.current_selected_data = defaultdict()
+        self.out_metadata = collections.defaultdict(lambda: collections.defaultdict(lambda: 0)) # TODO: Why create from scratch each time?
+        self.out_metadata_table = collections.defaultdict(list) # public
+        self.current_selected_data = collections.defaultdict()
         self.errors = set() # public
         self.request = request
         self.files_created = []  # public
@@ -784,10 +785,26 @@ class OutData():
 
         # self.request.session['csv_by_header_uniqued'] = self.csv_file.csv_by_header_uniqued
         # TODO DRY
+
         if ( not self.errors ):
-            self.request.session['out_metadata'] = self.out_metadata
+            self.request.session['out_metadata'] = self.convert_out_metadata()
 
         return (metadata_run_info_form, has_empty_cells)
+
+    def convert_out_metadata(self):
+        temp_dict = {}
+        for k, v in self.out_metadata.items():
+            if isinstance(v, collections.Mapping): # 1) check if dict instead, 2) restore structure in temp. 
+                # d[k] = update(d.get(k, {}), v)
+                continue
+            else:
+                temp_dict[k] = self.utils.convertDatetimeToString(v)
+
+        # for idx, val in self.utils.iteritems_recursive(self.out_metadata):
+        #     v = self.utils.convertDatetimeToString(val)
+        #     temp_dict[idx] = v
+
+        return temp_dict
 
     # TODO: rename or join
     def make_metadata_out_from_run_info_form(self):
@@ -803,7 +820,7 @@ class OutData():
             self.files_created = self.create_vamps2_submission_csv(self.request)
 
         self.edit_out_metadata()
-        self.request.session['out_metadata'] = self.out_metadata
+        self.request.session['out_metadata'] = self.convert_out_metadata()
         self.out_files.metadata_csv_file_names
         # created_files = self.out_files.metadata_csv_file_names
         path_to_csv = self.out_files.create_path_to_csv(selected_data)
@@ -845,7 +862,8 @@ class OutData():
         self.make_new_out_metadata()
         if self.errors:
             return (metadata_run_info_form)
-        self.request.session['out_metadata'] = self.out_metadata
+        self.request.session['out_metadata'] = self.convert_out_metadata()
+            # self.out_metadata
         return (metadata_run_info_form)
 
     # TODO: 2) how to simplify it (case?)?
@@ -907,14 +925,19 @@ class OutData():
                 raise
             try:
                 # TODO: change as get_selected
-                self.out_metadata[i]['contact_name']         = self.metadata.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.metadata.user_info_arr[curr_submit_code]['last_name']
-                self.out_metadata[i]['email'] = self.metadata.user_info_arr[curr_submit_code]['email']
-                self.out_metadata[i]['data_owner']           = self.metadata.user_info_arr[curr_submit_code]['vamps_name']
-                self.out_metadata[i]['first_name']           = self.metadata.user_info_arr[curr_submit_code]['first_name']
-                self.out_metadata[i]['funding']              = self.metadata.vamps_submissions[curr_submit_code]['funding']
-                self.out_metadata[i]['institution']			 = self.metadata.vamps_submissions[curr_submit_code]['institution']
-                self.out_metadata[i]['last_name']            = self.metadata.user_info_arr[curr_submit_code]['last_name']
-                self.out_metadata[i]['project_description']	 = self.metadata.vamps_submissions[curr_submit_code]['project_description']
+                self.out_metadata[i].update(self.metadata.user_info_arr[curr_submit_code])
+                for entry in self.metadata.vamps_submissions[curr_submit_code]:
+                    self.out_metadata[i].update(entry)
+
+                self.out_metadata[i]['contact_name'] = self.metadata.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.metadata.user_info_arr[curr_submit_code]['last_name']
+
+                # self.out_metadata[i]['email'] = self.metadata.user_info_arr[curr_submit_code]['email']
+                # self.out_metadata[i]['data_owner']           = self.metadata.user_info_arr[curr_submit_code]['vamps_name']
+                # self.out_metadata[i]['first_name']           = self.metadata.user_info_arr[curr_submit_code]['first_name']
+                # self.out_metadata[i]['funding']              = self.metadata.vamps_submissions[curr_submit_code]['funding']
+                # self.out_metadata[i]['institution']			 = self.metadata.vamps_submissions[curr_submit_code]['institution']
+                # self.out_metadata[i]['last_name']            = self.metadata.user_info_arr[curr_submit_code]['last_name']
+                # self.out_metadata[i]['project_description']	 = self.metadata.vamps_submissions[curr_submit_code]['project_description']
 
             except KeyError:
                 if not curr_submit_code:
@@ -937,15 +960,16 @@ class OutData():
             self.out_metadata[i]['overlap']				 = self.csv_file.csv_by_header['overlap'][i]
             self.out_metadata[i]['primer_suite']		 = self.csv_file.csv_by_header['primer_suite'][i]
             self.out_metadata[i]['project']				 = self.csv_file.csv_by_header['project_name'][i]
-            try:
-                self.out_metadata[i]['project_title']		= self.metadata.vamps_submissions[curr_submit_code]['title']
-            except KeyError:
-                try:
-                    self.out_metadata[i]['project_title']       = self.metadata.vamps_submissions[curr_submit_code]['project_title']
-                except KeyError:
-                    self.out_metadata[i]['project_title']       = ""
-            except:
-                raise
+            self.out_metadata[i]['project_title']		 = self.out_metadata[i]['title']
+            # try:
+            #     self.out_metadata[i]['project_title']		= self.metadata.vamps_submissions[curr_submit_code]['title']
+            # except KeyError:
+            #     try:
+            #         self.out_metadata[i]['project_title']       = self.metadata.vamps_submissions[curr_submit_code]['project_title']
+            #     except KeyError:
+            #         self.out_metadata[i]['project_title']       = ""
+            # except:
+            #     raise
 
             self.out_metadata[i]['read_length']			 = self.csv_file.csv_by_header['read_length'][i]
 
@@ -980,7 +1004,8 @@ class OutData():
         try:
             self.out_metadata = self.request.session['out_metadata']
         except KeyError:
-            self.request.session['out_metadata'] = self.out_metadata
+            self.request.session['out_metadata'] = self.convert_out_metadata()
+                # self.out_metadata
         except:
             raise
 
@@ -1151,7 +1176,8 @@ class OutData():
 
             # *) metadata csv files
             self.out_files.create_out_metadata_csv_file_names(self.out_metadata)
-            self.out_files.write_out_metadata_to_csv(path_to_csv, self.out_metadata)
+            self.out_files.write_out_metadata_to_csv(path_to_csv, self.convert_out_metadata())
+                                                     # self.out_metadata)
 
             # *) check if csv was created
             self.files_created = self.out_files.check_out_csv_files(path_to_csv)
@@ -1192,7 +1218,7 @@ class MysqlUtil():
         # pp = pprint.PrettyPrinter(indent = 4)
 
         res_arr_of_dict = []
-        # res_dict = defaultdict(lambda: defaultdict(lambda: 0))
+        # res_dict = collections.defaultdict(lambda: collections.defaultdict(lambda: 0))
 
         cursor = connections[connection_name].cursor()
         # cursor = connection.cursor()

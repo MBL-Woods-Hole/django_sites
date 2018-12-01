@@ -8,6 +8,8 @@ import os
 import logging
 import stat
 import subprocess
+import datetime as dt
+
 
 class Utils():
 
@@ -57,6 +59,31 @@ class Utils():
             #     del request.session[key]
         except KeyError:
             pass
+
+    # def convertDatetimeToString(obj):
+    #     DATE_FORMAT = "%Y-%m-%d"
+    #     TIME_FORMAT = "%H:%M:%S"
+    #
+    #     if isinstance(obj, dt.date):
+    #         return obj.strftime(DATE_FORMAT)
+    #     elif isinstance(obj, dt.time):
+    #         return obj.strftime(TIME_FORMAT)
+    #     elif isinstance(obj, dt.datetime):
+    #         return obj.strftime("%s %s" % (DATE_FORMAT, TIME_FORMAT))
+
+    # def iteritems_recursive(self, d):
+    #     for k, v in d.iteritems():
+    #         if isinstance(v, dict):
+    #             for k1, v1 in self.iteritems_recursive(v):
+    #                 yield (k,) + k1, v1
+    #         else:
+    #             yield (k,), v
+
+    def convertDatetimeToString(self, obj):
+
+        if isinstance(obj, dt.datetime):
+            return obj.__str__()
+
 
 
 class Dirs:

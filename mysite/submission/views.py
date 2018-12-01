@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext, loader, Context
 from django.utils.html import escape
+import json
 import os 
 import logging
 
@@ -100,7 +101,10 @@ def upload_file_n_make_new_metadata(request, out_data):
 
     errors_size = len(out_data.errors)
 
-    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size }
+    # csv_by_header_uniqued = json.dumps(out_data.csv_file.csv_by_header_uniqued, indent=4, sort_keys=True, default=str)
+    csv_by_header_uniqued = out_data.csv_file.csv_by_header_uniqued
+
+    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size }
     
 def submit_run_info_n_edit_metadata_n_make_table(request, out_data):
     # out_data = OutData(request)
