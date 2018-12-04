@@ -783,48 +783,23 @@ class OutData():
         self.make_new_out_metadata()
         self.errors.update(self.csv_file.errors)
 
-        # self.request.session['csv_by_header_uniqued'] = self.csv_file.csv_by_header_uniqued
-        # TODO DRY
-
         if ( not self.errors ):
             temp_dict = {}
             for k, val in self.out_metadata.items():
-                tt = type(val)
-                print("type(%s) = %s" % (val, tt))
                 if isinstance(val, collections.Mapping):
                     for k1, val1 in val.items():
                         if isinstance(val1, date):
                             dd = self.utils.convertDatetimeToString(val1)
                             val[k1] = dd
-                            # update(d.get(k, {}), v)
-                        tt1 = type(val1)
-                        print("type(%s) = %s" % (val1, tt1))
-                # if type(v) == date:
-
-
-            # for k, v in self.out_metadata.items():
-            #     temp_dict[k] = self.utils.convertDatetimeToString(self.convert_out_metadata(v))
-
-            # self.request.session['out_metadata'] = self.convert_out_metadata()
 
         return (metadata_run_info_form, has_empty_cells)
 
-    # def
-
     def convert_out_metadata(self, obj):
-        # 'value77' in [x for v in values for x in v if type(v) == list] or 'value77' in values
-
         if isinstance(obj, collections.Mapping): # 1) check if dict instead, 2) restore structure in temp.
             self.convert_out_metadata(obj.values())
             # d[k] = update(d.get(k, {}), v)
         else:
             return obj
-
-        # for idx, val in self.utils.iteritems_recursive(self.out_metadata):
-        #     v = self.utils.convertDatetimeToString(val)
-        #     temp_dict[idx] = v
-
-        # return temp_dict
 
     # TODO: rename or join
     def make_metadata_out_from_run_info_form(self):
