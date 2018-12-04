@@ -81,7 +81,7 @@ class Utils():
 
     def convertDatetimeToString(self, obj):
 
-        if isinstance(obj, dt.datetime):
+        if isinstance(obj, dt.date):
             return obj.__str__()
 
 
