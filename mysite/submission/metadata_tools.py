@@ -784,22 +784,29 @@ class OutData():
         self.errors.update(self.csv_file.errors)
 
         if ( not self.errors ):
-            temp_dict = {}
-            for k, val in self.out_metadata.items():
-                if isinstance(val, collections.Mapping):
-                    for k1, val1 in val.items():
-                        if isinstance(val1, date):
-                            dd = self.utils.convertDatetimeToString(val1)
-                            val[k1] = dd
+            temp_dict = self.out_metadata
+            self.out_metadata = self.convert_out_metadata(temp_dict)
+            self.request.session['out_metadata'] = self.out_metadata
+
+            # for k, val in self.out_metadata.items():
+            #     if isinstance(val, collections.Mapping):
+            #         for k1, val1 in val.items():
+            #             if isinstance(val1, date):
+            #                 dd = self.utils.convertDatetimeToString(val1)
+            #                 val[k1] = dd
 
         return (metadata_run_info_form, has_empty_cells)
 
     def convert_out_metadata(self, obj):
-        if isinstance(obj, collections.Mapping): # 1) check if dict instead, 2) restore structure in temp.
-            self.convert_out_metadata(obj.values())
-            # d[k] = update(d.get(k, {}), v)
-        else:
-            return obj
+        for k, val in obj.items():
+            if isinstance(val, collections.Mapping):
+                for k1, val1 in val.items():
+                    if isinstance(val1, date):
+                        dd = self.utils.convertDatetimeToString(val1)
+                        val[k1] = dd
+        return obj
+
+
 
     # TODO: rename or join
     def make_metadata_out_from_run_info_form(self):
@@ -815,7 +822,7 @@ class OutData():
             self.files_created = self.create_vamps2_submission_csv(self.request)
 
         self.edit_out_metadata()
-        self.request.session['out_metadata'] = self.convert_out_metadata()
+        self.request.session['out_metadata'] = self.out_metadata
         self.out_files.metadata_csv_file_names
         # created_files = self.out_files.metadata_csv_file_names
         path_to_csv = self.out_files.create_path_to_csv(selected_data)
@@ -857,7 +864,7 @@ class OutData():
         self.make_new_out_metadata()
         if self.errors:
             return (metadata_run_info_form)
-        self.request.session['out_metadata'] = self.convert_out_metadata()
+        self.request.session['out_metadata'] = self.out_metadata
             # self.out_metadata
         return (metadata_run_info_form)
 
@@ -999,7 +1006,7 @@ class OutData():
         try:
             self.out_metadata = self.request.session['out_metadata']
         except KeyError:
-            self.request.session['out_metadata'] = self.convert_out_metadata()
+            self.request.session['out_metadata'] = self.out_metadata
                 # self.out_metadata
         except:
             raise
@@ -1171,7 +1178,7 @@ class OutData():
 
             # *) metadata csv files
             self.out_files.create_out_metadata_csv_file_names(self.out_metadata)
-            self.out_files.write_out_metadata_to_csv(path_to_csv, self.convert_out_metadata())
+            self.out_files.write_out_metadata_to_csv(path_to_csv, self.out_metadata)
                                                      # self.out_metadata)
 
             # *) check if csv was created
