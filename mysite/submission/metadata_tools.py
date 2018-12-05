@@ -932,9 +932,9 @@ class OutData():
                     self.out_metadata[i].update(entry)
 
                 self.out_metadata[i]['contact_name'] = self.metadata.user_info_arr[curr_submit_code]['first_name'] + ' ' + self.metadata.user_info_arr[curr_submit_code]['last_name']
+                self.out_metadata[i]['data_owner']           = self.metadata.user_info_arr[curr_submit_code]['vamps_name']
 
                 # self.out_metadata[i]['email'] = self.metadata.user_info_arr[curr_submit_code]['email']
-                # self.out_metadata[i]['data_owner']           = self.metadata.user_info_arr[curr_submit_code]['vamps_name']
                 # self.out_metadata[i]['first_name']           = self.metadata.user_info_arr[curr_submit_code]['first_name']
                 # self.out_metadata[i]['funding']              = self.metadata.vamps_submissions[curr_submit_code]['funding']
                 # self.out_metadata[i]['institution']			 = self.metadata.vamps_submissions[curr_submit_code]['institution']
@@ -1187,7 +1187,7 @@ class OutData():
             if len(self.metadata.vamps_submissions) > 0:
                 self.metadata.update_submission_tubes(self.request)
 
-        self.new_rundate, self.new_rundate_created = self.metadata.insert_run(self.request)
+        self.new_rundate, self.new_rundate_created = self.metadata.insert_run()
         logging.info(
             "self.new_rundate = %s, self.new_rundate_created = %s" % (self.new_rundate, self.new_rundate_created))
 
