@@ -844,6 +844,11 @@ class OutData():
 
     def make_metadata_out_from_vamps2_submission(self):  # public
         data_from_db = self.metadata.get_vamps2_submission_info(self.request.POST['projects'])
+        if not data_from_db:
+            self.errors.add('Please check if there is an information for project_id %s in the db' % (self.request.POST['projects']))
+            metadata_run_info_form = CsvRunInfoUploadForm(initial = self.request.session['run_info_from_csv'])
+            return (metadata_run_info_form)
+
         domain_dna_regions = self.metadata.get_domain_dna_regions(data_from_db)
         dna_region = list(set(domain_dna_regions))[0][1:]  # 'v4' assuming only one region and a correct project name
         current_run_info = {
