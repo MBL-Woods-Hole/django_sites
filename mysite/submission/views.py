@@ -55,6 +55,9 @@ def upload_metadata(request):
 
     elif 'choose_project' in request.POST:
         context = choose_project(request, out_data)
+        if not context['metadata_run_info_form']:
+            context = initial_form({'errors': out_data.errors, 'errors_size': len(out_data.errors)})
+
 
     elif 'create_submission_metadata_file' in request.POST:
         context = edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request, out_data)
@@ -68,7 +71,8 @@ def choose_project(request, out_data):
 
     metadata_run_info_form = out_data.make_metadata_out_from_vamps2_submission()
 
-    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued}
+    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': len(out_data.errors) }
+
 
 def submit_run_info_and_get_csv(request, out_data):
     request.session['create_vamps2_submission_csv'] = True
@@ -135,11 +139,12 @@ def edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(reque
 
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'metadata_out_csv_form': formset, 'out_metadata_table': request.session['out_metadata_table'], 'errors': formset.errors, 'errors_size': errors_size, 'files_created': out_data.files_created}
 
-def initial_form():
+def initial_form(context_in = {}):
     file_upload_form = FileUploadForm()
     choose_project_form = ChooseProjectForm()
-
-    return {'file_upload_form': file_upload_form, 'choose_project_form': choose_project_form, 'header': 'Upload metadata', 'formset': {}}
+    context_out = {'file_upload_form': file_upload_form, 'choose_project_form': choose_project_form, 'header': 'Upload metadata', 'formset': {}}
+    context_out.update(context_in)
+    return context_out
         
 def add_project(request, out_data): # TODO: test 
     # csv_handler = CsvMetadata(request)

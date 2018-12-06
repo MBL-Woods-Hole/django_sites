@@ -18,6 +18,7 @@ import csv
 from .model_choices import Overlap, Machine, Domain
 from .models_l_env454 import *
 from .models_l_vamps import VampsSubmissionsTubes
+from .models_l_vamps2 import ProjectVamps2
 import io
 import os, sys
 import stat
@@ -596,7 +597,9 @@ class Metadata():
             WHERE project_id = %s""" % (project_id)
 
             self.vamps2_project_results = self.mysql_util.run_query_to_dict(query_subm, db_name)
-
+            if not self.vamps2_project_results:
+                logging.debug(query_subm)
+                print("Empty results fo this query: %s in %s" % (query_subm, db_name))
             # TODO: check all return self
             return self.vamps2_project_results
         except KeyError as e:
@@ -828,7 +831,6 @@ class OutData():
         path_to_csv = self.out_files.create_path_to_csv(selected_data)
         self.out_files.check_out_csv_files(path_to_csv)
         # self.files_created.append(created_files)
-        # TODO: change : {'miamiU03_MUA_AAAA_Bv4v5': '/Users/ashipunova/Documents/Metadata_upload_miamiU03_MUA_AAAA_Bv4v5.csv'} was created
 
         self.request.session['files_created'] = self.files_created
         self.request.session['run_info_form_post'] = self.request.POST
@@ -845,9 +847,10 @@ class OutData():
     def make_metadata_out_from_vamps2_submission(self):  # public
         data_from_db = self.metadata.get_vamps2_submission_info(self.request.POST['projects'])
         if not data_from_db:
-            self.errors.add('Please check if there is an information for project_id %s in the db' % (self.request.POST['projects']))
-            metadata_run_info_form = CsvRunInfoUploadForm(initial = self.request.session['run_info_from_csv'])
-            return (metadata_run_info_form)
+            project_id = self.request.POST['projects']
+            project_obj_by_id = ProjectVamps2.objects.filter(project_id = project_id)
+            self.errors.add('Please check if there is an information for project %s in the db' % (project_obj_by_id[0].project))
+            return
 
         domain_dna_regions = self.metadata.get_domain_dna_regions(data_from_db)
         dna_region = list(set(domain_dna_regions))[0][1:]  # 'v4' assuming only one region and a correct project name
