@@ -144,17 +144,17 @@ def initial_form(context_in = {}):
     context_out.update(context_in)
     return context_out
         
-def add_project(request, out_data): # TODO: test 
-    # csv_handler = CsvMetadata(request)
+def add_project(request): # TODO: test
+    out_data = OutData(request)
 
     if request.method == 'POST':
         # elif 'submit_new_project' in request.POST:
         logging.debug("HHH")
         logging.debug("222 submit_new_project in request.POST")
 
-        metadata_new_project_form = out_data.submit_new_project(request)
+        metadata_new_project_form = out_data.metadata.submit_new_project(request)
 
-        context = {'header': 'Add New Project', 'errors': out_data.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': out_data.new_project, 'new_project_created': out_data.new_project_created}    
+        context = {'header': 'Add New Project', 'errors': out_data.errors, 'metadata_new_project_form': metadata_new_project_form, 'new_project_name': out_data.metadata.new_project, 'new_project_created': out_data.metadata.new_project_created}
     else:
         metadata_new_project_form = AddProjectForm()
         context = {'header': 'Add New Project', 'errors': out_data.errors, 'metadata_new_project_form': metadata_new_project_form}

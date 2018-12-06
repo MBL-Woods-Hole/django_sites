@@ -457,10 +457,13 @@ class Metadata():
     def __init__(self, request):
         self.utils = Utils()
         self.mysql_util = MysqlUtil()
+        self.new_project = "" # public
+        self.new_project_created = False # public
+        self.errors = set() # public
+
         self.vamps_submissions = collections.defaultdict(lambda: collections.defaultdict(lambda: 0))
         self.domains_per_row = []
         self.domain_dna_regions = []
-        self.errors = set() # public
         self.user_info_arr = {}
         self.domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         self.adaptor_ref = self.get_all_adaptors()
@@ -737,6 +740,33 @@ class Metadata():
         missing_projects_list = ", ".join(list(set(missing_projects)))
         if len(missing_projects_list) > 0:
             self.errors.add("Please add project information for %s to env454." % missing_projects_list)
+
+
+    def submit_new_project(self, request): # public
+        metadata_new_project_form = AddProjectForm(request.POST)
+
+        if metadata_new_project_form.is_valid():
+            """
+            metadata_new_project_form.cleaned_data = 
+            {'env_source_name': <EnvSampleSource: 0: >, 'project_description': u'www', 'funding': u'rrr', 'project_title': u'sss', 'project': u'dfsdfs_dsfsdfs_B_v6', 'contact': <Contact: Eric Boyd>}
+
+            """
+
+            self.new_project, self.new_project_created = self.insert_project(request.POST)
+
+        return metadata_new_project_form
+
+    def insert_project(self, request_post):
+        project_name = request_post['project_0'] + "_" + request_post['project_1'] + "_" + request_post['project_2'] + request_post['project_3']
+
+        owner = Contact.cache_all_method.get(contact = request_post['contact'])
+
+        project_obj = Project.objects.get_or_create(project=project_name, title=request_post['project_title'], project_description=request_post['project_description'], rev_project_name=project_name[::-1], funding=request_post['funding'], env_sample_source_id=request_post['env_source_name'], contact_id=owner.contact_id)
+
+        return project_obj
+
+
+
 
 
 class OutData():
