@@ -70,6 +70,21 @@ class ProjectVamps2(models.Model):
     cache_all_method = AllMethodCachingManager()
 
     # form_class.base_fields['foo'].queryset = YourModel.cache_all_method.all()
+    #   `project_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    #   `project` varchar(32) NOT NULL DEFAULT '',
+    #   `title` varchar(255) NOT NULL DEFAULT '',
+    #   `project_description` text NOT NULL,
+    #   `rev_project_name` varchar(32) NOT NULL DEFAULT '',
+    #   `funding` varchar(64) NOT NULL DEFAULT '',
+    #   `owner_user_id` int(11) unsigned DEFAULT NULL,
+    #   `public` tinyint(1) NOT NULL DEFAULT '0',
+    #   `metagenomic` tinyint(1) DEFAULT '0',
+    #   `matrix` tinyint(1) DEFAULT '0',
+    #   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    #   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    #   `active` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'if 0 the project is invisible on VAMPS2',
+    #   `permanent` tinyint(1) NOT NULL DEFAULT '1',
+    #   `user_project` tinyint(1) DEFAULT '0',
 
     project_id = models.IntegerField(primary_key=True)
     project = models.CharField(unique=True, max_length=32)
@@ -77,12 +92,13 @@ class ProjectVamps2(models.Model):
     project_description = models.CharField(max_length=255)
     rev_project_name = models.CharField(unique=True, max_length=32)
     funding = models.CharField(max_length=64)
-    owner_user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
+    # owner_user_id = models.IntegerField()
+        # ForeignKey(
+        # User,
+        # on_delete=models.CASCADE,
         # related_name='user_id',
         # db_column='owner_user_id',
-    )
+    # )
     public = models.PositiveSmallIntegerField(default=0)
     metagenomic = models.PositiveSmallIntegerField(default=0)
     matrix = models.PositiveSmallIntegerField(default=0)
