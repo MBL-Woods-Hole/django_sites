@@ -11,9 +11,12 @@ class submissionRouter(object):
         """
         db = 'default'
 
+        # TODO: rewrite to simply use meta db (add to all models)
         if model._meta.app_label == 'submission':
             if hasattr(model._meta, 'vamps_db'):
                 db = 'vamps'
+            elif hasattr(model._meta, 'vamps2'):
+                db = 'vamps2'
             else:
                 db = 'env454'
 
@@ -23,11 +26,14 @@ class submissionRouter(object):
     def db_for_write(self, model, **hints):
         db = 'default'
 
+        # TODO: rewrite to simply use meta db (add to all models)
         if model._meta.app_label == 'submission':
         #     return None
         # return 'default'
             if hasattr(model._meta, 'vamps_db'):
                 db = 'vamps'
+            elif hasattr(model._meta, 'vamps2'):
+                db = 'vamps2'
             else:
                 db = 'env454'
 
