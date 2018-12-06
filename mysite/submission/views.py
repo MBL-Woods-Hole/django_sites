@@ -55,22 +55,23 @@ def upload_metadata(request):
 
     elif 'choose_project' in request.POST:
         context = choose_project(request, out_data)
-        if not context['metadata_run_info_form']:
-            context = initial_form({'errors': out_data.errors, 'errors_size': len(out_data.errors)})
 
     elif 'create_submission_metadata_file' in request.POST:
         context = edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request, out_data)
+
     else:
-        context = initial_form()
+        context = initial_form({'errors': out_data.errors, 'errors_size': len(out_data.errors)})
 
     return render(request, 'submission/upload_metadata.html', context)
 
-def choose_project(request, out_data):
-    utils = Utils()
-
+def choose_project(out_data):
+    context = {'errors': out_data.errors, 'errors_size': len(out_data.errors)}
     metadata_run_info_form = out_data.make_metadata_out_from_vamps2_submission()
-
-    return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': len(out_data.errors) }
+    if metadata_run_info_form:
+        context.update({ 'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': out_data.csv_file.csv_by_header_uniqued })
+    else:
+        context = initial_form(context)
+    return context
 
 
 def submit_run_info_and_get_csv(request, out_data):
@@ -110,8 +111,6 @@ def upload_file_n_make_new_metadata(request, out_data):
     return {'metadata_run_info_form': metadata_run_info_form, 'header': 'Upload metadata', 'csv_by_header_uniqued': csv_by_header_uniqued, 'errors': out_data.errors, 'errors_size': errors_size }
     
 def submit_run_info_n_edit_metadata_n_make_table(request, out_data):
-    # out_data = OutData(request)
-    
     logging.debug("HHH")
     logging.debug("333 submit_run_info in request.POST")
 

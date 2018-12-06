@@ -608,6 +608,10 @@ class Metadata():
         except:
             raise
 
+    def get_project_name_by_id(self, project_id):
+        project_name = ProjectVamps2.objects.get(project_id = project_id)
+        return project_name
+
     def get_domain_dna_regions(self, data_arr_dict):
         # print("PPP5 data_dict: %s" % data_dict)
 
@@ -847,9 +851,8 @@ class OutData():
     def make_metadata_out_from_vamps2_submission(self):  # public
         data_from_db = self.metadata.get_vamps2_submission_info(self.request.POST['projects'])
         if not data_from_db:
-            project_id = self.request.POST['projects']
-            project_obj_by_id = ProjectVamps2.objects.filter(project_id = project_id)
-            self.errors.add('Please check if there is an information for project %s in the db' % (project_obj_by_id[0].project))
+            project_name = self.metadata.get_project_name_by_id(self.request.POST['projects'])
+            self.errors.add('Please check if there is an information for project %s in the db' % (project_name))
             return
 
         domain_dna_regions = self.metadata.get_domain_dna_regions(data_from_db)
@@ -868,10 +871,8 @@ class OutData():
         self.request.session['run_info_from_csv'] = current_run_info
 
         metadata_run_info_form = CsvRunInfoUploadForm(initial=self.request.session['run_info_from_csv'])
-        # TODO: clean up!
         self.make_new_out_metadata()
         if not self.errors:
-            # return (metadata_run_info_form)
             self.request.session['out_metadata'] = self.out_metadata
         return (metadata_run_info_form)
 
