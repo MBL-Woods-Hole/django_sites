@@ -853,7 +853,7 @@ class OutData():
             return
 
         domain_dna_regions = self.metadata.get_domain_dna_regions(data_from_db)
-        dna_region = list(set(domain_dna_regions))[0][1:]  # 'v4' assuming only one region and a correct project name
+        dna_region = list(set(domain_dna_regions))[0][1:]  # e.g. 'v4' assuming only one region and a correct project name
         current_run_info = {
             'csv_rundate': "",
             'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/",
@@ -870,10 +870,9 @@ class OutData():
         metadata_run_info_form = CsvRunInfoUploadForm(initial=self.request.session['run_info_from_csv'])
         # TODO: clean up!
         self.make_new_out_metadata()
-        if self.errors:
-            return (metadata_run_info_form)
-        self.request.session['out_metadata'] = self.out_metadata
-            # self.out_metadata
+        if not self.errors:
+            # return (metadata_run_info_form)
+            self.request.session['out_metadata'] = self.out_metadata
         return (metadata_run_info_form)
 
     # TODO: 2) how to simplify it (case?)?

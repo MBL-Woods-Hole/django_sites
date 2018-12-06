@@ -58,7 +58,6 @@ def upload_metadata(request):
         if not context['metadata_run_info_form']:
             context = initial_form({'errors': out_data.errors, 'errors_size': len(out_data.errors)})
 
-
     elif 'create_submission_metadata_file' in request.POST:
         context = edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request, out_data)
     else:
