@@ -54,7 +54,7 @@ def upload_metadata(request):
         context = submit_run_info_and_get_csv(request, out_data)
 
     elif 'choose_project' in request.POST:
-        context = choose_project(request, out_data)
+        context = choose_project(out_data)
 
     elif 'create_submission_metadata_file' in request.POST:
         context = edit_metadata_table_n_add_metadata_table_to_metadata_n_update_metadata(request, out_data)
@@ -144,7 +144,7 @@ def initial_form(context_in = {}):
     context_out.update(context_in)
     return context_out
         
-def add_project(request): # TODO: test
+def add_project(request):
     out_data = OutData(request)
 
     if request.method == 'POST':
