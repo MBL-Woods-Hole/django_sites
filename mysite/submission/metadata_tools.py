@@ -743,6 +743,10 @@ class CsvMetadata():
             missing_projects_list = ", ".join(list(set(missing_projects)))
             if len(missing_projects_list) > 0:
                 self.errors.add("Please add project information for %s to env454." % missing_projects_list)
+        #             add_project_link = settings.REPOSITORY_ROOT + "add_project/"
+        #             self.errors.add('Please check if there is an information for project %s in the db here: %s' % (project_name, add_project_link))
+        #             return
+
 
     def make_new_out_metadata(self, request):
         logging.info("make_new_out_metadata")
