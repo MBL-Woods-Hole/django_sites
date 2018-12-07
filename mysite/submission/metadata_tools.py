@@ -350,10 +350,7 @@ class SelectedVals():
 
     def get_selected_val(self, request, metadata_names_arr):
         for metadata_name in metadata_names_arr:
-            # if metadata_name == 'csv_plarform':
-            #     print(metadata_name)
             selected_val = request.POST.get(metadata_name, False)
-                # self.get_selected_val(run_info_dict, metadata_name)
             if (not selected_val):
                 selected_val = request.session.get(metadata_name, False)
             else:
@@ -704,15 +701,18 @@ class Metadata():
                 except:
                   raise
 
-                try:
-                    contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
-                    self.user_info_arr[submit_code] = model_to_dict(contacts)
+                if not vamps_user_id:
+                    self.errors.add("Please add submission information for %s and try again." % submit_code)
+                else:
+                    try:
+                        contacts = Contact.cache_all_method.get(vamps_name = vamps_user_id)
+                        self.user_info_arr[submit_code] = model_to_dict(contacts)
 
-                except Contact.DoesNotExist as e:
-                    # self.cause = e.args[0]
-                    self.errors.add("Please add contact information for %s to env454." % vamps_user_id)
-                except:
-                    raise
+                    except Contact.DoesNotExist as e:
+                        # self.cause = e.args[0]
+                        self.errors.add("Please add contact information for %s to env454." % vamps_user_id)
+                    except:
+                        raise
         except:
             raise
 
@@ -882,7 +882,8 @@ class OutData():
         data_from_db = self.metadata.get_vamps2_submission_info(self.request.POST['projects'])
         if not data_from_db:
             project_name = self.metadata.get_project_name_by_id(self.request.POST['projects'])
-            self.errors.add('Please check if there is an information for project %s in the db' % (project_name))
+            add_project_link = settings.REPOSITORY_ROOT + "add_project/"
+            self.errors.add('Please check if there is an information for project %s in the db here: %s' % (project_name, add_project_link))
             return
 
         domain_dna_regions = self.metadata.get_domain_dna_regions(data_from_db)
@@ -1238,7 +1239,8 @@ class OutData():
         project = "".join(list(set([value1['project'] for key1, value1 in out_metadata.items()])))
         project_author = data_owner + "_" + project
         complete_file_name = "Metadata_upload_%s.csv" % (project_author)
-        file_path = os.path.join(os.path.expanduser('~'), 'Documents', complete_file_name)
+        # file_path = os.path.join(os.path.expanduser('~'), 'Documents', complete_file_name)
+        file_path = os.path.join('/tmp', complete_file_name)
         self.out_files.metadata_csv_file_names[project_author] = file_path
         writers = {}
         writers.update(self.out_files.create_writers_with_headers(project_author, file_path))
