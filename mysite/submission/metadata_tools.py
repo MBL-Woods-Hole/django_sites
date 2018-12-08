@@ -197,9 +197,9 @@ class CsvFile():
         for row in zip(*self.csv_content):
             temp_d_from_csv[row[0]] = row[1:]
         self.csv_by_header = self.utils.make_an_empty_dict_from_set(self.all_headers)
-        temp_d_from_csv_updated = self.update_csv_by_header_fungi(temp_d_from_csv) # to change its1, seems to work without it
-        # self.csv_by_header.update(temp_d_from_csv_updated)
         self.csv_by_header.update(temp_d_from_csv)
+        # temp_d_from_csv_updated = self.update_csv_by_header_fungi(temp_d_from_csv) # to change its1, seems to work without it
+        # self.csv_by_header.update(temp_d_from_csv_updated)
 
     # to change its1, seems to work without it
     def update_csv_by_header_fungi(self, temp_d_from_csv):
