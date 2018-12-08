@@ -197,12 +197,21 @@ class CsvFile():
         for row in zip(*self.csv_content):
             temp_d_from_csv[row[0]] = row[1:]
         self.csv_by_header = self.utils.make_an_empty_dict_from_set(self.all_headers)
+        temp_d_from_csv_updated = self.update_csv_by_header_fungi(temp_d_from_csv) # to change its1, seems to work without it
+        # self.csv_by_header.update(temp_d_from_csv_updated)
         self.csv_by_header.update(temp_d_from_csv)
-        self.update_csv_by_header_fungi(temp_d_from_csv)
 
+    # to change its1, seems to work without it
     def update_csv_by_header_fungi(self, temp_d_from_csv):
-        for row in temp_d_from_csv:
-            pass
+        it_dict = temp_d_from_csv
+        # new_domain = []
+        # for val in it_dict['domain']:
+        #     if val.lower() in self.metadata.fungi_names:
+        #         new_domain.append('its1')
+        new_domain = ['its1' for val in it_dict['domain'] if val.lower() in self.metadata.fungi_names]
+        it_dict['domain'] = new_domain
+        out_dict = it_dict
+        return out_dict
 
     def get_csv_by_header_uniqued(self):
         self.csv_by_header_uniqued = self.utils.make_an_empty_dict_from_set(self.all_headers)
