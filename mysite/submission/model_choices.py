@@ -50,6 +50,7 @@ class Domain(models.Model):
         ('archaea', 'Archaea'),
         ('eukarya', 'Eukarya'),
         ('its1', 'ITS1'),
+        ('fungi', 'ITS1'),
     )
 
     DOMAIN_SHORTCUTS_CHOICES = (

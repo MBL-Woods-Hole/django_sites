@@ -474,6 +474,8 @@ class Metadata():
 
         self.suite_domain_choices = dict(Domain.SUITE_DOMAIN_CHOICES)
 
+        self.fungi_names = ['fungi', 'its1']
+
         self.HEADERS_TO_EDIT_METADATA = ['domain', 'lane', 'contact_name', 'run_key', 'barcode_index', 'adaptor', 'project', 'dataset', 'dataset_description', 'env_source_name', 'tubelabel', 'barcode', 'amp_operator']
 
         self.METADATA_NAMES = {}
@@ -626,25 +628,26 @@ class Metadata():
         return self.domain_dna_regions
 
     def get_domain_per_row(self):
-        for r in self.domain_dna_regions:
-            domain_letter = r[0]
-            domain = ""
-            # dna_region = r[1:]
-            for d, letter in self.domain_choices.items():
-                if letter == domain_letter:
-                    domain = d
+        for curr_region in self.domain_dna_regions:
+            curr_domain_letter = curr_region[0]
+            if curr_region.lower() in self.fungi_names:
+                curr_domain_letter = "F"
+            curr_domain = ""
+            for domain_name, letter in self.domain_choices.items():
+                if letter == curr_domain_letter:
+                    curr_domain = domain_name
                     break
-            self.domains_per_row.append(domain)
+            self.domains_per_row.append(curr_domain)
 
     def get_primer_suites(self):
         primer_suites = []
         # print("PPP0 self.domain_dna_regions: %s" % self.domain_dna_regions)
 
         for r in self.domain_dna_regions:
-            domain_letter = r[0]
+            curr_domain_letter = r[0]
             dna_region = r[1:]
             try:
-                primer_suite = self.suite_domain_choices[domain_letter] + ' ' + dna_region.upper() + ' Suite'
+                primer_suite = self.suite_domain_choices[curr_domain_letter] + ' ' + dna_region.upper() + ' Suite'
             except KeyError:
                 primer_suite = ""
             except:
@@ -660,7 +663,11 @@ class Metadata():
     def get_adaptors_full(self, adaptor, dna_region, domain):
         # db_name = self.db_prefix + "env454"
         key = "_".join([adaptor, dna_region, domain])
-        mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(dna_region_id__dna_region = dna_region).filter(domain = domain)
+        mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(
+            dna_region_id__dna_region = dna_region).filter(domain = domain)
+        if domain.lower() in self.fungi_names:
+            mm = self.adaptor_ref.filter(illumina_adaptor_id__illumina_adaptor = adaptor).filter(
+                dna_region_id__dna_region = dna_region)
 
         # TODO: make once self.adaptors_full.update({})
 
