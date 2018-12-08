@@ -198,6 +198,11 @@ class CsvFile():
             temp_d_from_csv[row[0]] = row[1:]
         self.csv_by_header = self.utils.make_an_empty_dict_from_set(self.all_headers)
         self.csv_by_header.update(temp_d_from_csv)
+        self.update_csv_by_header_fungi(temp_d_from_csv)
+
+    def update_csv_by_header_fungi(self, temp_d_from_csv):
+        for row in temp_d_from_csv:
+            pass
 
     def get_csv_by_header_uniqued(self):
         self.csv_by_header_uniqued = self.utils.make_an_empty_dict_from_set(self.all_headers)

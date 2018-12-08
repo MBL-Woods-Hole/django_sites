@@ -72,6 +72,8 @@ class Domain(models.Model):
         ('archaea' , 'A'),
         ('eukarya' , 'E'),
         ('its1'    , 'F'),
+        ('fungi'   , 'F'),
+
     )
 
     DOMAIN_WITH_LETTER_CHOICES = (
