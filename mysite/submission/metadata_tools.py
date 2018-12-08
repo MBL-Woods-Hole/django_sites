@@ -1285,4 +1285,3 @@ class MysqlUtil():
             res_arr_of_dict.append(d)
 
         return res_arr_of_dict
-
