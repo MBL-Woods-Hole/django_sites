@@ -204,11 +204,7 @@ class CsvFile():
     # to change its1, seems to work without it
     def update_csv_by_header_fungi(self, temp_d_from_csv):
         it_dict = temp_d_from_csv
-        # new_domain = []
-        # for val in it_dict['domain']:
-        #     if val.lower() in self.metadata.fungi_names:
-        #         new_domain.append('its1')
-        new_domain = ['its1' for val in it_dict['domain'] if val.lower() in self.metadata.fungi_names]
+        new_domain = ['its1' for val in it_dict['domain'] if (val.lower() in self.metadata.fungi_names)]
         it_dict['domain'] = new_domain
         out_dict = it_dict
         return out_dict
