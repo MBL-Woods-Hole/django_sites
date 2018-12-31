@@ -274,21 +274,25 @@ class CsvFile():
             # logging.debug(self.run_info_from_csv)
         except KeyError as e:
             self.cause = e.args[0]
-            self.errors.add(self.no_data_message())
+            self.errors.add(self.metadata.no_data_message())
         except:
             raise
+
+    def get_domain(self, index):
+        try:
+            domain = self.csv_by_header['domain'][index]
+        except IndexError:
+            domain = self.metadata.domains_per_row[index]
+        except:
+            raise
+        return domain
 
     def get_adaptor_from_csv_content(self):
         for i in range(len(self.csv_content)-1):
             # logging.debug("+" * 9)
             adaptor    = self.csv_by_header['adaptor'][i]
             dna_region = self.csv_by_header['dna_region'][i]
-            try:
-                domain     = self.csv_by_header['domain'][i]
-            except IndexError:
-                domain = self.metadata.domains_per_row[i]
-            except:
-                raise
+            domain = self.get_domain(i)
 
             self.metadata.get_adaptors_full(adaptor, dna_region, domain)
 
@@ -495,6 +499,12 @@ class Metadata():
         self.METADATA_NAMES['selected_dna_region'] = ['csv_dna_region', 'dna_region']
         self.METADATA_NAMES['selected_overlap'] = ['csv_overlap', 'overlap']
 
+    def no_data_message(self, query_subm = "", db_name = ""):
+        if (db_name and query_subm):
+            return "Empty results for this query: %s in %s" % (query_subm, db_name)
+        else:
+            return "There are no data in the DB"
+
     def get_lanes_domains(self, out_metadata):
         domain_choices = dict(Domain.LETTER_BY_DOMAIN_CHOICES)
         lanes_domains = []
@@ -527,7 +537,7 @@ class Metadata():
                 self.vamps_submissions[submit_code] = self.mysql_util.run_query_to_dict(query_subm, 'vamps')
         except KeyError as e:
             self.cause = e.args[0]
-            self.errors.add(self.no_data_message())
+            self.errors.add(self.no_data_message(query_subm, db_name))
         except:
             raise
 
@@ -611,12 +621,13 @@ class Metadata():
             self.vamps2_project_results = self.mysql_util.run_query_to_dict(query_subm, db_name)
             if not self.vamps2_project_results:
                 logging.debug(query_subm)
-                print("Empty results fo this query: %s in %s" % (query_subm, db_name))
+                print("Empty results for this query: %s in %s" % (query_subm, db_name))
+                print(self.no_data_message(query_subm, db_name))
             # TODO: check all return self
             return self.vamps2_project_results
         except KeyError as e:
             self.cause = e.args[0]
-            self.errors.add(self.no_data_message())
+            self.errors.add(self.no_data_message(query_subm, db_name))
         except:
             raise
 
