@@ -958,7 +958,12 @@ class OutData():
             # dump the whole vamps2_dict to out_metadata, then add if key is different
             self.out_metadata[i] = self.utils.make_an_empty_dict_from_set(self.csv_file.all_headers)
             self.out_metadata[i].update(vamps2_dict[i])
-            self.out_metadata[i]['dna_region'] = self.request.session['run_info_from_csv']['csv_dna_region']
+            try:
+                self.out_metadata[i]['dna_region'] = self.request.session['run_info_from_csv']['csv_dna_region']
+            except KeyError:
+                self.out_metadata[i]['dna_region'] = self.csv_file.csv_by_header['dna_region'][i]
+            except:
+                raise
             try:
                 self.out_metadata[i]['contact_name'] = vamps2_dict[i].get('first_name', False) + ' ' + vamps2_dict[i].get('last_name', False)
                 self.out_metadata[i]['domain']       = self.metadata.domains_per_row[i]
