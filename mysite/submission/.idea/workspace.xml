@@ -17,7 +17,10 @@
         <entry file="file://$PROJECT_DIR$/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="114">
-              <caret line="23" selection-start-line="23" selection-end-line="23" />
+              <caret line="37" selection-start-line="37" selection-end-line="37" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -34,8 +37,8 @@
       <file leaf-file-name="metadata_tools.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/metadata_tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="299" selection-start-line="299" selection-end-line="299" />
+            <state relative-caret-position="216">
+              <caret line="255" selection-start-line="255" selection-end-line="255" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
                 <element signature="e#15564#17829#0" />
@@ -76,8 +79,8 @@
       <find>run_info_from_csv</find>
       <find>CsvRunInfoUploadForm</find>
       <find>csv_path_to_raw_data</find>
-      <find>make_initialCsvRunInfoUploadForm</find>
       <find>session</find>
+      <find>make_initialCsvRunInfoUploadForm</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -216,31 +219,31 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1297</line>
+          <line>1296</line>
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>949</line>
+          <line>948</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>940</line>
+          <line>939</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>474</line>
+          <line>473</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1112</line>
+          <line>1111</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>477</line>
+          <line>476</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -250,37 +253,37 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1117</line>
+          <line>1116</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>853</line>
+          <line>852</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>962</line>
+          <line>961</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1241</line>
+          <line>1240</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>933</line>
+          <line>932</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1295</line>
+          <line>1294</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>917</line>
+          <line>916</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -295,17 +298,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>852</line>
+          <line>851</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>960</line>
+          <line>959</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1296</line>
+          <line>1295</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -320,30 +323,63 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>854</line>
+          <line>853</line>
           <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="32" />
+      <option name="time" value="33" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="self.request.session['run_info_from_csv']" language="Python" />
         <watch expression="&quot;&quot;.join(self.csv_file.csv_by_header_uniqued['rundate'])" language="Python" />
         <watch expression="self.csv_file.run_info_from_csv" language="Python" />
-        <watch expression="self.request.session.keys()" language="Python" />
+        <watch expression="self.out_files.request.session.keys()" language="Python" />
+        <watch expression="(&quot;run_info_from_csv&quot; in self.out_files.request.session.keys() and len(self.metadata.request.session['run_info_from_csv']) &gt; 1)" language="Python" />
+        <watch expression="len(self.metadata.request.session['run_info_from_csv']) &gt; 1" language="Python" />
+        <watch expression="self.metadata.request.session.keys()" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
       <expression>
-        <expression-string>self.request.session.keys()</expression-string>
+        <expression-string>(&quot;run_info_from_csv&quot; in self.out_files.request.session.keys() and len(self.metadata.request.session['run_info_from_csv']) &gt; 1)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.out_files.request.session.keys()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>len(self.metadata.request.session['run_info_from_csv']) &gt; 1</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.metadata.request.session.keys()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.metadata.request.session</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.out_filesюrequest.session.keys()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
         <expression-string>request.session.keys()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.request.session.keys()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -354,36 +390,6 @@
       </expression>
       <expression>
         <expression-string>self.csv_file.run_info_from_csv</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>&quot;&quot;.join(self.csv_file.csv_by_header_uniqued['rundate'])</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>len(self.request.session['run_info_from_csv'])</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>initial['csv_path_to_raw_data']</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>initial['csv_path_to_raw_data'] = /xraid2-2/sequencing/Illumina/</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>initial['csv_path_to_raw_data'] =</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>initial[]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -519,14 +525,17 @@
     <entry file="file://$PROJECT_DIR$/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
+          <caret line="37" selection-start-line="37" selection-end-line="37" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/metadata_tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="299" selection-start-line="299" selection-end-line="299" />
+        <state relative-caret-position="216">
+          <caret line="255" selection-start-line="255" selection-end-line="255" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
             <element signature="e#15564#17829#0" />
