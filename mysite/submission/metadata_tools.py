@@ -126,6 +126,9 @@ class CsvFile():
         self.required_headers_vamps2 = [header_name for header_name, values in
                                  self.HEADERS_FROM_vamps2_CSV.items() if values['required']]
 
+        default_path_to_raw_data = "/xraid2-2/sequencing/Illumina/"
+
+
     def import_from_file(self, csv_file_in):
         logging.info("import_from_file")
 
@@ -812,6 +815,41 @@ class OutData():
         self.request = request
         self.files_created = []  # public
 
+    def make_initialCsvRunInfoUploadForm(self):
+        current_run_info = {}
+        if (len(self.request.session['run_info_from_csv']) > 1):
+            current_run_info = self.request.session['run_info_from_csv']
+        elif (self.csv_file.csv_by_header_uniqued):
+            current_run_info = {
+                'csv_rundate'         : "".join(self.csv_file.csv_by_header_uniqued['rundate']),
+                'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/",
+                'csv_platform'        : "".join(self.csv_file.csv_by_header_uniqued['platform']),
+                'csv_dna_region'      : "".join(self.csv_file.csv_by_header_uniqued['dna_region']),
+                'csv_overlap'         : "".join(self.csv_file.csv_by_header_uniqued['overlap']),
+                'csv_has_ns'          : "",
+                'csv_seq_operator'    : "".join(self.csv_file.csv_by_header_uniqued['seq_operator']),
+                'csv_insert_size'     : "".join(self.csv_file.csv_by_header_uniqued['insert_size']),
+                'csv_read_length'     : "".join(self.csv_file.csv_by_header_uniqued['read_length']),
+            }
+        else:
+            current_run_info = {
+                'csv_rundate'         : "",
+                'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/",
+                'csv_platform'        : "",
+                'csv_dna_region'      : "",
+                'csv_overlap'         : "",
+                'csv_has_ns'          : "",
+                'csv_seq_operator'    : "",
+                'csv_insert_size'     : "",
+                'csv_read_length'     : ""
+            }
+
+        for k, v in current_run_info.items():
+            if v == 'undefined':
+                current_run_info[k] = ""
+
+        return current_run_info
+
     # TODO: what's a difference with make_metadata_run_info_form?
     def make_metadata_out_from_old_file(self): #TODO: rename and/or split. Upload and parse file, get_initial run info, get current selected data, fill out request.session run info, makes metadata_run_info_form, get_vamps_submission_info, makes csv_by_header, get_domain_dna_regions, get_domain_per_row, get_adaptor_from_csv_content, check_user or get_user_info, get_csv_projects, check_projects, make_new_out_metadata, collect errors, populate request.session['csv_by_header_uniqued'], populate request.session['out_metadata']
 
@@ -821,7 +859,7 @@ class OutData():
 
         # self.current_selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
         self.request.session['run_info_from_csv'] = self.csv_file.run_info_from_csv
-        metadata_run_info_form = CsvRunInfoUploadForm(initial = self.request.session['run_info_from_csv'])
+        metadata_run_info_form = CsvRunInfoUploadForm(initial = self.make_initialCsvRunInfoUploadForm())
 
         if not self.csv_file.vamps2_csv:
             self.metadata.get_vamps_submission_info(self.csv_file.csv_by_header_uniqued)
@@ -1267,7 +1305,13 @@ class OutData():
 
     def create_vamps2_submission_csv(self, request):
         logging.info("create_vamps2_submission_csv")
-        out_metadata = request.session['out_metadata']
+        try:
+            out_metadata = request.session['out_metadata']
+        except KeyError:
+            raise
+        except:
+            raise
+
         data_owner = "".join(list(set([value1['data_owner'] for key1, value1 in out_metadata.items()])))
         project = "".join(list(set([value1['project'] for key1, value1 in out_metadata.items()])))
         project_author = data_owner + "_" + project
