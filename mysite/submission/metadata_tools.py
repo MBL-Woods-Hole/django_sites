@@ -47,6 +47,9 @@ class CsvFile():
         self.run_info_from_csv = {}
         self.errors = set() # public
 
+        self.dict_reader = {}
+        self.reader = {}
+
         self.HEADERS_FROM_CSV = {
             'id': {'field': 'id', 'required': True},
             'submit_code': {'field': 'submit_code', 'required': True},
@@ -288,7 +291,7 @@ class CsvFile():
         self.run_info_from_csv = self.make_initialCsvRunInfoUploadForm()
 
         if self.vamps2_csv:
-            csv_rundate = "".join(self.csv_by_header_uniqued['run'])
+            # csv_rundate = "".join(self.csv_by_header_uniqued['run'])
             self.run_info_from_csv['csv_seq_operator'] = ""
         else:
             csv_rundate = "".join(self.csv_by_header_uniqued['rundate'])
@@ -823,9 +826,6 @@ class Metadata():
         return project_obj
 
 
-
-
-
 class OutData():
     def __init__(self, request):
         self.metadata = Metadata(request)
@@ -850,8 +850,7 @@ class OutData():
 
         # self.current_selected_data = self.selected_vals.get_selected_variables(self.request.POST, self.csv_file.csv_by_header_uniqued)
         self.request.session['run_info_from_csv'] = self.csv_file.run_info_from_csv
-        metadata_run_info_form = CsvRunInfoUploadForm(initial = self.csv_file.make_initialCsvRunInfoUploadForm())
-        self.request.session['run_info_from_csv'] = metadata_run_info_form
+        metadata_run_info_form = CsvRunInfoUploadForm(initial = self.request.session['run_info_from_csv'])
 
         if not self.csv_file.vamps2_csv:
             self.metadata.get_vamps_submission_info(self.csv_file.csv_by_header_uniqued)
@@ -946,6 +945,9 @@ class OutData():
 
         domain_dna_regions = self.metadata.get_domain_dna_regions(data_from_db)
         dna_region = list(set(domain_dna_regions))[0][1:]  # e.g. 'v4' assuming only one region and a correct project name
+        # use insted self.csv_file.run_info_from_csv
+        # self.request.session['run_info_from_csv'] = self.csv_file.run_info_from_csv
+
         current_run_info = {
             'csv_rundate': "",
             'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/",
@@ -1296,7 +1298,8 @@ class OutData():
         try:
             out_metadata = request.session['out_metadata']
         except KeyError:
-            raise
+            out_metadata = self.out_metadata
+            self.make_metadata_out_from_project_data(self.csv_file.dict_reader)
         except:
             raise
 
