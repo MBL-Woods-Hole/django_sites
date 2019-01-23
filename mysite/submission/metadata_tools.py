@@ -975,6 +975,7 @@ class OutData():
             if (not self.csv_file.vamps2_csv):
                 self.make_metadata_out_from_csv()
             else:
+                self.make_metadata_out_from_csv()
                 self.make_metadata_out_from_project_data(self.csv_file.dict_reader)
         else:
             if self.metadata.vamps2_project_results:
@@ -1299,6 +1300,7 @@ class OutData():
             out_metadata = request.session['out_metadata']
         except KeyError:
             out_metadata = self.out_metadata
+            self.make_metadata_out_from_csv()
             self.make_metadata_out_from_project_data(self.csv_file.dict_reader)
         except:
             raise

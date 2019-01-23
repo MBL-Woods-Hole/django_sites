@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7ba7fd99-b74a-4ab2-a21b-8335eee1a4ac" name="Default" comment="" />
+    <list default="true" id="7ba7fd99-b74a-4ab2-a21b-8335eee1a4ac" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/metadata_tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/metadata_tools.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,8 +37,8 @@
       <file leaf-file-name="metadata_tools.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/metadata_tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="148">
-              <caret line="931" selection-start-line="931" selection-end-line="931" />
+            <state relative-caret-position="114">
+              <caret line="316" selection-start-line="316" selection-end-line="316" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -82,9 +84,9 @@
       <find>out_metadata =</find>
       <find>make_metadata_out</find>
       <find>make_metadata_out_from_project_data</find>
-      <find>dict_reader</find>
       <find>get_dict_reader</find>
       <find>self.reader</find>
+      <find>dict_reader</find>
       <find>make_metadata_out_from_vamps2_submission</find>
     </findStrings>
   </component>
@@ -207,7 +209,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.49960285" visible="true" weight="0.3997253" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49960285" weight="0.3997253" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -224,7 +226,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1298</line>
+          <line>1299</line>
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
@@ -258,7 +260,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1242</line>
+          <line>1243</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -268,7 +270,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1296</line>
+          <line>1297</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -293,7 +295,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1297</line>
+          <line>1298</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -323,7 +325,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1301</line>
+          <line>1303</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -348,11 +350,26 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/metadata_tools.py</url>
-          <line>1103</line>
+          <line>1104</line>
           <option name="timeStamp" value="44" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/metadata_tools.py</url>
+          <line>978</line>
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/metadata_tools.py</url>
+          <line>977</line>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/metadata_tools.py</url>
+          <line>1302</line>
+          <option name="timeStamp" value="47" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="45" />
+      <option name="time" value="48" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -362,11 +379,17 @@
         <watch expression="self.request.session['run_info']" language="Python" />
         <watch expression="self.request.session.keys()" language="Python" />
         <watch expression="self.dict_reader" language="Python" />
+        <watch expression="list(csv.DictReader(io.StringIO(self.csv_file_in.read().decode('utf-8'))))" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>list(csv.DictReader(io.StringIO(self.csv_file_in.read().decode('utf-8'))))</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>self.dict_reader</expression-string>
         <language-id>Python</language-id>
@@ -558,8 +581,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/metadata_tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="931" selection-start-line="931" selection-end-line="931" />
+        <state relative-caret-position="114">
+          <caret line="316" selection-start-line="316" selection-end-line="316" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
