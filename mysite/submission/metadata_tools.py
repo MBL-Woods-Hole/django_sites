@@ -213,9 +213,6 @@ class CsvMetadata():
     def make_an_empty_dict_for_all_headers(self):
         return {key: "" for key in self.all_headers}
 
-    def no_data_message(self):
-        return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
-
     def import_from_file(self, csvfile):
         logging.info("import_from_file")
         
@@ -299,6 +296,8 @@ class CsvMetadata():
 
         # self.csv_by_header_uniqued = ""
         # self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
+    def no_data_message(self):
+        return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
 
     def get_initial_run_info_data_dict(self):
         logging.info("get_initial_run_info_data_dict")
@@ -329,6 +328,7 @@ class CsvMetadata():
             # logging.debug(self.run_info_from_csv)
         except KeyError as e:
             self.cause = e.args[0]
+            self.errors.add("line 331")
             self.errors.add(self.no_data_message())
         except:
             raise
@@ -410,6 +410,7 @@ class CsvMetadata():
             return self.vamps2_project_results
         except KeyError as e:
             self.cause = e.args[0]
+            self.errors.add("line 413")
             self.errors.add(self.no_data_message())
         except:
             raise
@@ -432,6 +433,7 @@ class CsvMetadata():
                 self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
         except KeyError as e:
             self.cause = e.args[0]
+            self.errors.add("line 436")
             self.errors.add(self.no_data_message())
         except:
             raise
