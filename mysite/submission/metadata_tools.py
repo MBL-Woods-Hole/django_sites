@@ -328,7 +328,7 @@ class CsvMetadata():
             # logging.debug(self.run_info_from_csv)
         except KeyError as e:
             self.cause = e.args[0]
-            self.errors.add("line 331")
+            # self.errors.add("line 331")
             self.errors.add(self.no_data_message())
         except:
             raise
@@ -410,7 +410,7 @@ class CsvMetadata():
             return self.vamps2_project_results
         except KeyError as e:
             self.cause = e.args[0]
-            self.errors.add("line 413")
+            # self.errors.add("line 413")
             self.errors.add(self.no_data_message())
         except:
             raise
@@ -433,7 +433,7 @@ class CsvMetadata():
                 self.vamps_submissions[submit_code] = self.run_query_to_dict(query_subm)
         except KeyError as e:
             self.cause = e.args[0]
-            self.errors.add("line 436")
+            # self.errors.add("line 436")
             self.errors.add(self.no_data_message())
         except:
             raise
