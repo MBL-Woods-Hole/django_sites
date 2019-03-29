@@ -6,7 +6,12 @@
     Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}{{ run_data.find_machine }}
     </div>
 
+    {% if no_cricket %}
+    <div class = "is_cluster"> This command line(s) can be run on any <span class="emph">{{ is_cluster }}</span> cluster except <span class="emph">cricket</span>: </div>
+    {% else %}
+
     <div class = "is_cluster"> This command line(s) can be run on any <span class="emph">{{ is_cluster }}</span> cluster: </div>
+    {% endif %}
 
     <div class = "copy_command">
       {% if run_data %}

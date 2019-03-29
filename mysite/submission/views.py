@@ -279,7 +279,7 @@ def gast(request):
     # print "FFF form"
     # print form
 
-    return render(request, 'submission/page_wo_c_l.html', {'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': '', 'command': 'reads_overlap/; run_gast_ill_nonchim_sge.sh; date', 'what_to_check': 'the percent of "Unknown" taxa ', 'check_command': 'gast/; percent10_gast_unknowns.sh', 'error_message': error_message})
+    return render(request, 'submission/page_wo_c_l.html', {'no_cricket': 'yes', 'form': form, 'run_data': run_data, 'header': 'Gast', 'is_cluster': '', 'command': 'reads_overlap/; run_gast_ill_nonchim_sge.sh; date', 'what_to_check': 'the percent of "Unknown" taxa ', 'check_command': 'gast/; percent10_gast_unknowns.sh', 'error_message': error_message})
 
 def gzip_all(request):
     run_utils = Run()
