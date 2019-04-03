@@ -19,8 +19,23 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/submission/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="185" column="177" selection-start-line="185" selection-start-column="177" selection-end-line="185" selection-end-column="177" />
+            <state relative-caret-position="181">
+              <caret line="182" lean-forward="true" selection-start-line="182" selection-end-line="182" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/submission/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-454">
+              <caret line="137" column="15" selection-start-line="137" selection-start-column="8" selection-end-line="137" selection-end-column="15" />
+              <folding>
+                <element signature="e#0#64#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -68,6 +83,8 @@
       <find>JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id)</find>
       <find>%s</find>
       <find>SELECT sum(seq_count), dataset, project</find>
+      <find>_info</find>
+      <find>get_run</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -207,6 +224,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4777">
           <caret line="281" column="70" selection-start-line="281" selection-start-column="60" selection-end-line="281" selection-end-column="70" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -249,13 +269,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/submission/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="171" column="19" selection-start-line="171" selection-start-column="19" selection-end-line="171" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/submission/templates/submission/base.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1547">
@@ -270,10 +283,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/submission/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-454">
+          <caret line="137" column="15" selection-start-line="137" selection-start-column="8" selection-end-line="137" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/submission/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="185" column="177" selection-start-line="185" selection-start-column="177" selection-end-line="185" selection-end-column="177" />
+        <state relative-caret-position="181">
+          <caret line="182" lean-forward="true" selection-start-line="182" selection-end-line="182" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
