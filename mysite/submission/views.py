@@ -177,9 +177,13 @@ def data_upload(request):
         find_lane = ""
         primer_suite = ""
 
+    select_part = 'SELECT sum(seq_count), dataset, project'
+    common_join_part = 'JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id)'
     where_part = 'WHERE primer_suite = "%s" AND run = "%s" AND lane = "%s"' % (primer_suite, find_rundate, find_lane)
 
-    check_command = '''; diff <(mysql -h bpcdb1 env454 -e 'SELECT sum(seq_count), dataset, project FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id) %s group by dataset ORDER BY dataset')  <(mysql -h vampsdb vamps2 -e 'SELECT sum(seq_count), dataset, project FROM sequence_pdr_info JOIN run_info_ill USING(run_info_ill_id, dataset_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id) %s group by dataset ORDER BY dataset')''' % (where_part, where_part)
+    group_order_part = 'group by dataset ORDER BY dataset'
+
+    check_command = '''; diff -i <(mysql -h bpcdb1 env454 -e '%s FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) %s %s %s')  <(mysql -h vampsdb vamps2 -e '%s FROM sequence_pdr_info JOIN run_info_ill USING(run_info_ill_id, dataset_id) %s %s %s') | tee -a diff.log''' % (select_part, common_join_part, where_part, group_order_part, select_part, common_join_part, where_part, group_order_part)
 
     return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db (Please run twice, both for env454 and vamps2)', 'is_cluster': 'not', 'pipeline_command': 'file_to_db_upload', 'what_to_check': 'counts in env454 and VAMPS2 (there should be no difference) ', 'check_command': check_command, 'error_message': error_message })
 
