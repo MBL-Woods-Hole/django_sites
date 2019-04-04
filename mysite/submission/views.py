@@ -225,7 +225,7 @@ def overlap(request):
     form, run_data, error_message = run_utils.get_run(request)
 
     try:
-        check_command = 'reads_overlap/; take_%s_stats.py' % run_data['find_machine']
+        check_command = 'reads_overlap/; take_%s_stats.py; check_merging_step.py' % run_data['find_machine']
     except:
         pass
     
