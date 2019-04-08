@@ -14,3 +14,4 @@ mysite/submission/.DS_Store
 django_sites/lib/*
 .idea/*
 mysite/.idea/workspace.xml
+*.xml
