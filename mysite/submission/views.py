@@ -172,14 +172,24 @@ def data_upload(request):
         find_rundate = run_data['find_rundate']
         find_lane    = run_data['find_lane']
         primer_suite = run_data['primer_suite']
+        full_machine_name = run_data['full_machine_name']
+        find_domain = run_data['find_domain']
     except:
         find_rundate = ""
         find_lane = ""
         primer_suite = ""
+        full_machine_name = ""
+        find_domain = ""
 
+    log_file_name = """/xraid2-2/g454/run_new_pipeline/illumina/%s_info/%s/pipeline_%s_%s_lane_%s_%s_vamps2.log""" % (full_machine_name, find_rundate, find_rundate, full_machine_name, find_lane, find_domain)
+
+    select_part = 'SELECT sum(seq_count), dataset, project'
+    common_join_part = 'JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id)'
     where_part = 'WHERE primer_suite = "%s" AND run = "%s" AND lane = "%s"' % (primer_suite, find_rundate, find_lane)
 
-    check_command = '''; diff <(mysql -h bpcdb1 env454 -e 'SELECT sum(seq_count), dataset, project FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id) %s group by dataset ORDER BY dataset')  <(mysql -h vampsdb vamps2 -e 'SELECT sum(seq_count), dataset, project FROM sequence_pdr_info JOIN run_info_ill USING(run_info_ill_id, dataset_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id) %s group by dataset ORDER BY dataset')''' % (where_part, where_part)
+    group_order_part = 'group by dataset ORDER BY dataset'
+
+    check_command = '''; diff -i <(mysql -h bpcdb1 env454 -e '%s FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) %s %s %s')  <(mysql -h vampsdb vamps2 -e '%s FROM sequence_pdr_info JOIN run_info_ill USING(run_info_ill_id, dataset_id) %s %s %s') | tee -a %s''' % (select_part, common_join_part, where_part, group_order_part, select_part, common_join_part, where_part, group_order_part, log_file_name)
 
     return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db (Please run twice, both for env454 and vamps2)', 'is_cluster': 'not', 'pipeline_command': 'file_to_db_upload', 'what_to_check': 'counts in env454 and VAMPS2 (there should be no difference) ', 'check_command': check_command, 'error_message': error_message })
 
@@ -215,11 +225,11 @@ def overlap(request):
     form, run_data, error_message = run_utils.get_run(request)
 
     try:
-        check_command = 'reads_overlap/; take_%s_stats.py' % run_data['find_machine']
+        check_command = 'reads_overlap/; take_%s_stats.py; check_merging_step.py' % run_data['find_machine']
     except:
         pass
     
-    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Overlap, filter and unique reads in already demultiplexed files', 'is_cluster': '', 'pipeline_command': 'illumina_files', 'what_to_check': 'the overlap percentage ', 'check_command': check_command, 'error_message': error_message })
+    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Overlap, filter and unique reads in already demultiplexed files', 'is_cluster': '', 'pipeline_command': 'illumina_files', 'what_to_check': 'the overlap percentage and file creation ', 'check_command': check_command, 'error_message': error_message })
 
 def overlap_only(request):
     run_utils = Run()
