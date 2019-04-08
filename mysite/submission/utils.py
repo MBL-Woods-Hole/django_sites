@@ -80,7 +80,12 @@ class Dirs:
         
     def chmod_wg(self, curr_name):
         st = os.stat(curr_name)
-        os.chmod(curr_name, st.st_mode | stat.S_IWGRP)
+        try:
+            os.chmod(curr_name, st.st_mode | stat.S_IWGRP)
+        except OSError:
+            logging.warning("Can't chang permissions for " % (curr_name))
+        except:
+            raise
 
     def check_and_make_dir(self, dir_name):
         try:
