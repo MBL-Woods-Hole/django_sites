@@ -67,8 +67,6 @@ class Utils():
         # logging.debug("self.lanes_domains = %s" % self.lanes_domains)
         return lanes_domains
 
-
-
 class Dirs:
     """
         input_dir - directory with fastq files
