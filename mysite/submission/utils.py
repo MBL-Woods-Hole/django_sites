@@ -81,7 +81,7 @@ class Dirs:
         try:
             os.chmod(curr_name, st.st_mode | stat.S_IWGRP)
         except OSError:
-            logging.warning("Can't chang permissions for " % (curr_name))
+            logging.warning("Can't change permissions for %s " % (curr_name))
         except:
             raise
 
