@@ -45,8 +45,8 @@ class Utils():
         return domain_choices[domain_name]
 
     def clear_session(self, request):
-        key_list = list(request.session.keys())
         try:
+            key_list = list(request.session.keys())
             for key in key_list:
                 del request.session[key]
                 # continue
@@ -54,6 +54,8 @@ class Utils():
             #     del request.session[key]
         except KeyError:
             pass
+        except AttributeError:
+            key_list = []
 
             
     # TODO: combine with metadata_utils, DRY!
