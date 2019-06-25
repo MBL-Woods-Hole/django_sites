@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c1f49b5-ad4d-46e5-a852-d1590a75fa0c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/submission/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/submission/utils.py" afterDir="false" />
-    </list>
+    <list default="true" id="0c1f49b5-ad4d-46e5-a852-d1590a75fa0c" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -17,25 +14,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/submission/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4573">
-              <caret line="291" column="70" selection-start-line="291" selection-start-column="60" selection-end-line="291" selection-end-column="70" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="page_wo_c_l.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="page_wo_c_l.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/submission/templates/submission/page_wo_c_l.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
+            <state relative-caret-position="204">
               <caret line="10" column="14" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/submission/utils.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="143">
@@ -102,7 +90,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -142,6 +129,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="RunDashboard">
@@ -198,6 +186,46 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/submission/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4573">
+          <caret line="291" column="70" selection-start-line="291" selection-start-column="60" selection-end-line="291" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/submission/templates/submission/page_wo_c_l.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="14" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/submission/templates/submission/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1547">
+          <caret line="91" column="37" selection-start-line="91" selection-start-column="19" selection-end-line="91" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metadata_template/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/submission/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1258">
+          <caret line="83" column="41" selection-start-line="83" selection-start-column="41" selection-end-line="83" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/submission/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4573">
@@ -331,20 +359,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/submission/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4573">
-          <caret line="291" column="70" selection-start-line="291" selection-start-column="60" selection-end-line="291" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/submission/templates/submission/page_wo_c_l.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="14" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/submission/utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="143">
@@ -352,6 +366,20 @@
           <folding>
             <element signature="e#0#64#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/submission/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="291" column="70" selection-start-line="291" selection-start-column="60" selection-end-line="291" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/submission/templates/submission/page_wo_c_l.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="10" column="14" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
         </state>
       </provider>
     </entry>
