@@ -968,14 +968,14 @@ class CsvMetadata():
 
     def get_primer_suites(self):
         primer_suites = []
-        print("PPP0 self.domain_dna_regions: %s" % self.domain_dna_regions)
+        # print("PPP0 self.domain_dna_regions: %s" % self.domain_dna_regions)
 
         for r in self.domain_dna_regions:
             domain_letter = r[0]
             dna_region = r[1:]
-            print("PPP1 domain_letter: %s" % domain_letter)
-            print("PPP2 dna_region: %s" % dna_region)
-            print("PPP3 self.suite_domain_choices: %s" % self.suite_domain_choices)
+            # print("PPP1 domain_letter: %s" % domain_letter)
+            # print("PPP2 dna_region: %s" % dna_region)
+            # print("PPP3 self.suite_domain_choices: %s" % self.suite_domain_choices)
             try:
                 primer_suite = self.suite_domain_choices[domain_letter] + ' ' + dna_region.upper() + ' Suite'
             except KeyError:
