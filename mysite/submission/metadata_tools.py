@@ -235,7 +235,15 @@ class CsvMetadata():
             return len(self.empty_cells)
         else:
             self.get_csv_by_header_uniqued()
+            self.clean_csv_by_header_uniqued()
             return 0
+
+    def clean_platform(self):
+        platform = [x.lower() for x in self.csv_by_header_uniqued['platform']]
+        return list(set(platform))
+
+    def clean_csv_by_header_uniqued(self):
+        self.csv_by_header_uniqued['platform'] = self.clean_platform()
 
     def get_dialect(self):
         try:
@@ -294,8 +302,6 @@ class CsvMetadata():
         temp_d_from_csv = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
         self.csv_by_header_uniqued.update(temp_d_from_csv)
 
-        # self.csv_by_header_uniqued = ""
-        # self.csv_by_header_uniqued = dict((x[0], list(set(x[1:]))) for x in zip(*self.csv_content))
     def no_data_message(self):
         return 'There is no data for <span class="emph_it">%s</span> in the file <span class="emph_it">%s</span>' % (self.cause, self.csvfile)
 
@@ -334,7 +340,7 @@ class CsvMetadata():
             raise
 
     def parce_csv(self):
-      self.csv_content = [row for row in self.reader]
+      self.csv_content = [row for row in self.reader if any(v for v in row)]
       self.csv_headers = [header_name.lower() for header_name in self.csv_content[0]]
 
     def check_headers_presence(self):
