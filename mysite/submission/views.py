@@ -209,7 +209,7 @@ def if_no_primer_suite(primer_suite, find_rundate, find_lane, common_join_part):
         check_command_counts = '''mysql -h bpcdb1 env454 -e '%s FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) %s %s'; mysql -h vampsdb vamps2 -e '%s FROM sequence_pdr_info JOIN run_info_ill USING(run_info_ill_id, dataset_id) %s %s;' ''' % (
         select_part_count, common_join_part, where_part_no_primer_suite, select_part_count, common_join_part, where_part_no_primer_suite)
 
-        return check_command_counts
+    return check_command_counts
 
 
 def run_info_upload(request):
