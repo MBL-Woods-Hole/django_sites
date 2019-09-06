@@ -189,7 +189,7 @@ def data_upload(request):
 
     group_order_part = 'group by dataset ORDER BY dataset'
 
-    check_command_counts = if_no_primer_suite(primer_suite, find_rundate, find_lane, common_join_part)
+    check_command_counts = if_no_primer_suite(primer_suite, where_part, common_join_part)
 
     check_command = '''; %s diff -i <(mysql -h bpcdb1 env454 -e '%s FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) %s %s %s')  <(mysql -h vampsdb vamps2 -e '%s FROM sequence_pdr_info JOIN run_info_ill USING(run_info_ill_id, dataset_id) %s %s %s') | tee -a %s''' % (check_command_counts, select_part, common_join_part, where_part, group_order_part, select_part, common_join_part, where_part, group_order_part, log_file_name)
 
