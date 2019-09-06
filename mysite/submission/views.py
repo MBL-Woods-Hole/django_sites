@@ -181,8 +181,8 @@ def data_upload(request):
         full_machine_name = ""
         find_domain = ""
 
-    # if len(primer_suite) <= 0:
-    #     error_message
+    if len(primer_suite) <= 0:
+        error_message += """. Can't find a primer suite, please check the mysql query below. """
 
     log_file_name = """/xraid2-2/g454/run_new_pipeline/illumina/%s_info/%s/pipeline_%s_%s_lane_%s_%s_vamps2.log""" % (full_machine_name, find_rundate, find_rundate, full_machine_name, find_lane, find_domain)
 
