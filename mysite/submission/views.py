@@ -195,7 +195,7 @@ def data_upload(request):
 
     return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Data upload to db (Please run twice, both for env454 and vamps2)', 'is_cluster': 'not', 'pipeline_command': 'file_to_db_upload', 'what_to_check': 'counts in env454 and VAMPS2 (there should be no difference) ', 'check_command': check_command, 'error_message': error_message })
 
-def if_no_primer_suite(primer_suite, find_rundate, find_lane, common_join_part):
+def if_no_primer_suite(primer_suite, where_part, common_join_part):
     """
     mysql -h bpcdb1 env454 -e 'SELECT count(*) FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id) WHERE run = "20190825" AND lane = "1" group by dataset ORDER BY dataset'
 """
@@ -204,10 +204,10 @@ def if_no_primer_suite(primer_suite, find_rundate, find_lane, common_join_part):
     if len(primer_suite) <= 0:
         select_part_count = 'SELECT count(*) '
 
-        where_part_no_primer_suite = 'WHERE run = "%s" AND lane = "%s"' % (find_rundate, find_lane)
+        # where_part_no_primer_suite = 'WHERE run = "%s" AND lane = "%s"' % (find_rundate, find_lane)
 
         check_command_counts = '''mysql -h bpcdb1 env454 -e '%s FROM sequence_pdr_info_ill JOIN run_info_ill USING(run_info_ill_id) %s %s'; mysql -h vampsdb vamps2 -e '%s FROM sequence_pdr_info JOIN run_info_ill USING(run_info_ill_id, dataset_id) %s %s;'; ''' % (
-        select_part_count, common_join_part, where_part_no_primer_suite, select_part_count, common_join_part, where_part_no_primer_suite)
+        select_part_count, common_join_part, where_part, select_part_count, common_join_part, where_part)
 
     return check_command_counts
 
