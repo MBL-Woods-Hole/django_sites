@@ -215,7 +215,7 @@ def run_info_upload(request):
 
     form, run_data, error_message = run_utils.get_run(request)
 
-    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Run info upload to db', 'is_cluster': 'not', 'pipeline_command': 'run_info_upload',  'error_message': error_message })
+    return render(request, 'submission/page_w_command_l.html', {'form': form, 'run_data': run_data, 'header': 'Run info upload to db (env454 only)', 'is_cluster': 'not', 'pipeline_command': 'run_info_upload',  'error_message': error_message })
 
 def chimera_checking(request):
     run_utils = Run()
