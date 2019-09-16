@@ -126,6 +126,7 @@ class CsvMetadata():
         self.user_info_arr = {}
         self.vamps_submissions = {}
         self.vamps2_project_results = {}
+        self.dataset_amount = 0
         
         self.HEADERS_FROM_CSV = {
             'id': {'field': 'id', 'required': True},
@@ -236,7 +237,11 @@ class CsvMetadata():
         else:
             self.get_csv_by_header_uniqued()
             self.clean_csv_by_header_uniqued()
+            self.get_dataset_amount()
             return 0
+
+    def get_dataset_amount(self):
+        self.dataset_amount = len(self.csv_by_header_uniqued['dataset_name'])
 
     def clean_platform(self):
         platform = [x.lower() for x in self.csv_by_header_uniqued['platform']]
@@ -940,7 +945,9 @@ class CsvMetadata():
             # self.out_metadata[i]['tube_number']    = self.csv_by_header['tube_number'][i]
 
     def get_domain_per_row(self, info_list_len):
-        for r in self.domain_dna_regions:
+
+        for i in range(self.dataset_amount):
+            r = self.domain_dna_regions[i]
             domain_letter = r[0]
             domain = ""
             # dna_region = r[1:]
