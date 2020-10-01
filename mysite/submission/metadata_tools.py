@@ -326,7 +326,7 @@ class CsvMetadata():
             
             self.run_info_from_csv = {
                 'csv_rundate':          csv_rundate,
-                'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/%s%s" % (csv_rundate, self.selected_machine_short),
+                'csv_path_to_raw_data': "/groups/sequencing/Illumina/%s%s" % (csv_rundate, self.selected_machine_short),
                 'csv_platform':	        platform,
                 'csv_dna_region':	    "".join(self.csv_by_header_uniqued['dna_region']),
                 'csv_overlap':		    "".join(self.csv_by_header_uniqued['overlap']),
@@ -548,7 +548,7 @@ class CsvMetadata():
             raise
 
     def create_path_to_csv(self):
-        # /xraid2-2/g454/run_new_pipeline/illumina/miseq_info/20160711
+        # /groups/g454/run_new_pipeline/illumina/miseq_info/20160711
         # logging.debug("self.selected_machine from create_path_to_csv = %s" % (self.selected_machine))
 
         self.path_to_csv = os.path.join(settings.ILLUMINA_RES_DIR, self.selected_machine + "_info", self.selected_rundate)
@@ -568,7 +568,7 @@ class CsvMetadata():
         self.metadata_csv_file_names = self.create_out_file_names("metadata_%s_%s_%s.csv")
 
     def write_ini(self):
-        path_to_raw_data = "/xraid2-2/sequencing/Illumina/%s%s/" % (self.selected_rundate, self.selected_machine_short)
+        path_to_raw_data = "/groups/sequencing/Illumina/%s%s/" % (self.selected_rundate, self.selected_machine_short)
         overlap_choices = dict(Overlap.OVERLAP_CHOICES)
 
         for lane_domain, ini_name in self.ini_names.items():
@@ -1111,7 +1111,7 @@ class CsvMetadata():
 
         self.run_info_from_csv = { # TODO: rename everywhere
             'csv_rundate'         : "",
-            'csv_path_to_raw_data': "/xraid2-2/sequencing/Illumina/",
+            'csv_path_to_raw_data': "/groups/sequencing/Illumina/",
             'csv_platform'        : "",
             'csv_dna_region'      : self.dna_region,
             'csv_overlap'         : "",

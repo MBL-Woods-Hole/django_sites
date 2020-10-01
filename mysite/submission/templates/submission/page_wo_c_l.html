@@ -3,7 +3,7 @@
   {% block first_copy_command %}
 
     <div class = "blue_message">
-    Please check if the path to raw data exists: /xraid2-2/sequencing/Illumina/{{ run_data.find_rundate }}{{ run_data.find_machine }}
+    Please check if the path to raw data exists: /groups/sequencing/Illumina/{{ run_data.find_rundate }}{{ run_data.find_machine }}
     </div>
 
     {% if no_cricket %}
@@ -15,10 +15,10 @@
 
     <div class = "copy_command">
       {% if run_data %}
-      cd /xraid2-2/g454/run_new_pipeline/{{ run_data.full_machine_name }}/{{ run_data.find_rundate }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/{{ command }}
+      cd /groups/g454/run_new_pipeline/{{ run_data.full_machine_name }}/{{ run_data.find_rundate }}/lane_{{ run_data.find_lane }}_{{ run_data.find_domain }}/analysis/{{ command }}
 
       {% else %}
-      cd /xraid2-2/g454/run_new_pipeline/<span class = "insert_here">fullMachineName</span>/<span class = "insert_here">rundate</span>/lane_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span>/analysis/; {{ command }}
+      cd /groups/g454/run_new_pipeline/<span class = "insert_here">fullMachineName</span>/<span class = "insert_here">rundate</span>/lane_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span>/analysis/; {{ command }}
 
       {% endif %}
 

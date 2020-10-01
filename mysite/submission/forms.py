@@ -12,7 +12,7 @@ from django.db import models
 class RunForm(forms.Form):
     # query = Run.objects.filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
     # find_rundate = forms.ModelChoiceField(queryset = query, label = 'Run date', empty_label = None)
-    query = models_run.cache_all_method.all().filter(run__startswith = '201').filter(run__gte = '2015').order_by('-run')
+    query = models_run.cache_all_method.all().filter(run__startswith = '20').filter(run__gte = '2019').order_by('-run')
     find_rundate = forms.ModelChoiceField(queryset = query, label = 'Run date', empty_label = None)
 
     find_machine = forms.ChoiceField(choices = Machine.MACHINE_CHOICES, label = 'Machine name')
@@ -34,7 +34,7 @@ class ChooseProjectForm(forms.Form):
 class CsvRunInfoUploadForm(forms.Form):
     csv_rundate = forms.DateField(label = 'Run date', input_formats = ['%Y%m%d'])
     csv_path_to_raw_data = forms.CharField(label = 'Path to raw data', max_length = 128, widget = forms.TextInput(
-        attrs = {'id': 'path_ext_msg'}))  # <span class="emph">/xraid2-2/sequencing/Illumina/</span>
+        attrs = {'id': 'path_ext_msg'}))  # <span class="emph">/groups/sequencing/Illumina/</span>
     csv_platform = forms.ChoiceField(choices = Machine.PLATFORM_CHOICES, label = 'Platform')
     csv_dna_region = forms.ChoiceField(choices = Ill_dna_region.DNA_REGION_CHOICES, label = 'DNA Region')
     csv_overlap = forms.ChoiceField(choices = Overlap.OVERLAP_CHOICES, label = 'Overlap')

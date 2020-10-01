@@ -29,6 +29,7 @@ ALLOWED_HOSTS = ['vampsdev.jbpc-np.mbl.edu', '127.0.0.1', 'localhost' ]
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
 # https://django-debug-toolbar.readthedocs.io/en/stable/tips.html
 
+
 # Application definition
 INSTALLED_APPS = [
     'submission.apps.SubmissionConfig',

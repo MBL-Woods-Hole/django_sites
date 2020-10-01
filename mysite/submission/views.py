@@ -184,7 +184,7 @@ def data_upload(request):
     if len(primer_suite) <= 0:
         error_message += """. Can't find a primer suite, please check the mysql query below. """
 
-    log_file_name = """/xraid2-2/g454/run_new_pipeline/illumina/%s_info/%s/pipeline_%s_%s_lane_%s_%s_vamps2.log""" % (full_machine_name, find_rundate, find_rundate, full_machine_name, find_lane, find_domain)
+    log_file_name = """/groups/g454/run_new_pipeline/illumina/%s_info/%s/pipeline_%s_%s_lane_%s_%s_vamps2.log""" % (full_machine_name, find_rundate, find_rundate, full_machine_name, find_lane, find_domain)
 
     select_part = 'SELECT sum(seq_count), dataset, project'
     common_join_part = 'JOIN run USING(run_id) JOIN primer_suite USING(primer_suite_id) join dataset using(dataset_id) join project using(project_id)'
