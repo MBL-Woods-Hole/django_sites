@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^metadata_template/', include('metadata_template.urls')),
 ]
 
+
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [
