@@ -8,12 +8,22 @@
 
     <div class = "is_cluster"> This command line(s) can be run on any <span class="emph">{{ is_cluster }}</span> cluster: </div>
 
+    {% if '/chimera_checking/' in request.path %}
+    <div class="blockquote">
+        Note: You may optionally override the number of slots used by the pipeline by
+        setting the PIPELINE_SLOTS variable before invoking the commands.  For example,
+        before pasting the following command you could execute 
+        <span class="code">export PIPELINE_SLOTS=8</span> and subsquently the pipeline will
+        use 8 slots instead of whatever the default value is.
+    </div>
+    {% endif %}
+
     <div class = "copy_command">
       {% if run_data %}
-cd {{ illumina_res_dir }}/{{ run_data.full_machine_name }}_info/{{ run_data.find_rundate }}; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv {{ illumina_res_dir }}/{{ run_data.full_machine_name }}_info/{{ run_data.find_rundate }}/metadata_{{ run_data.find_rundate }}_{{ run_data.find_machine }}_{{ run_data.find_lane }}_{{ run_data.find_domain }}.csv -s {{ pipeline_command }} -l debug -p {{ run_data.full_machine_name }} -r {{ run_data.find_rundate }} -ft fastq -i /groups/sequencing/Illumina/{{ run_data.rundate_dir }}{{ run_data.find_rundate }}{{ run_data.find_machine }}/ -cp True -lane_name lane_{{ run_data.find_lane }}_{{ run_data.find_domain }} -do_perfect {{ run_data.perfect_overlap }} -db_name {{ run_data.find_db_name }} -db_host {{ run_data.db_host }}
+cd {{ illumina_res_dir }}/{{ run_data.full_machine_name }}_info/{{ run_data.find_rundate }}; time python /bioware/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv {{ illumina_res_dir }}/{{ run_data.full_machine_name }}_info/{{ run_data.find_rundate }}/metadata_{{ run_data.find_rundate }}_{{ run_data.find_machine }}_{{ run_data.find_lane }}_{{ run_data.find_domain }}.csv -s {{ pipeline_command }} -l debug -p {{ run_data.full_machine_name }} -r {{ run_data.find_rundate }} -ft fastq -i /groups/sequencing/Illumina/{{ run_data.rundate_dir }}{{ run_data.find_rundate }}{{ run_data.find_machine }}/ -cp True -lane_name lane_{{ run_data.find_lane }}_{{ run_data.find_domain }} -do_perfect {{ run_data.perfect_overlap }} -db_name {{ run_data.find_db_name }} -db_host {{ run_data.db_host }}
 
       {% else %}
-      cd {{ illumina_res_dir }}/<span class = "insert_here">fullMachineName</span>_info/<span class = "insert_here">rundate</span>; time python /bioware/linux/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv {{ illumina_res_dir }}/<span class = "insert_here">fullMachineName</span>_info/<span class = "insert_here">rundate</span>/metadata_<span class = "insert_here">rundate</span>_<span class = "insert_here">machine</span>_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span>.csv -s <span class = "insert_here">pipelineCommand</span> -l debug -p <span class = "insert_here">platform</span> -r <span class = "insert_here">rundate</span> -ft fastq -i /groups/sequencing/Illumina/<span class = "insert_here">rundate</span><span class = "insert_here">machine</span>/ -cp True -lane_name lane_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span> -do_perfect <span class = "insert_here">perfectOverlap</span> -db_name <span class = "insert_here">db_name</span> -db_host <span class = "insert_here">db_host</span>
+      cd {{ illumina_res_dir }}/<span class = "insert_here">fullMachineName</span>_info/<span class = "insert_here">rundate</span>; time python /bioware/seqinfo/bin/python_pipeline/py_mbl_sequencing_pipeline/pipeline-ui.py -csv {{ illumina_res_dir }}/<span class = "insert_here">fullMachineName</span>_info/<span class = "insert_here">rundate</span>/metadata_<span class = "insert_here">rundate</span>_<span class = "insert_here">machine</span>_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span>.csv -s <span class = "insert_here">pipelineCommand</span> -l debug -p <span class = "insert_here">platform</span> -r <span class = "insert_here">rundate</span> -ft fastq -i /groups/sequencing/Illumina/<span class = "insert_here">rundate</span><span class = "insert_here">machine</span>/ -cp True -lane_name lane_<span class = "insert_here">lane</span>_<span class = "insert_here">domain</span> -do_perfect <span class = "insert_here">perfectOverlap</span> -db_name <span class = "insert_here">db_name</span> -db_host <span class = "insert_here">db_host</span>
 
       {% endif %}
 
