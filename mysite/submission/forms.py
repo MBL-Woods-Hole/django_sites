@@ -17,7 +17,7 @@ class RunForm(forms.Form):
 
     find_machine = forms.ChoiceField(choices = Machine.MACHINE_CHOICES, label = 'Machine name')
     find_domain = forms.ChoiceField(choices = Domain.DOMAIN_SHORTCUTS_CHOICES, label = 'Domain')
-    find_lane = forms.CharField(label = 'Lane number', max_length = 3)
+    find_lane = forms.CharField(label = 'Lane number', max_length = 3, initial = '1')
     find_db_name = forms.ChoiceField(choices = Db_name.DB_NAME_CHOICES, label = 'Database name')
 
 
